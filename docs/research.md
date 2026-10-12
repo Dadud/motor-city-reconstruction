@@ -19,18 +19,20 @@ python -m tools.verify_dyno_flow '/path/to/game' --output evidence/flow.json
 python -m tools.verify_dyno_area '/path/to/game' --output evidence/area.json
 python -m tools.verify_cylinder_state '/path/to/game' --output evidence/cylinder-state.json
 python -m tools.verify_exhaust '/path/to/game' --output evidence/exhaust.json
+python -m tools.verify_cycle_preparation '/path/to/game' --output evidence/cycle-preparation.json
 ```
 
 Create the `evidence/` directory first. Each command needs your local installation; no binary is downloaded. The oracle uses Unicorn 2.1.4, bounded instruction execution and x87 control word `0x27f`. It does not run the original game entry point, implement Windows imports, connect to game services or prove original hardware behavior. REA is not included or required.
 
 ## Current validation snapshot
 
-- 119 synthetic unit tests passed on Windows after offline driving and exhaust preparation were introduced.
+- 127 synthetic unit tests passed on Windows after cycle preparation and intake/exhaust boundary evaluation were introduced.
 - Core builder inputs match 199 supported stock records given identical assembled component fields; native component-loader equivalence remains unproven.
 - Geometry, valve events, normalized flow and cam profiles match supported stock inputs.
 - 3,582 sampled valve lifts, 2,358 interpolation samples and 5,970 coupled airflow areas matched their native emulated ranges.
 - Cylinder initialization matched 4,179 stored fields across 199 engines and three pressure inputs. Only 44.1 is the recovered first-cycle pressure; 15 and 80 are synthetic probes, not recovered running pressures.
-- Exhaust preparation matched 16,720 fields across all seven modes, 199 supported engines and 19 RPM knots. Pressure-wave evolution and field units remain unfinished/unverified.
+- Exhaust preparation matched 16,720 fields across all seven modes, 199 supported engines and 19 RPM knots.
+- Coupled charge-temperature selection, cycle preparation, phase factor, exhaust wave and intake boundary evaluation matched 59,342 fields across 199 engines and synthetic mode/boost/boundary probes. Intake scaling preserves intermediate float32 stores, post-store boost addition and native negative values. Physical units and complete cylinder-pressure evolution remain unverified.
 - Thirteen unsupported stock assemblies remain explicitly rejected.
 - Complete pressure integration, final engine curves and recovered driving physics remain unfinished.
 

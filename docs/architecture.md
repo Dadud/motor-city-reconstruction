@@ -43,7 +43,9 @@ The runtime imports no emulation dependency. The optional oracle executes select
 
 `catalogue.py` assembles component-derived inputs. `dyno.py` loads the supported executable's local templates and serializes the core dyno record. `dyno_solver.py` implements verified geometry, timing, flow normalization, cam profiles, lift, interpolation, pressure correction, airflow areas and output conversion.
 
-`thermodynamics.exhaust_parameters` prepares the baseline, amplitude, reference RPM and exponent for the seven native exhaust branches. These are verified setup fields; their physical units and subsequent pressure-wave evolution remain unresolved.
+`thermodynamics.exhaust_parameters` prepares the baseline, amplitude, reference RPM and exponent for the seven native exhaust branches. `charge_temperature` selects a temperature using raw mode +0x2dc and RPM; `cycle_preparation` computes the native temperature polynomial and cycle/exhaust scales. `exhaust_phase_factor` and `exhaust_wave_value` evaluate the crank-angle-dependent boundary value, including retained exact phase boundaries and the positive-boost override. These calculations are verified against isolated native ranges; their physical units and complete cylinder-pressure evolution remain unresolved.
+
+`intake_boundary` couples assembled carburetor capacity/code, intake mode, cylinder displacement and RPM. It produces the stored displacement rate, capacity scale and intake pressure term. The builder's minimum capacity is a caller precondition. Native negative values and addition of boost after the pressure store are preserved; the function does not replace the mass-exchange or pressure integration loop.
 
 `thermodynamics.py` initializes pressure, temperature, crank geometry and cylinder mass terms. The caller supplies pressure; carrying it between cycles and integrating the thermodynamic loop remain incomplete. Original solver curves captured during development are comparison evidence, not a replacement for the portable solver. Offline driving uses separate authored acceleration/drag/grip parameters and does not consume the incomplete dyno pipeline.
 

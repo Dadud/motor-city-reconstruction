@@ -103,6 +103,56 @@ class DynoOracle:
         return tuple(struct.unpack('<f', self.cpu.mem_read(self.frame+offset, 4))[0]
                      for offset in (-0x94, -0x58, -0x54, -0x64))
 
+    def charge_temperature(self, mode, rpm):
+        self._reset()
+        self.cpu.mem_write(self.frame-0x60, struct.pack('<f', mode))
+        self.cpu.mem_write(self.frame-0xa8, struct.pack('<f', rpm))
+        self._run(0x479bce, 0x479c5e, timeout=0, count=1000)
+        return struct.unpack('<f', self.cpu.mem_read(self.frame-0xac, 4))[0]
+
+    def intake_boundary(self, geometry, rpm, carb_capacity, carb_code, intake_mode, boost=0):
+        self._reset()
+        self.cpu.ctl_remove_cache(0x47a05b, 0x47a145)
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESI, self.inputs)
+        self.cpu.mem_write(self.inputs+0xa4, struct.pack('<h', carb_capacity))
+        self.cpu.mem_write(self.inputs+0x6e, struct.pack('<h', intake_mode))
+        for offset, value in ((-0xb0, geometry.total_displacement), (-0xa8, rpm),
+                              (-0xb4, 70), (-0xa4, boost)):
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self._run(0x479025 if carb_code == 2 else 0x47903a, 0x479050, timeout=0, count=100)
+        self._run(0x479b29, 0x479b3f, timeout=0, count=100)
+        self._run(0x479b60, 0x479b6c, timeout=0, count=100)
+        self._run(0x47a05b, 0x47a0b0, timeout=0, count=100)
+        return tuple(struct.unpack('<f', self.cpu.mem_read(self.frame+offset, 4))[0]
+                     for offset in (-0x3c, -0x204, -0x20))
+
+    def cycle_preparation(self, rpm, temperature, exhaust):
+        self._reset()
+        self.cpu.ctl_remove_cache(0x47a05b, 0x47a145)
+        for offset, value in ((-0xa8, rpm), (-0xac, temperature), (-0x64, exhaust.rpm_exponent)):
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self._run(0x47a0b0, 0x47a145, timeout=0, count=10000)
+        return tuple(struct.unpack('<f', self.cpu.mem_read(self.frame+offset, 4))[0]
+                     for offset in (-0x224, -0x21c, -0x40))
+
+    def exhaust_phase_factor(self, start_angle):
+        self._reset()
+        self.cpu.mem_write(self.frame-0x4c, struct.pack('<f', start_angle))
+        self._run(0x479b6c, 0x479b81, timeout=0, count=100)
+        return struct.unpack('<f', self.cpu.mem_read(self.frame-0x20c, 4))[0]
+
+    def exhaust_wave_value(self, angle, start_angle, phase_factor, rpm, exhaust,
+                           wave_scale, previous_value=0, boost=0):
+        self._reset()
+        fields = ((8, angle), (-0x4c, start_angle), (-0x20c, phase_factor),
+                  (-0xa8, rpm), (-0x54, exhaust.reference_rpm), (-0x58, exhaust.amplitude),
+                  (-0x94, exhaust.baseline), (-0x40, wave_scale), (-0x44, previous_value),
+                  (-0xa4, boost))
+        for offset, value in fields:
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self._run(0x47aa3d, 0x47aafd, timeout=0, count=1000)
+        return struct.unpack('<f', self.cpu.mem_read(self.frame-0x44, 4))[0]
+
     def solver(self, inputs):
         """Run full 0x478ec0 on an explicit 1004-byte dyno input/output record.
 
