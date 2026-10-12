@@ -6,6 +6,18 @@ from client.lobby_cipher import DESChaining
 
 @unittest.skipUnless(importlib.util.find_spec('cryptography'), 'optional network cryptography')
 class ChainingTests(unittest.TestCase):
+    def test_native_zero_fill_and_no_extra_aligned_block(self):
+        key = bytes.fromhex('133457799BBCDFF1')
+        block = bytes.fromhex('0123456789ABCDEF')
+        cipher = DESChaining(key)
+        wire = cipher.encrypt_message(block) + cipher.encrypt_message(b'tail!')
+        reference = DESChaining(key).update(block + b'tail!' + bytes(3))
+        self.assertEqual(wire, reference)
+        self.assertEqual(len(wire), 16)
+        self.assertEqual(cipher.encrypt_message(b''), b'')
+        with self.assertRaises(ValueError):
+            DESChaining(key, decrypt=True).encrypt_message(block)
+
     def test_standard_first_block_and_chaining_across_updates(self):
         key = bytes.fromhex('133457799BBCDFF1')
         block = bytes.fromhex('0123456789ABCDEF')

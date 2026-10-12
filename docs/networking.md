@@ -188,6 +188,21 @@ encrypting a full block; the decryption tail handler at `0x7cf1b0` returns witho
 processing. Native filter buffering, tail padding, message-end signaling,
 per-message versus connection chaining, and reconnect/reset behavior still
 require verification. No adapter has been connected to the game transport yet.
+
+Further original-instruction comparisons verified three CBC encryption cases,
+each with two full blocks and a five-byte tail, against standard DES-CBC with a
+zero-filled final block. `tools.nps_cipher_oracle` now runs the original full
+block/tail filter handlers as well as the key schedule/block primitive. Only its
+output sink and memory allocation use emulator stubs. `encrypt_message` applies
+that observed zero-fill rule and emits no additional block for aligned or empty
+input, preserving the chain between calls.
+
+Message-end thunk `0x7cfc10` leads to `0x7cb780`: it drains buffered tail bytes,
+invokes the tail handler and resets the buffering object through `0x7cb290`.
+Those recovered operations do not reset the CBC chain buffer. This supports
+preserving the chain across message-end calls; other caller-driven resets and
+reconnect behavior remain unresolved. Message-end evidence:
+`ev_12e1602dbdb959a390ffb177ca18da9236ab277a9e2b6bc10da22481136020d2`.
 The 32-byte login record is not evidence that this path consumes a 256-bit key:
 the recovered DES setup reads only eight bytes.
 

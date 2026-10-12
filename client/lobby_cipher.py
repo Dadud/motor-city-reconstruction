@@ -16,7 +16,20 @@ class DESChaining:
         from cryptography.hazmat.decrepit.ciphers.algorithms import TripleDES
         self._cipher = Cipher(TripleDES(key*3), modes.CBC(iv))
         self._context = self._cipher.decryptor() if decrypt else self._cipher.encryptor()
+        self._decrypt = decrypt
         self._closed = False
+
+    def encrypt_message(self, message):
+        """Recovered tail behavior: zero-fill only an incomplete final block.
+
+        Preserve the current chain. This does not select transport boundaries or
+        add the outer wrapper; those remain the caller's responsibility.
+        """
+        if self._decrypt:
+            raise ValueError('cannot encrypt using a decryption context')
+        if not isinstance(message, bytes) or len(message) > 65536:
+            raise ValueError('message must contain at most 65536 bytes')
+        return self.update(message + bytes((-len(message)) % 8))
 
     def update(self, blocks):
         if self._closed:
