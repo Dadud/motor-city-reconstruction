@@ -149,8 +149,12 @@ The request header's default auxiliary value is the total length: `0x7e0800`
 zeroes the header and invokes `0x71be60` before writing flags, so that helper's
 length-plus-flags calculation sees zero flags. This ordering is distinct from
 interpreting the same helper after a received header already contains flags.
-The assembly helper sets that value explicitly. Full message serialization and
-native RSA ciphertext comparisons remain required; this is not a live login API.
+The assembly helper sets that value explicitly. The original full-message
+serializer now matches all 42 synthetic cases byte for byte, including its size
+method, default auxiliary calculation, flags and payload. The oracle runs the
+real vtable and `0x7e0800`, substitutes a bounded emulator allocation, and supplies
+specified htons/htonl/ntohs/ntohl byte swaps. Native RSA ciphertext comparisons
+remain required; this is not a live login API.
 
 ### Service ID and executable checksum
 

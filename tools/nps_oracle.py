@@ -10,6 +10,7 @@ import random
 import struct
 
 from client.nps_login import LoginPayload
+from client.nps_framing import encode_message
 from tools.native_oracle import DynoOracle
 
 
@@ -19,9 +20,18 @@ def verify(executable, samples=40):
     cpu, reg = oracle.cpu, oracle.reg
 
     def byte_swap(cpu, address, size, user):
-        if address not in (0x749bec, 0x749c3a):
+        if address == 0x699382:
+            stack = cpu.reg_read(reg.UC_X86_REG_ESP)
+            result_address, requested = struct.unpack('<II', cpu.mem_read(stack, 8))
+            if requested > 4096:
+                raise ValueError('unexpected serializer allocation')
+            cpu.reg_write(reg.UC_X86_REG_EAX, oracle.inputs+0x1000)
+            cpu.reg_write(reg.UC_X86_REG_ESP, stack+4)  # caller removes size
+            cpu.reg_write(reg.UC_X86_REG_EIP, result_address)
             return
-        width = 2 if address == 0x749bec else 4
+        if address not in (0x749bec, 0x749c3a, 0x749c34, 0x749c40):
+            return
+        width = 2 if address in (0x749bec, 0x749c34) else 4
         stack = cpu.reg_read(reg.UC_X86_REG_ESP)
         result_address, value = struct.unpack('<II', cpu.mem_read(stack, 8))
         value &= (1 << (8*width)) - 1
@@ -58,8 +68,26 @@ def verify(executable, samples=40):
         actual = bytes(cpu.mem_read(output, end-output))
         if actual != value.encode():
             raise ValueError(f'original serializer differs in synthetic case {index}')
-    return {'matched_cases': len(values), 'source': 'external original executable',
-            'coverage': 'emulated payload serializer only; no network or authenticated login'}
+        # Execute full native header-enabled serialization with the real vtable.
+        # This includes native size/default auxiliary computation and payload.
+        oracle._reset()
+        cpu.mem_write(obj, struct.pack('<I', 0x84b0f4))
+        cpu.mem_write(obj+8, bytes(24))
+        cpu.mem_write(obj+0x14, struct.pack('<H', 0x501))
+        cpu.mem_write(obj+0x18, b'\x01')
+        cpu.reg_write(reg.UC_X86_REG_ECX, obj)
+        stack = cpu.reg_read(reg.UC_X86_REG_ESP)
+        cpu.mem_write(stack, struct.pack('<II', oracle.stop, oracle.inputs+0x3000))
+        oracle._run(0x7e0800, oracle.stop, count=100000)
+        length = struct.unpack('<H', cpu.mem_read(oracle.inputs+0x3000, 2))[0]
+        native_wire = bytes(cpu.mem_read(output, length))
+        payload = value.encode()
+        expected = encode_message(0x501, payload, auxiliary=len(payload)+12)
+        if native_wire != expected:
+            raise ValueError(f'full native message differs in synthetic case {index}')
+    return {'matched_payload_cases': len(values), 'matched_full_message_cases': len(values),
+            'source': 'external original executable',
+            'coverage': 'emulated full message serializer; no network or authenticated login'}
 
 
 def main():
