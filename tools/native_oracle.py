@@ -267,6 +267,22 @@ class DynoOracle:
         self._run(entry, stop, timeout=0, count=1000)
         return struct.unpack('<f', self.cpu.mem_read(self.frame+output, 4))[0]
 
+    def initial_cylinder_state(self, geometry, stroke_inches, start_angle, pressure=44.1):
+        """Observe native cylinder initialization, including original trig stores."""
+        self._reset()
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESI, self.inputs)
+        self.cpu.mem_write(self.inputs+0x7a, struct.pack('<h', 1))
+        fields = {-0xc4: stroke_inches, -0xc8: geometry.bore_squared,
+                  -0xd0: geometry.rod_length, -0xb8: geometry.clearance_volume,
+                  -0x4c: start_angle, -8: pressure}
+        for offset, value in fields.items():
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self.cpu.ctl_remove_cache(0x479b3f, 0x479b60)
+        self._run(0x479b3f, 0x479b60, timeout=0, count=100)
+        self._run(0x479e4d, 0x479f35, timeout=0, count=10000)
+        return tuple(struct.unpack('<f', self.cpu.mem_read(self.frame+offset, 4))[0]
+                     for offset in (-8, -0x1c, -0x40, -0x88, -0x28, -0x48, -0x1d8))
+
     def builder_inputs(self, assembled):
         """Run 0x46d1d0 up to its first solver call at 0x46d707 (REA 238).
 

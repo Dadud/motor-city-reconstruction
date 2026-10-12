@@ -26,7 +26,7 @@ flowchart LR
 | Assembly | `assembly.py`, `scene.py`, `world.py` | Body selection, attachments, vehicle/track world scene |
 | Motion and contact | `motion.py`, `contact.py` | Recovered pose/velocity updates and wheel support geometry |
 | Components | `engine.py`, `tires.py`, `suspension.py` | Component interpretation, dimensions and recovered calculations |
-| Engine simulation | `dyno.py`, `dyno_solver.py` | External flow templates, input record, portable solver stages |
+| Engine simulation | `dyno.py`, `dyno_solver.py`, `thermodynamics.py` | External flow templates, input record, portable solver stages and cylinder initialization |
 | Developer inspection | `tools/catalog.py`, `tools/query_fields.py` | Asset inventory and database-query metadata |
 | Optional oracle | `tools/native_oracle.py`, `tools/verify_*.py` | Bounded CPU comparisons against a local verified executable |
 
@@ -40,4 +40,4 @@ The runtime imports no emulation dependency. The optional oracle executes select
 
 `catalogue.py` assembles component-derived inputs. `dyno.py` loads the supported executable's local templates and serializes the core dyno record. `dyno_solver.py` implements verified geometry, timing, flow normalization, cam profiles, lift, interpolation, pressure correction, airflow areas and output conversion.
 
-The thermodynamic loop joining those stages is incomplete. Original solver curves captured during development are comparison evidence, not a replacement for the portable solver. The client has no driving force loop yet.
+`thermodynamics.py` initializes pressure, temperature, crank geometry and cylinder mass terms. The caller supplies pressure; carrying it between cycles and integrating the thermodynamic loop remain incomplete. Original solver curves captured during development are comparison evidence, not a replacement for the portable solver. The client has no driving force loop yet.
