@@ -83,9 +83,9 @@ standalone FSH files decode. A textured Ford render passed the control checks.
 QFS bounds, overlapping backreferences, channel order and DXT alpha have synthetic
 fixture tests. Texture decoding covers supported SHPI formats and the first mip
 level; successful decoding alone does not prove every material renders correctly.
-The Windows/Ubuntu CI workflow has
-not run remotely. Local Linux testing cannot start because WSL2 virtualization
-is disabled, so Linux execution remains unverified.
+GitHub Actions runs asset-free checks on Windows and Ubuntu. These checks do
+not verify an interactive Linux graphics session; Linux rendering remains
+unverified.
 
 Newly authored tools are MIT licensed. This license does not cover the original
 game binaries, recovered pseudocode, third-party mods, artwork, or music.
