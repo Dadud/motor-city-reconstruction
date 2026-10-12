@@ -75,9 +75,11 @@ or install a Windows trust root. SHA1 pinning reproduces the installed patch's
 certificate identity convention; it is not a recommendation for a new PKI design.
 
 The unit suite checks that a mismatched certificate prevents an HTTP request's
-payload from being sent. Linux's default TLS and the legacy pinned connection
-still require an actual server transport check on Linux; passing mocked tests
-alone does not establish that result.
+payload from being sent. The [manual live transport run](https://github.com/Dadud/motor-city-reconstruction/actions/runs/38321930343)
+also passed on both Ubuntu and Windows runners using the configured endpoint
+and certificate pin. Both artifact reports record one parsed shard, an exact
+certificate match and TLS 1.3, with no TLS application data sent. This establishes
+cross-platform discovery and certificate transport, not authenticated gameplay.
 
 ## Recovered authorization format
 
@@ -126,12 +128,48 @@ No account creation or persistent original configuration changes occur.
 
 ## Evidence required for confidence
 
+### Recovered binary framing
+
+`client/nps_framing.py` implements the framing observed in the main executable
+serializer at `0x7e0800` and receiver at `0x72f600`. The first two big-endian
+16-bit fields contain message ID and total byte length. The receiver reads those
+four bytes, then exactly the remaining length. Its socket helper at `0x7e2da0`
+loops over partial reads; the sender at `0x7e2c80` retries partial sends.
+
+The serializer's header-enabled branch writes this layout:
+
+| Byte offset | Width | Observed value |
+| --- | --- | --- |
+| 0 | 2 | Message ID |
+| 2 | 2 | Total length including header |
+| 4 | 2 | `0x0101` for IDs `0x501..0x51a` and `0x521..0x526`, otherwise zero |
+| 6 | 2 | Zero |
+| 8 | 4 | Object field or virtual-method result; meaning unresolved |
+| 12 | variable | Message-specific payload |
+
+The receiver permits four-byte frames. Their purpose is unresolved, so the codec
+retains them without pretending they contain a full message header. Unknown IDs
+and payloads remain opaque. Framing tests cover every split point in a multi-frame
+stream, single-byte fragments, coalesced frames, maximum length, malformed length,
+and truncated EOF. These are synthetic tests, not captured successful logins.
+
+The original login path sends ID `0x501` and handles `0x601` as success. Observed
+failure branches include `0x602` (user not found), `0x610` (not authorized),
+`0x623` (authorization denied), `0x626` (banned), and `0x637` (CRC mismatch).
+Payload fields, CRC/session calculation, and ticket binding remain unresolved.
+No fabricated binary login messages have been submitted to the live server.
+
+Framing evidence: `ev_e4d6f3f4404e2fa696ae1b02193319a710dfe99d9c2d70ba75fc794aedc415a2`
+and `ev_65be7ce780de4792efa74e5bceeede74cc91966d869c8b65af46bf35a59d1279`.
+Partial-read evidence:
+`ev_54a1840a6a1d790094b44888bf2811b1887ad74cf33c4c965eadaada3a77c7cd`.
+
 | Stage | Current evidence | Remaining requirement |
 | --- | --- | --- |
 | Discovery | Both live INI responses parsed | Cross-platform original precedence and failure behavior |
-| HTTPS identity | Installed pin matches; pinned TLS and public GET succeeded on Windows | Linux transport and reconnect checks |
+| HTTPS identity | Installed pin matches; live Ubuntu/Windows discovery and TLS checks passed | Reconnect, expiry and certificate rotation behavior |
 | Authorization format | Original DLL request/response stages traced; synthetic tests | Caller service ID, real successful ticket, rejection/expiry behavior |
-| Binary login and persona | Endpoint reachable; original client leads | Codec, session/crypto flow and authenticated persona retrieval |
+| Binary login and persona | Endpoint reachable; framing recovered and tested | Payload codecs, session/crypto flow and authenticated persona retrieval |
 | Lobby | Endpoint reachable | Join, lists, rooms, disconnect and reconnect |
 | MCOTS | Endpoint reachable | Session binding and read-only state retrieval before mutations |
 | Racing | Patch transport/rate settings identified | Join, start, position exchange, finish and multiplayer testing |
