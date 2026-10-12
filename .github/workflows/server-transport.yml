@@ -1,0 +1,61 @@
+name: Manual server transport check
+on:
+  workflow_dispatch:
+    inputs:
+      shard_list_url:
+        description: Public shard-list URL from the configured installation
+        required: true
+        type: string
+      auth_host:
+        description: HTTPS authentication host from the configured installation
+        required: true
+        type: string
+      certificate_sha1:
+        description: Explicit server certificate pin from the installed patch
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  transport:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Discover shard and verify pinned TLS without credentials
+        shell: python
+        env:
+          MCO_CHECK_SHARD_URL: ${{ inputs.shard_list_url }}
+          MCO_CHECK_AUTH_HOST: ${{ inputs.auth_host }}
+          MCO_CHECK_CERTIFICATE: ${{ inputs.certificate_sha1 }}
+        run: |
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          from client.server_discovery import validate_url
+          url = validate_url(os.environ['MCO_CHECK_SHARD_URL'])
+          pin = os.environ['MCO_CHECK_CERTIFICATE']
+          root = Path('evidence/transport-config')
+          (root/'scripts').mkdir(parents=True, exist_ok=True)
+          (root/'shardlistip.ini').write_text('[SHARDLISTS]\nshardlist='+url+'\n')
+          (root/'scripts/MCOExOps.ini').write_text('[Install]\nServer Certificate='+pin+'\n')
+          result = subprocess.run([sys.executable, '-m', 'tools.server_check', str(root),
+                                   '--fetch', '--check-auth-tls', '--auth-host',
+                                   os.environ['MCO_CHECK_AUTH_HOST']],
+                                  capture_output=True, text=True)
+          Path('evidence/server-transport.json').write_text(result.stdout)
+          print(result.stdout)
+          print(result.stderr, file=sys.stderr)
+          sys.exit(result.returncode)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: server-transport-${{ matrix.os }}
+          path: evidence/server-transport.json
