@@ -2,7 +2,7 @@
 
 An open-source reconstruction of the Motor City Online client for modern Windows and Linux. It reads game assets from your own local installation.
 
-**Current status:** the garage and textured vehicle/track renderer work on Windows. The vehicle remains parked. Driving, complete engine simulation, sound, online services and multiplayer are unfinished. Linux runtime support is being developed and has not yet been verified.
+**Current status:** Windows supports garage previews and offline driving/time trials on decoded tracks. Driving uses an authored prototype bicycle model; recovered engine and force simulation, object collisions, sound, online services and multiplayer remain unfinished. Linux runtime support has not yet been verified.
 
 ## Quick start
 
@@ -13,7 +13,7 @@ Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the opt
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e ".[catalogue]"
-.\.venv\Scripts\motor-city.exe --data 'C:\Program Files (x86)\EA Games\Motor City Online' --vehicle 101 --track Boothill
+.\.venv\Scripts\motor-city.exe --data 'C:\Program Files (x86)\EA Games\Motor City Online' --vehicle 101 --track Drag --drive
 ```
 
 ### Linux
@@ -21,12 +21,14 @@ python -m venv .venv
 ```sh
 python3 -m venv .venv
 .venv/bin/python -m pip install -e '.[catalogue]'
-.venv/bin/motor-city --data '/path/to/Motor City Online' --vehicle 101 --track Boothill
+.venv/bin/motor-city --data '/path/to/Motor City Online' --vehicle 101 --track Drag --drive
 ```
 
 For a model-only garage preview, omit `--vehicle` and `--track`, and use `--model 32ford.viv`.
 
 Drag to orbit, scroll to zoom, Left/Right to browse models, `W` for wireframe, `F11` for fullscreen, and Escape to close. In track view, Home focuses the car and End shows the overview. The data path is remembered after an interactive launch.
+
+In driving mode, Up accelerates, Down/Space brakes, Left/Right steers, and Shift+Up reverses. Use R to reset, P to pause/resume and PageUp/PageDown to change tracks. Losing window focus pauses driving. Pass yellow checkpoint frames in order to finish a sprint or record a lap. Missing wheel support stops the car; original object collision response is not implemented. Omit `--drive` for a parked scene.
 
 ## Develop
 

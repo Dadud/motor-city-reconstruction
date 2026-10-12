@@ -9,15 +9,16 @@ The intended result is a playable, open-source Windows/Linux game client with mo
 - Windows OpenGL garage and textured vehicle/track scene.
 - Body selection, component placement, tire/contact geometry and recovered motion updates.
 - Independently verified portions of the engine dyno solver.
+- Offline prototype driving with terrain support, steering, braking/reverse, pause/reset, ordered checkpoints and lap/sprint timing.
 - Asset-free tests and Windows/Ubuntu CI configuration.
 
 ## Work to reach driving
 
 1. Complete cylinder-state/thermodynamic integration and final engine-curve corrections, including unsupported fuel/boost branches.
 2. Implement recovered tire forces, suspension forces, steering, drivetrain, braking and collision response.
-3. Connect simulation timing and player input to scene poses; support reset and useful diagnostics.
+3. Replace prototype driving parameters with verified forces; retain the working input, fixed-step scheduling, scene pose, pause/reset and race UI.
 4. Finish tire sizing, suspension stance and nested component assembly.
-5. Verify controllable driving and stability on actual track surfaces.
+5. Broaden controllable driving and stability checks beyond the verified Drag sprint and Boothill start.
 
 ## Work to reach a complete client
 

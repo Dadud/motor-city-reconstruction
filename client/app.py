@@ -61,6 +61,9 @@ def main():
     parser.add_argument('--body-style', choices=('stock', *PROFILES), help='stock selection or body configuration preview')
     parser.add_argument('--screenshot', type=Path, help='render once to PNG, then exit')
     parser.add_argument('--verify-controls', action='store_true', help='exercise controls before screenshot')
+    parser.add_argument('--drive', action='store_true', help='offline driving with authored prototype physics; requires --vehicle and --track')
+    parser.add_argument('--verify-driving', action='store_true', help='exercise driving, braking and reset before screenshot')
+    parser.add_argument('--verify-race', action='store_true', help='complete a Drag sprint through input/update/render before screenshot')
     args = parser.parse_args()
     if args.track_mesh and not args.track:
         parser.error('--track-mesh requires --track')
@@ -71,6 +74,12 @@ def main():
     if args.contact_report and any((args.model,args.skin,args.body_style,args.stock_parts,args.list_vehicles,args.screenshot)):
         parser.error('--contact-report cannot be combined with other vehicle or capture modes')
     world_view = bool(args.track and args.vehicle is not None and not args.contact_report)
+    if args.drive and not world_view:
+        parser.error('--drive requires --vehicle and --track')
+    if args.verify_driving and not (args.drive and args.screenshot):
+        parser.error('--verify-driving requires --drive and --screenshot')
+    if args.verify_race and not (args.drive and args.screenshot and args.track.casefold() == 'drag'):
+        parser.error('--verify-race requires --drive, --track Drag and --screenshot')
     if args.track and not args.contact_report and (args.model or
             (not world_view and (args.skin or args.body_style))):
         parser.error('track world view requires --vehicle; --model is a garage option')
@@ -166,11 +175,18 @@ def main():
                              config=gl.Config(double_buffer=True, depth_size=24,
                                               major_version=3, minor_version=3))
             self.program = ShaderProgram(Shader(VERTEX_SHADER, 'vertex'), Shader(FRAGMENT_SHADER, 'fragment'))
+            self.gate_mesh = self.program.vertex_list(6, gl.GL_LINES,
+                position=('f', [0]*18), normal=('f', [0]*18), uv=('f', [0]*12)) if args.drive else None
             self.meshes = []
             self.gpu_textures = []
             self.vehicle_meshes = []
             self.vehicle_textures = []
             self.world_vehicle = None
+            self.drive = None
+            self.paused = False
+            self.follow_car = True
+            self.keys = key.KeyStateHandler()
+            self.push_handlers(self.keys)
             self.texture_warning = ''
             self.body_style = args.body_style or ('stock' if selected_vehicle else None)
             self.body_flags = None
@@ -200,7 +216,12 @@ def main():
             if world_view:
                 self.set_caption('Motor City | World')
                 self.labels[5].text = 'Drag: orbit   Scroll: zoom   Left / Right: track   W: wireframe   Home: car   End: overview'
+            if args.drive:
+                self.set_caption('Motor City | Offline driving')
+                self.labels[5].text = 'Arrows: drive / brake / steer   Shift + Up: reverse   R: reset   P: pause   PgUp / PgDn: track   Home / End: camera'
             self.load_model()
+            if args.drive and not args.screenshot:
+                pyglet.clock.schedule_interval(self.update_driving, 1/60)
             if args.screenshot:
                 pyglet.clock.schedule_once(self.capture, 0.5)
 
@@ -212,6 +233,7 @@ def main():
                     texture.delete()
             self.vehicle_meshes, self.vehicle_textures = [], []
             self.world_vehicle = None
+            self.drive = None
             for mesh,_ in self.meshes:
                 mesh.delete()
             self.meshes = []
@@ -241,6 +263,10 @@ def main():
                         from .world import load_world_vehicle
                         self.world_vehicle = load_world_vehicle(assets, catalogue,
                             selected_vehicle, track_bytes, args.skin)
+                        if args.drive:
+                            from .driving import Drive
+                            from .racing import TimeTrial
+                            self.drive = Drive(self.world_vehicle, TimeTrial(self.track_data))
                         self.vehicle_textures = self.upload_textures(self.world_vehicle.textures)
                         self.vehicle_meshes = self.upload_meshes(self.world_vehicle.model)
                 else:
@@ -324,11 +350,36 @@ def main():
 
         def focus_start(self):
             road=self.track_data.slices[0]
-            self.center=Vec3(*(self.world_vehicle.pose.position if self.world_vehicle else road.position))
+            self.center=Vec3(*(self.drive.pose.position if self.drive else self.world_vehicle.pose.position if self.world_vehicle else road.position))
             self.radius=3 if self.world_vehicle else 10
             self.distance=3.5 if self.world_vehicle else 6.5
             self.pitch=0.2
             self.yaw=math.atan2(-road.forward[0],-road.forward[2])
+            self.follow_car = True
+
+        def update_driving(self, dt):
+            if not self.drive or self.paused:
+                return
+            from .driving import Controls
+            controls = Controls(float(bool(self.keys[key.UP])), float(bool(self.keys[key.DOWN] or self.keys[key.SPACE])),
+                float(bool(self.keys[key.RIGHT]))-float(bool(self.keys[key.LEFT])),
+                bool(self.keys[key.LSHIFT] or self.keys[key.RSHIFT]))
+            self.drive.update(dt, controls)
+            if self.follow_car:
+                self.center = Vec3(*self.drive.pose.position)
+            state = 'Terrain edge — steer or reset' if self.drive.blocked else 'Offline driving · Prototype physics'
+            self.labels[4].text = f'{abs(self.drive.speed)*3.6:.0f} km/h   ·   {self.drive.distance:.0f} m   ·   {state}'
+            self.labels[3].text = self.drive.trial.label()
+            gate = self.drive.trial.gates[self.drive.trial.next_gate]
+            if not self.drive.trial.finished:
+                self.labels[3].text += f' · Next {math.dist(self.drive.pose.position, gate.position):.0f} m'
+
+        def on_deactivate(self):
+            if hasattr(self, 'keys'):
+                self.keys.on_deactivate()
+            if args.drive and hasattr(self, 'labels'):
+                self.paused = True
+                self.labels[4].text = 'Paused · P to resume'
 
         def rebuild(self):
             for mesh,_ in self.meshes:
@@ -408,7 +459,7 @@ def main():
                     mesh.draw(gl.GL_TRIANGLES)
                 if self.world_vehicle:
                     from .world import pose_matrix
-                    transform = Mat4(*pose_matrix(self.world_vehicle.pose))
+                    transform = Mat4(*pose_matrix(self.drive.pose if self.drive else self.world_vehicle.pose))
                     self.program['mvp'] = projection @ view @ transform
                     self.program['object_to_world'] = transform
                     for mesh, page in self.vehicle_meshes:
@@ -418,6 +469,18 @@ def main():
                             texture = self.vehicle_textures[page]
                             gl.glBindTexture(texture.target, texture.id)
                         mesh.draw(gl.GL_TRIANGLES)
+                if self.drive and self.gate_mesh and not self.drive.trial.finished:
+                    gate = self.drive.trial.gates[self.drive.trial.next_gate]
+                    left = tuple(gate.position[i]-gate.left*gate.right[i] for i in range(3))
+                    right = tuple(gate.position[i]+gate.right_limit*gate.right[i] for i in range(3))
+                    left_top = (left[0], left[1]+3, left[2])
+                    right_top = (right[0], right[1]+3, right[2])
+                    self.gate_mesh.position[:] = (*left, *left_top, *left_top, *right_top, *right_top, *right)
+                    self.program['mvp'] = projection @ view
+                    self.program['object_to_world'] = Mat4()
+                    self.program['textured'] = False
+                    self.program['paint'] = (1, .75, .15, 1)
+                    self.gate_mesh.draw(gl.GL_LINES)
                 self.program.stop()
                 gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
                 gl.glDisable(gl.GL_DEPTH_TEST)
@@ -443,8 +506,15 @@ def main():
         def on_key_press(self, symbol, modifiers):
             if symbol == key.ESCAPE:
                 self.close()
-            elif symbol in (key.LEFT, key.RIGHT):
-                self.index = (self.index + (1 if symbol == key.RIGHT else -1)) % len(paths)
+            elif args.drive and symbol == key.R and self.drive:
+                self.drive.reset()
+                self.focus_start()
+            elif args.drive and symbol == key.P:
+                self.paused = not self.paused
+                if self.paused:
+                    self.labels[4].text = 'Paused · P to resume'
+            elif symbol in ((key.PAGEUP, key.PAGEDOWN) if args.drive else (key.LEFT, key.RIGHT)):
+                self.index = (self.index + (1 if symbol in (key.RIGHT, key.PAGEDOWN) else -1)) % len(paths)
                 self.load_model()
             elif symbol == key.TAB and hasattr(self, 'model'):
                 self.part_index = 0 if self.part_index is None else None
@@ -463,6 +533,7 @@ def main():
             elif symbol == key.HOME and args.track:
                 self.focus_start()
             elif symbol == key.END and args.track:
+                self.follow_car = False
                 self.center,self.radius=self.overview_center,self.overview_radius
                 self.distance,self.pitch,self.yaw=6.5,0.3,0.65
 
@@ -470,12 +541,31 @@ def main():
             if self.error:
                 raise RuntimeError(self.error)
             checks = []
+            driving_report = None
+            race_report = None
+            if args.verify_driving:
+                from .driving import Controls
+                initial = self.drive.pose
+                for _ in range(180):
+                    self.drive.update(1/60, Controls(throttle=1))
+                accelerated = self.drive.speed
+                travelled = self.drive.distance
+                assert accelerated > 1 and travelled > 1 and self.drive.pose != initial
+                assert all(c.gap is not None and c.gap >= .02-1e-6 for c in self.drive.contacts)
+                for _ in range(120):
+                    self.drive.update(1/60, Controls(brake=1))
+                assert self.drive.speed == 0
+                driving_report = dict(accelerated_speed_mps=accelerated, distance_m=travelled,
+                                      stopped=True, physics='authored bicycle model')
+                self.on_key_press(key.R, 0)
+                assert self.drive.pose == initial and self.drive.speed == 0
+                checks.append('driving accelerated, terrain supported, braked and reset')
             if args.verify_controls:
                 original = self.index
-                self.on_key_press(key.RIGHT, 0)
+                self.on_key_press(key.PAGEDOWN if args.drive else key.RIGHT, 0)
                 assert self.index == (original+1) % len(paths) and not self.error
                 checks.append('next model loaded')
-                self.on_key_press(key.LEFT, 0)
+                self.on_key_press(key.PAGEUP if args.drive else key.LEFT, 0)
                 assert self.index == original and not self.error
                 self.on_key_press(key.TAB, 0)
                 assert self.part_index == 0 and self.meshes
@@ -516,6 +606,24 @@ def main():
                             assert not any(p.name.startswith(':PP') for p in self.model.parts)
                     assert self.body_style == original_style
                     checks.append('body previews cycled without marker geometry')
+            if args.verify_race:
+                self.drive.reset()
+                self.paused = False
+                self.focus_start()
+                self.keys.on_key_press(key.UP, 0)
+                for frame in range(60*120):
+                    self.update_driving(1/60)
+                    if frame % 60 == 0:
+                        self.on_draw()
+                    if self.drive.blocked:
+                        raise RuntimeError('race encountered missing wheel support')
+                    if self.drive.trial.finished:
+                        break
+                self.keys.on_key_release(key.UP, 0)
+                assert self.drive.trial.finished
+                race_report = dict(seconds=self.drive.trial.elapsed, distance_m=self.drive.distance,
+                                   gates=len(self.drive.trial.gates), input='held Up via key-state handler')
+                checks.append('complete ordered Drag sprint through input, update and rendering')
             self.switch_to()
             self.on_draw()
             gl.glFinish()
@@ -534,22 +642,24 @@ def main():
                 assembly_notes=self.assembly_notes,
                 texture_pages=sum(t is not None for t in self.gpu_textures),
                 texture_slots=len(self.gpu_textures), texture_warning=self.texture_warning,
-                warnings=list(self.model.warnings), control_checks=checks), indent=2), encoding='utf-8')
+                warnings=list(self.model.warnings), control_checks=checks,
+                driving=driving_report, race=race_report), indent=2), encoding='utf-8')
             if self.world_vehicle:
                 report = args.screenshot.with_suffix('.runtime.json')
                 recorded = json.loads(report.read_text(encoding='utf-8'))
-                recorded['world_vehicle'] = dict(pose=asdict(self.world_vehicle.pose),
+                recorded['world_vehicle'] = dict(pose=asdict(self.drive.pose if self.drive else self.world_vehicle.pose),
                     triangles=self.world_vehicle.model.triangle_count,
                     body_flags=self.world_vehicle.flags,
                     engine_block=asdict(self.world_vehicle.engine),
                     texture_pages=sum(t is not None for t in self.vehicle_textures),
-                    contacts=[asdict(c) for c in self.world_vehicle.contacts],
+                    contacts=[asdict(c) for c in (self.drive.contacts if self.drive else self.world_vehicle.contacts)],
                     assembly_notes=self.world_vehicle.notes)
                 report.write_text(json.dumps(recorded, indent=2), encoding='utf-8')
             print(f'Rendered {paths[self.index].name}: {self.model.triangle_count} triangles to {args.screenshot}')
             self.close()
 
         def on_close(self):
+            pyglet.clock.unschedule(self.update_driving)
             if not args.screenshot:
                 try:
                     settings.save(dict(data_root=str(assets.root), model=previous.get('model', '32ford.viv')

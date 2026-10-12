@@ -3,9 +3,16 @@
 A growing open-source client that reads a local Motor City Online installation.
 The garage and combined vehicle/track renderer run on Windows with OpenGL,
 resizable windows, orbit/zoom controls, browsing, and part isolation. Linux
-execution remains unverified. This is not yet playable: full vehicle assembly,
-track objects/effects, force physics, sound, login, economy and multiplayer
-remain to implement.
+execution remains unverified. Offline driving and time trials use an authored
+prototype model. Full vehicle assembly, track objects/effects, recovered force
+physics, sound, login, economy and multiplayer remain to implement.
+
+For offline driving, add `--vehicle 101 --track Drag --drive`. Up accelerates,
+Down/Space brakes, Left/Right steers, and Shift+Up reverses. R resets and P
+pauses/resumes. PageUp/PageDown changes tracks; Home follows the car and End
+shows the overview. Pass yellow gates in order. A sprint stops on its finish
+screen; R starts again. Lap records last for the current session. Terrain edges
+stop the car, but object collisions and airborne motion are not implemented.
 
 The garage defaults to all model parts, including mutually exclusive
 customization variants. Body previews select the recovered component groups.
