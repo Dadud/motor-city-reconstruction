@@ -128,6 +128,35 @@ No account creation or persistent original configuration changes occur.
 
 ## Evidence required for confidence
 
+### Service ID and executable checksum
+
+The game login caller `0x5eda30` supplies service literal `2176` from `0x8b7358`
+and global `0x00a38a18` as its fourth login argument. Wrapper `0x4a7ba0` retains
+the service string. Checksum setup `0x5240b0` obtains the running executable's
+filename, reads its complete file bytes, and calls `0x658280`.
+
+The checksum routine starts at `0xffffffff`, uses the reflected CRC-32 table at
+`0x8bdcc8`, and omits the final complement. `client/nps_identity.py` therefore
+uses `zlib.crc32(data) ^ 0xffffffff`. Four emulated cases matched the original
+instructions, including empty input, the standard CRC check string, binary data,
+and a 4096-byte input. Repeat with:
+
+```sh
+python -m tools.nps_identity_oracle '/path/to/original/mcity.exe'
+```
+
+The portable helper reads the external original `mcity.exe` to reproduce its
+identity value. The Python launcher's bytes do not reproduce that value. Whether
+Revival accepts this identity for the reconstructed client remains untested.
+The calculation is not evidence that arbitrary modifications are compatible.
+
+Caller evidence:
+`ev_f3a2c0290b10825534f8611cda52c373aac3824103bc9a70572cff549e6a8911`.
+Checksum setup evidence:
+`ev_5e361eda99c5c6557295d9da04d072800aeecca9c75fc5abc33ffe2c057514a0`.
+Checksum instruction evidence:
+`ev_845ede42f71e5874074abb89dde0407172aa653a3a8989ea5ce38cab1deef2c0`.
+
 ### Login success response
 
 `client/nps_response.py` decodes the `0x601` payload read by native function
@@ -288,8 +317,8 @@ SHA-1 compression evidence:
 | --- | --- | --- |
 | Discovery | Both live INI responses parsed | Cross-platform original precedence and failure behavior |
 | HTTPS identity | Installed pin matches; live Ubuntu/Windows discovery and TLS checks passed | Reconnect, expiry and certificate rotation behavior |
-| Authorization format | Original DLL request/response stages traced; synthetic tests | Caller service ID, real successful ticket, rejection/expiry behavior |
-| Binary login and persona | Endpoint reachable; framing tested; request and success payloads match original instructions in synthetic cases | Caller service ID/value, full encryption/session flow and authenticated persona retrieval |
+| Authorization format | Original DLL request/response stages traced; service ID `2176` recovered; synthetic tests | Real successful ticket, rejection/expiry behavior |
+| Binary login and persona | Endpoint reachable; framing tested; request, success payloads and executable checksum match original instructions in synthetic cases | Full encryption/session flow and authenticated persona retrieval |
 | Lobby | Endpoint reachable | Join, lists, rooms, disconnect and reconnect |
 | MCOTS | Endpoint reachable | Session binding and read-only state retrieval before mutations |
 | Racing | Patch transport/rate settings identified | Join, start, position exchange, finish and multiplayer testing |
