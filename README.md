@@ -2,7 +2,7 @@
 
 An open-source reconstruction of the Motor City Online client for modern Windows and Linux. It reads game assets from your own local installation.
 
-**Current status:** Windows supports garage previews and offline driving/time trials on decoded tracks. Driving uses an authored prototype bicycle model; recovered engine and force simulation, object collisions, sound, online services and multiplayer remain unfinished. Linux runtime support has not yet been verified.
+**Current status:** Windows supports garage previews and offline driving/time trials on decoded tracks. The Linux OpenGL renderer passes a generated-geometry smoke check under Xvfb/Mesa; original-asset driving on Linux remains unverified. Driving uses an authored prototype bicycle model; recovered engine and force simulation, object collisions, sound, online services and multiplayer remain unfinished.
 
 ## Quick start
 

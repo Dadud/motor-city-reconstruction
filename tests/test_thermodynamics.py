@@ -2,7 +2,7 @@ from dataclasses import astuple, replace
 import unittest
 
 from client.dyno_solver import cylinder_geometry
-from client.thermodynamics import initial_cylinder_state
+from client.thermodynamics import exhaust_parameters, initial_cylinder_state
 
 
 class CylinderStateTests(unittest.TestCase):
@@ -32,3 +32,24 @@ class CylinderStateTests(unittest.TestCase):
             initial_cylinder_state(replace(self.geometry, rod_length=.1), 3.5, 90)
         with self.assertRaises(ValueError):
             initial_cylinder_state(None, 3.5, 120)
+
+
+class ExhaustTests(unittest.TestCase):
+    def test_native_mode_seven_transition(self):
+        self.assertEqual(astuple(exhaust_parameters(7, 2000, 1)),
+                         (26.25, .5, 6000, .949999988079071))
+        self.assertEqual(exhaust_parameters(7, 5500, 1).baseline, 21)
+        self.assertEqual(exhaust_parameters(7, 11000, 1).baseline, 21)
+
+    def test_native_mode_constants(self):
+        self.assertEqual(astuple(exhaust_parameters(1, 2000, 1)),
+                         (35, .30000001192092896, 4000, 1.059999942779541))
+        self.assertEqual(exhaust_parameters(4, 2000, 1).rpm_exponent, 1)
+        self.assertEqual(exhaust_parameters(6, 2000, 1).baseline, 22.700000762939453)
+
+    def test_invalid_inputs(self):
+        for inputs in ((0, 2000, 1), (8, 2000, 1), (True, 2000, 1),
+                       (1, 0, 1), (1, 2000, 0), (1, float('nan'), 1),
+                       (1, 2000, 1e300)):
+            with self.assertRaises(ValueError):
+                exhaust_parameters(*inputs)

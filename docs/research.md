@@ -18,23 +18,27 @@ python -m tools.verify_dyno_lift '/path/to/game' --output evidence/lift.json
 python -m tools.verify_dyno_flow '/path/to/game' --output evidence/flow.json
 python -m tools.verify_dyno_area '/path/to/game' --output evidence/area.json
 python -m tools.verify_cylinder_state '/path/to/game' --output evidence/cylinder-state.json
+python -m tools.verify_exhaust '/path/to/game' --output evidence/exhaust.json
 ```
 
 Create the `evidence/` directory first. Each command needs your local installation; no binary is downloaded. The oracle uses Unicorn 2.1.4, bounded instruction execution and x87 control word `0x27f`. It does not run the original game entry point, implement Windows imports, connect to game services or prove original hardware behavior. REA is not included or required.
 
 ## Current validation snapshot
 
-- 116 synthetic unit tests passed on Windows after offline driving was introduced.
+- 119 synthetic unit tests passed on Windows after offline driving and exhaust preparation were introduced.
 - Core builder inputs match 199 supported stock records given identical assembled component fields; native component-loader equivalence remains unproven.
 - Geometry, valve events, normalized flow and cam profiles match supported stock inputs.
 - 3,582 sampled valve lifts, 2,358 interpolation samples and 5,970 coupled airflow areas matched their native emulated ranges.
 - Cylinder initialization matched 4,179 stored fields across 199 engines and three pressure inputs. Only 44.1 is the recovered first-cycle pressure; 15 and 80 are synthetic probes, not recovered running pressures.
+- Exhaust preparation matched 16,720 fields across all seven modes, 199 supported engines and 19 RPM knots. Pressure-wave evolution and field units remain unfinished/unverified.
 - Thirteen unsupported stock assemblies remain explicitly rejected.
 - Complete pressure integration, final engine curves and recovered driving physics remain unfinished.
 
 ## Offline driving checks
 
 The authored prototype is independent of the native numerical oracle. A Ford 101 completed the 804.3 m Drag sprint through 28 gates in 23.33 simulation seconds, including the actual Windows input/update/OpenGL rendering path. Steering, reverse, braking, frame-rate independence, support rejection and race order have synthetic tests. This does not establish original force fidelity or Linux graphics compatibility.
+
+The [Linux graphics CI run](https://github.com/Dadud/motor-city-reconstruction/actions/runs/38286486337) also passed the actual client render/capture path with a generated triangle. Its runtime report records Linux x86_64, Python 3.13.16, llvmpipe LLVM 20.1.2 and OpenGL 4.5 Mesa 25.2.8. The test checks visible central-framebuffer pixels. It validates software-rendered garage operation, not original-asset driving, hardware drivers or multiplayer on Linux.
 
 ```sh
 python -m tools.verify_driving '/path/to/game' --output evidence/drag-sprint.json

@@ -88,6 +88,21 @@ class DynoOracle:
         self._run(0x479c5e, 0x479df6)
         return struct.unpack('<f', self.cpu.mem_read(self.frame-0x98, 4))[0]
 
+    def exhaust_parameters(self, mode, rpm, flow_factor):
+        """Bounded original valid-mode exhaust initialization branches."""
+        if type(mode) is not int or not 1 <= mode <= 7:
+            raise ValueError('oracle exhaust mode must be within [1, 7]')
+        self._reset()
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESI, self.inputs)
+        self.cpu.mem_write(self.inputs+0x7c, struct.pack('<f', flow_factor))
+        self.cpu.mem_write(self.frame-0xa8, struct.pack('<f', rpm))
+        entries = (0x479f42, 0x479f62, 0x479f82, 0x479fa2,
+                   0x479fc2, 0x479fdf, 0x479ffc)
+        self.cpu.ctl_remove_cache(0x479f42, 0x47a05b)
+        self._run(entries[mode-1], 0x47a05b, timeout=0, count=1000)
+        return tuple(struct.unpack('<f', self.cpu.mem_read(self.frame+offset, 4))[0]
+                     for offset in (-0x94, -0x58, -0x54, -0x64))
+
     def solver(self, inputs):
         """Run full 0x478ec0 on an explicit 1004-byte dyno input/output record.
 

@@ -11,6 +11,7 @@ The intended result is a playable, open-source Windows/Linux game client with mo
 - Independently verified portions of the engine dyno solver.
 - Offline prototype driving with terrain support, steering, braking/reverse, pause/reset, ordered checkpoints and lap/sprint timing.
 - Asset-free tests and Windows/Ubuntu CI configuration.
+- Actual Linux OpenGL garage smoke check with generated geometry under Xvfb/Mesa.
 
 ## Work to reach driving
 
@@ -30,4 +31,4 @@ The intended result is a playable, open-source Windows/Linux game client with mo
 
 ## Completion evidence
 
-Use real runtime checks for driving, audio, networking and rendering. CI passing synthetic tests does not prove these features. Validate Linux with an actual Linux execution environment; current local Windows checks and a universal Python wheel do not establish Linux runtime compatibility.
+Use real runtime checks for driving, audio, networking and rendering. CI passing synthetic tests does not prove these features. Linux CI now exercises the generated-geometry garage on Mesa; verify original-asset gameplay, hardware drivers and networking separately. A universal Python wheel alone does not establish runtime compatibility.

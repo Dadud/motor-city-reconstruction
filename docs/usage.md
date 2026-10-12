@@ -3,7 +3,8 @@
 A growing open-source client that reads a local Motor City Online installation.
 The garage and combined vehicle/track renderer run on Windows with OpenGL,
 resizable windows, orbit/zoom controls, browsing, and part isolation. Linux
-execution remains unverified. Offline driving and time trials use an authored
+rendering passes a generated-geometry Xvfb/Mesa smoke check; original-asset
+driving on Linux remains unverified. Offline driving and time trials use an authored
 prototype model. Full vehicle assembly, track objects/effects, recovered force
 physics, sound, login, economy and multiplayer remain to implement.
 

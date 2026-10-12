@@ -16,6 +16,43 @@ class InitialCylinderState:
     reference_mass_term: float
 
 
+@dataclass(frozen=True)
+class ExhaustParameters:
+    baseline: float
+    amplitude: float
+    reference_rpm: float
+    rpm_exponent: float
+
+
+def exhaust_parameters(mode, rpm, flow_factor):
+    """Recover exhaust branch setup at 0x479f42–0x47a05b.
+
+    Field roles follow their subsequent arithmetic; physical units and the
+    complete pressure-wave evolution remain unverified. This is preparation
+    for the cycle loop, not an exhaust-force or engine-output calculation.
+    """
+    if type(mode) is not int or not 1 <= mode <= 7:
+        raise ValueError('exhaust mode must be within [1, 7]')
+    if not all(math.isfinite(v) for v in (rpm, flow_factor)):
+        raise ValueError('non-finite exhaust input')
+    try:
+        rpm, factor = map(_f32, (rpm, flow_factor))
+    except (OverflowError, ValueError) as error:
+        raise ValueError('exhaust input exceeds float32') from error
+    if not 2000 <= rpm <= 11000 or factor <= 0:
+        raise ValueError('invalid exhaust rpm/flow factor')
+    baseline, amplitude, reference, exponent = (
+        (35, .3, 4000, 1.06), (32, .3, 4000, 1.04),
+        (26.5, .5, 5000, 1.04), (22.5, .5, 5000, 1),
+        (25.7, .5, 5000, 1.02), (22.7, .5, 5500, .94),
+        (21, .5, 6000, .95))[mode-1]
+    baseline = _f32(baseline)
+    if mode == 7 and rpm < 5500:
+        baseline = ((5500-rpm)/rpm)*3+21
+    return ExhaustParameters(_f32(baseline/factor), _f32(amplitude),
+                             _f32(reference), _f32(exponent))
+
+
 def initial_cylinder_state(geometry, stroke_inches, start_angle, pressure=44.1):
     """Initialize the cycle state recovered at 0x479e4d–0x479f35.
 
