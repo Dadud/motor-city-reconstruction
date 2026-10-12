@@ -13,6 +13,7 @@ license = "MIT"
 
 [project.optional-dependencies]
 catalogue = ["access-parser==0.0.6"]
+network = ["cryptography==50.0.2"]
 oracle = ["unicorn==2.1.4", "cryptography==50.0.2"]
 
 [project.urls]

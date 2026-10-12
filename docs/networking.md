@@ -148,9 +148,24 @@ python -m tools.nps_cipher_oracle '/path/to/original/mcity.exe'
 
 The oracle runs original schedule and block instructions, replacing allocator
 and free boundaries with bounded emulator memory. No host services execute.
-These checks establish the block primitive only. Mode, padding, partial blocks,
-per-message versus connection chaining, and reconnect/reset behavior remain
-unverified. No lobby encryption adapter has been connected to the client yet.
+These emulated checks establish the block primitive only. Subsequent filter
+recovery identifies CBC chaining: `0x7cefc0` XORs incoming plaintext into the
+stored previous ciphertext and encrypts in place; `0x7cf140` decrypts incoming
+ciphertext, XORs the previous ciphertext, emits the result, and retains the
+incoming ciphertext as the next chain value. Helper `0x7d18d0` performs the XOR.
+
+`client/lobby_cipher.py` provides a complete-block DES-CBC adapter through the
+optional `network` dependency. The zero IV reproduces observed initialization;
+updates preserve chaining and require eight-byte alignment. Tests cover the
+standard DES first-block vector, split versus combined CBC updates, decryption,
+input bounds and closed state. These tests do not establish native filter
+equivalence across complete messages.
+
+The encryption tail handler at `0x7cf010` combines only supplied tail bytes before
+encrypting a full block; the decryption tail handler at `0x7cf1b0` returns without
+processing. Native filter buffering, tail padding, message-end signaling,
+per-message versus connection chaining, and reconnect/reset behavior still
+require verification. No adapter has been connected to the game transport yet.
 The 32-byte login record is not evidence that this path consumes a 256-bit key:
 the recovered DES setup reads only eight bytes.
 
@@ -160,6 +175,10 @@ Schedule evidence:
 `ev_6a76d9f887b4e4823899ccd41d1bf8115bcd27275b0f2b57ee7b37d0f6a5932c`.
 Block evidence:
 `ev_be392c94b7413ade85b602cbc2e7cbd6c8db9b7825c9a0136c3c9d613d41c1f9`.
+Encryption-chain evidence:
+`ev_9410e03837d1d9a45b7395de9a1952517a79515ac91aa6e5bae4a3610812944c`.
+XOR evidence:
+`ev_5e7fa8cf3b91612052a99bc928a80cf27e545253049c07f31cb71e654a0f16ce`.
 
 ### Preparing the encrypted session field
 
