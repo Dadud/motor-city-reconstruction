@@ -128,6 +128,39 @@ No account creation or persistent original configuration changes occur.
 
 ## Evidence required for confidence
 
+### Lobby session block cipher
+
+Lobby crypto setup `0x73f470` bypasses encryption when the key-record length is
+zero. Otherwise it constructs separate forward/reversed schedules through
+`0x7ce230` using the first eight material bytes, initializes an eight-byte IV
+to zero, and constructs separate send/receive filter objects. The key schedule
+and block routine `0x7ce600` match standard DES: six emulated checks passed for
+three synthetic keys/blocks in both directions, including the standard DES
+example key and plaintext. The independent reference uses cryptography's
+TripleDES with K,K,K, which is equivalent to DES.
+
+Install the optional oracle dependencies and repeat with:
+
+```sh
+python -m pip install -e '.[oracle]'
+python -m tools.nps_cipher_oracle '/path/to/original/mcity.exe'
+```
+
+The oracle runs original schedule and block instructions, replacing allocator
+and free boundaries with bounded emulator memory. No host services execute.
+These checks establish the block primitive only. Mode, padding, partial blocks,
+per-message versus connection chaining, and reconnect/reset behavior remain
+unverified. No lobby encryption adapter has been connected to the client yet.
+The 32-byte login record is not evidence that this path consumes a 256-bit key:
+the recovered DES setup reads only eight bytes.
+
+Setup evidence:
+`ev_7821cd60e3cdf7b82309b54d1386191fa22e1e33245f52f7f7802d8940cfdf45`.
+Schedule evidence:
+`ev_6a76d9f887b4e4823899ccd41d1bf8115bcd27275b0f2b57ee7b37d0f6a5932c`.
+Block evidence:
+`ev_be392c94b7413ade85b602cbc2e7cbd6c8db9b7825c9a0136c3c9d613d41c1f9`.
+
 ### Preparing the encrypted session field
 
 The global key object passed to `0x72c3f0` begins at `0x00b37e84`. The 32-byte
