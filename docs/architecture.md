@@ -32,6 +32,7 @@ flowchart LR
 | Engine simulation | `dyno.py`, `dyno_solver.py`, `thermodynamics.py` | External flow templates, input record, portable solver stages and cylinder initialization |
 | Developer inspection | `tools/catalog.py`, `tools/query_fields.py` | Asset inventory and database-query metadata |
 | Optional oracle | `tools/native_oracle.py`, `tools/verify_*.py` | Bounded CPU comparisons against a local verified executable |
+| Server discovery and auth preparation | `server_discovery.py`, `legacy_https.py`, `auth_protocol.py`, `tools/server_check.py` | Installed endpoint/patch settings, bounded discovery, explicitly pinned HTTPS and recovered auth format; no authenticated game session yet |
 
 ## Boundaries
 
