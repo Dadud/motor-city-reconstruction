@@ -199,8 +199,8 @@ Partial-read evidence:
 
 The login helper `0x72c3f0` opens `pub.key` through a file source and then formats
 its encryption result as uppercase hexadecimal (`0x7b75c0`/`0x7b7670`). The
-installed key is 324 bytes of ASCII hexadecimal beginning with a DER
-SubjectPublicKeyInfo-shaped sequence and the RSA encryption OID. Its SHA256 is
+installed key is 324 bytes of ASCII hexadecimal containing DER
+SubjectPublicKeyInfo with an RSA-1024 modulus and exponent 65537. Its SHA256 is
 `6b134da9afbefa3e2872f5001ab72b570d892f390f5b0878fbcef827c7242cba`.
 The key remains an external installation resource, not a hardcoded repository
 constant. Native filename evidence:
@@ -219,10 +219,25 @@ python -m tools.nps_hash_oracle '/path/to/original/mcity.exe'
 
 `client/nps_crypto.py` implements that SHA-1 mask expansion with bounded inputs.
 The padding routine at `0x7c7a80` uses two masks, a 20-byte seed, a 20-byte hash,
-zero fill and a `0x01` separator. This is consistent with OAEP-style padding;
-complete construction, public-key parsing, and session encryption remain to be
-verified. The random pool is initialized using a time-derived input in the native
-path; the portable implementation's entropy behavior is not yet chosen.
+zero fill and a `0x01` separator. The authored empty-label OAEP data block matched
+nine original-instruction cases at three block sizes, including empty and maximum
+messages. The oracle supplies the independently verified empty-label SHA-1 digest
+and runs range `0x7c7b33..0x7c7b82`; it does not verify native allocation, both mask
+calls, or the final RSA operation end to end.
+
+The module now parses bounded hexadecimal RSA SubjectPublicKeyInfo, builds
+SHA-1 OAEP padding, performs the public RSA operation, and produces uppercase hex.
+Independent checks with cryptography 50.0.2 decrypted all six synthetic ciphertexts
+using ephemeral generated RSA-1024/RSA-2048 private keys. This proves standard
+OAEP interoperability for those cases, not complete original-session equivalence.
+The installed key parses to a 128-byte RSA block and a 256-byte hex ciphertext;
+neither the key contents nor ciphertexts are published.
+
+The native random pool uses a time-derived input. Portable encryption takes an
+explicit 20-byte seed for reproducible checks; live callers must supply fresh
+unpredictable bytes. No automatic login caller or live encryption exchange exists
+yet. Full native encryption comparison, caller service ID/checksum, login response
+decoding, and session binding remain required before an authenticated test.
 
 Mask evidence: `ev_909a700466e65e54216134b28247becab4ed1357c1dc309c4a13a3360dc09389`.
 Counter evidence: `ev_553b79d135e4703afd0994cc762f9ce8d078e97bfd94a642877ae7ce9bfa7314`.
