@@ -1,7 +1,7 @@
 import struct
 import unittest
 
-from client.nps_response import AuthorizationRecord, LoginSuccess
+from client.nps_response import AuthorizationRecord, LoginSuccess, SessionKeyRecord
 
 
 def counted(value):
@@ -17,6 +17,13 @@ def synthetic_success():
 
 
 class SuccessTests(unittest.TestCase):
+    def test_header_free_key_record(self):
+        self.assertEqual(SessionKeyRecord(b'\0\xff', 0x12345678).encode(),
+                         bytes.fromhex('000200ff12345678'))
+        for material, value in ((bytes(33), 0), (b'', -1), (b'', 2**32)):
+            with self.assertRaises(ValueError):
+                SessionKeyRecord(material, value).encode()
+
     def test_recovered_fields(self):
         reply = LoginSuccess.decode(synthetic_success())
         self.assertEqual((reply.user_id, reply.value_2, reply.flag, reply.value_3),

@@ -70,6 +70,14 @@ class SessionKeyRecord:
     material: bytes = field(repr=False)
     value: int
 
+    def encode(self):
+        """Header-free key record used as the login RSA plaintext (0x71d6d0)."""
+        if not isinstance(self.material, bytes) or len(self.material) > 32:
+            raise ValueError('session material must contain at most 32 bytes')
+        if type(self.value) is not int or not 0 <= self.value <= 0xffffffff:
+            raise ValueError('session record value must fit uint32')
+        return struct.pack('>H', len(self.material)) + self.material + struct.pack('>I', self.value)
+
     @classmethod
     def _read(cls, reader):
         value = cls(reader.counted(32), reader.u32())

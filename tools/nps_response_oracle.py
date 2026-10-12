@@ -3,7 +3,7 @@ import argparse
 import json
 import struct
 
-from client.nps_response import LoginSuccess
+from client.nps_response import LoginSuccess, SessionKeyRecord
 from tools.native_oracle import DynoOracle
 
 
@@ -13,9 +13,9 @@ def verify(executable):
     cpu, reg = oracle.cpu, oracle.reg
 
     def swaps(cpu, address, size, user):
-        if address not in (0x749c34, 0x749c40):
+        if address not in (0x749c34, 0x749c40, 0x749bec, 0x749c3a):
             return
-        width = 2 if address == 0x749c34 else 4
+        width = 2 if address in (0x749c34, 0x749bec) else 4
         stack = cpu.reg_read(reg.UC_X86_REG_ESP)
         target, value = struct.unpack('<II', cpu.mem_read(stack, 8))
         value &= (1 << (width*8)) - 1
@@ -58,7 +58,26 @@ def verify(executable):
         assert bytes(cpu.mem_read(obj+0x558, 3)) == expected.text
         assert struct.unpack('<I', cpu.mem_read(obj+0x10, 4))[0] == source+len(wire)
         checked += 1
-    return {'matched_cases': checked, 'coverage': 'emulated success payload reader; no network'}
+    key_cases = 0
+    for size in (0, 1, 32):
+        oracle._reset()
+        obj, output = oracle.inputs, oracle.inputs+0x2000
+        material = bytes(range(size))
+        cpu.mem_write(obj, bytes(0x48))
+        cpu.mem_write(obj+0x10, struct.pack('<I', output))
+        cpu.mem_write(obj+0x20, material or b'\0')
+        cpu.mem_write(obj+0x42, struct.pack('<H', size))
+        cpu.mem_write(obj+0x44, struct.pack('<I', 0x12345678))
+        cpu.reg_write(reg.UC_X86_REG_ECX, obj)
+        stack = cpu.reg_read(reg.UC_X86_REG_ESP)
+        cpu.mem_write(stack, struct.pack('<I', oracle.stop))
+        oracle._run(0x71d6d0, oracle.stop, count=100000)
+        actual = bytes(cpu.mem_read(output, size+6))
+        if actual != SessionKeyRecord(material, 0x12345678).encode():
+            raise ValueError('original key-record serializer differs')
+        key_cases += 1
+    return {'matched_response_cases': checked, 'matched_key_record_cases': key_cases,
+            'coverage': 'emulated success reader and key-record serializer; no network'}
 
 
 if __name__ == '__main__':

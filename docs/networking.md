@@ -128,6 +128,30 @@ No account creation or persistent original configuration changes occur.
 
 ## Evidence required for confidence
 
+### Preparing the encrypted session field
+
+The global key object passed to `0x72c3f0` begins at `0x00b37e84`. The 32-byte
+material copied by `0x72a8f0` starts at object offset `0x20`; its length is set
+to 32. The login path explicitly clears object offset `0x18`, disabling the
+outer header. Serializer `0x71d6d0` writes uint16 length, those bytes, and a uint32
+field from object offset `0x44`. Three original-instruction checks matched the
+authored `SessionKeyRecord.encode`, including binary data and the full capacity.
+
+`client/nps_session_request.py` assembles the recovered pieces without contacting
+a server: external public key and executable checksum, caller-supplied ticket,
+fresh 32-byte OS-generated material, header-free key-record serialization, RSA
+OAEP encryption with a fresh 20-byte seed, service ID `2176`, and message `0x501`.
+It requires an explicit key-record value because that field's initial state and
+meaning remain incompletely traced. It retains the private material for later
+session handling and excludes both material and wire bytes from diagnostic reprs.
+
+The request header's default auxiliary value is the total length: `0x7e0800`
+zeroes the header and invokes `0x71be60` before writing flags, so that helper's
+length-plus-flags calculation sees zero flags. This ordering is distinct from
+interpreting the same helper after a received header already contains flags.
+The assembly helper sets that value explicitly. Full message serialization and
+native RSA ciphertext comparisons remain required; this is not a live login API.
+
 ### Service ID and executable checksum
 
 The game login caller `0x5eda30` supplies service literal `2176` from `0x8b7358`
