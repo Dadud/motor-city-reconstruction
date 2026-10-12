@@ -68,8 +68,9 @@ motor-city --data /path/to/game --vehicle 101 --track Boothill --skin 32for001.f
 This loads textured base track geometry and the stock body, tires, hubcaps and
 engine block. Vehicle geometry has its own texture namespace and world transform.
 The spawn pose uses four terrain supports and database tire radii. Home returns
-the camera to the car; End shows the track overview. The vehicle remains parked:
-throttle, steering, suspension settling and racing are unfinished.
+the camera to the car; End shows the track overview. This command keeps the
+vehicle parked. Add `--drive` for authored prototype driving and time trials;
+recovered suspension settling and force physics remain unfinished.
 
 The following research tools use only the Python standard library:
 
@@ -188,7 +189,8 @@ This reports four wheel contacts, verified tire dimensions, stock spring/shock
 configuration for each wheel, and core engine-block dimensions, plus an authored
 spawn pose that clears every tire above its sampled terrain by at least 0.02 meters.
 Missing wheel supports fail explicitly. It preserves orientation and does not
-simulate suspension settling; driving remains unfinished.
+simulate suspension settling. The authored offline driving mode uses a separate
+terrain-following model; recovered suspension and tire forces remain unfinished.
 
 `client.motion` implements recovered arithmetic with distinct intervals:
 velocity increments use 1/32 second, position/rotation increments use 1/64 second,

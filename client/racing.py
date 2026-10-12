@@ -41,6 +41,7 @@ class TimeTrial:
             indices.append(len(slices)-1)
         self.gates = tuple(Gate(slices[i].position, slices[i].forward, slices[i].right,
                                 slices[i].left_limit, slices[i].right_limit) for i in indices)
+        self.best_time = None
         self.reset()
 
     def reset(self):
@@ -51,7 +52,7 @@ class TimeTrial:
 
     @property
     def best(self):
-        return min(self.completed) if self.completed else None
+        return self.best_time
 
     def update(self, previous, current, dt):
         if not math.isfinite(dt) or dt <= 0:
@@ -71,6 +72,7 @@ class TimeTrial:
         if final:
             result = old_elapsed+fraction*dt
             self.completed.append(result)
+            self.best_time = result if self.best_time is None else min(result, self.best_time)
             if self.closed:
                 self.next_gate = 1
                 self.elapsed = (1-fraction)*dt

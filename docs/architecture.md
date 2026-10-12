@@ -11,6 +11,8 @@ flowchart LR
     Catalogue --> Scene
     Catalogue --> Physics[Engine / tires / suspension / dyno inputs]
     Scene --> App[app.py: OpenGL renderer and controls]
+    Scene --> Drive[driving.py / racing.py: offline simulation]
+    Drive --> App
     Physics --> Reports[Headless reports and verification]
 ```
 
@@ -41,10 +43,12 @@ The runtime imports no emulation dependency. The optional oracle executes select
 
 `catalogue.py` assembles component-derived inputs. `dyno.py` loads the supported executable's local templates and serializes the core dyno record. `dyno_solver.py` implements verified geometry, timing, flow normalization, cam profiles, lift, interpolation, pressure correction, airflow areas and output conversion.
 
+`thermodynamics.exhaust_parameters` prepares the baseline, amplitude, reference RPM and exponent for the seven native exhaust branches. These are verified setup fields; their physical units and subsequent pressure-wave evolution remain unresolved.
+
 `thermodynamics.py` initializes pressure, temperature, crank geometry and cylinder mass terms. The caller supplies pressure; carrying it between cycles and integrating the thermodynamic loop remain incomplete. Original solver curves captured during development are comparison evidence, not a replacement for the portable solver. Offline driving uses separate authored acceleration/drag/grip parameters and does not consume the incomplete dyno pipeline.
 
 ## Offline simulation
 
 `Drive.update` accumulates frame time and advances at 120 Hz, with catch-up capped at 0.25 seconds. Each accepted step requires four wheel supports. A terrain basis aligns the body to the sampled road normals; absent supports stop motion. This is a terrain-following bicycle model with authored parameters, not recovered suspension, tire or collision response.
 
-`TimeTrial` samples ordered gates from the decoded road slices. It checks forward plane crossings, road width and vertical proximity, then records lap/sprint times with crossing interpolation. Closed courses loop through the start gate; open courses freeze on a finish result until reset. Course closure is inferred from endpoint proximity. Reset clears session times. Window focus loss pauses the simulation; no original server connection is involved.
+`TimeTrial` samples ordered gates from the decoded road slices. It checks forward plane crossings, road width and vertical proximity, then records lap/sprint times with crossing interpolation. Closed courses loop through the start gate; open courses freeze on a finish result until reset. Course closure is inferred from endpoint proximity. Reset restarts the race and retains the best time until the track changes or the window closes. Window focus loss pauses the simulation; no original server connection is involved.

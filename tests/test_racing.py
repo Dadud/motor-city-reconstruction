@@ -31,6 +31,7 @@ class RacingTests(unittest.TestCase):
         trial.reset()
         self.assertFalse(trial.started)
         self.assertEqual(trial.completed, [])
+        self.assertEqual(trial.best, 2.5)
 
     def test_closed_lap_and_stationary_clock(self):
         trial = TimeTrial(SimpleNamespace(slices=(road(0), road(20), road(0))))
