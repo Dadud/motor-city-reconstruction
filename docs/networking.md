@@ -128,6 +128,46 @@ No account creation or persistent original configuration changes occur.
 
 ## Evidence required for confidence
 
+### Login success response
+
+`client/nps_response.py` decodes the `0x601` payload read by native function
+`0x72bf90`. Its recovered order is two big-endian uint32 values (the login caller
+uses the first as user ID), one byte converted to boolean, three nested records,
+another uint32, and a length-prefixed string of up to 64 bytes. Each nested record
+has a big-endian uint16 byte length and contains payload without an outer header.
+
+The first two records are read by `0x72bcf0`: three uint32 values, followed by
+strings with capacities 64, 256, and 256 bytes. Native `0x72bd80` checks whether
+the second uint32 is nonzero and the third is zero or greater than the current
+signed 32-bit `time_t`. The authored `active_at` method preserves that signed
+expiry comparison, including the original post-2038 limitation.
+
+The third record is read by `0x71d700`: a length-prefixed field of up to 32 bytes
+and a uint32 value. The login caller retains this material for its session.
+The decoder does not yet infer a cipher or interpret the remaining numeric fields.
+Sensitive strings and session material are excluded from diagnostic reprs.
+
+The original reader comparison matched three synthetic cases containing zero,
+one, and 32-byte session material. It runs the original reader and nested virtual
+methods under Unicorn, replacing only ntohs/ntohl with specified byte swaps.
+It checks decoded fields and the final reader cursor. Repeat with:
+
+```sh
+python -m tools.nps_response_oracle '/path/to/original/mcity.exe'
+```
+
+The portable decoder rejects truncation, oversized fields, and trailing bytes.
+The native bounded-string helper can truncate oversized fields and advance only
+by the copied length; that malformed-input behavior is not reproduced. No live
+successful response has been captured or decoded yet.
+
+Response evidence:
+`ev_cd949004a2b40d4aced0d994805387b832855d718a859420f40f77f3a73c346b`.
+Nested record evidence:
+`ev_5ad41516f233dd45ab7d8f8d8e454b55a2cc101985cf643a59215fe841982af2`.
+Expiry evidence:
+`ev_a172eb653ed0a675aef2a2f13d9fb22b47e8435e7e6ed034fd52700324af57fc`.
+
 ### Recovered binary framing
 
 `client/nps_framing.py` implements the framing observed in the main executable
@@ -249,7 +289,7 @@ SHA-1 compression evidence:
 | Discovery | Both live INI responses parsed | Cross-platform original precedence and failure behavior |
 | HTTPS identity | Installed pin matches; live Ubuntu/Windows discovery and TLS checks passed | Reconnect, expiry and certificate rotation behavior |
 | Authorization format | Original DLL request/response stages traced; synthetic tests | Caller service ID, real successful ticket, rejection/expiry behavior |
-| Binary login and persona | Endpoint reachable; framing tested; login payload matches original instructions | Caller service ID/value, opaque string generation, response codecs, session/crypto flow and authenticated persona retrieval |
+| Binary login and persona | Endpoint reachable; framing tested; request and success payloads match original instructions in synthetic cases | Caller service ID/value, full encryption/session flow and authenticated persona retrieval |
 | Lobby | Endpoint reachable | Join, lists, rooms, disconnect and reconnect |
 | MCOTS | Endpoint reachable | Session binding and read-only state retrieval before mutations |
 | Racing | Patch transport/rate settings identified | Join, start, position exchange, finish and multiplayer testing |
