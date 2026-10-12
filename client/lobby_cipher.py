@@ -22,6 +22,7 @@ class DESChaining:
     def encrypt_message(self, message):
         """Recovered tail behavior: zero-fill only an incomplete final block.
 
+        This is filter tail behavior, not the TCP sender's scratch-buffer tail.
         Preserve the current chain. This does not select transport boundaries or
         add the outer wrapper; those remain the caller's responsibility.
         """
