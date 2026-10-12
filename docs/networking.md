@@ -195,6 +195,40 @@ and `ev_65be7ce780de4792efa74e5bceeede74cc91966d869c8b65af46bf35a59d1279`.
 Partial-read evidence:
 `ev_54a1840a6a1d790094b44888bf2811b1887ad74cf33c4c965eadaada3a77c7cd`.
 
+### Session encryption recovery
+
+The login helper `0x72c3f0` opens `pub.key` through a file source and then formats
+its encryption result as uppercase hexadecimal (`0x7b75c0`/`0x7b7670`). The
+installed key is 324 bytes of ASCII hexadecimal beginning with a DER
+SubjectPublicKeyInfo-shaped sequence and the RSA encryption OID. Its SHA256 is
+`6b134da9afbefa3e2872f5001ab72b570d892f390f5b0878fbcef827c7242cba`.
+The key remains an external installation resource, not a hardcoded repository
+constant. Native filename evidence:
+`ev_9d5117fcb629ea54a9663d27f88e75e22c846bbef9489e06529c1dfde76fb714`.
+
+The masking helper `0x7c7cb0` hashes a seed followed by a four-byte counter starting
+at zero. Its call to `0x7b69b0` explicitly selects big-endian counter order. The
+hash initializer `0x7d22a0` sets the five SHA-1 initialization words; compression
+at `0x7d22e0` has the SHA-1 rounds and constants. The original compression
+instructions matched standard SHA-1 in seven emulated cases, covering empty,
+short, padding-boundary, multi-block, and binary inputs. Repeat with:
+
+```sh
+python -m tools.nps_hash_oracle '/path/to/original/mcity.exe'
+```
+
+`client/nps_crypto.py` implements that SHA-1 mask expansion with bounded inputs.
+The padding routine at `0x7c7a80` uses two masks, a 20-byte seed, a 20-byte hash,
+zero fill and a `0x01` separator. This is consistent with OAEP-style padding;
+complete construction, public-key parsing, and session encryption remain to be
+verified. The random pool is initialized using a time-derived input in the native
+path; the portable implementation's entropy behavior is not yet chosen.
+
+Mask evidence: `ev_909a700466e65e54216134b28247becab4ed1357c1dc309c4a13a3360dc09389`.
+Counter evidence: `ev_553b79d135e4703afd0994cc762f9ce8d078e97bfd94a642877ae7ce9bfa7314`.
+SHA-1 compression evidence:
+`ev_b7a76874e5e0bf89a72bca70c642254f2c431d838efb576a2fb5d45f590b0fe8`.
+
 | Stage | Current evidence | Remaining requirement |
 | --- | --- | --- |
 | Discovery | Both live INI responses parsed | Cross-platform original precedence and failure behavior |
