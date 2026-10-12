@@ -128,6 +128,28 @@ No account creation or persistent original configuration changes occur.
 
 ## Evidence required for confidence
 
+### Encrypted lobby receive envelope
+
+Receiver `0x7414b0` reads the four-byte message prefix, checks the declared size
+against a 60000-byte upper limit, and reads the rest. When its ID is `0x1101`,
+it submits exactly `outer_length - 4` ciphertext bytes to the receive filter,
+signals message end through virtual offset `0x10`, drains the output, and parses
+the decrypted message's own prefix. It then dispatches the inner message.
+Thus the encrypted wrapper has four prefix bytes, not the 12-byte login header.
+
+`client/lobby_envelope.py` accepts this wrapper and a caller-managed cipher,
+validates aligned ciphertext and inner length, and returns the inner `Frame`
+with any trailing block padding retained separately. It does not strip presumed
+zero bytes or reset/reuse a cipher automatically. Native filter lifecycle remains
+unverified; callers must close the connection after a decoding failure rather
+than reuse possibly advanced cipher state. The decoder is not attached to a live
+connection. Tests cover wrapper bounds, byte offsets, inner length consistency,
+and preservation of opaque padding. These are synthetic checks, not native
+end-to-end message equivalence or authenticated server tests.
+
+Receive evidence:
+`ev_4032c0c570e9560645fbe2d1dac34984fd22c1bb00696784602d7cd9c620075e`.
+
 ### Lobby session block cipher
 
 Lobby crypto setup `0x73f470` bypasses encryption when the key-record length is
