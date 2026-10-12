@@ -53,6 +53,36 @@ class IntakeExchange:
     density_term: float = 0
 
 
+@dataclass(frozen=True)
+class CylinderEnergyTerms:
+    """Native stored polynomial terms; physical units remain unverified."""
+    capacity_term: float
+    energy_term: float
+
+
+def cylinder_energy_terms(temperature):
+    """Temperature polynomials at 0x47ae8f–0x47af0b.
+
+    Preserve the original operation order and float32 stores. These terms
+    prepare the energy exchange; they do not evolve temperature or pressure.
+    """
+    temperature, = _stored_inputs(temperature)
+    if not 0 < temperature <= 10000:
+        raise ValueError('invalid cylinder temperature')
+    square = temperature*temperature
+    cube = temperature*square
+    fourth = temperature*cube
+    capacity = square*1.17048e-8+temperature*1.0396e-5
+    capacity += _f32(.16528)
+    capacity -= cube*3.74528e-12
+    capacity += fourth*3.1578e-16
+    energy = square*5.1979e-6+temperature*_f32(.16528)
+    energy += cube*_f32(3.9016e-9)
+    energy -= fourth*9.3632e-13
+    energy += (temperature*fourth)*6.3156e-17
+    return CylinderEnergyTerms(_f32(capacity), _f32(energy))
+
+
 def _mass_inputs(cylinder_pressure, cylinder_temperature, boundary_pressure, area, rpm):
     pressure, temperature, boundary, area, rpm = _stored_inputs(
         cylinder_pressure, cylinder_temperature, boundary_pressure, area, rpm)

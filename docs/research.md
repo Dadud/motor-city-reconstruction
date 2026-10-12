@@ -27,7 +27,8 @@ Create the `evidence/` directory first. Each command needs your local installati
 
 ## Current validation snapshot
 
-- 134 synthetic unit tests passed on Windows after valve mass exchange and intake pressure feedback were introduced.
+- 136 synthetic unit tests passed on Windows after cylinder energy terms were introduced.
+- Cylinder temperature-dependent capacity and energy terms at 0x47ae8f–0x47af0b matched 20,000 stored float32 fields across 10,000 synthetic positive temperature inputs. This verifies the isolated polynomials under bounded x86 emulation; physical units, accumulated energy and complete temperature evolution remain unverified. Reproduce with `python -m tools.verify_cylinder_energy '/path/to/verified/executable'` and optional Unicorn installed.
 - Core builder inputs match 199 supported stock records given identical assembled component fields; native component-loader equivalence remains unproven.
 - Geometry, valve events, normalized flow and cam profiles match supported stock inputs.
 - 3,582 sampled valve lifts, 2,358 interpolation samples and 5,970 coupled airflow areas matched their native emulated ranges.

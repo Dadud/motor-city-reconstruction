@@ -2,6 +2,11 @@
 
 The intended result is a playable, open-source Windows/Linux game client with modern OS compatibility. A renderer alone does not meet that goal.
 
+Behavioral fidelity to Motor City Online is the target. Recover original systems
+from executable and asset evidence, verify their behavior, and replace temporary
+prototype systems with portable implementations. Prototype driving is a development
+harness and does not define the intended handling or game rules.
+
 ## Implemented foundations
 
 - Bounded archive, vehicle geometry, texture and base-track decoders.

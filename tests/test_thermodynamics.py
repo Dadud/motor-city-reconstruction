@@ -7,7 +7,21 @@ from client.thermodynamics import (charge_temperature, cycle_preparation,
                                    exhaust_wave_value, initial_cylinder_state,
                                    intake_boundary, IntakeExchange,
                                    intake_mass_exchange, exhaust_mass_transfer,
-                                   intake_pressure_feedback)
+                                   intake_pressure_feedback, cylinder_energy_terms)
+
+
+class CylinderEnergyTests(unittest.TestCase):
+    def test_emulated_native_reference(self):
+        for temperature, expected in (
+                (540, (.1737440675497055, 91.30455017089844)),
+                (2000, (.2079814374446869, 369.6042785644531)),
+                (4000, (.2352825552225113, 818.962646484375))):
+            self.assertEqual(astuple(cylinder_energy_terms(temperature)), expected)
+
+    def test_invalid_temperature(self):
+        for temperature in (0, -1, 10001, float('nan'), float('inf')):
+            with self.assertRaises(ValueError):
+                cylinder_energy_terms(temperature)
 
 
 class CylinderStateTests(unittest.TestCase):
