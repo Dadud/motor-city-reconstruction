@@ -153,6 +153,43 @@ class DynoOracle:
         self._run(0x47aa3d, 0x47aafd, timeout=0, count=1000)
         return struct.unpack('<f', self.cpu.mem_read(self.frame-0x44, 4))[0]
 
+    def intake_mass_exchange(self, cylinder_pressure, cylinder_temperature, intake_pressure,
+                             intake_temperature, area, rpm, previous=None):
+        self._reset()
+        self.cpu.ctl_remove_cache(0x47abe4, 0x47ae8f)
+        feedback = (0, 0, 0, 0) if previous is None else (
+            previous.pressure_ratio, previous.flow_term, previous.thermal_root, previous.density_term)
+        fields = ((-8, cylinder_pressure), (-0x1c, cylinder_temperature),
+                  (-0xbc, intake_pressure), (-0xac, intake_temperature), (-0x6c, area),
+                  (-0xa8, rpm), (-0x2c, 0), (-0x34, 0), (-0x200, 0),
+                  (-0x14, feedback[0]), (-0x1b4, feedback[1]),
+                  (-0x1d0, feedback[2]), (-0x1f0, feedback[3]))
+        for offset, value in fields:
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self._run(0x47abe4, 0x47ad3b, timeout=0, count=10000)
+        return tuple(struct.unpack('<f', self.cpu.mem_read(self.frame+offset, 4))[0]
+                     for offset in (-0x2c, -0x14, -0x1b4, -0x1d0, -0x1f0))
+
+    def intake_pressure_feedback(self, boundary_pressure, area, valve_scale, previous, wave=0):
+        self._reset()
+        self.cpu.ctl_remove_cache(0x47ab69, 0x47ae8f)
+        fields = ((-0x20, boundary_pressure), (-0x6c, area), (-0x214, valve_scale),
+                  (-0x78, wave), (-0x1b4, previous.flow_term),
+                  (-0x1d0, previous.thermal_root), (-0x1f0, previous.density_term))
+        for offset, value in fields:
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self._run(0x47ab69, 0x47abe4, timeout=0, count=10000)
+        return struct.unpack('<f', self.cpu.mem_read(self.frame-0xbc, 4))[0]
+
+    def exhaust_mass_transfer(self, cylinder_pressure, cylinder_temperature, exhaust_pressure, area, rpm):
+        self._reset()
+        self.cpu.ctl_remove_cache(0x47abe4, 0x47ae8f)
+        for offset, value in ((-8, cylinder_pressure), (-0x1c, cylinder_temperature),
+                              (-0x44, exhaust_pressure), (-0x70, area), (-0xa8, rpm), (-0x1bc, 0)):
+            self.cpu.mem_write(self.frame+offset, struct.pack('<f', value))
+        self._run(0x47ad3b, 0x47ae8f, timeout=0, count=10000)
+        return struct.unpack('<f', self.cpu.mem_read(self.frame-0x18, 4))[0]
+
     def solver(self, inputs):
         """Run full 0x478ec0 on an explicit 1004-byte dyno input/output record.
 
@@ -168,6 +205,56 @@ class DynoOracle:
         self.cpu.mem_write(stack, struct.pack('<II', self.stop, self.inputs))
         self._run(0x478ec0, self.stop, timeout=5_000_000, count=50_000_000)
         return bytes(self.cpu.mem_read(self.inputs, 1004))
+
+    def solver_mass_exchange_stages(self, inputs, *, stride=64, per_rpm=32):
+        """Bounded per-RPM samples from original intake/exhaust loop execution.
+
+        Exact-address hooks observe instructions without replacing them.
+        Captures input/output pairs; does not provide a portable full solver.
+        """
+        from unicorn import UC_HOOK_CODE
+        if type(stride) is not int or stride < 1 or type(per_rpm) is not int or not 1 <= per_rpm <= 128:
+            raise ValueError('invalid mass-exchange sampling bounds')
+        rows, counts, selected = [], {}, {}
+        pending = None
+        boundary_inputs = None
+
+        def read(cpu, frame, offsets):
+            return tuple(struct.unpack('<f', cpu.mem_read(frame+offset, 4))[0] for offset in offsets)
+
+        def capture(cpu, address, size, user_data):
+            nonlocal pending, boundary_inputs
+            frame = cpu.reg_read(self.reg.UC_X86_REG_EBP)
+            if address == 0x47ab69:
+                boundary_inputs = dict(inputs=read(cpu, frame, (-0x20, -0x6c, -0x214, -0x78)),
+                    previous=read(cpu, frame, (-0x1b4, -0x1d0, -0x1f0)))
+            elif address == 0x47abe4:
+                rpm = read(cpu, frame, (-0xa8,))[0]
+                count = counts.get(rpm, 0)
+                counts[rpm] = count+1
+                pending = None
+                if count % stride == 0 and selected.get(rpm, 0) < per_rpm:
+                    selected[rpm] = selected.get(rpm, 0)+1
+                    pending = dict(intake_inputs=read(cpu, frame, (-8, -0x1c, -0xbc, -0xac, -0x6c, -0xa8)),
+                        feedback=read(cpu, frame, (-0x14, -0x1b4, -0x1d0, -0x1f0)),
+                        pressure_feedback=boundary_inputs)
+            elif address == 0x47ad3b and pending is not None:
+                pending['intake_output'] = read(cpu, frame, (-0x2c, -0x14, -0x1b4, -0x1d0, -0x1f0))
+                pending['exhaust_inputs'] = read(cpu, frame, (-8, -0x1c, -0x44, -0x70, -0xa8))
+            elif address == 0x47ae8f and pending is not None:
+                pending['exhaust_output'] = read(cpu, frame, (-0x18,))[0]
+                rows.append(pending)
+                pending = None
+
+        hooks = [self.cpu.hook_add(UC_HOOK_CODE, capture, begin=address, end=address)
+                 for address in (0x47ab69, 0x47abe4, 0x47ad3b, 0x47ae8f)]
+        try:
+            self.cpu.ctl_remove_cache(0x478ec0, 0x47b500)
+            output = self.solver(inputs)
+        finally:
+            for hook in hooks:
+                self.cpu.hook_del(hook)
+        return output, rows, counts
 
     def solver_work_stages(self, inputs):
         """Capture stack inputs to 0x47b2b7 while running the full solver.

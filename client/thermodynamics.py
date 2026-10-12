@@ -38,6 +38,118 @@ class IntakeBoundary:
     pressure: float
 
 
+@dataclass(frozen=True)
+class IntakeExchange:
+    """Stored branch outputs; pressure_ratio is meaningful for an open valve.
+
+    A closed valve retains the caller's native scratch/feedback fields. The
+    boundary-feedback stage overwrites the native ratio slot with valve scale;
+    a future full loop must preserve that ordering when composing these stages.
+    """
+    mass_delta: float = 0
+    pressure_ratio: float = 0
+    flow_term: float = 0
+    thermal_root: float = 0
+    density_term: float = 0
+
+
+def _mass_inputs(cylinder_pressure, cylinder_temperature, boundary_pressure, area, rpm):
+    pressure, temperature, boundary, area, rpm = _stored_inputs(
+        cylinder_pressure, cylinder_temperature, boundary_pressure, area, rpm)
+    if not (area >= 0 and 2000 <= rpm <= 11000):
+        raise ValueError('invalid valve mass-exchange input')
+    if area > 0 and not (pressure > 0 and temperature > 0 and boundary > 0):
+        raise ValueError('invalid active valve gas state')
+    return pressure, temperature, boundary, area, rpm
+
+
+def _flow_term(ratio):
+    return _f32((math.pow(ratio, 1.4279999732971191)-
+                 math.pow(ratio, 1.7139999866485596))*5)
+
+
+def intake_pressure_feedback(boundary_pressure, area, valve_scale, previous, wave=0):
+    """0x47ab69–0x47abe4 boundary feedback before the current exchange.
+
+    Consume prior stored flow/thermal/density fields and the current valve area.
+    Valve scale is the native stored input, not a guessed diameter conversion.
+    The caller supplies the separately evolved wave term. No pressure clamp or
+    original failure/abort handling is added to this numerical stage.
+    """
+    if not isinstance(previous, IntakeExchange):
+        raise ValueError('expected intake feedback state')
+    boundary, area, scale, wave, term, root, density = _stored_inputs(
+        boundary_pressure, area, valve_scale, wave, previous.flow_term,
+        previous.thermal_root, previous.density_term)
+    if not (area >= 0 and scale > 0 and term >= 0 and root >= 0 and density >= 0):
+        raise ValueError('invalid intake feedback input')
+    velocity = ((math.sqrt(term)*root)*area)/((scale*scale)*_f32(.7853982))
+    result = boundary*144-((velocity*velocity)*density)*.5
+    return _f32(result*_f32(.0069444445)+wave)
+
+
+def intake_mass_exchange(cylinder_pressure, cylinder_temperature, intake_pressure,
+                         intake_temperature, area, rpm, previous=None):
+    """0x47abe4–0x47ad3b intake exchange and feedback fields.
+
+    Positive delta flows into the cylinder. A closed valve zeros delta while
+    retaining prior feedback fields. Inputs require positive boundary pressure;
+    native failure/abort paths for invalid gas state are not integrated here.
+    Delta units and its subsequent accumulation interval remain unverified.
+    """
+    pressure, temperature, boundary, area, rpm = _mass_inputs(
+        cylinder_pressure, cylinder_temperature, intake_pressure, area, rpm)
+    incoming_temperature, = _stored_inputs(intake_temperature)
+    if area > 0 and incoming_temperature <= 0:
+        raise ValueError('invalid intake temperature')
+    previous = IntakeExchange() if previous is None else previous
+    if not isinstance(previous, IntakeExchange):
+        raise ValueError('expected intake feedback state')
+    if area == 0:
+        fields = _stored_inputs(previous.pressure_ratio, previous.flow_term,
+                                previous.thermal_root, previous.density_term)
+        return IntakeExchange(0, *fields)
+    high, low = max(pressure, boundary), min(pressure, boundary)
+    source_temperature = incoming_temperature if boundary > pressure else temperature
+    ratio = _f32(low/high)
+    term = _flow_term(ratio)
+    root = _f32(math.sqrt(source_temperature*_f32(2405.01806640625)))
+    delta = ((root*high)*_f32(.01874414272606373))/source_temperature
+    delta *= math.sqrt(term)
+    delta *= area
+    delta *= _f32(.16666667)
+    delta = _f32(delta/rpm)
+    if boundary < pressure:
+        delta = -delta
+    density = _f32((boundary*144)/(source_temperature*1716))
+    return IntakeExchange(delta, ratio, term, root, density)
+
+
+def exhaust_mass_transfer(cylinder_pressure, cylinder_temperature, exhaust_pressure, area, rpm):
+    """0x47ad3b–0x47ae8f exhaust exchange; positive delta flows out.
+
+    Reverse flow uses the native fixed incoming temperature 2000. Unlike the
+    intake branch, this branch retains its unrounded thermal square root during
+    multiplication. The positive-pressure domain has a ratio at most one; the
+    native alternate ratio>1.892 path is unreachable in this supported domain.
+    """
+    pressure, temperature, boundary, area, rpm = _mass_inputs(
+        cylinder_pressure, cylinder_temperature, exhaust_pressure, area, rpm)
+    if area == 0:
+        return 0.0
+    high, low = max(pressure, boundary), min(pressure, boundary)
+    source_temperature = 2000.0 if pressure < boundary else temperature
+    ratio = _f32(low/high)
+    term = _flow_term(ratio)
+    root = math.sqrt(source_temperature*_f32(2405.01806640625))
+    delta = ((root*high)*_f32(.01874414272606373))/source_temperature
+    delta *= math.sqrt(term)
+    delta *= area
+    delta *= _f32(.16666667)
+    delta = _f32(delta/rpm)
+    return -delta if pressure < boundary else delta
+
+
 def intake_boundary(geometry, rpm, carb_capacity, carb_code, intake_mode, boost=0):
     """Couple 0x479025/0x47903a, 0x479b29 and 0x47a05b–0x47a0b0.
 

@@ -5,7 +5,9 @@ from client.dyno_solver import cylinder_geometry
 from client.thermodynamics import (charge_temperature, cycle_preparation,
                                    exhaust_parameters, exhaust_phase_factor,
                                    exhaust_wave_value, initial_cylinder_state,
-                                   intake_boundary)
+                                   intake_boundary, IntakeExchange,
+                                   intake_mass_exchange, exhaust_mass_transfer,
+                                   intake_pressure_feedback)
 
 
 class CylinderStateTests(unittest.TestCase):
@@ -56,6 +58,55 @@ class ExhaustTests(unittest.TestCase):
                        (1, 2000, 1e300)):
             with self.assertRaises(ValueError):
                 exhaust_parameters(*inputs)
+
+
+class MassExchangeTests(unittest.TestCase):
+    def test_native_reverse_intake(self):
+        self.assertEqual(astuple(intake_mass_exchange(44.1, 2000, 14.7, 540, 1.2, 2000)),
+                         (-4.803440242540091e-5, .3333333432674408, .2808070778846741,
+                          2193.179443359375, .0006167832179926336))
+
+    def test_native_forward_intake(self):
+        self.assertEqual(astuple(intake_mass_exchange(5, 2000, 14.7, 540, 1.2, 2000)),
+                         (3.1015468266559765e-5, .3401360511779785, .2844894528388977,
+                          1139.6094970703125, .002284382237121463))
+
+    def test_native_exhaust_both_directions(self):
+        self.assertEqual(exhaust_mass_transfer(44.1, 2000, 35, 1.2, 2000),
+                         4.346361311036162e-5)
+        self.assertEqual(exhaust_mass_transfer(5, 540, 35, 1.2, 2000),
+                         -2.6192557925242e-5)
+
+    def test_closed_valve_retains_feedback_and_skips_gas_validation(self):
+        previous = IntakeExchange(.1, .5, .2, 1000, .01)
+        self.assertEqual(astuple(intake_mass_exchange(-1, 0, -2, 0, 0, 2000, previous)),
+                         (0, .5, .20000000298023224, 1000, .009999999776482582))
+        self.assertEqual(exhaust_mass_transfer(-1, 0, -2, 0, 2000), 0)
+
+    def test_equal_pressures_zero_transfer(self):
+        intake = intake_mass_exchange(44.1, 2000, 44.1, 540, 1.2, 2000)
+        self.assertEqual(intake.mass_delta, 0)
+        self.assertEqual(intake.pressure_ratio, 1)
+        self.assertEqual(intake.flow_term, 0)
+        self.assertEqual(intake.thermal_root, 2193.179443359375)
+        self.assertEqual(exhaust_mass_transfer(35, 2000, 35, 1.2, 2000), 0)
+
+    def test_native_pressure_feedback(self):
+        self.assertEqual(intake_pressure_feedback(14.7, 1.2, .13,
+                         IntakeExchange(.1, .5, .2, 1000, .01), 2.3), -56743.58984375)
+        self.assertEqual(intake_pressure_feedback(14.7, 0, .13, IntakeExchange()),
+                         14.699999809265137)
+
+    def test_invalid_active_exchange_inputs(self):
+        for inputs in ((0, 2000, 35, 1, 2000), (35, 0, 35, 1, 2000),
+                       (35, 2000, 0, 1, 2000), (35, 2000, 35, -1, 2000),
+                       (35, 2000, 35, 1, 0), (float('nan'), 2000, 35, 1, 2000)):
+            with self.assertRaises(ValueError):
+                exhaust_mass_transfer(*inputs)
+        with self.assertRaises(ValueError):
+            intake_mass_exchange(35, 2000, 44.1, 0, 1, 2000)
+        with self.assertRaises(ValueError):
+            intake_pressure_feedback(14.7, 1, 0, IntakeExchange())
 
 
 class CyclePreparationTests(unittest.TestCase):
