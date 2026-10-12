@@ -51,6 +51,8 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/usage.md` | Detailed controls, command examples and supported formats |
 | `docs/roadmap.md` | Work needed to reach a playable client |
 | `docs/research.md` | Evidence standards and optional verification workflow |
+| `docs/calculations/` | Explanations of recovered original engine, gas-flow and vehicle calculations |
+| `docs/mod-dev-kit.md` | Planned add-on package format, extension boundaries and developer tools |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.

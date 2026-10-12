@@ -34,6 +34,15 @@ harness and does not define the intended handling or game rules.
 - Windows and Linux graphics/runtime verification, controller input, packaging and installation.
 - Performance profiling, malformed-content handling and broader vehicle/track validation.
 
+## Mod development kit
+
+Provide documented, versioned extension points and tooling for vehicle, component,
+track and presentation add-ons. Include package validation, dependency/conflict
+reports, examples, and a development workflow that does not modify original files.
+See [the mod kit design](mod-dev-kit.md). Preserve recovered original behavior
+as the default; make simulation changes explicit and negotiate online compatibility
+once the target server protocol is understood.
+
 ## Completion evidence
 
 Use real runtime checks for driving, audio, networking and rendering. CI passing synthetic tests does not prove these features. Linux CI now exercises the generated-geometry garage on Mesa; verify original-asset gameplay, hardware drivers and networking separately. A universal Python wheel alone does not establish runtime compatibility.
