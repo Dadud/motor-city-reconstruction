@@ -25,9 +25,9 @@ copied into that task at +0x20. They are not copied into the attachment payload.
 Completion handler `0x681d30` finds the pending transaction by the four-byte
 value at allocation +0xf. In its positive completion branch, it passes the
 retained task's bytes at +0x20 to `0x6f6c20`, then enables connection encryption
-through `0x6f6b50`. The opcode and dispatch condition that selects that positive
-branch remain to be recovered; the existence of this branch alone is not
-evidence that a real fan server accepted an attachment.
+through `0x6f6b50`. The generic success and wrapped-result conditions are
+recovered in [MCOTS replies](mcots-responses.md). Their bounded verification
+does not establish that a real fan server accepted an attachment.
 
 `0x6f6c20` locates the connection and calls `0x6fa730`. That initializer
 constructs two RC4 objects through `0x6fd320`, each with the same key pointer

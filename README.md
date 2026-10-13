@@ -62,6 +62,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/online-account.md` | Integrated authorization, persona selection and lobby entry API |
 | `docs/mcots-login.md` | Recovered MCOTS task flow and native login record |
 | `docs/mcots-encryption.md` | MCOTS attachment key source and verified persistent RC4 calculation |
+| `docs/mcots-responses.md` | Transaction correlation, attachment completion and native error mapping |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.
