@@ -123,6 +123,44 @@ External database SHA-256:
 `bdd86d8e781f127ac7dee5a5dab38945d0f9f03db354248e3cf50bbf9a13e021`.
 The database and raw native evidence remain external to the published repository.
 
+### Physics record and checksum
+
+`client.owned_physics` reconstructs the 496-byte record loaded by `0x67d900`
+from `Physics_Select`. The physical query columns are PartTypeID, Ordinal,
+StatusID, DutyRating, MaxItemWear, Mass, Val1 through Val50, and TextVal1
+through TextVal8. The loader clears the entire record after initially writing
+its first two words, so those words remain zero. Ordinal and StatusID occupy
+offsets 8 and 12; Mass is float32 at 16; DutyRating and MaxItemWear occupy
+20 and 24. Value and text counts are at 28 and 32, checksum at 36, fifty
+float32 values at 40, and eight 32-byte narrow text slots at 240.
+
+The value loop stops at the first NULL, leaving its remaining zero-initialized
+slots untouched. Text fields are independent: NULL is skipped, an empty
+non-NULL string still counts, and strings are truncated to 32 bytes with no
+terminator when full. The authored encoder requires an explicit text encoding
+and rejects nonfinite or out-of-range numeric input. These validation limits
+are authored safeguards, rather than a claim about native error handling.
+
+The checksum covers 216 bytes: signed PartTypeID, DutyRating and MaxItemWear,
+float32 Mass, then all fifty float32 slots including the zero tail. Original
+`0x658280` uses reflected CRC32 with initial state `0xffffffff` and no final
+inversion. Its result is Python's `zlib.crc32(buffer) ^ 0xffffffff`.
+Ordinal, StatusID and text do not participate. Four controlled input buffers
+match execution of the complete original checksum routine using
+`python -m tools.owned_physics_oracle /path/to/original/mcity.exe`.
+That oracle excludes database loading and record placement.
+
+The owned-part placement copies the record into offsets `0x404` through
+`0x5f3`, then replaces the earlier wear limit at `0x1ef` with physics
+MaxItemWear. Instance identity, damage and wear remain outside this copy.
+This encoder is an intermediate building block; startup does not yet resolve
+and enrich every owned car automatically, and it does not establish live
+fan-server compatibility.
+
+Physics evidence: `ev_43236bb54bf3a2d2505832f5a1dccd831c08af8c9438503639cf67a431a88839`
+(loader) and `ev_845ede42f71e5874074abb89dde0407172aa653a3a8989ea5ce38cab1deef2c0`
+(checksum).
+
 Additional evidence: `ev_fdfb5c0da53c5d462fe14bbc44d485c8973d188a5c23a3b39081d3c3a43cc967`
 (query names), `ev_7f0f24842329efb01a59e535640ba6389a8e2ea116a82f04988d36315beebef0`
 (update/insert bindings), `ev_6e74cd2ef153184a2d25f6d152664e19241c451d2d55082cf10d3aac1aaaf72b`
