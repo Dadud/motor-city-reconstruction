@@ -1,8 +1,8 @@
-# Account-to-lobby flow
+# Account, lobby and primary connection flow
 
 `client/online_account.py` joins the recovered services into an explicit,
-blocking developer API. It does not replace the game's menus or implement
-MCOTS and racing.
+blocking developer API, including the primary MCOTS exchange. The game's
+menus, follow-up services and racing remain unfinished.
 
 `authenticate` receives an external installation, discovered shard, configured
 auth settings/certificate pin, credentials and the explicit key-record value.
@@ -24,6 +24,22 @@ authenticated account ID and retained client request key. The raw map record's
 account field cannot replace the authenticated identity. The returned lobby
 connection belongs to the caller and must be closed after use.
 
+`enter_connections` performs that same activation and lobby sequence, then
+connects to the discovered transaction endpoint with the same account ID,
+selected persona and retained 32-byte client key. It passes zero for all three
+extra login fields, matching the original caller. It validates primary inputs
+before activation. Primary failure closes the accepted lobby; the returned
+`OnlineConnections` context manager owns and closes both accepted streams.
+It stops at the primary rich success reply, before additional service joins
+and game-data requests.
+
+Original caller evidence: procedure `0x5ef240` clears EBX at `0x5ef2e8`, has
+no subsequent EBX writes before the three pushes at `0x5ef815`, `0x5ef81c`
+and `0x5ef822`, and invokes `0x683100` at `0x5ef857`. The Windows x86 calling
+convention preserves EBX across intervening calls. Thus the three values are
+zero in this path; their broader meanings remain unresolved. Local REA evidence
+ID: `ev_f6fc96430dcc6cdc39dc51c7dd405281738d905606779b9a9e3e0a5690f3143d`.
+
 The explicit key-record value remains unresolved in original runtime evidence;
 the integration does not introduce a guessed default. Hostname and local IP
 encoding are also caller supplied. This API sends account and activation requests
@@ -32,7 +48,8 @@ game UI, cancellation/background execution and reconnect policy remain unfinishe
 
 Tests verify ticket handoff, service ID, account/key retention, stopping after
 denial, shard-aware selection, account-versus-persona identity, and rejecting
-invalid local identity fields before activation. They use synthetic service
+invalid local identity fields before activation, ordered primary handoff and
+cleanup after primary rejection. They use synthetic service
 results. Separate TLS and socket checks exercise the transport, but the complete
 flow has not yet succeeded against an authorized fan-server account.
 

@@ -62,3 +62,38 @@ class OnlineAccountTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 online.enter_lobby(42, hostname=b'x'*64, ip_address=b'127.0.0.1')
             activate.assert_not_called()
+
+    def test_primary_handoff_order_identity_key_and_owned_cleanup(self):
+        prepared = PreparedLogin(b'', b'c'*32)
+        online = OnlineAccount(self.shard, MagicMock(user_id=123, prepared_login=prepared),
+            PersonaMaps((PersonaMapEntry(99, 42, 44, 0, b'name'),), 1))
+        calls = MagicMock()
+        with patch.object(OnlineAccount, 'enter_lobby', return_value=MagicMock()) as lobby, \
+             patch('client.online_account.connect_primary', return_value=MagicMock()) as primary:
+            calls.attach_mock(lobby, 'lobby')
+            calls.attach_mock(primary, 'primary')
+            with online.enter_connections(42, hostname=b'host', ip_address=b'127.0.0.1') as joined:
+                self.assertEqual([call[0] for call in calls.mock_calls], ['lobby', 'primary'])
+                endpoint, record, material = primary.call_args.args
+                self.assertEqual(endpoint, self.shard.transactions)
+                self.assertEqual((record.account_user_id, record.persona_id, record.persona_name),
+                                 (123, 42, b'name'))
+                self.assertEqual((record.value_120, record.value_124, record.value_128), (0, 0, 0))
+                self.assertEqual(material, prepared.session_material)
+                self.assertIs(joined.lobby, lobby.return_value)
+            primary.return_value.close.assert_called_once_with()
+            lobby.return_value.close.assert_called_once_with()
+        with patch.object(OnlineAccount, 'enter_lobby', return_value=MagicMock()) as lobby, \
+             patch('client.online_account.connect_primary', side_effect=ValueError('rejected')):
+            with self.assertRaisesRegex(ValueError, 'rejected'):
+                online.enter_connections(42, hostname=b'host', ip_address=b'127.0.0.1')
+            lobby.return_value.close.assert_called_once_with()
+
+    def test_invalid_primary_inputs_do_not_activate_persona(self):
+        online = OnlineAccount(self.shard,
+            MagicMock(user_id=123, prepared_login=PreparedLogin(b'', b'c'*31)),
+            PersonaMaps((PersonaMapEntry(99, 42, 44, 0, b'name'),), 1))
+        with patch('client.online_account.activate_persona') as activate:
+            with self.assertRaises(ValueError):
+                online.enter_connections(42, hostname=b'host', ip_address=b'127.0.0.1')
+            activate.assert_not_called()

@@ -4,7 +4,8 @@
 primary transaction steps. It validates the login record, retained 32-byte
 client session material, transaction ID and timeouts before opening a socket.
 The caller supplies the transaction endpoint from shard discovery and explicit
-values for the three still-unresolved native login fields.
+values for the three native login fields. The integrated account caller supplies
+zero for each, as recovered from original procedure `0x5ef240`.
 
 The exchange sends the 40-byte 0x1b6 attachment payload as plaintext, waits
 for a matching generic completion, then enables both persistent cipher
@@ -38,13 +39,13 @@ Real local TCP tests verify exact plaintext attachment bytes, encrypted login
 bytes, independent incoming/outgoing streams, a control keepalive exchange,
 the rich response and ownership cleanup. They also cover uint32 wraparound,
 attachment rejection, wrong transaction IDs, missing/truncated login data,
-and validation before connection. All 286 repository tests passed locally.
+and validation before connection.
 The algorithms and packet builders have separate original-code oracles;
 the integrated exchange uses a synthetic peer and does not prove live server
 compatibility.
 
 Remaining integration includes service descriptor configuration and attachment,
-account-to-primary orchestration, native login-field meanings, UI lifecycle,
+native login-field meanings, UI lifecycle,
 outgoing compression and full transaction/race behavior. See
 [login success](mcots-login-success.md), [session](mcots-session.md) and
 [attachment replies](mcots-responses.md) for the recovered boundaries.
