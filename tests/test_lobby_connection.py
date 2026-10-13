@@ -1,5 +1,6 @@
 import socket
 import struct
+import threading
 import unittest
 from unittest.mock import patch
 from client.lobby_connection import connect_lobby, LobbyConnection, LobbyRequestError
@@ -95,3 +96,65 @@ class LobbyConnectionTests(unittest.TestCase):
             stream.send(Frame(0x207, b''), padding=b'')
         remote.send.finish()
         remote.receive.finish()
+
+    def test_server_heartbeat_reply_and_chains_survive(self):
+        stream, peer, remote = self.pair()
+        # Both plaintext and wrapped heartbeats reach the native opcode handler.
+        for wrapped in (False, True):
+            heartbeat = Frame(0x217, b'')
+            if wrapped:
+                heartbeat = encrypt_envelope(heartbeat, remote.send, padding=bytes(4))
+            application = Frame(0x401, b'application')
+            peer.send(Frame(0x207, b'').encode())
+            peer.send(heartbeat.encode())
+            peer.send(encrypt_envelope(application, remote.send,
+                padding=bytes((-len(application.encode())) % 8)).encode())
+            self.assertEqual(stream.receive_message(timeout=2), application)
+            self.assertEqual(peer.receive(timeout=2), Frame(0x207, b''))
+            # The heartbeat reply must not advance the outbound encryption chain.
+            stream.send(application, padding=bytes((-len(application.encode())) % 8))
+            reply = peer.receive(timeout=2)
+            self.assertEqual(decrypt_envelope(reply, remote.receive).inner, application)
+        remote.send.finish()
+        remote.receive.finish()
+
+    def test_complete_local_queue_login_and_heartbeat_exchange(self):
+        listener = socket.socket()
+        self.addCleanup(listener.close)
+        listener.bind(('127.0.0.1', 0))
+        listener.listen(1)
+        listener.settimeout(3)
+        errors, requests, positions = [], [], []
+        application = Frame(0x401, b'local lobby fixture')
+
+        def server():
+            ciphers = LobbyCiphers.from_login(self.prepared)
+            try:
+                sock, _ = listener.accept()
+                with NPSConnection(sock) as peer:
+                    peer.send(Frame(0x231, struct.pack('>HH', 1, 2)).encode())
+                    peer.send(Frame(0x230, b'').encode())
+                    requests.append(peer.receive(timeout=3))
+                    peer.send(self.success_frame().encode())
+                    peer.send(Frame(0x217, b'').encode())
+                    peer.send(encrypt_envelope(application, ciphers.send,
+                        padding=bytes((-len(application.encode())) % 8)).encode())
+                    requests.append(peer.receive(timeout=3))
+            except Exception as error:
+                errors.append(type(error).__name__)
+            finally:
+                ciphers.send.finish()
+                ciphers.receive.finish()
+
+        thread = threading.Thread(target=server, daemon=True)
+        thread.start()
+        with connect_lobby(Endpoint('127.0.0.1', listener.getsockname()[1]),
+                           self.login, self.prepared, queue_timeout=3,
+                           on_queue_position=positions.append) as connection:
+            self.assertEqual(connection.success, self.success)
+            self.assertEqual(connection.receive_message(timeout=3), application)
+        thread.join(4)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual(errors, [])
+        self.assertEqual(positions, [LobbyQueuePosition(1, 2)])
+        self.assertEqual(requests, [self.login.frame(), Frame(0x207, b'')])

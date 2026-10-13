@@ -7,6 +7,7 @@ from client.lobby_response import (LobbyLoginSuccess, LobbyQueuePosition,
                                     native_connection_rejection)
 from client.lobby_session import LobbyCiphers
 from client.nps_transport import NPSConnection, _timeout
+from client.nps_framing import Frame
 
 
 class LobbyRequestError(RuntimeError):
@@ -20,8 +21,9 @@ class LobbyRequestError(RuntimeError):
 class LobbyConnection:
     """An accepted lobby stream; cipher chains persist until it closes.
 
-    Heartbeat frames remain visible to the caller. Room dispatch, heartbeat
-    scheduling and reconnect policy are not implemented by this stream wrapper.
+    receive() exposes raw inner frames; receive_message() handles server
+    heartbeats before delivering application messages. Room dispatch and
+    reconnect policy remain separate.
     """
     def __init__(self, connection, ciphers, success):
         self._connection, self._ciphers = connection, ciphers
@@ -65,6 +67,31 @@ class LobbyConnection:
             self._connection.close()
             self._ciphers.send.finish()
             self._ciphers.receive.finish()
+
+    def receive_message(self, *, timeout=120):
+        """Native 0x7414b0: discard 0x207, answer 0x217 with empty 0x207.
+
+        Replies bypass encryption and do not advance either CBC chain. The
+        deadline covers heartbeat traffic too, so it cannot extend the wait
+        indefinitely. No unsolicited heartbeat schedule is inferred here.
+        """
+        deadline = time.monotonic()+_timeout(timeout)
+        while True:
+            remaining = deadline-time.monotonic()
+            if remaining <= 0:
+                self.close()
+                raise TimeoutError('lobby message receive timed out')
+            frame = self.receive(timeout=remaining)
+            if frame.message_id == 0x207:
+                continue
+            if frame.message_id == 0x217:
+                remaining = deadline-time.monotonic()
+                if remaining <= 0:
+                    self.close()
+                    raise TimeoutError('lobby heartbeat reply timed out')
+                self.send(Frame(0x207, b''), padding=b'', timeout=min(30, remaining))
+                continue
+            return frame
 
     def __enter__(self):
         if self._closed:
