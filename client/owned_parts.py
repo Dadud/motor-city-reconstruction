@@ -31,6 +31,37 @@ class OwnedPartMetadata:
             struct.pack_into('<i',slot,offset,value)
         return bytes(slot)
 
+    def apply_text_fields(self,slot, *, text_encoding):
+        """Copy recovered query text, before family/type-specific overrides.
+
+        Model, short model, extra info and filename require a terminator in
+        the original query buffer. Reject overlong input rather than recreate
+        the native unbounded read beyond that buffer.
+        """
+        if not isinstance(slot,bytes) or len(slot) != 1596:
+            raise ValueError('expected owned-part intermediate slot')
+        def encoded(value):
+            if value is None:
+                value = ''
+            if not isinstance(value,str) or '\0' in value:
+                raise ValueError('expected unterminated owned-part text')
+            return value.encode(text_encoding)
+        fields = []
+        for offset,capacity,value in ((0x307,64,self.model_name),
+                (0x20,352,self.extra_info),(0x387,9,self.part_filename),
+                (0x287,64,self.short_model_name)):
+            text = encoded(value)
+            if len(text) >= capacity:
+                raise ValueError('owned-part text lacks a bounded native terminator')
+            fields.append((offset,text+b'\0'))
+        name = encoded(self.part_type_name)[:63]
+        output = bytearray(slot)
+        output[0x347:0x387] = name.ljust(64,b'\0')
+        for offset,text in fields:
+            output[offset:offset+len(text)] = text
+        output[0x390] = 0  # Original explicitly cleared local text buffer.
+        return bytes(output)
+
 
 @dataclass(frozen=True)
 class OwnedPart:

@@ -162,7 +162,7 @@ The saved query explicitly filters `PartTypeID=[id]` and `Physics.Ordinal=1`.
 `Catalogue.owned_part_intermediate` now joins the actual instance's branded
 metadata to exactly that physics row. It reproduces the cleared record and
 zero wear limit when ordinal 1 is missing, rather than choosing another row.
-Text metadata placement and later calculations remain incomplete, so this
+Family/type-specific text overrides and later calculations remain incomplete, so this
 method does not yet produce a complete playable car or establish live
 fan-server compatibility.
 
@@ -176,6 +176,36 @@ conversion remains unresolved and the authored join rejects it explicitly.
 Physics evidence: `ev_43236bb54bf3a2d2505832f5a1dccd831c08af8c9438503639cf67a431a88839`
 (loader) and `ev_845ede42f71e5874074abb89dde0407172aa653a3a8989ea5ce38cab1deef2c0`
 (checksum).
+
+### Query text placement
+
+The intermediate catalogue join now copies `BrandPart_SelectE` text using
+the original `0x6693a6`–`0x669498` instruction sequence. Model name goes to
+`0x307`, short model name to `0x287`, extra information to `0x20`, and the
+part filename to `0x387`. These copies include the terminator and preserve
+bytes beyond it. The part type name at `0x347` instead uses a 63-byte
+`strncpy`, zero padding and an explicitly cleared last byte at `0x386`.
+The original also copies a separately cleared local string to `0x390`.
+
+Query buffer capacities are 64 bytes for model/short model/type name,
+352 for extra information, and 9 for the filename. The native query reader
+itself uses `strncpy` with those capacities; the subsequent model/short
+model/extra/filename copies scan for a terminator. The authored version rejects
+strings that would fill those source buffers, avoiding an unbounded native
+read. Type names can be truncated safely to 63 bytes. Text encoding remains
+explicit at the API boundary. NULL text copies an empty string.
+
+`python -m tools.owned_text_oracle /path/to/original/mcity.exe` verifies four
+cases against the original copying instructions, comparing all 1596 bytes.
+Cases cover NULL, ordinary labels, capacity boundaries, and narrow accented
+text; deliberately patterned initial slots also confirm preserved tails.
+Query buffers are supplied by the oracle, and family/type-specific overrides
+following this instruction range remain outside its scope. All 4,257 supported
+external-database branded joins also pass with this text placement enabled.
+
+Evidence: `ev_06ca5d6dd75c04c0eaf46b1e931fd0872e8aae40953b9badda14cda344a794a0`
+(enrichment) and `ev_bd20d19c2b2c28f709b1abd2ed3716a0080052ca5d9fd5ef8e599b2970048fda`
+(query buffer reader).
 
 Additional evidence: `ev_fdfb5c0da53c5d462fe14bbc44d485c8973d188a5c23a3b39081d3c3a43cc967`
 (query names), `ev_7f0f24842329efb01a59e535640ba6389a8e2ea116a82f04988d36315beebef0`
