@@ -10,7 +10,10 @@ def fixture():
                         dict(BrandedPartID=2, ModelID=20, PartTypeID=200)],
         'PartType': [dict(PartTypeID=200, AbstractPartTypeID=20001,
                           PartFilename='testcar', PartType='body')],
-        'AbstractPartType': [dict(AbstractPartTypeID=20001, PartFilename='fallback')],
+        'AbstractPartType': [dict(AbstractPartTypeID=20001, PartFilename='fallback',
+            ParentAbstractPartTypeID=0,DependsOn=0,ModifiedRule=0,PartPaired=0,
+            BlockFamilyCompatibility=0,GarageCategory=1,RepairCostModifier=0.5,
+            ScrapValueModifier=0.25,EAPT='Body',EUT='',SchematicPicname1='pic1',SchematicPicname2='pic2')],
         'Model': [dict(ModelID=10, Debug_String='Test car', EModel='Coupe'),
                   dict(ModelID=20, EModel='Stock body')],
         'AttachmentPoint': [dict(AttachmentPointID=0, AttachmentPoint='default')],
@@ -61,6 +64,8 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(slot[0x404:0x5f4],encode_owned_physics(row,text_encoding='cp1252'))
         self.assertEqual(struct.unpack_from('<i',slot,0x1ef)[0],900)
         self.assertEqual(struct.unpack_from('<i',slot,0x610)[0],17)
+        self.assertEqual(slot[0x1c0:0x1c9],b'fallback\0')
+        self.assertEqual(struct.unpack_from('<ff',slot,0x1db),(0.5,0.25))
         del catalogue.owned_physics_rows[(200,1)]
         slot = catalogue.owned_part_intermediate(part,text_encoding='cp1252')
         self.assertEqual(slot[0x404:0x5f4],bytes(496))

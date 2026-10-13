@@ -133,8 +133,8 @@ class Catalogue:
     def owned_part_intermediate(self, part, *, text_encoding):
         """Join instance metadata and Physics_Select ordinal 1.
 
-        Type-specific text overrides and later native calculations are
-        not yet included; this returns an intermediate slot, not a playable car.
+        Display-name formatting and later native calculations are not yet
+        included; this returns an intermediate slot, not a playable car.
         A missing ordinal-1 row reproduces the native cleared physics record.
         """
         from .owned_physics import apply_owned_physics
@@ -152,6 +152,13 @@ class Catalogue:
                     brand['Brand'],family['EName'],family['EShortName'])
                 slot = override.apply(slot,text_encoding=text_encoding,
                     brand_cache_name='' if brand['Brand'] is None else brand['Brand'])
+        from .part_type_templates import encode_part_type_template, apply_part_type_template
+        try:
+            template = encode_part_type_template(self.abstract[metadata.abstract_type_id],
+                                                  text_encoding=text_encoding)
+        except KeyError as error:
+            raise ValueError('owned part has missing abstract-type template data') from error
+        slot = apply_part_type_template(slot,template)
         if metadata.part_type_id == 0:
             return slot
         row = self.owned_physics_rows.get((metadata.part_type_id,1))

@@ -162,7 +162,7 @@ The saved query explicitly filters `PartTypeID=[id]` and `Physics.Ordinal=1`.
 `Catalogue.owned_part_intermediate` now joins the actual instance's branded
 metadata to exactly that physics row. It reproduces the cleared record and
 zero wear limit when ordinal 1 is missing, rather than choosing another row.
-Type-specific text overrides and later calculations remain incomplete, so this
+Display-name formatting and later calculations remain incomplete, so this
 method does not yet produce a complete playable car or establish live
 fan-server compatibility.
 
@@ -246,13 +246,68 @@ supplied caches. Four cases match every slot byte: matching family/brand,
 matching family with absent brand cache, absent family, and ID -1. The family
 loader boundary is substituted; SQL and allocation do not execute. The installed
 database has 108 brands and 22 families; all 4,257 supported intermediate part
-joins pass with the overrides enabled. Later type-specific template processing
-and valuation remain outside this implementation.
+joins pass with the overrides enabled. Later display formatting and valuation
+calculations remain outside this implementation.
 
 Evidence: `ev_ce4d2a7a98b55b76dcba61e7f748be262b33c76d400c8c13516bf5c9d739fcfc`
 (brand cache loader), `ev_cb9a1c6738389cdf23e7525d0ad1c87a3fb411259b55039ef510a96d8eee521d`
 (brand lookup), and `ev_74e003d9c9abcb3c65c7f6ba7169af89b45bfa20b95d4efd4eac18cc81653237`
 (family cache loader).
+
+### Abstract part-type templates
+
+Original `0x64cdd0` loads a cache from AbstractPartType, using an explicit SQL
+column order rather than the physical table order. The query includes identity,
+parent, dependencies, localized labels, asset names, pairing and category flags,
+and two valuation modifiers. The cache reserves a first entry for the no-parent
+marker; actual records begin at index 1 with a 1596-byte stride.
+
+`client.part_type_templates` reconstructs the confirmed per-record stores:
+
+| Offset | Database field or derived value |
+| --- | --- |
+| `0` | AbstractPartTypeID |
+| `4` | ParentAbstractPartTypeID |
+| `8` | DependsOn |
+| `0xc` | Membership in the original 12-ID special-type list |
+| `0x10` | PartPaired |
+| `0x14` | BlockFamilyCompatibility |
+| `0x18` | GarageCategory |
+| `0x1c` | ModifiedRule |
+| `0x20` | EUT, 351-byte padded copy |
+| `0x180` | EAPT, 63-byte padded copy |
+| `0x1c0`, `0x1c9`, `0x1d2` | PartFilename and two schematic picture names, eight bytes each |
+| `0x1db`, `0x1df` | RepairCostModifier and ScrapValueModifier as float32 |
+| `0x600`, `0x604` | Parent/dependency cache indices, initially -1 |
+
+The source query's PartPaired, BlockFamilyCompatibility and GarageCategory
+values occupy consecutive but distinct fields. These positions were verified
+against original stores rather than inferred from nearby getter names. Parent
+and dependency IDs are separate from later resolved cache indices. The encoder
+accepts explicit indices; it does not yet reconstruct the whole cache's index
+resolution passes or no-parent marker automatically.
+
+During owned-part enrichment the original helpers copy the special-type flag,
+pairing, garage category and modification rule to matching offsets. Subsequent
+instructions copy the two float32 modifiers and the template filename and
+schematics. The filename at `0x1c0` is a separate field from the branded part's
+filename at `0x387`; both are retained. Filename/schematic copies include the
+terminator and preserve remaining destination bytes. The catalogue now applies
+these fields to the real owned instance before its physics record is loaded.
+
+`python -m tools.part_type_template_oracle /path/to/original/mcity.exe`
+checks three synthetic types against original cache stores, four helper
+lookups per type, and owned-part copy ranges: nine byte-for-byte comparisons
+cover all 1596 bytes. Query values and caches are supplied; SQL, allocation,
+whole-cache relationship resolution, model-brand copies and display formatting
+remain excluded. All 4,257 supported installed-database part joins also pass
+with template fields enabled; the external table contains 64 abstract types.
+These modifiers are recovered inputs, not a completed repair/scrap calculation.
+
+Evidence: `ev_983c49d6e98b3d947068551553e72553b69089e6110ebf8185395a3d642f9145`
+(template loader), `ev_1a2f70396702f4a577d1cacb6ec564d21fd69d678bc2e228976c463dec77ab40`
+(template lookup), and `ev_06ca5d6dd75c04c0eaf46b1e931fd0872e8aae40953b9badda14cda344a794a0`
+(owned enrichment).
 
 Additional evidence: `ev_fdfb5c0da53c5d462fe14bbc44d485c8973d188a5c23a3b39081d3c3a43cc967`
 (query names), `ev_7f0f24842329efb01a59e535640ba6389a8e2ea116a82f04988d36315beebef0`
