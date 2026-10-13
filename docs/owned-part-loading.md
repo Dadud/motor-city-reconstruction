@@ -1,5 +1,9 @@
 # Original owned-part loading
 
+The next assembly stage is documented in
+[owned-component discovery](owned-component-discovery.md), including the
+original gate for expanding nested assemblies.
+
 The recovered post-load arithmetic is documented in
 [owned-part condition and valuation](calculations/owned-part-valuation.md).
 The catalogue applies it when explicit `valuation_rates` are supplied;

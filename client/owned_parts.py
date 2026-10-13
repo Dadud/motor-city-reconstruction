@@ -251,3 +251,9 @@ class OwnedInstanceCache:
 
     def part_cache(self):
         return OwnedPartCache(self._rows.values())
+
+    def child_rows(self,parent_id):
+        """Snapshot rows matching the original ParentPartID equality predicate."""
+        if type(parent_id) is not int or not 1 <= parent_id <= 0xffffffff:
+            raise ValueError('expected nonzero owned parent ID')
+        return tuple(dict(row) for row in self._rows.values() if row.get('ParentPartID') == parent_id)
