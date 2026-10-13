@@ -61,6 +61,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/lobby-service.md` | Queue, plaintext lobby login and persistent encrypted message transport |
 | `docs/online-account.md` | Integrated authorization, persona selection and lobby entry API |
 | `docs/mcots-login.md` | Recovered MCOTS task flow and native login record |
+| `docs/mcots-encryption.md` | MCOTS attachment key source and verified persistent RC4 calculation |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.

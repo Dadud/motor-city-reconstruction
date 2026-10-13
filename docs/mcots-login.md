@@ -84,7 +84,9 @@ from the queue, it dispatches through vtable +0x30 to `0x6f52e0`. That method
 can compress a payload through `0x6f53e0` and encrypt it through `0x6fa7f0`,
 depending on message and connection flags. Compression skips payloads shorter
 than 80 bytes, so the 39-byte login record does not take that compression
-path. Encryption is connection dependent and remains unresolved.
+path. Encryption is connection dependent; its key source and RC4 primitive
+are recovered in [MCOTS encryption](mcots-encryption.md). Attachment response
+dispatch and message-specific encryption selection remain incomplete.
 
 The final ordinary TCP sender is vtable +0x28, `0x6f7f20`. It adds 9 to the
 payload length at allocation +9 and sends from that offset, with a byte count
