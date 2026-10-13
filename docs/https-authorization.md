@@ -36,6 +36,15 @@ statuses and sanitized errors. They use synthetic connection responses. The
 installed fan server's pinned TLS certificate was checked separately; a real
 successful account ticket has not been obtained by this service.
 
+`python -m tools.auth_https_smoke` additionally exercises a real local TLS peer
+with an ephemeral certificate and synthetic credentials. It verifies the actual
+HTTP/1.0 request line, query escaping and user agent, parses a synthetic ticket,
+then checks that a mismatched pin delivers no HTTP bytes to the peer. Temporary
+certificate/private-key files are removed when the check exits; request contents
+are not printed. This check runs in Windows and Ubuntu CI with the network extra.
+It passed locally on Windows. It establishes transport and pin behavior, not
+fan-server account acceptance.
+
 Retained DLL evidence:
 `ev_6ce86436747de248e3b58b54d1288ab8b5ff4c608b8636e5e2a44b817b0b106c`.
 Source SHA-256:
