@@ -42,6 +42,40 @@ through COM or changed. Thus the base catalogue can supply branded metadata,
 but does not itself provide the live owned-instance cache. The cache-update
 path is now reconstructed in memory; complete enrichment remains unfinished.
 
+`Catalogue.owned_part_metadata` now reproduces the `BrandPart_SelectE` join
+from the instance's actual `BrandedPartID` through `PartType` and `Model`.
+It does not replace an owned instance with a `StockAssembly` vehicle. The
+saved selection order identifies part type, part-type text, brand, model,
+abstract type, extra information, filename, retail price, maximum wear,
+manufacturing date, short model, grade, engine family and a final literal zero.
+Nullable integer results follow the native zero conversion.
+
+`OwnedPartMetadata.apply_numeric_fields` applies the first confirmed numeric
+stores while preserving the instance seed:
+
+| Field | Slot offset |
+| --- | --- |
+| AbstractPartTypeID | +0 |
+| PartTypeID | +0x1e7 |
+| RetailPrice | +0x1eb |
+| MaxItemWear | +0x1ef |
+| Manufacturing year | +0x1fb |
+| PartGradeID | +0x1ff |
+| EngineBlockFamilyID | +0x203 |
+
+Metadata text is returned separately without guessing its original narrow-byte
+encoding. These stores precede other metadata helpers, text copying,
+`Physics_Select`, cache-backed enrichment and subsequent price adjustments.
+They are an intermediate object stage, not the final playable car record.
+
+`python -m tools.owned_metadata_oracle /path/to/original/mcity.exe` executes
+the original numeric stores at `0x669346`–`0x669374` with controlled query
+values. Three engine-family cases match all 1596 bytes, including preserving
+owned-instance damage and wear. No metadata query, text helper, physics or
+later value computation executes. A separate read-only check joined all 212
+stock-body catalogue rows in the installed database and formed their numeric
+metadata slots. That validates real table references, not live garage state.
+
 `OwnedInstanceCache.apply_persona_car_pairs` reproduces the car-list update:
 each nonzero first word selects `PartID`, the second supplies `BrandedPartID`,
 and the selected persona supplies `OwnerID`. Parent is SQL NULL; attachment,

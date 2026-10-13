@@ -20,6 +20,28 @@ def fixture():
 
 
 class CatalogueTests(unittest.TestCase):
+    def test_owned_metadata_joins_actual_instance_brand_without_stock_substitution(self):
+        import struct
+        from client.owned_parts import OwnedPart
+        catalogue = Catalogue(fixture())
+        catalogue.branded[2].update(RetailPrice=500,MaxItemWear=1000,
+            MfgDate='1955-01-01',EngineBlockFamilyID=None)
+        catalogue.types[200]['PartGradeID'] = 3
+        catalogue.models[20].update(BrandID=7,EShortModel='Body',EExtraInfo='details')
+        owned = OwnedPart(42,2,17,25,99,50,75)
+        metadata = catalogue.owned_part_metadata(owned)
+        self.assertEqual((metadata.part_type_id,metadata.abstract_type_id,metadata.retail_price,
+            metadata.max_item_wear,metadata.manufacture_year,metadata.engine_block_family_id),
+            (200,20001,500,1000,1955,0))
+        slot = metadata.apply_numeric_fields(owned)
+        self.assertEqual(struct.unpack_from('<I',slot,0x5f8)[0],42)
+        self.assertEqual(struct.unpack_from('<i',slot,0x610)[0],17)
+        self.assertEqual(struct.unpack_from('<i',slot,0x614)[0],25)
+        self.assertEqual(struct.unpack_from('<i',slot,0x1eb)[0],500)
+        self.assertEqual(metadata.model_name,'Stock body')
+        with self.assertRaises(ValueError):
+            catalogue.owned_part_metadata(OwnedPart(43,999,0,0,0,0,0))
+
     def test_stock_dyno_record_uses_duty_rating_and_rejects_special_carb(self):
         import struct
         from client.dyno import FlowTemplate

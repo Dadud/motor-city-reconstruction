@@ -4,6 +4,35 @@ import struct
 
 
 @dataclass(frozen=True)
+class OwnedPartMetadata:
+    abstract_type_id: int
+    part_type_id: int
+    retail_price: int
+    max_item_wear: int
+    manufacture_year: int
+    part_grade_id: int
+    engine_block_family_id: int
+    brand_id: int
+    part_type_name: str | None
+    model_name: str | None
+    short_model_name: str | None
+    extra_info: str | None
+    part_filename: str | None
+
+    def apply_numeric_fields(self,part):
+        """Add confirmed integer metadata; text and physics remain separate."""
+        slot = bytearray(part.native_seed())
+        for offset,value in ((0,self.abstract_type_id),(0x1e7,self.part_type_id),
+                (0x1eb,self.retail_price),(0x1ef,self.max_item_wear),
+                (0x1fb,self.manufacture_year),(0x1ff,self.part_grade_id),
+                (0x203,self.engine_block_family_id)):
+            if type(value) is not int or not -0x80000000 <= value <= 0x7fffffff:
+                raise ValueError('owned-part metadata must fit int32')
+            struct.pack_into('<i',slot,offset,value)
+        return bytes(slot)
+
+
+@dataclass(frozen=True)
 class OwnedPart:
     part_id: int
     branded_part_id: int

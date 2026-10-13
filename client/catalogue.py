@@ -103,6 +103,30 @@ class Catalogue:
         except KeyError as error:
             raise ValueError(f'vehicle {identifier}: missing database reference {error}') from error
 
+    def owned_part_metadata(self, part):
+        """BrandPart_SelectE join for an actual instance, including modified parts.
+
+        No StockAssembly replacement is made. Native query selection order
+        identifies metadata; instance damage/wear remain in the supplied part.
+        """
+        from .owned_parts import OwnedPart, OwnedPartMetadata
+        if not isinstance(part,OwnedPart):
+            raise ValueError('expected an owned-part instance')
+        part.native_seed()
+        try:
+            branded = self.branded[part.branded_part_id]
+            kind = self.types[branded['PartTypeID']]
+            model = self.models[branded['ModelID']]
+            def native_integer(value):
+                return 0 if value is None else value
+            return OwnedPartMetadata(native_integer(kind['AbstractPartTypeID']),kind['PartTypeID'],
+                native_integer(branded['RetailPrice']),native_integer(branded['MaxItemWear']),
+                0 if branded['MfgDate'] is None else int(str(branded['MfgDate'])[:4]),native_integer(kind['PartGradeID']),
+                native_integer(branded['EngineBlockFamilyID']),native_integer(model['BrandID']),kind['PartType'],
+                model['EModel'],model['EShortModel'],model['EExtraInfo'],kind['PartFilename'])
+        except (KeyError,TypeError,ValueError) as error:
+            raise ValueError('owned part has missing or invalid branded metadata') from error
+
     def tire_dimensions(self, vehicle):
         """Resolve stock wheel/axle attachments with unambiguous physics rows.
 
