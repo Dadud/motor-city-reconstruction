@@ -69,6 +69,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/mcots-session.md` | Integrated persistent encryption, decompression and keepalive handling |
 | `docs/mcots-primary-service.md` | Integrated primary attachment and encrypted login exchange |
 | `docs/post-login-data.md` | Original post-login data managers, requests and local cache boundaries |
+| `docs/owned-part-loading.md` | Owned-instance fields and original car population before metadata enrichment |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.
