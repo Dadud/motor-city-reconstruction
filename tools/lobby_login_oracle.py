@@ -34,7 +34,25 @@ def verify(executable):
         expected = case.payload()
         if length != len(expected) or bytes(cpu.mem_read(output, length)) != expected:
             raise ValueError('connection login differs from original packing')
-    return {'matched_cases': len(cases), 'coverage': 'native payload packer; no connection or server test'}
+    identity_cases = 0
+    for persona_id, name in ((42, b'driver'), (0xffffffff, b'n'*31)):
+        oracle._reset()
+        identity, source = oracle.inputs, oracle.inputs+0x1000
+        cpu.mem_write(identity, b'\xff'*116)
+        cpu.mem_write(source, name+b'\0')
+        cpu.reg_write(reg.UC_X86_REG_ECX, identity)
+        stack = cpu.reg_read(reg.UC_X86_REG_ESP)
+        cpu.mem_write(stack, struct.pack('<5I', oracle.stop, persona_id, source, 0, 0))
+        oracle._run(0x455c40, oracle.stop, count=100000)
+        if struct.unpack('<I', cpu.mem_read(identity+4, 4))[0] != persona_id:
+            raise ValueError('native persona identity differs')
+        if bytes(cpu.mem_read(identity+8, len(name)+1)) != name+b'\0':
+            raise ValueError('native persona name differs')
+        if bytes(cpu.mem_read(identity+0x28, 64)) != bytes(64):
+            raise ValueError('native selected-persona blob was not zeroed')
+        identity_cases += 1
+    return {'matched_cases': len(cases), 'matched_identity_cases': identity_cases,
+            'coverage': 'native payload packer and selected-persona identity constructor; no server test'}
 
 
 if __name__ == '__main__':

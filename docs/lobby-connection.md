@@ -163,3 +163,37 @@ The native unknown-opcode fallback returns -1. Queue messages 0x230/0x231 are
 handled separately, and success remains limited to the explicit success IDs.
 The helper only classifies an ID; it does not parse rejection payloads or
 execute the connection procedure.
+
+## Selected-persona login field source
+
+Game routine `0x5ef240` first selects and activates a persona through the account
+interface. It constructs a local identity using `0x455c40`, passing the selected
+persona ID, persona name, a null blob pointer, and blob length zero. Constructor
+`0x455c40` initializes the 64-byte field to zero, so this specific game path
+sends 64 zero bytes. This is established caller behavior, not a guessed default
+for every server-login use.
+
+Wrapper `0x44a0a0` passes that identity to `0x44fe10` with caller value zero and
+queue-enabled and synchronous flags both 1. Identity copy `0x455e40` preserves
+the persona ID, 32-byte name, and 64-byte blob. The task builder copies those
+into the server argument fields at 0x68, 0x48, and 0x6c respectively. It passes
+the retained client key-record pointer at 0xc4. The remaining uint32 argument
+at 0xc8 comes from account interface getter +0x18; its value remains unresolved.
+
+`LobbyLogin.for_selected_persona` now constructs the established zero blob,
+zero caller value, version string, and retained-key MD5, while leaving that
+getter value explicit. It requires persona identity supplied by the caller;
+persona download and activation are not yet implemented by this helper.
+
+Two bounded native-constructor cases began with nonzero scratch memory and
+confirmed the persona ID/name and explicit clearing of all 64 blob bytes.
+They extend `tools/lobby_login_oracle.py` alongside its three packet-packing
+cases. No authenticated connection was performed.
+
+Evidence:
+
+- Persona activation caller: `ev_fb4aaf06e28e38444f656f0009fd2662872068838eaf4534990864b889f7d69f`.
+- Identity constructor: `ev_09ca1f8cf0f3238d270f2ae286b5dca05745a4a7674e7ba994b9e783be9df39e`.
+- Identity copy: `ev_f07f1bc201c5e52392589e054d41fe2ccf2bedc454f2a07f4a553ee99e2dbd7f`.
+- Server task builder: `ev_665070d98ed7516a242bc3e5e400459907df28cc8226601de27b68b4c7cbc741`.
+- Wrapper: `ev_ba175135182d165e168232e9f38b127838dd86b294985517beb44d7b854a4077`.
