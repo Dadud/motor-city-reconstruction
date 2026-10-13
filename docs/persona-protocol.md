@@ -41,3 +41,28 @@ The payload serializer has Ghidra evidence
 Game wrapper evidence:
 `ev_acfdd6163e0796226d54663ee4d941bf56a468205f9ba920caa4a68fbd960614`.
 Raw source instructions remain local and excluded from publication.
+
+## Persona-map success payload
+
+The request's reply switch accepts opcode `0x607` (comparison at `0x71dd94`).
+Its derived response table `0x84af2c` selects reader `0x71e940`, which reads a
+big-endian uint16 entry count, then nested records through `0x7e0e30`, then a
+single final byte. Each nested record has a uint16 byte length. Entry factory
+`0x71e6d0` selects table `0x84af58` with reader `0x71e820`.
+
+Each entry contains four big-endian uint32 values followed by a uint16 byte
+count and at most 32 name bytes. The reader appends a local NUL terminator;
+the wire count does not include that appended byte. Field meanings and the
+final byte's meaning are not yet assigned by the reconstructed parser.
+
+`PersonaMaps.decode` bounds counts against available bytes and requires exact
+nested and outer lengths. It rejects names over 32 bytes rather than reproducing
+the native reader's truncation. Three entry cases matched original instructions
+under emulation, including empty and maximum names, integer values, and cursor
+advance. The enclosing list reader was inspected statically, not replayed.
+
+Entry reader evidence:
+`ev_8d66d19d22cabf07777a549c5f773d40233c168d6169a7ad9147245e8f8edb6b`.
+Nested record helper:
+`ev_fb720fb3faac0c2b1fd4b99e9d0fa0de85dc6d45f0783def9f8c23dff619ceeb`.
+This parser does not activate a persona or establish a server session.
