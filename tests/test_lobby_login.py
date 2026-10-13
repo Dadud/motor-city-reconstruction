@@ -2,10 +2,19 @@ import struct
 import unittest
 from dataclasses import replace
 
-from client.lobby_login import LobbyLogin
+from client.lobby_login import LobbyLogin, session_key_digest
 
 
 class LobbyLoginTests(unittest.TestCase):
+    def test_retained_key_digest(self):
+        self.assertEqual(session_key_digest(bytes(range(32))).hex(),
+                         'b4ffcb23737cec315a4a4d1aa2a620ce')
+        self.assertEqual(session_key_digest(b'').hex(),
+                         'd41d8cd98f00b204e9800998ecf8427e')
+        for material in (bytes(33), 'secret', None):
+            with self.assertRaises(ValueError):
+                session_key_digest(material)
+
     def setUp(self):
         self.login = LobbyLogin(42, b'driver', bytes(64), 7, 9, b'4.5.0.0',
                                 b'host', b'127.0.0.1', bytes(16))

@@ -5,8 +5,19 @@ The connection login is sent directly before normal lobby encryption activates.
 """
 from dataclasses import dataclass, field
 import struct
+import hashlib
 
 from client.nps_framing import Frame
+
+
+def session_key_digest(material):
+    """Native connection login's 16-byte MD5 of retained session key bytes.
+
+    This is the legacy wire digest, not a password hash or a new security design.
+    """
+    if not isinstance(material, bytes) or len(material) > 32:
+        raise ValueError('session key must contain at most 32 bytes')
+    return hashlib.md5(material, usedforsecurity=False).digest()
 
 
 def _string(value, capacity):
