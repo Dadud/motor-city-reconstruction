@@ -49,7 +49,43 @@ stops before transaction queueing. Four cases matched all 39 bytes, starting
 with nonzero destination memory: empty, ordinary, exactly 13-byte and 32-byte
 names. This proves those record bytes, not successful MCOTS authentication.
 
-Evidence:
+## Transaction ownership and outgoing queue
+
+The next stage is an asynchronous outgoing queue, rather than a direct socket
+write. Routine `0x6831f0` finds service 0xfe in the service table and copies its
+connection handle into offset 0 of the message allocation. It copies the
+global value at `0x8c13b4` into allocation offset +0xb. Before handing the
+allocation off, it saves the operation at +0x14 and the four-byte value at +0xf
+for the transaction tracking record. The meaning of that four-byte value and
+the default header value still require further tracing.
+
+Communication constructor `0x6f7710` selects vtable `0x84a220`; its send slot
+at +0xc resolves to `0x6f8270`. That method immediately takes ownership of the
+message: it reads the pointer through its first argument and clears the
+caller's pointer. It rejects a zero payload length at allocation +9 and a zero
+connection handle. For an ordinary positive connection handle it resolves a
+connection record through `0x6f73a0`, checks that record's +8 field, then puts
+the allocation onto the outgoing queue through `0x64dfd0` when the second
+argument is zero. It updates queue counters and signals the worker event.
+Consequently a successful return from this method proves queue acceptance;
+it does not prove a socket write or server acceptance.
+
+The allocation uses a 20-byte local prefix: connection handle at +0, another
+four-byte field at +4, allocation class at +8, payload length at +9, the field
+at +0xb, the field at +0xf, and a byte at +0x13. Payload begins at +0x14.
+Allocator `0x6f8e10` selects class 1, 2 or 4 according to pool-size thresholds.
+These class and ownership fields belong to local memory management. No wire
+header should be inferred by copying this prefix wholesale. The outgoing
+worker and its encoding remain the next boundary to recover.
+
+Additional static evidence:
+
+- Transaction queue: `ev_0278b349e65a18dd873bd7ed20107e49079727fb970c76de6a05866a7bca753c`.
+- Communication constructor: `ev_b78bea98aa1ea714bcb9c4682c3d2fe9ac098b3b3d64464cb59c52927e7a7533`.
+- Allocation: `ev_c9ed7afdcc898ed4e69ce04b4cf5ece65540fe3ef5f812fae6fbc1c52681e94a`.
+- Outgoing queue method: `ev_4e6470594521129189c6097579c2c7bc8865e5bf9ef82d0183b4516ec1c280c6`.
+
+## Login construction evidence
 
 - Task construction: `ev_98e890e64e73c615ef54da5b8da851d17b657aae5399cf65f32c7f9e932cbc3e`.
 - Task pump: `ev_6fab521cecde27ecd584769d507599c2e08311d002e1b0669de5eca97418d96e`.
