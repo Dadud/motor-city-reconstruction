@@ -10,7 +10,7 @@ class LobbyLoginTests(unittest.TestCase):
     def test_selected_persona_uses_zero_blob_and_retained_key_digest(self):
         prepared = PreparedLogin(b'', bytes(range(32)))
         login = LobbyLogin.for_selected_persona(42, b'persona', prepared,
-            value_200=7, hostname=b'host', ip_address=b'127.0.0.1')
+            account_user_id=7, hostname=b'host', ip_address=b'127.0.0.1')
         self.assertEqual(login.user_id, 42)
         self.assertEqual(login.username, b'persona')
         self.assertEqual(login.key_blob, bytes(64))

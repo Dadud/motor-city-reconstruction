@@ -178,11 +178,11 @@ queue-enabled and synchronous flags both 1. Identity copy `0x455e40` preserves
 the persona ID, 32-byte name, and 64-byte blob. The task builder copies those
 into the server argument fields at 0x68, 0x48, and 0x6c respectively. It passes
 the retained client key-record pointer at 0xc4. The remaining uint32 argument
-at 0xc8 comes from account interface getter +0x18; its value remains unresolved.
+at 0xc8 comes from account interface getter +0x18 and is the account user ID.
 
 `LobbyLogin.for_selected_persona` now constructs the established zero blob,
 zero caller value, version string, and retained-key MD5, while leaving that
-getter value explicit. It requires persona identity supplied by the caller;
+account user ID explicit. It requires persona identity supplied by the caller;
 persona download and activation are not yet implemented by this helper.
 
 Two bounded native-constructor cases began with nonzero scratch memory and
@@ -197,3 +197,23 @@ Evidence:
 - Identity copy: `ev_f07f1bc201c5e52392589e054d41fe2ccf2bedc454f2a07f4a553ee99e2dbd7f`.
 - Server task builder: `ev_665070d98ed7516a242bc3e5e400459907df28cc8226601de27b68b4c7cbc741`.
 - Wrapper: `ev_ba175135182d165e168232e9f38b127838dd86b294985517beb44d7b854a4077`.
+
+## Account ID getter
+
+The game's account-interface entry +0x18 resolves through thunk `0x525060` to
+getter `0x4a80f0`. The getter reads its adjusted `this` minus 0x78, corresponding
+to account-object offset 0xa0. Account worker `0x4a7e70` passes the login-result
+destination at object offset 0x9c. Binary login `0x72a8f0` stores the authenticated
+user ID at result offset 4, so the getter reads that same field. The complete
+data flow identifies login argument 0xc8 and payload value at native offset 200
+as the account user ID, separate from the selected persona ID.
+
+`for_selected_persona` now calls this input `account_user_id`. The general
+packet class retains its layout name `value_200` because other callers have not
+all been audited. This recovery follows static pointer adjustments and writes;
+native getter replay and live acceptance remain separate verification work.
+
+Account-worker evidence:
+`ev_b3fb8ae2237a5d0d3dbeb1ae7e3247ff1de5a0bec69f87b00bcb647a714f6d40`.
+Derived account constructor evidence:
+`ev_0b7cdfc0deb12256ecfb063973aeff7e543ad9e0cd65e27863c17070a373c0e4`.

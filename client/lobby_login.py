@@ -47,18 +47,18 @@ class LobbyLogin:
 
     @classmethod
     def for_selected_persona(cls, persona_id, persona_name, prepared, *,
-                             value_200, hostname, ip_address):
+                             account_user_id, hostname, ip_address):
         """Game 0x5ef240 selected-persona path: zero blob and caller value 0.
 
-        Persona data must come from successful persona selection. The remaining
-        service getter value is explicit until its implementation is recovered.
+        Persona data must come from successful persona selection. Account ID
+        comes from the authenticated login success, separately from persona ID.
         """
         from client.nps_session_request import PreparedLogin
         if not isinstance(prepared, PreparedLogin):
             raise TypeError('expected retained client login material')
         if not isinstance(prepared.session_material, bytes) or len(prepared.session_material) != 32:
             raise ValueError('prepared login must retain its 32-byte key')
-        result = cls(persona_id, persona_name, bytes(64), 0, value_200,
+        result = cls(persona_id, persona_name, bytes(64), 0, account_user_id,
                      b'4.5.0.0', hostname, ip_address,
                      session_key_digest(prepared.session_material))
         result.payload()
