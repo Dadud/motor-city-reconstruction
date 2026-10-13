@@ -23,15 +23,47 @@ The four network builders allocate ten payload bytes through `0x6833c0`,
 write their little-endian operation word, and queue through `0x683390`, which
 routes to primary service 0xfe. Operation 0x142 additionally writes a uint32
 argument at payload +2; the caller shown here supplies zero. Remaining payload
-bytes inherit allocator initialization. Response layouts and ownership must
-be traced before providing an integrated fetching API.
+bytes inherit allocator initialization. The direct response layouts are now
+decoded by `client.mcots_data_response.MCOTSDataReply`; integrated fetching and
+the meanings of individual fields remain incomplete.
+
+| Request | Direct reply | Layout |
+| --- | --- | --- |
+| 0x144 | 0x145 | uint16 count +2, continuation byte +4, 569-byte records +5 |
+| 0x142 | 0x143 | Same list header, 8-byte records |
+| 0x16b | 0x16c | Same list header, 516-byte records |
+| 0x185 | 0x186 | 118 bytes, including the operation word |
+
+The parser requires the matching transaction and expected reply operation,
+checks the entire counted record span before slicing, and retains trailing
+extensions. A nonzero continuation byte means more pages; it is not restricted
+to literal 1. Records remain opaque until their consumers establish meanings.
+Generic failure replies are handled separately, not interpreted as data.
+
+Native list assembly has important differences. Handler `0x65f190` appends
+0x145 records at the previous record count times 569. On its final page it
+finds duplicate first-uint32 values and zeroes later duplicates' first words.
+Handler `0x65f5a0` appends the 8-byte 0x143 records. Handler `0x65f9a0` copies
+0x16c records to the allocation's base each time, while increasing its stored
+count; it does not use that count as a destination offset. The portable parser
+retains individual chunks and does not silently replace this behavior with
+ordinary concatenation. Full result assembly remains separate work.
+
+`python -m tools.mcots_data_copy_oracle /path/to/original/mcity.exe` checks
+the original 0x145 and 0x16c copy instructions with zero, one and three records,
+including a nonzero previous count. All six cases matched every byte of an
+8192-byte destination, demonstrating the append/overwrite distinction and
+the final partial-word copy for 569-byte records. The bounded oracle stops
+before allocation, status publication or duplicate processing; no sockets run.
 
 Operation 0x198 illustrates why a queued operation cannot be assumed to be a
 wire request. Its handler `0x660a00` checks global cache `0xb29730`: a zero
 state registers pending local work through `0x6835e0`; a small nonzero status
 is returned directly; a populated cache is copied into a new owned result.
-This handler does not build or send an MCOTS packet. The cache producer still
-needs tracing.
+This handler does not build or send an MCOTS packet. Completion `0x660860`
+replaces that cache from an incoming counted 8-byte list, then satisfies pending
+local work by operation rather than a request packet's transaction. Dispatch
+and the list's business meaning still need tracing.
 
 The later `0x5efd60` sequence refreshes additional objects, reads account data
 at several unaligned offsets, chooses a car, and updates local presentation.
@@ -44,3 +76,12 @@ Evidence includes `ev_e0e2fbfea89f59742bfd0e308fb8524acae3f658568994865422d3c4f5
 (0x198 cache handler), and `ev_8d8bc0b11a05e1836fb6d4e2af20cc80029edc487b61c844929595ce87bb10af`
 (later initialization). Original executable SHA-256:
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
+
+Reply-handler evidence:
+`ev_4a4fffb9659c33f87e1094577ae61e6646a6e6d72ed81a006bb463ffcaf055f9`
+(0x145), `ev_a4e44457c355d9a456032c58c4371e1adad1a851477df3c0d133fbb3b50513f3`
+(0x143), `ev_85af5f8ed88ce0b034950e94df4ac769b930c6b1117831aad8bcf3e713411163`
+(0x16c), `ev_a50cdc698fac002a65376de8012d90498c58ccb468263460c995b1b794573dbd`
+(0x186), and `ev_0d1ba3461d9bb86c890533af74a2c4e0da6e0dc4b3e75624eeb3150f7749fc1d`
+(cache replacement). These are static observations except for the specifically
+bounded copies tested above.
