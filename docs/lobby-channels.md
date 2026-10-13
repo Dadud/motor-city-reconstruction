@@ -42,3 +42,37 @@ These are static findings from executable SHA-256
 The remainder of channel negotiation, initial server-argument construction,
 the 64-byte login field's upstream source, and actual authenticated room joining
 remain unresolved. No room request was sent during this investigation.
+
+## Game network task dispatch
+
+The game dispatcher `0x454d50` reads a task kind from the first uint32 of its
+input structure and passes arguments starting at byte offset 12. These are
+local task kinds, not wire opcodes; treating them as packets would be incorrect.
+
+| Task kind | Observed dispatch |
+| --- | --- |
+| 0 | Server connection interface entry +4 with argument structure |
+| 1 | Interface entry +0x24 with one caller value |
+| 2 | Interface entry +0x50 with retained server ID and argument structure |
+| 3 | Server-info request through entry +0x8c with two caller values |
+| 4 | Helper 0x4558c0; meaning not yet established |
+| 5 | Game-start request through entry +0x40 with two caller values |
+| 6 | Helper 0x455510, selecting interface entry +0x5c or +0x60 |
+| 7 | Channel connection entry +8 with arguments, -1, and 1 |
+| 8 | Mini-room-list request through entry +100 with retained server ID |
+| 9 | Helper 0x4557b0; meaning not yet established |
+
+For task 0, a negative connection result is retained as an error. A nonnegative
+result is retained as the server ID, then helper `0x451860` and event helper
+`0x456b20` run. The argument data is forwarded unchanged at this boundary;
+its upstream construction still needs tracing to resolve the login blob.
+
+Task 7's returned value 1 is converted to 0 by this dispatcher. Its diagnostic
+mentions UDP preference; that text alone does not establish the transport
+selected after negotiation or the patched client's effective preference.
+
+Dispatcher evidence:
+`ev_9170e4e2a5da0fe611eab3362980db11b6754d741438a80273e9aad306288681`.
+These findings are static call-flow observations, with no native dispatcher
+replay or live task execution. They extend the integration map beyond login
+without claiming the corresponding gameplay operations are implemented.
