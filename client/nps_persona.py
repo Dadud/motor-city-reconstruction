@@ -1,4 +1,4 @@
-"""Recovered persona-map request; response and activation remain separate."""
+"""Recovered persona-map messages and identity fields."""
 import struct
 from dataclasses import dataclass, field
 from client.nps_framing import encode_message
@@ -13,6 +13,21 @@ class PersonaMapEntry:
     value_4: int
     name: bytes = field(repr=False)
 
+    @property
+    def account_user_id(self):
+        """Customer ID in the native persona-info record (offset 0)."""
+        return self.value_1
+
+    @property
+    def persona_id(self):
+        """Persona ID used for lobby login (native record offset 0x38)."""
+        return self.value_2
+
+    @property
+    def shard_id(self):
+        """Shard ID in the native persona-info record (offset 0x50c)."""
+        return self.value_3
+
 
 @dataclass(frozen=True)
 class PersonaMaps:
@@ -23,7 +38,7 @@ class PersonaMaps:
     def decode(cls, payload):
         """0x607 payload: uint16 count, counted records, then one byte.
 
-        Entry meanings and final byte meaning remain uninterpreted. Exact
+        The fourth entry value and final byte remain uninterpreted. Exact
         record lengths are checked beyond the original reader's copy behavior.
         """
         reader = _Reader(payload)

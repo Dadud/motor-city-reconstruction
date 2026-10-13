@@ -59,8 +59,35 @@ def verify(executable):
         if struct.unpack('<I', cpu.mem_read(obj+0x10, 4))[0] != source+len(record):
             raise ValueError('native persona map cursor differs')
         entry_cases += 1
+    conversion_cases = 0
+    for index, name in enumerate((b'', b'Motor City', b'n'*32)):
+        oracle._reset()
+        obj, output = oracle.inputs, oracle.inputs+0x1000
+        count_ptr, output_ptr = oracle.inputs+0x4000, oracle.inputs+0x4010
+        values = (0x12345678, 42, 44, 0xffffffff)
+        cpu.mem_write(obj, bytes(0x54))
+        cpu.mem_write(obj+0x20, struct.pack('<4I', *values))
+        cpu.mem_write(obj+0x30, name+b'\0')
+        cpu.mem_write(output, bytes(0x510*3))
+        cpu.mem_write(count_ptr, struct.pack('<H', index))
+        cpu.mem_write(output_ptr, struct.pack('<I', output))
+        cpu.reg_write(reg.UC_X86_REG_ESI, obj)
+        cpu.reg_write(reg.UC_X86_REG_EBX, count_ptr)
+        cpu.reg_write(reg.UC_X86_REG_EBP, output_ptr)
+        # Execute the original strncpy too, stopping before object destruction.
+        oracle._run(0x71e12b, 0x71e172, count=10000)
+        dest = output+index*0x510
+        for offset, value in zip((0, 0x38, 0x50c, 0x2c), values):
+            if struct.unpack('<I', cpu.mem_read(dest+offset, 4))[0] != value:
+                raise ValueError('native persona identity conversion differs')
+        if bytes(cpu.mem_read(dest+4, 32)) != name.ljust(32, b'\0'):
+            raise ValueError('native persona name conversion differs')
+        if struct.unpack('<H', cpu.mem_read(count_ptr, 2))[0] != index+1:
+            raise ValueError('native persona record index differs')
+        conversion_cases += 1
     return {'matched_cases': 4, 'matched_entry_cases': entry_cases,
-            'coverage': 'native request payload writer and response entry reader; outer list traced statically; no server test'}
+            'matched_conversion_cases': conversion_cases,
+            'coverage': 'native request payload, entry reader, and identity conversion; outer list traced statically; no server test'}
 
 
 if __name__ == '__main__':
