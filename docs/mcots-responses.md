@@ -70,9 +70,11 @@ No network calls or key initialization execute in this bounded oracle.
 Login operation 0x69 uses handler `0x682590`. That handler recognizes an
 operation-specific 0xd5 payload and reads fields through offset 0xa9, including
 four service records starting at +0x21 with a 26-byte stride. This is a richer
-success response than generic acknowledgement. Its complete layout, service
-attachment behavior and bounded parser remain to be recovered before the
-portable client can enter the transaction services faithfully.
+success response than generic acknowledgement. The bounded parser and
+verified scalar layout are documented in [login success](mcots-login-success.md).
+The meanings of its remaining service bytes and service attachment behavior
+remain to be recovered before the portable client can enter those services
+faithfully.
 
 Evidence:
 
