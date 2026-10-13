@@ -96,7 +96,11 @@ int main() {
     reject(Records{record(1)}, Records{record(1)});
     reject(Records{record(1)}, Records{record(0), record(1, -1)});
     reject(Records{record(1)}, Records{record(0), record(1, 2)});
-    reject(Records{record(1, 1)}, Records{record(0), record(1)});
+    const Records unresolved_slots{record(99, -1), record(98, 12345)};
+    check(mco::select_owned_root(unresolved_slots, Records{record(0)}).slots == unresolved_slots,
+          "unresolved owned indexes rejected during root selection");
+    check(mco::link_owned_parents(unresolved_slots, Records{record(0)}) == unresolved_slots,
+          "unmatched owned indexes not preserved");
     reject(Records{record(1)}, Records{record(0), record(1, 1)});
     reject(Records{record(1)}, Records{record(0), record(1, 2), record(2, 1)});
 }

@@ -7,7 +7,8 @@ a complete recovered runtime.
 
 ## Implemented foundation
 
-The root CMake build contains `mco_core` (owned-part valuation/dependency linking, VIV directories,
+The root CMake build contains `mco_core` (owned-part valuation, type-cache resolution,
+placeholder insertion/pruning, root selection and parent/dependency linking, VIV directories,
 MCOTS framing), `mco_scripting`
 (isolated Lua execution), and optional `mco_platform_probe` (SDL/OpenGL context
 creation). There is no native gameplay application or native online client yet.
@@ -38,9 +39,16 @@ game rendering or driving.
 GitHub native Windows/Linux builds, differential valuation checks and the Linux
 Mesa/Xvfb SDL/OpenGL probe passed for commit `1fce19c` in
 [native checks run 38466840304](https://github.com/Dadud/motor-city-reconstruction/actions/runs/38466840304).
-The subsequent dependency-linking port is covered by an additional native suite;
+The subsequent component passes are covered by additional native suites;
 its original-code comparison is documented separately in
 [owned component dependencies](owned-component-dependencies.md).
+
+Local validation of the insertion port on 2026-10-13 passed all nine native suites
+and 387 Python tests. Its 96-case corpus matches Python/C++ byte-for-byte and the
+bounded original insertion prefix with explicit allocation/formatting substitutions.
+This covers an isolated assembly stage; full car loading and aggregation remain
+unfinished. The native CI matrix runs the asset-free insertion comparisons on both
+operating systems.
 
 Repeat the external-asset check without persisting original bytes:
 

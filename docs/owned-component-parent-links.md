@@ -56,9 +56,11 @@ physical interpretations of the abstract IDs.
 ## Validation and verification
 
 Both APIs return immutable records without modifying their inputs. They require
-1596-byte records, valid parent indexes and the index-zero sentinel. Type-parent
-cycles are rejected. These checks are authored safeguards: the original ancestor
-walk has no cycle limit, and malformed cache/index behavior is not reproduced.
+1596-byte records, valid resolved type-cache parent indexes and the index-zero
+sentinel. Owned-slot parent values are not validated as indexes: neither pass
+dereferences them, and unmatched values such as -1 or 10000 must remain intact.
+Type-parent cycles are rejected. These checks are authored safeguards: the original
+ancestor walk has no cycle limit, and invalid type-cache behavior is not reproduced.
 
 Run the portable cases with:
 
@@ -79,6 +81,8 @@ and `0x64c1d0`, with deterministic synthetic acyclic caches. It does not initial
 the cache from the database, run preceding component finalization/reordering, or
 verify downstream aggregation and dependency assignment. Unit cases additionally
 cover the strict 255 distance cutoff, first/last match rules and malformed input.
+Native cases also include initial owned-parent values of -1 and 10000. A later
+consumer that dereferences those indexes needs its own validation.
 
 This work is not yet integrated into owned startup as a complete car. Original
 component finalization, other reorder passes, dependencies, aggregation and online

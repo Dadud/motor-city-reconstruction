@@ -32,7 +32,7 @@ def synthetic_cases():
             if case % 8 == 1 and index == 0:
                 identifier = 990001  # Missing first template: root status 3.
             struct.pack_into('<i', slot, 0, identifier)
-            struct.pack_into('<i', slot, 0x600, rng.randrange(count))
+            struct.pack_into('<i', slot, 0x600, rng.choice((-1, 10000, rng.randrange(count))))
             struct.pack_into('<i', slot, 0x61c, rng.choice((0, 1, 2)))
             struct.pack_into('<I', slot, 0x1e3, rng.choice((0, 321)))
             struct.pack_into('<i', slot, 0x203, rng.choice((0, 4, -7, 42)))

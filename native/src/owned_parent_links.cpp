@@ -54,11 +54,8 @@ Lookup validate(std::span<const OwnedPartSlot> slots, std::span<const OwnedPartS
         if (parent < 0 || static_cast<std::size_t>(parent) >= templates.size())
             throw std::invalid_argument("resolved type parent index must reference cache");
     }
-    for (const auto& record : slots) {
-        const auto parent = read_i32(record, 0x600);
-        if (parent < 0 || static_cast<std::size_t>(parent) >= slots.size())
-            throw std::invalid_argument("owned parent index must reference existing slot");
-    }
+    // Existing owned indexes are only compared in this pass, never dereferenced.
+    // Placeholder clones may still contain a type-cache index at this stage.
     Lookup lookup;
     for (std::size_t i = 1; i < templates.size(); ++i) lookup.try_emplace(read_i32(templates[i]), i);
     for (const auto& entry : lookup) distance(entry.first, 0, templates, lookup);

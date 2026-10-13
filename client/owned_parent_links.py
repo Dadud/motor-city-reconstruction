@@ -22,8 +22,6 @@ def _validate(slots, templates):
         raise ValueError('type-cache index zero must be the abstract-zero sentinel')
     if any(not 0 <= _integer(record, 0x600) < len(templates) for record in templates):
         raise ValueError('resolved type parent indexes must reference the cache')
-    if any(not 0 <= _integer(record, 0x600) < len(slots) for record in slots):
-        raise ValueError('owned parent indexes must reference existing slots')
     lookup = {}
     for record in templates[1:]:
         lookup.setdefault(_integer(record), record)
@@ -85,6 +83,8 @@ def link_owned_parents(slots, templates):
     Root-selection status is intentionally ignored by the original caller.
     Missing type matches yield parent-template index zero. Existing owned
     parent indexes survive unless a matching parent overwrites them.
+    This pass never dereferences owned parent indexes; cloned templates may
+    still contain cache indexes, or an unmatched slot may retain -1.
     The fallback uses the type cache's BlockFamilyCompatibility at 0x14.
     """
     slots, lookup = _validate(slots, templates)

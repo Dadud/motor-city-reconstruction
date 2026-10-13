@@ -23,7 +23,7 @@ endif()
 # This target contains recovered calculations, not prototype vehicle handling.
 add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/mcots_framing.cpp native/src/owned_dependencies.cpp native/src/owned_parent_links.cpp
-  native/src/part_type_cache.cpp native/src/owned_induction.cpp)
+  native/src/part_type_cache.cpp native/src/owned_induction.cpp native/src/owned_insertion.cpp)
 target_include_directories(mco_core PUBLIC native/include)
 if(MSVC)
   target_compile_options(mco_core PRIVATE /W4 /fp:strict)
@@ -51,6 +51,11 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_owned_insertion_test native/tests/owned_insertion_test.cpp)
+  target_link_libraries(mco_owned_insertion_test PRIVATE mco_core)
+  add_test(NAME owned_insertion COMMAND mco_owned_insertion_test)
+  add_executable(mco_owned_insertion_compare native/tests/owned_insertion_compare.cpp)
+  target_link_libraries(mco_owned_insertion_compare PRIVATE mco_core)
   add_executable(mco_valuation_test native/tests/valuation_test.cpp)
   target_link_libraries(mco_valuation_test PRIVATE mco_core)
   add_test(NAME recovered_valuation COMMAND mco_valuation_test)

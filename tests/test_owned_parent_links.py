@@ -95,12 +95,18 @@ class OwnedParentLinkTests(unittest.TestCase):
             self.assertEqual(before[:0x600], after[:0x600])
             self.assertEqual(before[0x604:], after[0x604:])
 
+    def test_unmatched_owned_parent_values_are_preserved_without_dereference(self):
+        templates = (record(0), record(10, 2), record(20))
+        slots = (record(10, parent=-1, attachment=9), record(20, parent=999, attachment=8))
+        selected, status = select_owned_root(slots, templates)
+        self.assertEqual((selected, status), ((slots[1], slots[0]), 1))
+        self.assertEqual(link_owned_parents(slots, templates), selected)
+
     def test_invalid_inputs_and_cycles_rejected(self):
         for slots, templates in (
                 ([], [record(0)]), ([record(1)], []), ([b'x'], [record(0)]),
                 ([record(1)], [record(1)]), ([record(1)], [record(0), record(1, -1)]),
                 ([record(1)], [record(0), record(1, 2)]),
-                ([record(1, parent=1)], [record(0), record(1)]),
                 ([record(1)], [record(0), record(1, 1)]),
                 ([record(1)], [record(0), record(1, 2), record(2, 1)])):
             with self.subTest(count=len(slots)):
