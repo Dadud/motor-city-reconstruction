@@ -54,6 +54,8 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/calculations/` | Explanations of recovered original engine, gas-flow and vehicle calculations |
 | `docs/mod-dev-kit.md` | Planned add-on package format, extension boundaries and developer tools |
 | `docs/networking.md` | Configured fan server, protocol research and discovery/certificate checks |
+| `docs/nps-transport.md` | TCP connection lifecycle, framing, deadlines and verification limits |
+| `docs/persona-protocol.md` | Original persona retrieval, identity fields and activation messages |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.
