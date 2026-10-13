@@ -4,7 +4,7 @@ import threading
 import unittest
 from unittest.mock import MagicMock
 from client.mcots_data_service import (MCOTSDataClient, MCOTSDataRejected,
-    encode_data_request, fetch_persona_startup)
+    encode_data_request, fetch_persona_startup, fetch_valuation_data)
 from client.mcots_framing import MCOTSFrame
 from client.mcots_session import MCOTSSession
 from client.mcots_transport import MCOTSConnection
@@ -13,6 +13,35 @@ from client.owned_parts import OwnedInstanceCache
 
 
 class DataServiceTests(unittest.TestCase):
+    def test_valuation_rejection_propagates_without_default_factor_substitution(self):
+        session = MagicMock()
+        session.receive.return_value = MCOTSFrame(5,0,struct.pack('<HHI',0x66,0x185,0x83))
+        with self.assertRaises(MCOTSDataRejected) as error:
+            fetch_valuation_data(MCOTSDataClient(session,first_transaction=5))
+        self.assertEqual((error.exception.operation,error.exception.result_code),(0x185,0x83))
+        session.close.assert_not_called()
+
+    def test_server_valuation_factors_flow_from_encrypted_stream_into_owned_part(self):
+        from client.owned_valuation import apply_owned_valuation
+        record = bytearray(118)
+        struct.pack_into('<H',record,0,0x186)
+        struct.pack_into('<dd',record,0x1e,0.2,0.65)
+        def server(session):
+            request = session.receive(timeout=3)
+            self.assertEqual((request.transaction_value,request.payload),(5,struct.pack('<H',0x185)+bytes(8)))
+            session.send(MCOTSFrame(5,0,bytes(record)+b'factor-extension'))
+        def client(session):
+            result = fetch_valuation_data(MCOTSDataClient(session,first_transaction=5),timeout=3)
+            self.assertEqual(result.record.raw,bytes(record))
+            self.assertEqual(result.extensions,(b'factor-extension',))
+            slot = bytearray(1596)
+            for offset,value in ((0,160001),(0x1e3,123),(0x1eb,500),(0x1ef,1000),
+                                 (0x5f8,42),(0x610,20),(0x614,250)):
+                struct.pack_into('<i',slot,offset,value)
+            valued = apply_owned_valuation(bytes(slot),result.rates)
+            self.assertEqual(struct.unpack_from('<ii',valued,0x62c),(20,224))
+        self.exchange(server,client)
+
     def exchange(self, server, client):
         key = bytes(range(32))
         listener = socket.socket()

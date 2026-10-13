@@ -8,6 +8,8 @@ from client.mcots_framing import MCOTSFrame
 from client.mcots_response import decode_completion
 from client.nps_transport import _timeout
 from client.owned_parts import OwnedInstanceCache
+from client.mcots_data_records import MCOTSFixed186Record
+from client.owned_valuation import PartValuationRates
 
 
 def encode_data_request(operation, *, argument=0):
@@ -28,6 +30,24 @@ class MCOTSPersonaStartup:
     profile: bytes = field(repr=False)
     extensions: tuple[tuple[bytes, ...], ...] = field(repr=False)
     part_seeds: tuple[bytes, ...] = field(default=(),repr=False)
+
+
+@dataclass(frozen=True)
+class MCOTSValuationData:
+    rates: PartValuationRates
+    record: MCOTSFixed186Record = field(repr=False)
+    extensions: tuple[bytes, ...] = field(repr=False)
+
+
+def fetch_valuation_data(client, *, timeout=120):
+    """Fetch original request 0x185 and retain its complete data record.
+
+    Rejections and invalid factors propagate; no silent default-factor retry.
+    This does not prescribe when the original startup triggers the lazy query.
+    """
+    result = client.fetch(0x185,timeout=timeout)
+    record = MCOTSFixed186Record(result.records[0])
+    return MCOTSValuationData(PartValuationRates.from_reply(record),record,result.extensions)
 
 
 def fetch_persona_startup(client, persona_id, *, timeout=120, instance_cache=None):

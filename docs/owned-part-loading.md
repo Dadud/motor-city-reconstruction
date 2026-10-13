@@ -1,5 +1,10 @@
 # Original owned-part loading
 
+The recovered post-load arithmetic is documented in
+[owned-part condition and valuation](calculations/owned-part-valuation.md).
+The catalogue applies it when explicit `valuation_rates` are supplied;
+`fetch_valuation_data` obtains those factors from the MCOTS data service.
+
 The persona's 0xad response is a compact list of eight-byte pairs, not a list
 of complete stock cars. Handler `0x655520` uses the first value as an owned
 instance ID, updates the local cache for each pair, allocates zeroed 1596-byte

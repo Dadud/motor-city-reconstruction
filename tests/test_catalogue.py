@@ -71,6 +71,10 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from('<i',slot,0x610)[0],17)
         self.assertEqual(slot[0x1c0:0x1c9],b'fallback\0')
         self.assertEqual(struct.unpack_from('<ff',slot,0x1db),(0.5,0.25))
+        from client.owned_valuation import PartValuationRates
+        valued = catalogue.owned_part_intermediate(part,text_encoding='cp1252',
+                                                   valuation_rates=PartValuationRates(0.1,0.75))
+        self.assertEqual(struct.unpack_from('<ii',valued,0x62c),(8,357))
         del catalogue.owned_physics_rows[(200,1)]
         slot = catalogue.owned_part_intermediate(part,text_encoding='cp1252')
         self.assertEqual(slot[0x404:0x5f4],bytes(496))
