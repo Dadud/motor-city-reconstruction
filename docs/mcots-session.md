@@ -46,7 +46,8 @@ and compression algorithms have separate original-code oracles; the combined
 session checks use synthetic peers and do not establish live fan-server
 acceptance.
 
-Attachment/login orchestration, service descriptor configuration, outgoing
+Primary attachment/login orchestration is now implemented in the
+[primary service](mcots-primary-service.md). Service descriptor configuration, outgoing
 compression and the full transaction/race services remain incomplete. This
 session does not perform authentication by itself.
 

@@ -67,6 +67,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/mcots-transport.md` | Persistent MCOTS TCP framing and recovered service attachment routing |
 | `docs/mcots-compression.md` | PKWARE DCL decoder and original incoming transformation order |
 | `docs/mcots-session.md` | Integrated persistent encryption, decompression and keepalive handling |
+| `docs/mcots-primary-service.md` | Integrated primary attachment and encrypted login exchange |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.
