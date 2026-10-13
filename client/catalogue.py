@@ -130,11 +130,11 @@ class Catalogue:
         except (KeyError,TypeError,ValueError) as error:
             raise ValueError('owned part has missing or invalid branded metadata') from error
 
-    def owned_part_intermediate(self, part, *, text_encoding):
+    def owned_part_intermediate(self, part, *, text_encoding, display_mode=2):
         """Join instance metadata and Physics_Select ordinal 1.
 
-        Display-name formatting and later native calculations are not yet
-        included; this returns an intermediate slot, not a playable car.
+        Later native calculations are not yet included; this returns an
+        intermediate slot, not a playable car.
         A missing ordinal-1 row reproduces the native cleared physics record.
         """
         from .owned_physics import apply_owned_physics
@@ -159,10 +159,17 @@ class Catalogue:
         except KeyError as error:
             raise ValueError('owned part has missing abstract-type template data') from error
         slot = apply_part_type_template(slot,template)
-        if metadata.part_type_id == 0:
-            return slot
-        row = self.owned_physics_rows.get((metadata.part_type_id,1))
-        return apply_owned_physics(slot,row,text_encoding=text_encoding)
+        from .owned_parts import apply_owned_model_brand
+        slot = apply_owned_model_brand(slot,self.brands.get(metadata.brand_id),
+                                       text_encoding=text_encoding)
+        from .part_type_templates import apply_owned_display_names
+        slot = apply_owned_display_names(slot,template,mode=display_mode)
+        if metadata.part_type_id != 0:
+            row = self.owned_physics_rows.get((metadata.part_type_id,1))
+            slot = apply_owned_physics(slot,row,text_encoding=text_encoding)
+        from .owned_parts import apply_owned_vehicle_price
+        # BrandPart_SelectE column 13 is the literal zero in the supplied DB.
+        return apply_owned_vehicle_price(slot,0)
 
     def tire_dimensions(self, vehicle):
         """Resolve stock wheel/axle attachments with unambiguous physics rows.

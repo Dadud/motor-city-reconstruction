@@ -54,3 +54,35 @@ def apply_part_type_template(slot,template):
         value = template[offset:offset+9].split(b'\0',1)[0]+b'\0'
         output[offset:offset+len(value)] = value
     return bytes(output)
+
+
+def apply_owned_display_names(slot,template, *, mode=2):
+    """Original display formatting, with native initializer's default mode 2."""
+    if any(not isinstance(value,bytes) or len(value)!=1596 for value in (slot,template)):
+        raise ValueError('expected part and template intermediate slots')
+    if slot[:4] != template[:4] or type(mode) is not int or not 0 <= mode <= 0xffffffff:
+        raise ValueError('invalid display mode or mismatched abstract type')
+    def text(source,offset,capacity):
+        value = source[offset:offset+capacity]
+        if b'\0' not in value:
+            raise ValueError('display input lacks a bounded terminator')
+        return value.split(b'\0',1)[0]
+    brand = text(slot,0x2c7,64)
+    model = text(slot,0x307,64)
+    identifier = struct.unpack_from('<i',slot)[0]
+    name = brand+b' '+model
+    output = bytearray(slot)
+    if mode != 2:
+        output[0x287:0x287+len(model)+1] = model+b'\0'
+        if identifier in _SPECIAL_TYPES:
+            name = model
+    if identifier == 101:
+        year = struct.unpack_from('<i',slot,0x1fb)[0]
+        year = ((year-1900+0x80000000)&0xffffffff)-0x80000000
+        name = f"'{year:02d} ".encode('ascii')+brand+b' '+model
+    if len(name) >= 128:
+        raise ValueError('display name exceeds native output region')
+    output[0x207:0x207+len(name)+1] = name+b'\0'
+    category = text(template,0x180,64)
+    output[0x180:0x180+len(category)+1] = category+b'\0'
+    return bytes(output)

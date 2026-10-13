@@ -3,6 +3,43 @@ from dataclasses import dataclass
 import struct
 
 
+def apply_owned_vehicle_price(slot,query_price=0):
+    """Final enrichment override for abstract type 101 (query column 13)."""
+    if not isinstance(slot,bytes) or len(slot) != 1596:
+        raise ValueError('expected owned-part intermediate slot')
+    if type(query_price) is not int or not -0x80000000 <= query_price <= 0x7fffffff:
+        raise ValueError('vehicle query price must fit int32')
+    if struct.unpack_from('<i',slot)[0] != 101:
+        return slot
+    output = bytearray(slot)
+    struct.pack_into('<i',output,0x1eb,query_price)
+    return bytes(output)
+
+
+def apply_owned_model_brand(slot,row, *, text_encoding):
+    """Copy cached model-brand name/picture after family labels.
+
+    None is a failed lookup, which preserves the existing family label.
+    A present NULL field becomes an empty cached string.
+    """
+    if not isinstance(slot,bytes) or len(slot) != 1596:
+        raise ValueError('expected owned-part intermediate slot')
+    if row is None:
+        return slot
+    fields = []
+    for offset,count,key in ((0x399,8,'PicName'),(0x2c7,63,'Brand')):
+        value = '' if row[key] is None else row[key]
+        if not isinstance(value,str) or '\0' in value:
+            raise ValueError('expected unterminated model-brand text')
+        # Original brand-cache initialization copies bounded prefixes into a
+        # cleared record; enrichment then copies through the resulting NUL.
+        fields.append((offset,value.encode(text_encoding)[:count]+b'\0'))
+    output = bytearray(slot)
+    for offset,value in fields:
+        output[offset:offset+len(value)] = value
+    return bytes(output)
+
+
 @dataclass(frozen=True)
 class OwnedEngineFamily:
     family_id: int

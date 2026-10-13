@@ -162,7 +162,7 @@ The saved query explicitly filters `PartTypeID=[id]` and `Physics.Ordinal=1`.
 `Catalogue.owned_part_intermediate` now joins the actual instance's branded
 metadata to exactly that physics row. It reproduces the cleared record and
 zero wear limit when ordinal 1 is missing, rather than choosing another row.
-Display-name formatting and later calculations remain incomplete, so this
+Later calculations remain incomplete, so this
 method does not yet produce a complete playable car or establish live
 fan-server compatibility.
 
@@ -246,8 +246,8 @@ supplied caches. Four cases match every slot byte: matching family/brand,
 matching family with absent brand cache, absent family, and ID -1. The family
 loader boundary is substituted; SQL and allocation do not execute. The installed
 database has 108 brands and 22 families; all 4,257 supported intermediate part
-joins pass with the overrides enabled. Later display formatting and valuation
-calculations remain outside this implementation.
+joins pass with the overrides enabled. Later valuation calculations remain
+outside this implementation.
 
 Evidence: `ev_ce4d2a7a98b55b76dcba61e7f748be262b33c76d400c8c13516bf5c9d739fcfc`
 (brand cache loader), `ev_cb9a1c6738389cdf23e7525d0ad1c87a3fb411259b55039ef510a96d8eee521d`
@@ -308,6 +308,56 @@ Evidence: `ev_983c49d6e98b3d947068551553e72553b69089e6110ebf8185395a3d642f9145`
 (template loader), `ev_1a2f70396702f4a577d1cacb6ec564d21fd69d678bc2e228976c463dec77ab40`
 (template lookup), and `ev_06ca5d6dd75c04c0eaf46b1e931fd0872e8aae40953b9badda14cda344a794a0`
 (owned enrichment).
+
+### Model-brand copies and display names
+
+After family labels, original `0x669591`–`0x6695fa` looks up the model's
+BrandID in the separate brand cache. It copies the picture name to `0x399`
+and brand label to `0x2c7`, including each terminator and preserving the rest
+of the destination. A missing model brand preserves the family brand already
+there. A present brand replaces that label even if its name is empty. The
+family-query brand label at `0x3a2` remains separate. Cached prefixes are
+limited to eight picture bytes and 63 label bytes by the original cache loader.
+
+The next routines format the display label at `0x207` and copy the abstract
+type's EAPT label to `0x180`. Initializer instructions at `0x6538c0` set the
+global formatting mode to 2. The reconstructed API defaults to that value
+and accepts an explicit `display_mode` for the other native branch:
+
+| Condition | Display label | Short-model field at `0x287` |
+| --- | --- | --- |
+| Mode 2, ordinary type | Brand + space + model | Retained |
+| Other mode, ordinary type | Brand + space + model | Replaced with model |
+| Other mode, member of the special-type list | Model | Replaced with model |
+| Abstract type 101, either mode | Apostrophe + `(year - 1900)` with minimum two digits + space + brand + space + model | Follows mode rule |
+
+Original formats are `%s %s`, `%s`, and `'%02d %s %s`. Separators remain even
+when the brand is empty. The year subtraction follows signed 32-bit wrapping;
+years beyond 1999 are not reduced modulo 100. The authored implementation
+requires bounded terminators and rejects a name that would exceed the 128-byte
+display region. The installed data's longest resulting label is 48 bytes.
+
+Finally, `0x669714`–`0x669721` replaces the intermediate retail-price field
+at `0x1eb` for abstract type 101 with saved-query column 13. In the supplied
+`BrandPart_SelectE`, that column is literal zero. This faithfully produces
+zero at that stage; it does not mean the game's final vehicle prices are zero.
+Later valuation and transaction behavior still need recovery.
+
+The model-brand oracle compares four complete slots against original lookup
+and copying instructions, plus three final-price override cases. The display
+oracle executes the original routines including native CRT formatting in six
+cases, plus a check of the default-mode initializer. Query/cache inputs are
+synthetic; original SQL and live game execution are excluded. All 4,257
+supported installed-database joins also pass with these stages enabled.
+
+Run `python -m tools.owned_model_brand_oracle /path/to/original/mcity.exe`
+and `python -m tools.owned_display_oracle /path/to/original/mcity.exe` to
+repeat those bounded native checks. Evidence:
+`ev_273fad6cbf7feb84c5fa1de3ce0dfb0541923de12839ca8f190bba7dfb7b7398`
+(picture lookup), `ev_d21f8a58c93bea640cf73fa8afc7239bc13d14600ca935c47bca4772ef84958d`
+(display formatting), and the enrichment evidence cited above. Ghidra did not
+identify `0x6538c0` as a procedure; that initializer check uses source-bound
+instruction decoding and bounded CPU execution instead of decompiler output.
 
 Additional evidence: `ev_fdfb5c0da53c5d462fe14bbc44d485c8973d188a5c23a3b39081d3c3a43cc967`
 (query names), `ev_7f0f24842329efb01a59e535640ba6389a8e2ea116a82f04988d36315beebef0`
