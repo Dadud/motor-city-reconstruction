@@ -65,6 +65,8 @@ class Catalogue:
         self.types = self._index(tables['PartType'], 'PartTypeID')
         self.abstract = self._index(tables['AbstractPartType'], 'AbstractPartTypeID')
         self.models = self._index(tables['Model'], 'ModelID')
+        self.brands = self._index(tables.get('Brand',[]),'BrandID')
+        self.engine_families = self._index(tables.get('EngineBlockFamily',[]),'EngineBlockFamilyID')
         self.attachments = self._index(tables['AttachmentPoint'], 'AttachmentPointID')
         self.vehicles = self._index(tables['StockVehicleAttributes'], 'BrandedPartID')
         self.assemblies = {}
@@ -131,7 +133,7 @@ class Catalogue:
     def owned_part_intermediate(self, part, *, text_encoding):
         """Join instance metadata and Physics_Select ordinal 1.
 
-        Family/type-specific text overrides and later native calculations are
+        Type-specific text overrides and later native calculations are
         not yet included; this returns an intermediate slot, not a playable car.
         A missing ordinal-1 row reproduces the native cleared physics record.
         """
@@ -139,6 +141,17 @@ class Catalogue:
         metadata = self.owned_part_metadata(part)
         slot = metadata.apply_numeric_fields(part)
         slot = metadata.apply_text_fields(slot,text_encoding=text_encoding)
+        family = self.engine_families.get(metadata.engine_block_family_id)
+        # EngineBlockFamily_Dump uses an inner join, so missing brands exclude
+        # the family rather than supplying a made-up label.
+        if family is not None and metadata.engine_block_family_id != -1:
+            brand = self.brands.get(family['BrandID'])
+            if brand is not None:
+                from .owned_parts import OwnedEngineFamily
+                override = OwnedEngineFamily(family['EngineBlockFamilyID'],family['BrandID'],
+                    brand['Brand'],family['EName'],family['EShortName'])
+                slot = override.apply(slot,text_encoding=text_encoding,
+                    brand_cache_name='' if brand['Brand'] is None else brand['Brand'])
         if metadata.part_type_id == 0:
             return slot
         row = self.owned_physics_rows.get((metadata.part_type_id,1))
@@ -373,6 +386,7 @@ class Catalogue:
                 'AttachmentPoint': 'AttachmentPointID',
                 'StockVehicleAttributes': 'BrandedPartID', 'StockAssembly': None,
                 'Physics': None}
+        keys.update(Brand='BrandID',EngineBlockFamily='EngineBlockFamilyID')
         for name, key in keys.items():
             table = database.get_table(name)
             if table is None:

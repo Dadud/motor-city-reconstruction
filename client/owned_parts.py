@@ -4,6 +4,43 @@ import struct
 
 
 @dataclass(frozen=True)
+class OwnedEngineFamily:
+    family_id: int
+    brand_id: int
+    brand_name: str | None
+    name: str | None
+    short_name: str | None
+
+    def apply(self,slot, *, text_encoding, brand_cache_name):
+        """Original family overrides; None means brand-cache lookup failed."""
+        if not isinstance(slot,bytes) or len(slot) != 1596:
+            raise ValueError('expected owned-part intermediate slot')
+        if self.family_id == -1 or struct.unpack_from('<i',slot,0x203)[0] != self.family_id:
+            raise ValueError('engine family does not match owned-part metadata')
+        def encode(value):
+            value = '' if value is None else value
+            if not isinstance(value,str) or '\0' in value:
+                raise ValueError('expected unterminated engine-family text')
+            return value.encode(text_encoding)
+        fields = []
+        for offset,capacity,value in ((0x3a2,64,self.brand_name),
+                (0x3e2,26,self.name),(0x3fc,8,self.short_name)):
+            text = encode(value)
+            if len(text) >= capacity:
+                raise ValueError('engine-family query text lacks a bounded terminator')
+            fields.append((offset,text.ljust(capacity-1,b'\0')))
+        brand = None if brand_cache_name is None else encode(brand_cache_name)[:63].ljust(63,b'\0')
+        output = bytearray(slot)
+        if brand is None:
+            output[0x2c7] = 0
+        else:
+            output[0x2c7:0x306] = brand
+        for offset,text in fields:
+            output[offset:offset+len(text)] = text
+        return bytes(output)
+
+
+@dataclass(frozen=True)
 class OwnedPartMetadata:
     abstract_type_id: int
     part_type_id: int

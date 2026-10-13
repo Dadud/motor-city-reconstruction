@@ -162,7 +162,7 @@ The saved query explicitly filters `PartTypeID=[id]` and `Physics.Ordinal=1`.
 `Catalogue.owned_part_intermediate` now joins the actual instance's branded
 metadata to exactly that physics row. It reproduces the cleared record and
 zero wear limit when ordinal 1 is missing, rather than choosing another row.
-Family/type-specific text overrides and later calculations remain incomplete, so this
+Type-specific text overrides and later calculations remain incomplete, so this
 method does not yet produce a complete playable car or establish live
 fan-server compatibility.
 
@@ -200,12 +200,59 @@ cases against the original copying instructions, comparing all 1596 bytes.
 Cases cover NULL, ordinary labels, capacity boundaries, and narrow accented
 text; deliberately patterned initial slots also confirm preserved tails.
 Query buffers are supplied by the oracle, and family/type-specific overrides
-following this instruction range remain outside its scope. All 4,257 supported
+following this instruction range remain outside that oracle's scope. All 4,257 supported
 external-database branded joins also pass with this text placement enabled.
 
 Evidence: `ev_06ca5d6dd75c04c0eaf46b1e931fd0872e8aae40953b9badda14cda344a794a0`
 (enrichment) and `ev_bd20d19c2b2c28f709b1abd2ed3716a0080052ca5d9fd5ef8e599b2970048fda`
 (query buffer reader).
+
+### Engine-family label overrides
+
+The next instruction range (`0x669498` through `0x669540`) looks up the
+part's EngineBlockFamilyID in a cached family table. ID -1 skips the lookup;
+an absent family leaves the previous slot unchanged. `EngineBlockFamily_Dump`
+selects family ID, brand ID, `Brand.Brand`, `EName`, and `EShortName` using an
+inner join on BrandID. Thus a family without a matching brand is absent from
+the original query result. Its cached records have a 108-byte stride and a
+final -1 sentinel.
+
+When found, the family replaces these label regions with zero-padded narrow
+`strncpy` copies:
+
+| Slot offset | Source | Bytes copied |
+| --- | --- | --- |
+| `0x2c7` | Separate brand-cache lookup by the family's BrandID | 63 |
+| `0x3a2` | Brand name from the family query | 63 |
+| `0x3e2` | Family EName | 25 |
+| `0x3fc` | Family EShortName | 7 |
+
+The byte immediately after each region is preserved. If the separate brand
+lookup fails, only the first byte at `0x2c7` is cleared. That differs from an
+existing empty brand name, which zero-pads all 63 bytes. Original `0x64c9b0`
+loads that brand cache from `SELECT BrandID, Brand, PicName FROM Brand`;
+`0x64ccf0` searches its IDs and returns the cached label. The family's BrandID,
+rather than the model's BrandID, selects this override.
+
+`OwnedEngineFamily.apply` preserves these distinctions. The catalogue loads
+Brand and EngineBlockFamily read-only, performs the same inner join, and
+applies the override between query text placement and physics loading. As with
+other query buffers, the authored version rejects text without a terminator
+inside the original capacity rather than reproducing unsafe reads.
+
+`python -m tools.owned_family_oracle /path/to/original/mcity.exe` executes the
+original family search, separate brand lookup and copying instructions against
+supplied caches. Four cases match every slot byte: matching family/brand,
+matching family with absent brand cache, absent family, and ID -1. The family
+loader boundary is substituted; SQL and allocation do not execute. The installed
+database has 108 brands and 22 families; all 4,257 supported intermediate part
+joins pass with the overrides enabled. Later type-specific template processing
+and valuation remain outside this implementation.
+
+Evidence: `ev_ce4d2a7a98b55b76dcba61e7f748be262b33c76d400c8c13516bf5c9d739fcfc`
+(brand cache loader), `ev_cb9a1c6738389cdf23e7525d0ad1c87a3fb411259b55039ef510a96d8eee521d`
+(brand lookup), and `ev_74e003d9c9abcb3c65c7f6ba7169af89b45bfa20b95d4efd4eac18cc81653237`
+(family cache loader).
 
 Additional evidence: `ev_fdfb5c0da53c5d462fe14bbc44d485c8973d188a5c23a3b39081d3c3a43cc967`
 (query names), `ev_7f0f24842329efb01a59e535640ba6389a8e2ea116a82f04988d36315beebef0`

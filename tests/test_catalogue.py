@@ -20,6 +20,27 @@ def fixture():
 
 
 class CatalogueTests(unittest.TestCase):
+    def test_family_inner_join_overrides_labels_without_using_model_brand(self):
+        from client.owned_parts import OwnedPart
+        tables = fixture()
+        tables['Brand'] = [dict(BrandID=8,Brand='Family brand')]
+        tables['EngineBlockFamily'] = [dict(EngineBlockFamilyID=10,BrandID=8,
+                                           EName='Family',EShortName='Fam')]
+        tables['BrandedPart'][1].update(RetailPrice=500,MaxItemWear=1000,
+            MfgDate='1955-01-01',EngineBlockFamilyID=10)
+        tables['PartType'][0]['PartGradeID'] = 3
+        tables['Model'][1].update(BrandID=7,EShortModel='Body',EExtraInfo='details')
+        catalogue = Catalogue(tables)
+        part = OwnedPart(42,2,17,25,99,50,75)
+        slot = catalogue.owned_part_intermediate(part,text_encoding='cp1252')
+        self.assertEqual(slot[0x2c7:0x2d4],b'Family brand\0')
+        self.assertEqual(slot[0x3e2:0x3e9],b'Family\0')
+        self.assertEqual(slot[0x3fc:0x400],b'Fam\0')
+        catalogue.brands.clear()
+        slot = catalogue.owned_part_intermediate(part,text_encoding='cp1252')
+        self.assertEqual(slot[0x2c7:0x306],bytes(63))
+        self.assertEqual(slot[0x3e2:0x3fb],bytes(25))
+
     def test_owned_physics_uses_saved_query_ordinal_one_and_clears_missing(self):
         import struct
         from client.owned_parts import OwnedPart
