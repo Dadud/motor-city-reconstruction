@@ -47,14 +47,34 @@ Handler `0x65f5a0` appends the 8-byte 0x143 records. Handler `0x65f9a0` copies
 0x16c records to the allocation's base each time, while increasing its stored
 count; it does not use that count as a destination offset. The portable parser
 retains individual chunks and does not silently replace this behavior with
-ordinary concatenation. Full result assembly remains separate work.
+ordinary concatenation.
+
+`client.mcots_data_assembly.MCOTSDataAssembler` now assembles matching pages.
+It appends 0x145/0x143 records, applies final-page duplicate-ID clearing to
+0x145, and reproduces the base overwrite for 0x16c. The result's count includes
+all received records, as in the native handler. Any resulting slot never
+written by a page is represented by `None`, retaining uncertainty rather than
+inventing data. Allocation helper `0x65e910` uses an uninitialized heap buffer
+on its large-allocation path; bytes in such unwritten slots cannot be recovered
+from the network response. Previous records beyond an overwritten prefix are
+preserved. The 0x186 fixed reply completes in one page.
+
+Extensions are retained per page. Invalid identities, malformed lengths and
+resource-limit failures leave the previous accepted state intact. Default
+limits of 16 MiB and 1024 pages are portable defensive limits, not recovered
+native constants. Feeding a completed assembler fails. This does not yet
+provide a network dispatcher, automatic requests or typed garage fields.
 
 `python -m tools.mcots_data_copy_oracle /path/to/original/mcity.exe` checks
 the original 0x145 and 0x16c copy instructions with zero, one and three records,
 including a nonzero previous count. All six cases matched every byte of an
 8192-byte destination, demonstrating the append/overwrite distinction and
 the final partial-word copy for 569-byte records. The bounded oracle stops
-before allocation, status publication or duplicate processing; no sockets run.
+before allocation or status publication; no sockets run. Four additional
+bounded executions of the original final-page duplicate loop compare zero
+IDs, unique IDs and repeated IDs against portable duplicate clearing. Those
+four cases also match, including preserving record tails after clearing only
+the first four bytes.
 
 Operation 0x198 illustrates why a queued operation cannot be assumed to be a
 wire request. Its handler `0x660a00` checks global cache `0xb29730`: a zero
@@ -85,3 +105,6 @@ Reply-handler evidence:
 (0x186), and `ev_0d1ba3461d9bb86c890533af74a2c4e0da6e0dc4b3e75624eeb3150f7749fc1d`
 (cache replacement). These are static observations except for the specifically
 bounded copies tested above.
+
+Allocation evidence:
+`ev_51e623d856b89fa283f75c5cb2684ed069de89ffb206e154f7b4f26a0662f7d7`.

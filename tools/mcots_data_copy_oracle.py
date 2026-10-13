@@ -3,6 +3,7 @@ import argparse
 import json
 import struct
 from client.mcots_data_response import MCOTSDataReply
+from client.mcots_data_assembly import _clear_duplicate_ids
 from client.mcots_framing import MCOTSFrame
 from tools.native_oracle import DynoOracle
 
@@ -37,8 +38,23 @@ def verify(executable):
             if bytes(cpu.mem_read(output,8192)) != bytes(expected):
                 raise ValueError('original data copy differs from recovered offsets')
             matched += 1
+    duplicate_cases = ((5,), (5,5), (0,7,7,0,5,5), (9,10,9,10,9))
+    for identifiers in duplicate_cases:
+        oracle._reset()
+        records = tuple(struct.pack('<I',identifier)+bytes([index+1])*565
+                        for index,identifier in enumerate(identifiers))
+        result, output = oracle.inputs, oracle.inputs+0x2000
+        cpu.mem_write(result,struct.pack('<3I',0,len(records),output))
+        cpu.mem_write(output,b''.join(records))
+        cpu.reg_write(reg.UC_X86_REG_EBX,result)
+        cpu.reg_write(reg.UC_X86_REG_ECX,len(records))
+        # Final-page duplicate loop only; stop before publishing the result.
+        oracle._run(0x65f3e7,0x65f432,count=10000)
+        if bytes(cpu.mem_read(output,len(records)*569)) != b''.join(_clear_duplicate_ids(records)):
+            raise ValueError('original duplicate clearing differs')
     return {'matched_data_copy_cases':matched,
-            'scope':'bounded copies only; 0x145 appends, 0x16c overwrites; no network I/O'}
+            'matched_duplicate_cases':len(duplicate_cases),
+            'scope':'bounded copies and duplicate clearing; no network I/O or allocation'}
 
 
 if __name__ == '__main__':
