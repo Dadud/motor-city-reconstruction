@@ -97,6 +97,14 @@ class LoginSuccess:
     text: bytes = field(repr=False)
 
     @classmethod
+    def from_frame(cls, frame):
+        from client.nps_framing import MessageHeader
+        if frame.message_id != 0x601:
+            raise ValueError('expected login success reply 0x601')
+        MessageHeader.from_frame(frame)
+        return cls.decode(frame.body[8:])
+
+    @classmethod
     def decode(cls, payload):
         reader = _Reader(payload)
         user_id, value_2 = reader.u32(), reader.u32()
