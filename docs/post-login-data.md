@@ -93,6 +93,40 @@ synthetic peers verify the authored exchange, not live fan-server acceptance.
 Typed garage records, the full initial-fetch sequence and cache consumers
 remain unfinished.
 
+Confirmed record views are available in `client.mcots_data_records`. These
+names describe offsets and observed operations rather than assigning guessed
+business meanings:
+
+| Record | Confirmed consumer fields |
+| --- | --- |
+| 0x145 / 569 bytes | ID +0; uint32 +4; C-string start +0x0c; byte flag +0x2c; uint32 reference +0x137 |
+| 0x143 / 8 bytes | Two uint32 values; consumers filter on the second and return the first |
+| 0x16c / 516 bytes | ID +0; `0x4bebb0` returns a pointer to the remaining 512 bytes after an ID match |
+| 0x186 / 118 bytes | Three uint32 values +2/+6/+10; doubles +0x1e/+0x26 |
+
+The +0x0c text view exposes a bounded 32-byte window ending before the known
+flag. Consumers compare a C string from that start, but its full declared
+capacity remains unresolved. Original narrow bytes are retained without
+guessing a text encoding. The two double readers use fallback values 0.1
+and 0.75 only when the entire native result is absent; those numbers are not
+defaults for missing or invalid fields inside a received record.
+
+The common 0x145 eligibility predicate requires nonzero ID, +4 value,
++0x137 reference and +0x2c flag, a successful external reference lookup, and
+either a nonempty text start or +4 value equal to 14. Its reference membership
+comes from the separate list searched by `0x58bc30`; this module requires the
+caller to supply that result rather than assuming every reference is known.
+The simple lookup `0x5e89a0` instead returns the first ID whose +4 value matches
+the query, without those eligibility checks. A matching zero ID still returns
+zero and stops; it does not skip ahead to a later nonzero match.
+
+`python -m tools.mcots_data_lookup_oracle /path/to/original/mcity.exe` executes
+that original lookup with a controlled already-fetched result. Four cases
+(empty, middle match, first zero-ID match and no match) agree with the portable
+lookup. The refresh call is substituted; no network, allocation or membership
+lookup executes. Actual record business meanings and cache-backed UI behavior
+remain incomplete.
+
 `python -m tools.mcots_data_copy_oracle /path/to/original/mcity.exe` checks
 the original 0x145 and 0x16c copy instructions with zero, one and three records,
 including a nonzero previous count. All six cases matched every byte of an
@@ -136,3 +170,12 @@ bounded copies tested above.
 
 Allocation evidence:
 `ev_51e623d856b89fa283f75c5cb2684ed069de89ffb206e154f7b4f26a0662f7d7`.
+
+Consumer evidence: `ev_293e0e005ec8ab1d4c99bcbd8532018ecc59309ab3b6290e393832c8e169e094`
+(eligibility), `ev_ddd1037ee7b81741a9d42b29f2e16ff2dff399153ef22cdd54954817382d2ade`
+(simple lookup), `ev_e6b50fc3658ebc1c7c46e91ca758fe02849a64948964a98df8d8118599d8f550`
+(8-byte pair filter), `ev_8467780928961ecb4191b498a707da2730dd26b25d8f82dde32367a141c96502`
+(516-byte ID lookup), `ev_166b10dca831f4238ca0448c157f99e6c70e9189dc105ba85ab2affb688a0387`
+(three fixed values), `ev_6f17ecfcb0a9998a06763d41c085be418f0e2f0468fb3f930891ef636970d400`
+and `ev_3638ed0937b0a1e65d734e43ddca6a9a296da364ec3f61ff25ebb41933fb6ad6`
+(double readers).
