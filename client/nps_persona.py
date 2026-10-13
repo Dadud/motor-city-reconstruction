@@ -1,7 +1,7 @@
 """Recovered persona-map messages and identity fields."""
 import struct
 from dataclasses import dataclass, field
-from client.nps_framing import encode_message
+from client.nps_framing import encode_message, MessageHeader
 from client.nps_response import _Reader
 
 
@@ -33,6 +33,22 @@ class PersonaMapEntry:
 class PersonaMaps:
     entries: tuple[PersonaMapEntry, ...]
     trailing_value: int
+
+    @classmethod
+    def from_frame(cls, frame):
+        """Header-enabled 0x607 response; native reader begins at wire +12."""
+        if frame.message_id != 0x607:
+            raise ValueError('expected persona-map success reply 0x607')
+        MessageHeader.from_frame(frame)
+        return cls.decode(frame.body[8:])
+
+    def find(self, persona_id, shard_id):
+        """Original local selection comparator 0x4ab740 checks both IDs."""
+        for value in (persona_id, shard_id):
+            if type(value) is not int or not 0 <= value <= 0xffffffff:
+                raise ValueError('persona selection identities must be uint32')
+        return next((entry for entry in self.entries
+                     if entry.persona_id == persona_id and entry.shard_id == shard_id), None)
 
     @classmethod
     def decode(cls, payload):

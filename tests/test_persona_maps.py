@@ -1,6 +1,7 @@
 import struct
 import unittest
 from client.nps_persona import PersonaMaps
+from client.nps_framing import Frame, encode_message
 
 
 def entry(name):
@@ -20,6 +21,19 @@ class PersonaMapTests(unittest.TestCase):
         self.assertEqual(decoded.trailing_value, 255)
         self.assertEqual(PersonaMaps.decode(b'\0\0\x01').entries, ())
         self.assertNotIn('Motor City', repr(decoded))
+
+    def test_full_response_and_selection_require_shard(self):
+        payload = b'\0\1'+entry(b'name')+b'\0'
+        wire = encode_message(0x607, payload, auxiliary=len(payload)+12)
+        maps = PersonaMaps.from_frame(Frame(0x607, wire[4:]))
+        self.assertEqual(maps.find(2, 3).name, b'name')
+        self.assertIsNone(maps.find(2, 44))
+        self.assertIsNone(maps.find(1, 3))
+        for bad in (Frame(0x601, wire[4:]), Frame(0x607, b'\0\0\0')):
+            with self.assertRaises(ValueError):
+                PersonaMaps.from_frame(bad)
+        with self.assertRaises(ValueError):
+            maps.find(True, 3)
 
     def test_truncation_and_invalid_record_bounds(self):
         wire = b'\0\1'+entry(b'name')+b'\0'

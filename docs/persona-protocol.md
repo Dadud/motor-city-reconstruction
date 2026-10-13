@@ -66,6 +66,13 @@ Nested record helper:
 `ev_fb720fb3faac0c2b1fd4b99e9d0fa0de85dc6d45f0783def9f8c23dff619ceeb`.
 This parser does not activate a persona or establish a server session.
 
+`PersonaMaps.from_frame` decodes the full header-enabled 0x607 reply. Base
+constructor `0x7e0670` enables the header; buffer reader `0x7e0bb0` begins the
+payload at wire offset 12. The adapter therefore skips the eight remaining
+header bytes in `Frame.body`, rather than interpreting flags as an entry count.
+It requires opcode 0x607 and a complete header before decoding records.
+`PersonaMaps.find` follows the original `(persona ID, shard ID)` comparison.
+
 ## Activating a selected persona
 
 Selecting the local list entry and activating it online are separate operations.
@@ -109,6 +116,32 @@ including distinct IDs, zeros, and maximum uint32 values. This verifies the
 opcode, flags, reserved field, default auxiliary, total length and field order.
 The complete request/response lifecycle has not been replayed
 or exercised with an authenticated server account.
+
+## Portable request service
+
+`client/nps_persona_service.py` now connects these codecs to the TCP transport.
+`fetch_personas(login_endpoint, account_user_id)` opens the endpoint at login
+port plus two, sends 0x532, requires 0x607, and decodes its full framed response.
+The native list request returns -11 for 0x602; other rejection replies return -1.
+`activate_persona(login_endpoint, account_user_id, persona_id, shard_id)` sends
+0x503 on a fresh connection and returns only after opcode 0x207. Both operations
+close the query connection and propagate transport failures without retries.
+Importing the module sends nothing; calling either function performs network I/O.
+
+Decoded map records retain their received account field for inspection. Activation
+requires the authenticated account ID explicitly, matching the game worker's
+replacement of that field before `UseSelected`. It does not infer the account
+from a persona name or declare the lobby connected after activation.
+
+Service tests verify endpoint routing, request identities, full-header parsing,
+shard-aware selection and rejection handling with synthetic replies. TCP behavior
+is verified separately with local sockets. No authenticated fan-server request
+has been performed by this service yet.
+
+Header constructor evidence:
+`ev_0fd2a6aa1134f2e792d113d962da55ac314903739439009eb5471a4e6153218a`.
+Full-buffer reader:
+`ev_b0dc6e0fd898d0b8e10a1c8da32708102c7504b9e60276e917bb933b28e31d71`.
 
 Evidence:
 
