@@ -9,6 +9,7 @@ from client.mcots_framing import MCOTSFrame
 from client.mcots_session import MCOTSSession
 from client.mcots_transport import MCOTSConnection
 from client.server_discovery import Endpoint
+from client.owned_parts import OwnedInstanceCache
 
 
 class DataServiceTests(unittest.TestCase):
@@ -113,6 +114,10 @@ class DataServiceTests(unittest.TestCase):
             result = fetch_persona_startup(MCOTSDataClient(session,first_transaction=2),42,timeout=3)
             self.assertEqual(result.persona_id,42)
             self.assertEqual(result.car_pairs,(pairs[:8],pairs[8:]))
+            self.assertEqual(tuple(struct.unpack_from('<I',seed,0x5f8)[0]
+                                   for seed in result.part_seeds),(123,789))
+            self.assertEqual(tuple(struct.unpack_from('<I',seed,0x1e3)[0]
+                                   for seed in result.part_seeds),(456,1011))
             self.assertEqual(result.profile,profile[:427]+supplement)
             self.assertEqual(len(result.profile),453)
             self.assertEqual(result.extensions,((b'cars-tail',),(b'profile-tail',),(b'supplement-tail',)))
@@ -120,13 +125,15 @@ class DataServiceTests(unittest.TestCase):
 
     def test_profile_rejection_stops_before_supplement(self):
         session = MagicMock()
-        session.receive.side_effect = (MCOTSFrame(2,0,struct.pack('<HB',0xad,0)),
+        session.receive.side_effect = (MCOTSFrame(2,0,struct.pack('<HBII',0xad,1,123,456)),
             MCOTSFrame(3,0,struct.pack('<HHI',0x66,0x6c,1)))
         client = MCOTSDataClient(session,first_transaction=2)
         with self.assertRaises(ValueError):
             fetch_persona_startup(client,0)
         session.send.assert_not_called()
+        cache = OwnedInstanceCache()
         with self.assertRaises(MCOTSDataRejected):
-            fetch_persona_startup(client,42)
+            fetch_persona_startup(client,42,instance_cache=cache)
         self.assertEqual(session.send.call_count,2)
         session.close.assert_not_called()
+        self.assertEqual((cache.row(123)['OwnerID'],cache.row(123)['BrandedPartID']),(42,456))

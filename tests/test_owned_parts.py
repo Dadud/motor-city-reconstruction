@@ -1,6 +1,6 @@
 import struct
 import unittest
-from client.owned_parts import OwnedPart, OwnedPartCache
+from client.owned_parts import OwnedPart, OwnedPartCache, OwnedInstanceCache
 
 
 class OwnedPartTests(unittest.TestCase):
@@ -27,5 +27,27 @@ class OwnedPartTests(unittest.TestCase):
             cache.seed_car_pairs((struct.pack('<II',99,123),))
         with self.assertRaises(ValueError):
             cache.seed_car_pairs((b'short',))
+        self.assertEqual(OwnedPart.from_row(self.row(damage=None)).percent_damage,0)
+
+    def test_car_list_cache_updates_owner_brand_and_explicit_zero_fields(self):
+        row = self.row()
+        row.update(OwnerID=7,ParentPartID=99,AttachmentPointID=10,PartName='retained')
+        cache = OwnedInstanceCache((row,))
+        cache.apply_persona_car_pairs(123,(struct.pack('<II',42,456),
+            struct.pack('<II',43,789),bytes(8),struct.pack('<II',42,987)))
+        updated = cache.row(42)
+        self.assertEqual((updated['OwnerID'],updated['BrandedPartID']),(123,987))
+        self.assertEqual(updated['PartName'],'retained')
+        self.assertIsNone(updated['ParentPartID'])
+        for field in ('AttachmentPointID','PercentDamage','ItemWear','RepairCost','ScrapValue'):
+            self.assertEqual(updated[field],0)
+        copied = cache.row(42)
+        copied['PercentDamage'] = 99
+        self.assertEqual(cache.row(42)['PercentDamage'],0)
+        seeds = cache.part_cache().seed_car_pairs((struct.pack('<II',42,987),))
+        self.assertEqual(struct.unpack_from('<I',seeds[0],0x1e3)[0],987)
+        self.assertEqual(struct.unpack_from('<I',seeds[0],0x60c)[0],0)
         with self.assertRaises(ValueError):
-            OwnedPart.from_row(self.row(damage=None)).native_seed()
+            cache.apply_persona_car_pairs(123,(struct.pack('<II',44,1),b'bad'))
+        with self.assertRaises(ValueError):
+            cache.row(44)

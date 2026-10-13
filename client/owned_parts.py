@@ -15,7 +15,8 @@ class OwnedPart:
 
     @classmethod
     def from_row(cls,row):
-        return cls(*(row[key] for key in ('PartID','BrandedPartID','PercentDamage',
+        # Native 0x67f080 writes zero for a present SQL NULL integer column.
+        return cls(*(0 if row[key] is None else row[key] for key in ('PartID','BrandedPartID','PercentDamage',
             'ItemWear','ParentPartID','RepairCost','ScrapValue')))
 
     def native_seed(self):
@@ -72,3 +73,47 @@ class OwnedPartCache:
             identifier = struct.unpack_from('<I',pair)[0]
             result.append(self.get(identifier).native_seed() if identifier else bytes(0x63c))
         return tuple(result)
+
+
+class OwnedInstanceCache:
+    """Authored in-memory equivalent of the recovered car-list SQL updates.
+
+    Keep SQL NULL parent values distinct from integer zero in cache rows.
+    Conversion to native integer slots follows the original NULL read rule.
+    No installation database is changed.
+    """
+    def __init__(self,rows=()):
+        self._rows = {}
+        for source in rows:
+            row = dict(source)
+            part = OwnedPart.from_row(row)
+            part.native_seed()
+            if part.part_id in self._rows:
+                raise ValueError('duplicate owned-part instance ID')
+            self._rows[part.part_id] = row
+
+    def apply_persona_car_pairs(self,persona_id,pairs):
+        if type(persona_id) is not int or not 1 <= persona_id <= 0xffffffff:
+            raise ValueError('expected nonzero selected persona ID')
+        validated = []
+        for pair in pairs:
+            if not isinstance(pair,bytes) or len(pair) != 8:
+                raise ValueError('expected eight-byte persona car pair')
+            validated.append(struct.unpack('<II',pair))
+        for identifier,brand in validated:
+            if not identifier:
+                continue  # Original 0x6725d0 rejects zero; its caller continues.
+            row = dict(self._rows.get(identifier,{}))
+            row.update(PartID=identifier,OwnerID=persona_id,BrandedPartID=brand,
+                ParentPartID=None,AttachmentPointID=0,PercentDamage=0,ItemWear=0,
+                RepairCost=0,ScrapValue=0)
+            self._rows[identifier] = row
+
+    def row(self,identifier):
+        try:
+            return dict(self._rows[identifier])
+        except KeyError as error:
+            raise ValueError('owned-part instance is missing from cache') from error
+
+    def part_cache(self):
+        return OwnedPartCache(self._rows.values())

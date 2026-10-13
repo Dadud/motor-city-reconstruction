@@ -31,8 +31,8 @@ is a local object, not a wire payload.
 `client.owned_parts.OwnedPart` represents the seven confirmed instance fields.
 `native_seed` produces the zeroed initial slot plus these fields, before
 enrichment. `OwnedPartCache.seed_car_pairs` resolves the first word against
-explicit instance rows; a zero ID remains an empty slot. The second word's
-original cache-update behavior remains separate. Duplicate or absent instance
+explicit instance rows; a zero ID remains an empty slot. The second word supplies
+the branded ID during the cache update described below. Duplicate or absent instance
 rows are rejected. No stock catalogue fallback can invent missing damage,
 wear, parent or ownership state.
 
@@ -40,7 +40,37 @@ The supplied base `Data/DB/Online.mdb` has zero rows in `Part`, while its query
 and schema are present. This was inspected read-only; no database was opened
 through COM or changed. Thus the base catalogue can supply branded metadata,
 but does not itself provide the live owned-instance cache. The cache-update
-path and complete enrichment still need reconstruction.
+path is now reconstructed in memory; complete enrichment remains unfinished.
+
+`OwnedInstanceCache.apply_persona_car_pairs` reproduces the car-list update:
+each nonzero first word selects `PartID`, the second supplies `BrandedPartID`,
+and the selected persona supplies `OwnerID`. Parent is SQL NULL; attachment,
+damage, wear, repair cost and scrap value are explicitly zero. Existing fields
+outside those assignments, such as `PartName`, are retained. Repeated instance
+IDs update in order, so the final pair wins. Zero IDs are ignored by the native
+update routine and its caller continues.
+
+Saved query `Part_UpdatePartNew` updates by `PartID`. If its execution fails
+or affects zero rows, original `0x6725d0` falls back to `Part_InsertNew` with
+the same data and a different parameter order. `0x680190` binds NULL for a
+zero parent. Integer reader `0x67f080` writes zero for a present NULL/empty
+variant; accordingly, `OwnedPart.from_row` converts present null values to
+zero when forming a native slot. Missing columns remain errors. This does
+not imply that every instance's real damage is zero: it reproduces this
+specific initial car-list cache update before later population.
+
+`fetch_persona_startup` now applies the list to an authored cache and returns
+the corresponding initial part slots alongside the merged profile. Callers
+can provide an existing `instance_cache`; cache changes occur immediately
+after the car-list reply and remain if a later profile step fails, as in the
+original sequence. Brand/physics enrichment is still required before these
+slots can represent complete playable cars. All changes are in memory.
+
+`python -m tools.owned_part_update_oracle /path/to/original/mcity.exe` executes
+the original binding and fallback logic with query boundaries substituted.
+Four cases confirm existing-row update, zero-row insert fallback, failed-query
+insert fallback, and rejection of a zero ID. It verifies the exact parameter
+maps and NULL parent binding; it does not execute SQL or modify a database.
 
 `python -m tools.owned_part_seed_oracle /path/to/original/mcity.exe` executes
 the six original stores at `0x66f8eb`–`0x66f912` with controlled query values.
@@ -58,3 +88,9 @@ Evidence: `ev_91fedcba62903d34e42733c19159b0260c79635b48f80029b667b35b0ac69786`
 External database SHA-256:
 `bdd86d8e781f127ac7dee5a5dab38945d0f9f03db354248e3cf50bbf9a13e021`.
 The database and raw native evidence remain external to the published repository.
+
+Additional evidence: `ev_fdfb5c0da53c5d462fe14bbc44d485c8973d188a5c23a3b39081d3c3a43cc967`
+(query names), `ev_7f0f24842329efb01a59e535640ba6389a8e2ea116a82f04988d36315beebef0`
+(update/insert bindings), `ev_6e74cd2ef153184a2d25f6d152664e19241c451d2d55082cf10d3aac1aaaf72b`
+(NULL binding), and `ev_cb3e03b3169f51828fea7566b7df1b3056b1f5c85b9ed541284dcf9a887628ac`
+(integer NULL reading).

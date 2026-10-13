@@ -7,6 +7,7 @@ from client.mcots_data_assembly import MCOTSDataAssembler
 from client.mcots_framing import MCOTSFrame
 from client.mcots_response import decode_completion
 from client.nps_transport import _timeout
+from client.owned_parts import OwnedInstanceCache
 
 
 def encode_data_request(operation, *, argument=0):
@@ -26,9 +27,10 @@ class MCOTSPersonaStartup:
     car_pairs: tuple[bytes, ...] = field(repr=False)
     profile: bytes = field(repr=False)
     extensions: tuple[tuple[bytes, ...], ...] = field(repr=False)
+    part_seeds: tuple[bytes, ...] = field(default=(),repr=False)
 
 
-def fetch_persona_startup(client, persona_id, *, timeout=120):
+def fetch_persona_startup(client, persona_id, *, timeout=120, instance_cache=None):
     """Fetch the car list and original profile-plus-supplement sequence.
 
     Preserve the eight-byte car pairs; resolving complete car objects from
@@ -36,6 +38,10 @@ def fetch_persona_startup(client, persona_id, *, timeout=120):
     """
     if type(persona_id) is not int or not 1 <= persona_id <= 0xffffffff:
         raise ValueError('expected nonzero selected persona ID')
+    if instance_cache is None:
+        instance_cache = OwnedInstanceCache()
+    if not isinstance(instance_cache,OwnedInstanceCache):
+        raise ValueError('expected owned-instance cache')
     deadline = time.monotonic()+_timeout(timeout)
     replies = []
     for operation in (0xac,0x6c,0x108):
@@ -44,10 +50,13 @@ def fetch_persona_startup(client, persona_id, *, timeout=120):
             client.session.close()
             raise TimeoutError('MCOTS persona startup timed out')
         replies.append(client.fetch(operation,argument=persona_id,timeout=remaining))
+        if operation == 0xac:
+            instance_cache.apply_persona_car_pairs(persona_id,replies[-1].records)
+            seeds = instance_cache.part_cache().seed_car_pairs(replies[-1].records)
     cars, profile, supplement = replies
     merged = profile.records[0][:0x1ab]+supplement.records[0]
     return MCOTSPersonaStartup(persona_id,cars.records,merged,
-                              tuple(reply.extensions for reply in replies))
+                              tuple(reply.extensions for reply in replies),seeds)
 
 
 class MCOTSDataRejected(ValueError):
