@@ -179,6 +179,17 @@ caller-defined deadline. Each failure stops subsequent requests. It returns
 the car pairs, merged profile and each exchange's preserved extensions.
 It does not perform the remaining startup refreshes or select a playable car.
 
+Supplying `catalogue` and explicit `text_encoding` also resolves recovered
+owned-part loading stages after the car list and before the profile request.
+Raw `part_seeds` remain available; enriched intermediate records are returned
+separately as `part_slots`. Optional `valuation_rates` apply recovered repair
+and scrap arithmetic. No extra factor request is inserted into this sequence.
+Zero-ID slots stay zeroed, and already-applied instance-cache updates survive
+a later failure. See [owned-part loading](owned-part-loading.md) for the API
+and fidelity limits. An encrypted local integration test covers the combined
+response/cache/catalogue/physics/valuation path; complete car trees and live
+authenticated fan-server play remain unfinished.
+
 A real local encrypted TCP exchange verifies request order, persona identity,
 all three response shapes and profile merging. A rejection test verifies
 that profile failure does not send the supplement request. The parser also

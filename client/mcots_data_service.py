@@ -1,5 +1,6 @@
 """Serial post-login requests over an accepted primary MCOTS session."""
 from collections import deque
+import codecs
 from dataclasses import dataclass, field
 import struct
 import time
@@ -30,6 +31,7 @@ class MCOTSPersonaStartup:
     profile: bytes = field(repr=False)
     extensions: tuple[tuple[bytes, ...], ...] = field(repr=False)
     part_seeds: tuple[bytes, ...] = field(default=(),repr=False)
+    part_slots: tuple[bytes, ...] = field(default=(),repr=False)
 
 
 @dataclass(frozen=True)
@@ -50,11 +52,13 @@ def fetch_valuation_data(client, *, timeout=120):
     return MCOTSValuationData(PartValuationRates.from_reply(record),record,result.extensions)
 
 
-def fetch_persona_startup(client, persona_id, *, timeout=120, instance_cache=None):
+def fetch_persona_startup(client, persona_id, *, timeout=120, instance_cache=None,
+                          catalogue=None, text_encoding=None, display_mode=2, valuation_rates=None):
     """Fetch the car list and original profile-plus-supplement sequence.
 
-    Preserve the eight-byte car pairs; resolving complete car objects from
-    the original cache/database is separate. Use one caller-defined deadline.
+    Preserve car pairs and raw seeds; an explicit catalogue also resolves the
+    recovered loading stages into part_slots. These are not complete car trees.
+    Use one caller-defined deadline for requests and intervening loading.
     """
     if type(persona_id) is not int or not 1 <= persona_id <= 0xffffffff:
         raise ValueError('expected nonzero selected persona ID')
@@ -62,6 +66,17 @@ def fetch_persona_startup(client, persona_id, *, timeout=120, instance_cache=Non
         instance_cache = OwnedInstanceCache()
     if not isinstance(instance_cache,OwnedInstanceCache):
         raise ValueError('expected owned-instance cache')
+    if catalogue is not None:
+        from .catalogue import Catalogue
+        if not isinstance(catalogue,Catalogue) or not isinstance(text_encoding,str):
+            raise ValueError('catalogue enrichment requires a catalogue and explicit text encoding')
+        codecs.lookup(text_encoding)
+        if type(display_mode) is not int or not 0 <= display_mode <= 0xffffffff:
+            raise ValueError('expected uint32 display mode')
+        if valuation_rates is not None and not isinstance(valuation_rates,PartValuationRates):
+            raise ValueError('expected explicit part valuation rates')
+    elif text_encoding is not None or valuation_rates is not None or display_mode != 2:
+        raise ValueError('part enrichment options require a catalogue')
     deadline = time.monotonic()+_timeout(timeout)
     replies = []
     for operation in (0xac,0x6c,0x108):
@@ -72,11 +87,17 @@ def fetch_persona_startup(client, persona_id, *, timeout=120, instance_cache=Non
         replies.append(client.fetch(operation,argument=persona_id,timeout=remaining))
         if operation == 0xac:
             instance_cache.apply_persona_car_pairs(persona_id,replies[-1].records)
-            seeds = instance_cache.part_cache().seed_car_pairs(replies[-1].records)
+            cache = instance_cache.part_cache()
+            seeds = cache.seed_car_pairs(replies[-1].records)
+            slots = ()
+            if catalogue is not None:
+                slots = tuple(catalogue.owned_part_intermediate(cache.get(struct.unpack_from('<I',pair)[0]),
+                    text_encoding=text_encoding,display_mode=display_mode,valuation_rates=valuation_rates)
+                    if struct.unpack_from('<I',pair)[0] else bytes(1596) for pair in replies[-1].records)
     cars, profile, supplement = replies
     merged = profile.records[0][:0x1ab]+supplement.records[0]
     return MCOTSPersonaStartup(persona_id,cars.records,merged,
-                              tuple(reply.extensions for reply in replies),seeds)
+                              tuple(reply.extensions for reply in replies),seeds,slots)
 
 
 class MCOTSDataRejected(ValueError):

@@ -105,6 +105,32 @@ after the car-list reply and remain if a later profile step fails, as in the
 original sequence. Brand/physics enrichment is still required before these
 slots can represent complete playable cars. All changes are in memory.
 
+Callers can now supply `catalogue`, explicit `text_encoding`, and optional
+`valuation_rates`/`display_mode` to `fetch_persona_startup`. Immediately after
+the car-list cache update, it resolves each nonzero instance through the
+recovered branded metadata, template, family/model-brand, display and physics
+stages. With explicit rates it also applies post-load valuation. The result's
+`part_slots` contains those enriched intermediate slots in response order;
+zero IDs remain completely zeroed placeholders. `part_seeds` continues to hold
+the earlier raw seeds, making the stages separately inspectable. Without a
+catalogue, `part_slots` is empty and the previous startup API behavior remains.
+
+Options are checked before sending requests. Encoding is explicit rather than
+assumed from the host platform. Catalogue loading uses the actual instance's
+brand and never replaces it with a stock vehicle. Missing metadata propagates
+as an error before profile/supplement requests; already-applied cache updates
+remain. The caller's overall deadline also covers the intervening enrichment
+before the next network request. Valuation factors must be supplied deliberately;
+this startup wrapper does not add an unverified factor-fetch ordering.
+
+An encrypted real local TCP test covers the original car-list/profile/supplement
+sequence with catalogue enrichment, cache overwrite, retained instance identity,
+physics wear limit, display label, supplied-factor valuation and a zero-ID slot.
+Separate checks cover prevalidation before network I/O and missing metadata
+stopping later requests. The peer is synthetic. These slots still lack the
+complete owned component tree, race/session initialization and authenticated
+live-server gameplay; the integration is not a claim of complete playable cars.
+
 `python -m tools.owned_part_update_oracle /path/to/original/mcity.exe` executes
 the original binding and fallback logic with query boundaries substituted.
 Four cases confirm existing-row update, zero-row insert fallback, failed-query
@@ -251,8 +277,8 @@ supplied caches. Four cases match every slot byte: matching family/brand,
 matching family with absent brand cache, absent family, and ID -1. The family
 loader boundary is substituted; SQL and allocation do not execute. The installed
 database has 108 brands and 22 families; all 4,257 supported intermediate part
-joins pass with the overrides enabled. Later valuation calculations remain
-outside this implementation.
+joins pass with the overrides enabled. Post-load valuation is available with
+explicit factors as documented separately; transaction pricing remains unfinished.
 
 Evidence: `ev_ce4d2a7a98b55b76dcba61e7f748be262b33c76d400c8c13516bf5c9d739fcfc`
 (brand cache loader), `ev_cb9a1c6738389cdf23e7525d0ad1c87a3fb411259b55039ef510a96d8eee521d`
@@ -346,7 +372,8 @@ Finally, `0x669714`–`0x669721` replaces the intermediate retail-price field
 at `0x1eb` for abstract type 101 with saved-query column 13. In the supplied
 `BrandPart_SelectE`, that column is literal zero. This faithfully produces
 zero at that stage; it does not mean the game's final vehicle prices are zero.
-Later valuation and transaction behavior still need recovery.
+Recovered post-load valuation can then update repair/scrap costs using explicit
+factors; complete transaction pricing and behavior still need recovery.
 
 The model-brand oracle compares four complete slots against original lookup
 and copying instructions, plus three final-price override cases. The display

@@ -13,6 +13,68 @@ from client.owned_parts import OwnedInstanceCache
 
 
 class DataServiceTests(unittest.TestCase):
+    def enrichment_catalogue(self):
+        from client.catalogue import Catalogue
+        physics = dict(PartTypeID=200,Ordinal=1,StatusID=0,DutyRating=0,MaxItemWear=1000,Mass=10)
+        physics.update({f'Val{i}': 20 if i == 11 else 0 for i in range(1,51)})
+        physics.update({f'TextVal{i}': None for i in range(1,9)})
+        return Catalogue(dict(BrandedPart=[dict(BrandedPartID=456,PartTypeID=200,ModelID=20,
+            RetailPrice=500,MaxItemWear=900,MfgDate='1955-01-01',EngineBlockFamilyID=-1)],
+            PartType=[dict(PartTypeID=200,AbstractPartTypeID=20001,PartFilename='body',PartType='Body',PartGradeID=3)],
+            AbstractPartType=[dict(AbstractPartTypeID=20001,ParentAbstractPartTypeID=0,DependsOn=0,
+                PartPaired=0,BlockFamilyCompatibility=0,GarageCategory=1,ModifiedRule=0,
+                RepairCostModifier=0.5,ScrapValueModifier=0.25,EAPT='Body',EUT='',
+                PartFilename='body',SchematicPicname1='pic1',SchematicPicname2='pic2')],
+            Model=[dict(ModelID=20,BrandID=7,EModel='Model',EShortModel='Short',EExtraInfo='Details')],
+            Brand=[dict(BrandID=7,Brand='Maker',PicName='maker')],Physics=[physics],
+            AttachmentPoint=[],StockVehicleAttributes=[],StockAssembly=[]))
+
+    def test_persona_stream_populates_owned_slots_before_profile(self):
+        from client.owned_valuation import PartValuationRates
+        pairs = struct.pack('<II',123,456)+bytes(8)
+        profile = struct.pack('<H',0x7a)+bytes(451)
+        supplement = struct.pack('<H',0x109)+bytes(24)
+        def server(session):
+            for transaction,operation,payload in ((2,0xac,struct.pack('<HB',0xad,2)+pairs),
+                    (3,0x6c,profile),(4,0x108,supplement)):
+                request = session.receive(timeout=3)
+                self.assertEqual(request.payload,struct.pack('<HI',operation,42)+bytes(4))
+                session.send(MCOTSFrame(transaction,0,payload))
+        def client(session):
+            cache = OwnedInstanceCache([dict(PartID=123,BrandedPartID=99,PercentDamage=17,
+                ItemWear=25,ParentPartID=9,RepairCost=50,ScrapValue=75)])
+            result = fetch_persona_startup(MCOTSDataClient(session,first_transaction=2),42,
+                timeout=3,instance_cache=cache,catalogue=self.enrichment_catalogue(),
+                text_encoding='cp1252',valuation_rates=PartValuationRates(0.2,0.65))
+            self.assertEqual(len(result.part_slots),2)
+            slot = result.part_slots[0]
+            self.assertEqual(struct.unpack_from('<I',slot,0x5f8)[0],123)
+            self.assertEqual(struct.unpack_from('<I',slot,0x1e3)[0],456)
+            self.assertEqual(struct.unpack_from('<ii',slot,0x610),(0,0))
+            self.assertEqual(struct.unpack_from('<ii',slot,0x62c),(0,338))
+            self.assertEqual(slot[0x207:0x213],b'Maker Model\0')
+            self.assertEqual(struct.unpack_from('<i',slot,0x1ef)[0],1000)
+            self.assertEqual(result.part_slots[1],bytes(1596))
+            self.assertEqual(result.part_seeds[0][:0x1e3],bytes(0x1e3))
+            self.assertEqual(cache.row(123)['OwnerID'],42)
+        self.exchange(server,client)
+
+    def test_enrichment_prevalidation_and_missing_brand_stop_later_requests(self):
+        session = MagicMock()
+        client = MCOTSDataClient(session,first_transaction=2)
+        catalogue = self.enrichment_catalogue()
+        with self.assertRaises(ValueError):
+            fetch_persona_startup(client,42,catalogue=catalogue)
+        with self.assertRaises(LookupError):
+            fetch_persona_startup(client,42,catalogue=catalogue,text_encoding='unknown-encoding')
+        session.send.assert_not_called()
+        session.receive.return_value = MCOTSFrame(2,0,struct.pack('<HBII',0xad,1,123,999))
+        cache = OwnedInstanceCache()
+        with self.assertRaises(ValueError):
+            fetch_persona_startup(client,42,catalogue=catalogue,text_encoding='cp1252',instance_cache=cache)
+        self.assertEqual(session.send.call_count,1)
+        self.assertEqual(cache.row(123)['BrandedPartID'],999)
+
     def test_valuation_rejection_propagates_without_default_factor_substitution(self):
         session = MagicMock()
         session.receive.return_value = MCOTSFrame(5,0,struct.pack('<HHI',0x66,0x185,0x83))
