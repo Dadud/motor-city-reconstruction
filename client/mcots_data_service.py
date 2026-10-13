@@ -1,0 +1,89 @@
+"""Serial post-login requests over an accepted primary MCOTS session."""
+from collections import deque
+import struct
+import time
+from client.mcots_data_assembly import MCOTSDataAssembler
+from client.mcots_framing import MCOTSFrame
+from client.mcots_response import decode_completion
+from client.nps_transport import _timeout
+
+
+def encode_data_request(operation, *, argument=0):
+    """Ten-byte native payload, using the normal pool's zero initialization."""
+    if type(operation) is not int or operation not in (0x144,0x142,0x16b,0x185):
+        raise ValueError('unsupported post-login request operation')
+    if type(argument) is not int or not 0 <= argument <= 0xffffffff:
+        raise ValueError('expected uint32 request argument')
+    if operation != 0x142 and argument:
+        raise ValueError('only request 0x142 has a recovered argument field')
+    return struct.pack('<HI',operation,argument)+bytes(4)
+
+
+class MCOTSDataRejected(ValueError):
+    def __init__(self, operation, result_code):
+        self.operation, self.result_code = operation, result_code
+        super().__init__('MCOTS data request was rejected')
+
+
+class MCOTSDataClient:
+    """Use serially; retain unrelated application frames for their consumers.
+
+    The caller supplies the next unused transaction ID and owns the session.
+    Resource and transport failures close it. A correlated server rejection
+    leaves the connection usable, as in the original data completion handlers.
+    """
+    def __init__(self, session, *, first_transaction, max_pending_bytes=1024*1024):
+        if type(first_transaction) is not int or not 0 <= first_transaction <= 0xffffffff:
+            raise ValueError('expected uint32 next transaction')
+        if type(max_pending_bytes) is not int or max_pending_bytes < 1:
+            raise ValueError('expected positive pending-frame capacity')
+        self.session, self._next = session, first_transaction
+        self._pending, self._pending_bytes = deque(), 0
+        self.max_pending_bytes = max_pending_bytes
+
+    def pop_pending(self):
+        """Return an unrelated decoded frame, or None if none is retained."""
+        if not self._pending:
+            return None
+        frame = self._pending.popleft()
+        self._pending_bytes -= len(frame.payload)+11
+        return frame
+
+    def fetch(self, operation, *, argument=0, timeout=120,
+              max_bytes=16*1024*1024, max_pages=1024):
+        payload = encode_data_request(operation, argument=argument)
+        timeout = _timeout(timeout)
+        transaction = self._next
+        assembly = MCOTSDataAssembler(operation,transaction,max_bytes=max_bytes,max_pages=max_pages)
+        self._next = (transaction+1)&0xffffffff
+        deadline = time.monotonic()+timeout
+        try:
+            self.session.send(MCOTSFrame(transaction,0,payload),timeout=timeout)
+            while True:
+                remaining = deadline-time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError('MCOTS data request timed out')
+                frame = self.session.receive(timeout=remaining)
+                opcode = struct.unpack_from('<H',frame.payload)[0] if len(frame.payload)>=2 else None
+                # Operation 0x198 updates a cache independently of transaction
+                # correlation in the original completion handler.
+                if frame.transaction_value != transaction or opcode == 0x198:
+                    size = len(frame.payload)+11
+                    if self._pending_bytes+size > self.max_pending_bytes:
+                        raise ValueError('MCOTS pending frames exceed configured capacity')
+                    self._pending.append(frame)
+                    self._pending_bytes += size
+                    continue
+                if opcode in (0x65,0x66,0x67,0x107):
+                    completion = decode_completion(frame,transaction_value=transaction,operation=operation)
+                    if not completion.successful:
+                        raise MCOTSDataRejected(operation,completion.result_code)
+                    raise ValueError('MCOTS data acknowledgement lacks its direct data record')
+                result = assembly.feed(frame)
+                if result is not None:
+                    return result
+        except MCOTSDataRejected:
+            raise
+        except Exception:
+            self.session.close()
+            raise

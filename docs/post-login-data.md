@@ -62,8 +62,36 @@ preserved. The 0x186 fixed reply completes in one page.
 Extensions are retained per page. Invalid identities, malformed lengths and
 resource-limit failures leave the previous accepted state intact. Default
 limits of 16 MiB and 1024 pages are portable defensive limits, not recovered
-native constants. Feeding a completed assembler fails. This does not yet
-provide a network dispatcher, automatic requests or typed garage fields.
+native constants. Feeding a completed assembler fails. The assembler itself
+does not send requests or interpret typed garage fields.
+
+`client.mcots_data_service.MCOTSDataClient` now provides serial requests on an
+accepted primary session. The caller supplies the next unused transaction ID;
+each issued request consumes it and wraps at uint32. The four supported
+request payloads are ten bytes. Operation 0x142 has its argument at +2; the
+others have only their operation word and zero bytes from the normal pool's
+initialization path. The native pool's exhausted-allocation fallback does not
+have the same clearing step; reproducing stale/debug-fill bytes from that
+exceptional path is outside this encoder.
+
+`fetch` sends one request and assembles direct reply pages under one overall
+deadline. Unrelated transaction frames are retained in a bounded FIFO,
+retrievable with `pop_pending`. Operation 0x198 cache updates are retained even
+when their transaction matches, because the original handler treats them
+independently. Existing session keepalive and encryption handling continue
+while waiting. A generic successful acknowledgement without a data record
+cannot complete fetching. A correlated rejection exposes the operation and
+numeric code and leaves the connection usable; malformed matching data,
+timeouts, transport failures and resource-limit failures close it. There are
+no automatic retries.
+
+Real local TCP tests use independently encrypted peers to verify a two-page
+reply, unrelated-message retention, a cache update, a control keepalive,
+transaction wraparound and a second fixed reply on the same stream. A second
+exchange verifies rejection followed by another successful request. These
+synthetic peers verify the authored exchange, not live fan-server acceptance.
+Typed garage records, the full initial-fetch sequence and cache consumers
+remain unfinished.
 
 `python -m tools.mcots_data_copy_oracle /path/to/original/mcity.exe` checks
 the original 0x145 and 0x16c copy instructions with zero, one and three records,
