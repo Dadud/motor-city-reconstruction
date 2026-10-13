@@ -103,3 +103,25 @@ Additional evidence:
 - Update: `ev_c39115a443cca76991f5dab01ccef6f68bde63eaa3749fede7acaf6d10ae7b69`.
 - Padding: `ev_bea96ac77af1bbd39100da3f0e84895dbf77f02505498ba38a879bddc36c989d`.
 - Compression bridge: `ev_e63dac75c0fb994aa538646848d441ea554e940bd6dbed3557225c20f258574e`.
+
+## Connection success response
+
+Connection procedure `0x73a720` accepts success opcode `0x120` or `0x308`.
+Both share the `0x7e64d0` branch at `0x7e7e0c`. Its format is `lpb`: a
+big-endian uint32 user ID, uint32 byte count and at most 32 username bytes,
+then 64 fixed bytes. These are four-byte frames, not the authentication
+protocol's 12-byte header. `client/lobby_response.py` preserves both byte fields
+without guessing how the fixed blob is interpreted.
+
+The connection procedure compares the returned user ID with its argument ID,
+logs a difference, and replaces the argument ID with the returned value before
+constructing the connection object. Thus a differing ID does not by itself
+mean native login failure. Rejection handling and later connection setup still
+require implementation. The parser validates exact lengths and rejects trailing
+data, a deliberate strictness beyond the observed native copy operations.
+
+Success parser static evidence:
+`ev_893e71fc6b21523217e3cd52e187d9dd3c475554e6b86671aefc59f2d3c804a6`.
+Synthetic tests cover both IDs, empty and maximum counted fields, opaque NUL
+bytes, truncation, oversized counts, and trailing bytes. Native reader replay
+and authenticated server acceptance remain unverified.
