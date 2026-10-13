@@ -75,6 +75,11 @@ per pass and matching C++/Python outputs. [Type-cache resolution](part-type-cach
 matches another 64 original-code cases. Preceding finalization and integration of
 these passes remain required before complete owned-car startup.
 
+The [induction pruning phase](owned-induction-pruning.md) of finalization matches
+97 original-code cases and has a native port. Earlier missing-part insertion and
+the full finalizer's entry conditions remain unresolved; pruning is not a complete
+replacement for that finalizer.
+
 Numerical checks include branch/boundary inputs, update order, rounding and explicit
 tolerances; bit equality is required where recovered serialized layouts demand it.
 Whole-runtime traces include controls, initial vehicle/track state and elapsed time.
