@@ -123,5 +123,21 @@ data, a deliberate strictness beyond the observed native copy operations.
 Success parser static evidence:
 `ev_893e71fc6b21523217e3cd52e187d9dd3c475554e6b86671aefc59f2d3c804a6`.
 Synthetic tests cover both IDs, empty and maximum counted fields, opaque NUL
-bytes, truncation, oversized counts, and trailing bytes. Native reader replay
-and authenticated server acceptance remain unverified.
+bytes, truncation, oversized counts, and trailing bytes. Authenticated server
+acceptance remains unverified.
+
+Ten synthetic cases matched native field reader `0x7e42e0` under bounded x86
+emulation, checking consumed length, user ID, fixed blob, and bounded username.
+Run `python -m tools.lobby_response_oracle` with the verified original executable.
+The two opcode branches were traced statically; replay runs their shared field
+reader, not the entire connection procedure.
+
+The native `p` reader uses a C-string destination: it appends a NUL when the
+count is below capacity and overwrites byte 31 with NUL at capacity 32. Thus a
+32-byte field without a NUL has only 31 visible username bytes. The property
+`native_username` reproduces that view; `username` retains the original wire
+bytes. Counts above 32 are truncated by the original reader but rejected by the
+reconstruction's bounded parser, an explicit strictness choice.
+
+Field-reader evidence:
+`ev_a1ee5894895e7645ed03137c8708e1ed0b9fe93a81813b483d6dd8688e09d281`.

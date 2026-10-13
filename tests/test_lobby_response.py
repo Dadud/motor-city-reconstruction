@@ -6,6 +6,13 @@ from client.nps_framing import Frame
 
 
 class LobbyResponseTests(unittest.TestCase):
+    def test_native_username_forces_terminator_without_altering_wire_bytes(self):
+        for wire, native in ((b'n'*32, b'n'*31), (b'a\0b', b'a'),
+                             (b'driver\0', b'driver'), (b'', b'')):
+            result = LobbyLoginSuccess(42, wire, bytes(64))
+            self.assertEqual(result.native_username, native)
+            self.assertEqual(result.username, wire)
+
     def test_success_ids_and_opaque_counted_bytes(self):
         for message_id in (0x120, 0x308):
             for username in (b'', b'driver\0', b'a\0b', b'n'*32):

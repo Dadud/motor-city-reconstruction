@@ -15,6 +15,15 @@ class LobbyLoginSuccess:
     username: bytes = field(repr=False)
     caller_blob: bytes = field(repr=False)
 
+    @property
+    def native_username(self):
+        """Original bounded C-string view; capacity 32 reserves a terminator.
+
+        Keep the wire field separately so embedded NUL and truncation are
+        visible to callers rather than silently changing the retained payload.
+        """
+        return self.username[:31].split(b'\0', 1)[0]
+
     @classmethod
     def from_frame(cls, frame):
         if not isinstance(frame, Frame) or frame.message_id not in (0x120, 0x308):
