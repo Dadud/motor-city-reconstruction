@@ -97,6 +97,12 @@ buffers through public mod APIs. Do not turn unresolved fields into guessed defa
 
 ## Porting order and parity contracts
 
+Owned root selection, parent/family linking and type-cache reference resolution
+are now available in the native core. Their comparison tools preserve every
+record byte and use the same asset-free corpora as the optional original CPU
+oracles. These modules remain isolated until preceding component finalization
+and subsequent aggregation are recovered; they do not yet define a drivable car.
+
 1. Establish the CMake build, asset-free headless tests and Windows/Linux CI before
    porting runtime behavior. Keep build products outside source and original files.
 2. Port bounded decoders and recovered pure calculations. Feed identical fixtures

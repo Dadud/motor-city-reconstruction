@@ -20,6 +20,14 @@ jobs:
         run: python -m tools.native_valuation_compare build/native/mco_valuation_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_valuation_compare build/native/Release/mco_valuation_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_owned_parent_links_compare build/native/mco_owned_parent_links_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_owned_parent_links_compare build/native/Release/mco_owned_parent_links_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_part_type_cache_compare build/native/mco_part_type_cache_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_part_type_cache_compare build/native/Release/mco_part_type_cache_compare.exe
   linux-platform:
     runs-on: ubuntu-latest
     steps:

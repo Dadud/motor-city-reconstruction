@@ -31,7 +31,7 @@ outside the published repository.
 | Vehicle geometry and textures | Partial: FCE and supported texture decoding; `fce.py`, `textures.py` | Inventory unsupported variants, materials, attachment visibility and animation | Decode installed vehicle corpus; compare representative assembled cars to original views and reject malformed content safely |
 | Tracks and world presentation | Partial: base track meshes, spatial lookup and support; `track*.py`, `world.py` | Objects, effects, material/render ordering, visibility and full track variants | Traverse every supported track with original assets; compare landmarks, surfaces and object placement |
 | Catalogue and stock assembly | Partial: typed catalogue, physics fields and component interpretation; `catalogue.py`, `assembly.py`, `physics_data.py` | Resolve unsupported assemblies, conversion cases, dimensions and nested placement | Assemble stock corpus with explicit reports for every rejected record; compare complete geometry and component inputs |
-| Owned and modified vehicles | Partial: instance/physics enrichment, valuation, provisional child discovery; [loading](owned-part-loading.md), [discovery](owned-component-discovery.md) | Recover finalization, root reorder, parent/dependency indexes, aggregate fields, total valuation and online refresh | Load an actually modified owned car without stock substitution; compare complete hierarchy, attachments and derived values |
+| Owned and modified vehicles | Partial: enrichment, valuation, discovery and verified root/parent/family/dependency passes; [loading](owned-part-loading.md), [discovery](owned-component-discovery.md), [parent links](owned-component-parent-links.md) | Recover preceding finalization, other reorder passes, aggregate fields, total valuation and online refresh; integrate recovered passes | Load an actually modified owned car without stock substitution; compare complete hierarchy, attachments and derived values |
 | Engine calculations | Partial: independently compared dyno stages and thermodynamic boundaries; [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Pressure/mass/energy integration, cycle carryover, final curves and fuel/boost branches | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
 | Motion and support geometry | Recovered bounded calculations: pose updates and contact geometry; [motion](calculations/vehicle-motion.md) | Confirm full call ordering, units, wheel sizing and stance in the integrated simulation | Original versus reconstruction pose/contact traces agree under documented tolerances and identical inputs |
 | Tire/suspension/drivetrain/brake forces | Partial component interpretation; full integrated force model unknown | Trace original force producers, steering, gears/clutch, differential, surface and aero consumers | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
@@ -69,9 +69,11 @@ outside the published repository.
 
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded
-original-CPU cases include the actual type-cache helper. Root reordering, parent
-linking and preceding finalization remain required before integrating this pass
-into owned-car startup.
+original-CPU cases include the actual type-cache helper. Root selection and
+parent/family linking are now recovered separately, with 96 original-code cases
+per pass and matching C++/Python outputs. [Type-cache resolution](part-type-cache.md)
+matches another 64 original-code cases. Preceding finalization and integration of
+these passes remain required before complete owned-car startup.
 
 Numerical checks include branch/boundary inputs, update order, rounding and explicit
 tolerances; bit equality is required where recovered serialized layouts demand it.

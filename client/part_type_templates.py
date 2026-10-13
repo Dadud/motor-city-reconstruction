@@ -1,4 +1,6 @@
 """Recovered AbstractPartType query templates, external database data only."""
+import codecs
+from collections.abc import Mapping
 import math
 import struct
 
@@ -86,3 +88,63 @@ def apply_owned_display_names(slot,template, *, mode=2):
     category = text(template,0x180,64)
     output[0x180:0x180+len(category)+1] = category+b'\0'
     return bytes(output)
+
+
+def resolve_part_type_cache(records):
+    """Resolve original cache parent/dependency indexes in supplied order.
+
+    Recovered post-load loop 0x64d1e9..0x64d297 searches data records starting
+    at index one. Missing nonzero IDs preserve their previous index, normally
+    -1, rather than treating an unresolved reference as the index-zero marker.
+    The sentinel and every byte outside indexes 0x600/0x604 stay unchanged.
+    """
+    if not isinstance(records, (tuple, list)) or not records:
+        raise ValueError('expected nonempty part-type cache records')
+    if len(records) > 0x7fffffff:
+        raise ValueError('part-type cache count must fit int32')
+    if any(not isinstance(record, bytes) or len(record) != 1596 for record in records):
+        raise ValueError('expected 1596-byte part-type cache records')
+    if struct.unpack_from('<i', records[0])[0] != 0:
+        raise ValueError('part-type cache must begin with an abstract-zero sentinel')
+    lookup = {}
+    for index, record in enumerate(records[1:], 1):
+        lookup.setdefault(struct.unpack_from('<i', record)[0], index)
+    result = [records[0]]
+    for record in records[1:]:
+        output = bytearray(record)
+        for source_offset, index_offset in ((4, 0x600), (8, 0x604)):
+            identifier = struct.unpack_from('<i', record, source_offset)[0]
+            index = 0 if identifier == 0 else lookup.get(identifier)
+            if index is not None:
+                struct.pack_into('<i', output, index_offset, index)
+        result.append(bytes(output))
+    return tuple(result)
+
+
+def build_part_type_cache(rows, *, text_encoding):
+    """Encode ordered rows, prepend the original marker, then resolve links.
+
+    Cyclic or missing references are not rewritten or rejected by the original
+    resolution loop. Later consumers must validate references before use.
+    """
+    if not isinstance(text_encoding, str):
+        raise ValueError('expected explicit part-type text encoding')
+    codecs.lookup(text_encoding)
+    if isinstance(rows, (str, bytes, Mapping)):
+        raise ValueError('expected an ordered iterable of part-type rows')
+    try:
+        rows = tuple(rows)
+    except TypeError as error:
+        raise ValueError('expected an ordered iterable of part-type rows') from error
+    if len(rows) >= 0x7fffffff:
+        raise ValueError('part-type cache count must fit int32')
+    if any(not isinstance(row, Mapping) for row in rows):
+        raise ValueError('expected mapping records for part-type rows')
+    marker = bytearray(1596)
+    text = b'==No Parent Marker==\0'
+    marker[0x347:0x347 + len(text)] = text
+    encoded = (bytes(marker),) + tuple(
+        encode_part_type_template(row, text_encoding=text_encoding,
+                                  parent_index=-1, depends_index=-1)
+        for row in rows)
+    return resolve_part_type_cache(encoded)
