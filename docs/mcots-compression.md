@@ -33,8 +33,8 @@ ignored, consistent with the decompressor's end-marker behavior.
 Control flag 0x80 bypasses encryption. The handler recognizes the four-byte
 payload values 0xf216 and 0xf207 as keepalive traffic after transformations;
 0xf216 is rewritten to 0xf207, marked 0x80 and queued for return. These control
-paths and automatic connection-state handling are not yet integrated into
-the portable transport.
+paths and automatic connection-state handling are now integrated in the
+[session layer](mcots-session.md), above the raw portable transport.
 
 ## Decoder and verification
 
