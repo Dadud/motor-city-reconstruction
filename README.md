@@ -64,6 +64,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/mcots-encryption.md` | MCOTS attachment key source and verified persistent RC4 calculation |
 | `docs/mcots-responses.md` | Transaction correlation, attachment completion and native error mapping |
 | `docs/mcots-login-success.md` | Bounded login-success fields and unresolved service records |
+| `docs/mcots-transport.md` | Persistent MCOTS TCP framing and recovered service attachment routing |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.
