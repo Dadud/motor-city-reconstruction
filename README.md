@@ -6,6 +6,27 @@ An open-source reconstruction of the Motor City Online client for modern Windows
 
 ## Quick start
 
+The C++20 migration is underway. See the [recovery ledger](docs/recovery-ledger.md)
+for outstanding systems and the [native migration guide](docs/native-migration.md)
+for module boundaries and verification gates. The native build currently contains
+recovered valuation calculations, bounded VIV directories, MCOTS packet framing,
+a restricted Lua execution harness, and an
+optional SDL/OpenGL platform probe; it is not yet a playable native client.
+
+With CMake 3.24+ and a C++20 compiler installed:
+
+```sh
+cmake -S . -B build/native -DCMAKE_BUILD_TYPE=Release
+cmake --build build/native --config Release --parallel
+ctest --test-dir build/native -C Release --output-on-failure
+```
+
+The first configuration downloads hash-pinned Lua 5.4.8 sources. Enable
+`-DMCO_BUILD_PLATFORM=ON` to also build the SDL3/OpenGL 3.3 context probe
+using hash-pinned SDL 3.2.28 sources. This probe does not render game assets.
+Use `-DMCO_BUILD_SCRIPTING=OFF` for an offline, dependency-free calculation build.
+The Python application below remains the playable research harness.
+
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 
 ### Windows PowerShell
