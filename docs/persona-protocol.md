@@ -97,6 +97,8 @@ not that the service accepts the recovered request or authenticates an account.
 
 List worker Ghidra evidence:
 `ev_4c33037558fcb072151ec25bb75e0bbdb9892fc7584867635dd880b84236d6b1`.
+Conversion instruction REA evidence:
+`ev_38cee976a78984bc9c6fc4b3c80e6799c53a565da9d001d81d1fe2ac204882e2`.
 Three bounded emulation cases execute the original conversion and `strncpy`,
 checking all four fields, the name, destination stride, and list index advance.
 The identity meanings are established by static instructions and their callers;
