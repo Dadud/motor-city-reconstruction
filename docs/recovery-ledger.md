@@ -67,6 +67,12 @@ outside the published repository.
 
 ## Verification record requirements
 
+The dependency-linking pass is now implemented in isolation and documented in
+[owned component dependencies](owned-component-dependencies.md). Its 64 bounded
+original-CPU cases include the actual type-cache helper. Root reordering, parent
+linking and preceding finalization remain required before integrating this pass
+into owned-car startup.
+
 Numerical checks include branch/boundary inputs, update order, rounding and explicit
 tolerances; bit equality is required where recovered serialized layouts demand it.
 Whole-runtime traces include controls, initial vehicle/track state and elapsed time.

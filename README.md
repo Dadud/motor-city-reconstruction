@@ -9,7 +9,7 @@ An open-source reconstruction of the Motor City Online client for modern Windows
 The C++20 migration is underway. See the [recovery ledger](docs/recovery-ledger.md)
 for outstanding systems and the [native migration guide](docs/native-migration.md)
 for module boundaries and verification gates. The native build currently contains
-recovered valuation calculations, bounded VIV directories, MCOTS packet framing,
+recovered valuation and dependency-linking calculations, bounded VIV directories, MCOTS packet framing,
 a restricted Lua execution harness, and an
 optional SDL/OpenGL platform probe; it is not yet a playable native client.
 

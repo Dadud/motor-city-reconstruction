@@ -7,7 +7,7 @@ a complete recovered runtime.
 
 ## Implemented foundation
 
-The root CMake build contains `mco_core` (owned-part valuation, VIV directories,
+The root CMake build contains `mco_core` (owned-part valuation/dependency linking, VIV directories,
 MCOTS framing), `mco_scripting`
 (isolated Lua execution), and optional `mco_platform_probe` (SDL/OpenGL context
 creation). There is no native gameplay application or native online client yet.
@@ -34,6 +34,13 @@ The optional SDL3 platform probe also built locally and successfully created an
 OpenGL 3.3 core context on Windows. It initializes SDL video/audio/gamepad
 subsystems, but this check does not exercise audio playback, controller input,
 game rendering or driving.
+
+GitHub native Windows/Linux builds, differential valuation checks and the Linux
+Mesa/Xvfb SDL/OpenGL probe passed for commit `1fce19c` in
+[native checks run 38466840304](https://github.com/Dadud/motor-city-reconstruction/actions/runs/38466840304).
+The subsequent dependency-linking port is covered by an additional native suite;
+its original-code comparison is documented separately in
+[owned component dependencies](owned-component-dependencies.md).
 
 Repeat the external-asset check without persisting original bytes:
 
