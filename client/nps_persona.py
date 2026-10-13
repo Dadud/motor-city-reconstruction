@@ -66,3 +66,26 @@ def encode_persona_maps_request(account_user_id):
     if type(account_user_id) is not int or not 1 <= account_user_id <= 0xffffffff:
         raise ValueError('persona-map account ID must be a nonzero uint32')
     return encode_message(0x532, struct.pack('>I', account_user_id), auxiliary=16)
+
+
+def encode_persona_activation_request(account_user_id, persona_id, shard_id):
+    """Prepare native 0x503 activation; no network or selection side effects.
+
+    Field order follows task 5 at 0x4ab7a0 and serializer 0x7290d0.
+    Native uint32 fields have no recovered nonzero validation here.
+    """
+    values = (account_user_id, persona_id, shard_id)
+    if any(type(value) is not int or not 0 <= value <= 0xffffffff for value in values):
+        raise ValueError('persona activation identities must be uint32 values')
+    return encode_message(0x503, struct.pack('>3I', *values), auxiliary=24)
+
+
+def native_persona_activation_result(message_id):
+    """Original 0x728d10 reply classification, independent of reply body.
+
+    0x207 means success on this auth connection; lobby heartbeat handling
+    belongs to a different protocol context. Unknown replies fail with -1.
+    """
+    if type(message_id) is not int or not 0 <= message_id <= 0xffff:
+        raise ValueError('persona activation reply ID must be uint16')
+    return {0x207: 0, 0x612: -11}.get(message_id, -1)
