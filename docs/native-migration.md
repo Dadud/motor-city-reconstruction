@@ -9,6 +9,7 @@ a complete recovered runtime.
 
 The root CMake build contains `mco_core` (owned-part valuation, type-cache resolution,
 placeholder insertion/pruning, root selection and parent/dependency linking, VIV directories,
+component counts and repair/scrap/price totals,
 MCOTS framing), `mco_scripting`
 (isolated Lua execution), and optional `mco_platform_probe` (SDL/OpenGL context
 creation). There is no native gameplay application or native online client yet.
@@ -49,6 +50,13 @@ bounded original insertion prefix with explicit allocation/formatting substituti
 This covers an isolated assembly stage; full car loading and aggregation remain
 unfinished. The native CI matrix runs the asset-free insertion comparisons on both
 operating systems.
+
+The subsequent numeric aggregation port passes ten native suites and 397 Python
+tests locally. Each of its three passes matches complete original functions in
+97 controlled cases, including whole-record output, existing totals and 32-bit
+wrapping. See [owned-component aggregates](calculations/owned-component-aggregates.md)
+for traversal order and the repeated-accumulation behavior. This does not prove
+mechanical aggregation, complete garage loading or live economy compatibility.
 
 Repeat the external-asset check without persisting original bytes:
 
