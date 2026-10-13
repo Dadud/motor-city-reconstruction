@@ -39,7 +39,7 @@ An exactly 13-byte name has no NUL in that field. Longer names are truncated.
 The portable `MCOTSLoginRecord.encode_native_record` preserves this behavior
 and leaves the additional values explicit. Its output is the recovered memory
 record, not an NPS frame or a complete MCOTS wire packet. The attachment
-handshake, transaction header, wire transformations, response matching and
+handshake, connection-specific wire transformations, response matching and
 login-success payload remain under investigation. No MCOTS request is sent by
 the record module or oracle.
 
@@ -75,8 +75,47 @@ four-byte field at +4, allocation class at +8, payload length at +9, the field
 at +0xb, the field at +0xf, and a byte at +0x13. Payload begins at +0x14.
 Allocator `0x6f8e10` selects class 1, 2 or 4 according to pool-size thresholds.
 These class and ownership fields belong to local memory management. No wire
-header should be inferred by copying this prefix wholesale. The outgoing
-worker and its encoding remain the next boundary to recover.
+header should be inferred by copying this prefix wholesale.
+
+## TCP envelope
+
+The outgoing worker entry `0x6f8060` calls `0x6f8080`. After removing an item
+from the queue, it dispatches through vtable +0x30 to `0x6f52e0`. That method
+can compress a payload through `0x6f53e0` and encrypt it through `0x6fa7f0`,
+depending on message and connection flags. Compression skips payloads shorter
+than 80 bytes, so the 39-byte login record does not take that compression
+path. Encryption is connection dependent and remains unresolved.
+
+The final ordinary TCP sender is vtable +0x28, `0x6f7f20`. It adds 9 to the
+payload length at allocation +9 and sends from that offset, with a byte count
+two larger than the resulting length. Thus the wire envelope is little endian:
+
+| Wire offset | Bytes | Meaning |
+| --- | --- | --- |
+| 0 | 2 | Payload length +9, excludes the length field itself |
+| 2 | 4 | Marker 0x434d4f54, bytes `54 4f 4d 43` |
+| 6 | 4 | Value from allocation +0xf, semantics unresolved |
+| 10 | 1 | Message flags from allocation +0x13 |
+| 11 | variable | Payload after any compression/encryption |
+
+The marker is read from `0x8c13b4` in the verified executable. A 39-byte
+payload has a length field of 48 and a total envelope size of 50. The separate
+operation 0x808 uses a string send branch; the ordinary codec does not support
+that branch. `client.mcots_framing` implements this envelope with explicit
+transaction value and flags. It must receive an already transformed payload;
+it does not claim that wrapping the native login record alone completes login.
+
+`python -m tools.mcots_framing_oracle /path/to/original/mcity.exe` executes
+only `0x6f7f90` through `0x6f7fb1`, stopping before the socket send loop. Three
+cases matched every prepared byte: one-byte, 39-byte and maximum 65,526-byte
+payloads, with differing transaction values and flags. This is bounded CPU
+emulation of send-buffer preparation, not an authenticated network test.
+Ghidra did not recognize several worker entries as procedures; those specific
+dispatch and send ranges were traced with Capstone over the same hash-verified
+executable. Compression evidence is
+`ev_20fe167e68a49014cfede4db39bb4c3e98c3e705221938162a0acdb20e539615`;
+encryption dispatch evidence is
+`ev_ae34f2662645620fd3f35bd49c0f7653a28c2c8c4f16436fc008c02ed91ca44b`.
 
 Additional static evidence:
 
