@@ -8,8 +8,8 @@ a complete recovered runtime.
 ## Implemented foundation
 
 The root CMake build contains `mco_core` (owned-part valuation, type-cache resolution,
-placeholder insertion/pruning, root selection and parent/dependency linking, VIV directories,
-component counts and repair/scrap/price totals,
+placeholder insertion/pruning, type/attachment ordering, root selection and
+parent/dependency linking, VIV directories, component counts and repair/scrap/price totals,
 MCOTS framing), `mco_scripting`
 (isolated Lua execution), and optional `mco_platform_probe` (SDL/OpenGL context
 creation). There is no native gameplay application or native online client yet.
@@ -57,6 +57,17 @@ tests locally. Each of its three passes matches complete original functions in
 wrapping. See [owned-component aggregates](calculations/owned-component-aggregates.md)
 for traversal order and the repeated-accumulation behavior. This does not prove
 mechanical aggregation, complete garage loading or live economy compatibility.
+
+The ordering port reproduces the original cache-driven depth-first traversal and
+fixed attachment sequence. Its caller accepts reordered records on count equality
+alone, including repeated selections. The original recursive function matches 96
+controlled cases with allocation/free substitutions and isolated SEH state; the
+loader's acceptance gate is derived from static evidence. See
+[owned-component ordering](calculations/owned-component-ordering.md) for examples
+and the boundary between candidate ordering and complete car loading.
+Local validation passed eleven native suites and 407 Python tests. All 96
+candidate and accepted/rejected ordering outputs match Python/C++ byte-for-byte;
+the Windows/Linux CI matrix runs the same asset-free comparison.
 
 Repeat the external-asset check without persisting original bytes:
 
