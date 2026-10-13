@@ -28,8 +28,30 @@ The first four bytes of each service record are a service ID. The handler
 skips ID 0xff and advances exactly 26 bytes for each of the four slots. The
 remaining 22 bytes are opaque in the current reconstruction. The inspected
 slot-selection loop writes a local slot index and does not itself copy an
-address or port from the record. Their configuration path needs further
-tracing; no automatic connection should guess its fields from their size.
+address or port from the record.
+
+The installed executable's exact loop at `0x682824` through `0x6828cd`
+searches four existing slots by ID, otherwise finds the first closed slot.
+For an eligible closed slot it writes only that slot's index at +4. It leaves
+the configured ID, port and address unchanged. Consequently, repeated unknown
+advertised IDs select the same free slot rather than populating four services.
+This is observed in this supplied executable; it is not a claim about every
+historical client build or the server's intended descriptor format.
+
+`python -m tools.mcots_service_selection_oracle /path/to/original/mcity.exe`
+executes that original loop with five controlled connection tables: all records
+unused, four unknown IDs, a known closed slot, a known open slot and a fully
+occupied table. It compares every byte of the four 0x138-byte slots, allowing
+only the expected index writes. Distinct nonzero descriptor bytes remain
+uncopied. All five cases matched. No connection walk, socket or host service
+executes in this oracle.
+
+Initialization `0x681710` marks the four configured IDs unused (0xff), and
+`0x6819e0` configures the primary slot as 0xfe. With that initial state and an
+open primary connection, the later connection and attachment walks have no
+newly configured service to join. This explains why adding automatic joins
+from the opaque reply bytes would diverge from the supplied client. Other
+configuration paths or runtime modifications remain outside this proof.
 
 Scalar destinations, in payload order:
 
