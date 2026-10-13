@@ -48,8 +48,27 @@ The published upstream example `00 04 82 24 25 8f 80 7f` decodes to
 `AIAIAIAIAIAIA`, including an overlapping copy. Tests verify that vector,
 every truncation of it, malformed headers, trailing bytes and MCOTS length
 checks. All 274 local repository tests passed after this addition. This
-initial vector coverage is not a native DLL comparison or a live compressed
-fan-server reply; broader coded-literal and native cross-checks remain needed.
+initial vector coverage has now been supplemented with the native comparison
+below. No live compressed fan-server reply has been verified.
+
+`python -m tools.pkware_native_oracle /path/to/original/IMPLODE.DLL` maps the
+exact hash-verified original PE into Unicorn without executing its DLL entry
+point or loading it into the host process. It executes the original `implode`
+and `explode` exports with bounded memory read/write callbacks, work memory
+and instruction/time limits. All 18 cases matched: literal modes 0 and 1,
+dictionary sizes 1024, 2048 and 4096, overlapping copies, all 256 byte values,
+and repeated data longer than the 4096-byte decoder window.
+
+The original compressor's outputs for those synthetic inputs are retained in
+`tests/fixtures/pkware-native.json`. Ordinary regression tests decode these
+fixed streams without the original DLL or optional emulation dependencies.
+This checks the coded-literal table independently of a test encoder derived
+from the portable decoder. All 275 local repository tests passed with these
+fixtures. It remains a bounded CPU emulation comparison, not native Windows
+DLL execution or a fan-server acceptance test.
+
+Original DLL SHA-256:
+`349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3`.
 
 Evidence:
 

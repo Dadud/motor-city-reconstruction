@@ -1,5 +1,7 @@
 import struct
 import unittest
+import json
+from pathlib import Path
 from client.pkware_dcl import explode, decompress_mcots_payload
 
 
@@ -7,6 +9,18 @@ class PKWareDCLTests(unittest.TestCase):
     # Published blast 1.3 example, exercising overlapping length/distance copy.
     VECTOR = bytes.fromhex('00048224258f807f')
     OUTPUT = b'AIAIAIAIAIAIA'
+
+    def test_native_compressor_fixtures_all_modes_and_dictionaries(self):
+        fixture = json.loads((Path(__file__).parent/'fixtures/pkware-native.json').read_text(encoding='utf-8'))
+        sources = {'overlap': self.OUTPUT, 'all_bytes': bytes(range(256)),
+                   'multi_window': b'garage car engine '*400}
+        self.assertEqual(len(fixture['cases']), 18)
+        for case in fixture['cases']:
+            with self.subTest(mode=case['mode'], dictionary=case['dictionary'], source=case['source']):
+                compressed = bytes.fromhex(case['compressed_hex'])
+                expected = sources[case['source']]
+                self.assertEqual(explode(compressed, max_output=len(expected)), expected)
+                self.assertEqual(decompress_mcots_payload(struct.pack('<H', len(expected))+compressed), expected)
 
     def test_upstream_overlap_vector_and_mcots_length(self):
         self.assertEqual(explode(self.VECTOR), self.OUTPUT)
