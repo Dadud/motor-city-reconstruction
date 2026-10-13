@@ -22,6 +22,18 @@ copied into that task at +0x20. They are not copied into the attachment payload.
 | 35 | 1 | Explicit NUL |
 | 36 | 4 | Literal 0x1b5a |
 
+`client.mcots_attachment.MCOTSAttachment.encode` implements this exact
+40-byte payload. Unlike the login record's 13-byte name field, attachment
+copies only 12 name bytes and always appends a NUL at +35. It does not include
+the session key or target service ID in these 40 bytes. The target service
+identity and key remain in the local completion task.
+
+`python -m tools.mcots_attachment_oracle /path/to/original/mcity.exe` executes
+the native builder range `0x68230d`–`0x682348`, including original `strncpy`
+and the explicit NUL store. Five cases matched every byte: empty, ordinary,
+12-byte, 13-byte and 32-byte names. The destination started with nonzero bytes.
+The oracle stops before task allocation or any request is queued or sent.
+
 Completion handler `0x681d30` finds the pending transaction by the four-byte
 value at allocation +0xf. In its positive completion branch, it passes the
 retained task's bytes at +0x20 to `0x6f6c20`, then enables connection encryption
