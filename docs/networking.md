@@ -1,9 +1,16 @@
 # Fan-server compatibility
 
 The target is the server already configured in the supplied installation.
-Discovery and certificate transport are implemented as developer tools. The
-client does not yet establish an authenticated lobby or race session. Reaching
+Discovery, pinned HTTPS authorization, binary account login, persona retrieval
+and activation now have portable implementations. The client does not yet
+establish an authenticated lobby or race session. Reaching
 an open port is not sufficient evidence of protocol compatibility.
+
+Current integration details are in [HTTPS authorization](https-authorization.md),
+[binary login](binary-login-service.md), [TCP transport](nps-transport.md),
+[persona requests](persona-protocol.md), and [lobby connection](lobby-connection.md).
+The research sections below describe progressively recovered components; these
+dedicated documents describe the current service boundaries and verification limits.
 
 ## Observed configuration and live services
 
@@ -35,14 +42,16 @@ flowchart LR
     Auth --> Ticket[Authorization ticket]
     Discovery --> Login[Advertised login endpoint]
     Ticket --> Login
-    Login --> Lobby[Lobby and persona session]
+    Login --> Persona[Persona queries on login port plus two]
+    Persona --> Lobby[Lobby session]
     Lobby --> Game[Game channel and MCOTS]
     Game --> Race[Race state and positional updates]
 ```
 
-The later links show the integration path to recover and verify, not completed
-portable functionality. The exact ticket handoff, packet framing, encryption,
-session state and race sequence remain incomplete.
+The diagram shows the intended connection sequence. Authorization, binary login
+and persona operations are implemented as explicit service calls; their live
+account acceptance remains unverified. Lobby session integration, game channels,
+MCOTS session binding and the race sequence remain incomplete.
 
 ## Installed patch expectations
 
@@ -421,9 +430,12 @@ neither the key contents nor ciphertexts are published.
 
 The native random pool uses a time-derived input. Portable encryption takes an
 explicit 20-byte seed for reproducible checks; live callers must supply fresh
-unpredictable bytes. No automatic login caller or live encryption exchange exists
-yet. Full native encryption comparison, caller service ID/checksum, login response
-decoding, and session binding remain required before an authenticated test.
+unpredictable bytes. `prepare_login` supplies fresh OS entropy, service ID `2176`
+and the recovered executable checksum, then builds the full request. Its caller
+still supplies the unresolved key-record value explicitly. The binary login
+service decodes success and retains the original request key separately.
+Full native encryption comparison and live account/session acceptance remain
+unverified.
 
 Mask evidence: `ev_909a700466e65e54216134b28247becab4ed1357c1dc309c4a13a3360dc09389`.
 Counter evidence: `ev_553b79d135e4703afd0994cc762f9ce8d078e97bfd94a642877ae7ce9bfa7314`.
@@ -434,9 +446,9 @@ SHA-1 compression evidence:
 | --- | --- | --- |
 | Discovery | Both live INI responses parsed | Cross-platform original precedence and failure behavior |
 | HTTPS identity | Installed pin matches; live Ubuntu/Windows discovery and TLS checks passed | Reconnect, expiry and certificate rotation behavior |
-| Authorization format | Original DLL request/response stages traced; service ID `2176` recovered; synthetic tests | Real successful ticket, rejection/expiry behavior |
-| Binary login and persona | Endpoint reachable; framing tested; request, success payloads and executable checksum match original instructions in synthetic cases | Full encryption/session flow and authenticated persona retrieval |
-| Lobby | Endpoint reachable | Join, lists, rooms, disconnect and reconnect |
+| Authorization | Original DLL request/response stages traced; portable pinned HTTPS service; real local TLS check with synthetic credentials | Real successful ticket, rejection/expiry behavior |
+| Binary login and persona | Portable request services and response handling; native serializer comparisons; login and persona endpoints reachable | Key-record value resolution, full native RSA comparison and authenticated acceptance |
+| Lobby | Endpoint reachable; login payload, cipher and reply codecs recovered and checked | Live connection integration, join, lists, rooms, disconnect and reconnect |
 | MCOTS | Endpoint reachable | Session binding and read-only state retrieval before mutations |
 | Racing | Patch transport/rate settings identified | Join, start, position exchange, finish and multiplayer testing |
 | Add-ons | Mod kit design | Server-authorized content and simulation compatibility rules |
