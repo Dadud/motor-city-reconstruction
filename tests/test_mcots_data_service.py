@@ -3,7 +3,8 @@ import struct
 import threading
 import unittest
 from unittest.mock import MagicMock
-from client.mcots_data_service import MCOTSDataClient, MCOTSDataRejected, encode_data_request
+from client.mcots_data_service import (MCOTSDataClient, MCOTSDataRejected,
+    encode_data_request, fetch_persona_startup)
 from client.mcots_framing import MCOTSFrame
 from client.mcots_session import MCOTSSession
 from client.mcots_transport import MCOTSConnection
@@ -94,3 +95,38 @@ class DataServiceTests(unittest.TestCase):
         self.assertIsNone(data.pop_pending())
         for op in (0x144,0x142,0x16b,0x185):
             self.assertEqual(encode_data_request(op),struct.pack('<H',op)+bytes(8))
+
+    def test_persona_startup_sequence_merges_supplement_on_real_stream(self):
+        pairs = struct.pack('<4I',123,456,789,1011)
+        profile = struct.pack('<H',0x7a)+bytes((index*37)&255 for index in range(451))
+        supplement = struct.pack('<H',0x109)+bytes(range(24))
+        def server(session):
+            for transaction, operation, payload in (
+                    (2,0xac,struct.pack('<HB',0xad,2)+pairs+b'cars-tail'),
+                    (3,0x6c,profile+b'profile-tail'),
+                    (4,0x108,supplement+b'supplement-tail')):
+                request = session.receive(timeout=3)
+                self.assertEqual((request.transaction_value,request.payload),
+                    (transaction,struct.pack('<HI',operation,42)+bytes(4)))
+                session.send(MCOTSFrame(transaction,0,payload))
+        def client(session):
+            result = fetch_persona_startup(MCOTSDataClient(session,first_transaction=2),42,timeout=3)
+            self.assertEqual(result.persona_id,42)
+            self.assertEqual(result.car_pairs,(pairs[:8],pairs[8:]))
+            self.assertEqual(result.profile,profile[:427]+supplement)
+            self.assertEqual(len(result.profile),453)
+            self.assertEqual(result.extensions,((b'cars-tail',),(b'profile-tail',),(b'supplement-tail',)))
+        self.exchange(server,client)
+
+    def test_profile_rejection_stops_before_supplement(self):
+        session = MagicMock()
+        session.receive.side_effect = (MCOTSFrame(2,0,struct.pack('<HB',0xad,0)),
+            MCOTSFrame(3,0,struct.pack('<HHI',0x66,0x6c,1)))
+        client = MCOTSDataClient(session,first_transaction=2)
+        with self.assertRaises(ValueError):
+            fetch_persona_startup(client,0)
+        session.send.assert_not_called()
+        with self.assertRaises(MCOTSDataRejected):
+            fetch_persona_startup(client,42)
+        self.assertEqual(session.send.call_count,2)
+        session.close.assert_not_called()

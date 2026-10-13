@@ -5,6 +5,24 @@ from client.mcots_framing import MCOTSFrame
 
 
 class DataReplyTests(unittest.TestCase):
+    def test_persona_byte_count_header_and_fixed_lengths(self):
+        payload = struct.pack('<HB',0xad,255)+bytes(255*8)
+        parsed = MCOTSDataReply.from_frame(MCOTSFrame(7,0,payload),
+            transaction_value=7,request_operation=0xac)
+        self.assertEqual(len(parsed.records),255)
+        self.assertIsNone(parsed.continuation_value)
+        for request,reply,size in ((0x6c,0x7a,453),(0x108,0x109,26)):
+            payload = struct.pack('<H',reply)+bytes(size-2)
+            parsed = MCOTSDataReply.from_frame(MCOTSFrame(7,0,payload),
+                transaction_value=7,request_operation=request)
+            self.assertEqual(parsed.records,(payload,))
+            with self.assertRaises(ValueError):
+                MCOTSDataReply.from_frame(MCOTSFrame(7,0,payload[:-1]),
+                    transaction_value=7,request_operation=request)
+        with self.assertRaises(ValueError):
+            MCOTSDataReply.from_frame(MCOTSFrame(7,0,struct.pack('<HB',0xad,2)+bytes(15)),
+                transaction_value=7,request_operation=0xac)
+
     def test_unaligned_records_continuations_and_extensions(self):
         for request, reply, stride in ((0x144,0x145,569), (0x142,0x143,8), (0x16b,0x16c,516)):
             records = tuple(bytes((index+i*31) & 255 for index in range(stride)) for i in range(3))

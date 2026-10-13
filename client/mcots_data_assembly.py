@@ -1,7 +1,7 @@
 """Bounded original post-login page assembly, with explicit unwritten slots."""
 from dataclasses import dataclass, field
 import struct
-from client.mcots_data_response import MCOTSDataReply, _REPLIES
+from client.mcots_data_response import MCOTSDataReply, _REPLIES, _FIXED_SIZES
 
 
 def _clear_duplicate_ids(records):
@@ -52,7 +52,7 @@ class MCOTSDataAssembler:
             raise ValueError('MCOTS data result already complete')
         page = MCOTSDataReply.from_frame(frame, transaction_value=self.transaction,
                                         request_operation=self.operation)
-        stride = _REPLIES[self.operation][1] or 118
+        stride = _REPLIES[self.operation][1] or _FIXED_SIZES[self.operation]
         size = self._size+len(page.records)*stride+len(page.extension)
         if size > self.max_bytes or self._pages >= self.max_pages:
             raise ValueError('MCOTS data result exceeds configured resource limit')

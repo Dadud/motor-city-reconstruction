@@ -152,6 +152,50 @@ at several unaligned offsets, chooses a car, and updates local presentation.
 Its data schemas and request paths remain incomplete. Reproducing only the
 primary acknowledgement cannot satisfy that sequence.
 
+The first two persona-specific refreshes in that sequence are now recovered:
+
+| Request | Argument | Direct reply | Layout |
+| --- | --- | --- | --- |
+| 0xac | Selected persona ID at +2 | 0xad | Byte count +2, eight-byte pairs +3; no continuation byte |
+| 0x6c | Selected persona ID at +2 | 0x7a | 453 bytes including opcode |
+| 0x108 | Same persona ID at +2 | 0x109 | 26 bytes including opcode |
+
+All requests use ten-byte normal-pool payloads. The selected persona comes
+from global `0x9aa92c`, assigned from the persona object's +0x38 field by
+the login caller at `0x5ef878`–`0x5ef881`. It is distinct from account ID.
+Car-list handler `0x655520` reads the byte count, updates the local cache from
+each pair and allocates zeroed 1596-byte car slots. It initially writes each
+pair's first value at car +0x5f8, then calls `0x66f7d0` to populate complete
+objects. The portable result preserves the pairs; that population work is
+still unresolved and is not replaced with guessed stock vehicles.
+
+Profile worker `0x67bc40` first requests 0x6c and waits for its result, then
+requests 0x108. It copies the supplement's full 26 bytes to profile +0x1ab,
+replacing the final 26 bytes of the 453-byte record. Allocation and disposal
+are local; the allocation-owner pointer is not a network field.
+`fetch_persona_startup(data_client, persona_id, timeout=...)` performs car
+list → profile → supplement with an explicit nonzero persona ID and one
+caller-defined deadline. Each failure stops subsequent requests. It returns
+the car pairs, merged profile and each exchange's preserved extensions.
+It does not perform the remaining startup refreshes or select a playable car.
+
+A real local encrypted TCP exchange verifies request order, persona identity,
+all three response shapes and profile merging. A rejection test verifies
+that profile failure does not send the supplement request. The parser also
+checks the car-list maximum byte count of 255 and truncated records.
+`python -m tools.mcots_persona_profile_oracle /path/to/original/mcity.exe`
+executes just the original copy at `0x67be3c`–`0x67be59`; three patterned
+profiles match exactly. No network, allocation or disposal executes in that
+bounded check.
+
+Evidence: `ev_25cc9dbaad21935684a3a90cf23b0bcf65c69c8b9e8a5bf283ca58e38fcb6def`
+(car request), `ev_e4c56edab9f9aa6da51611e5b614902ace59ddb4fd93b55a03113520d4c4e11e`
+(car reply), `ev_98415323304ef3402b8a8c024f485c7f0c486a65ef96b76377ad5e7cd3c0f69c`
+(profile reply), `ev_7dd3f0db4f9e16d58db9a694dd799e6bde3c78f16e948345edff23a94ad48a4f`
+(two-stage profile worker), and
+`ev_a8c86da80b7412127eaf4031f4b6b4722c9ef170279ee411f3b8365292bb5c03`
+(supplement reply).
+
 Evidence includes `ev_e0e2fbfea89f59742bfd0e308fb8524acae3f658568994865422d3c4f50b92c9`
 (manager construction), `ev_07c2e903bc72b5a17e5d8dc683e38f12341bbc38c44c0bc35b0c6767e0333966`
 (0x144 builder), `ev_85e756b9507f7a904b7b2feaa27abe4329c208c7ae53062bbb0461e93b74fcd0`

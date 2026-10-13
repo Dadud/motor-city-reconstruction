@@ -1,5 +1,6 @@
 """Serial post-login requests over an accepted primary MCOTS session."""
 from collections import deque
+from dataclasses import dataclass, field
 import struct
 import time
 from client.mcots_data_assembly import MCOTSDataAssembler
@@ -10,13 +11,43 @@ from client.nps_transport import _timeout
 
 def encode_data_request(operation, *, argument=0):
     """Ten-byte native payload, using the normal pool's zero initialization."""
-    if type(operation) is not int or operation not in (0x144,0x142,0x16b,0x185):
+    if type(operation) is not int or operation not in (0x144,0x142,0x16b,0x185,0xac,0x6c,0x108):
         raise ValueError('unsupported post-login request operation')
     if type(argument) is not int or not 0 <= argument <= 0xffffffff:
         raise ValueError('expected uint32 request argument')
-    if operation != 0x142 and argument:
-        raise ValueError('only request 0x142 has a recovered argument field')
+    if operation not in (0x142,0xac,0x6c,0x108) and argument:
+        raise ValueError('request has no recovered argument field')
     return struct.pack('<HI',operation,argument)+bytes(4)
+
+
+@dataclass(frozen=True)
+class MCOTSPersonaStartup:
+    persona_id: int
+    car_pairs: tuple[bytes, ...] = field(repr=False)
+    profile: bytes = field(repr=False)
+    extensions: tuple[tuple[bytes, ...], ...] = field(repr=False)
+
+
+def fetch_persona_startup(client, persona_id, *, timeout=120):
+    """Fetch the car list and original profile-plus-supplement sequence.
+
+    Preserve the eight-byte car pairs; resolving complete car objects from
+    the original cache/database is separate. Use one caller-defined deadline.
+    """
+    if type(persona_id) is not int or not 1 <= persona_id <= 0xffffffff:
+        raise ValueError('expected nonzero selected persona ID')
+    deadline = time.monotonic()+_timeout(timeout)
+    replies = []
+    for operation in (0xac,0x6c,0x108):
+        remaining = deadline-time.monotonic()
+        if remaining <= 0:
+            client.session.close()
+            raise TimeoutError('MCOTS persona startup timed out')
+        replies.append(client.fetch(operation,argument=persona_id,timeout=remaining))
+    cars, profile, supplement = replies
+    merged = profile.records[0][:0x1ab]+supplement.records[0]
+    return MCOTSPersonaStartup(persona_id,cars.records,merged,
+                              tuple(reply.extensions for reply in replies))
 
 
 class MCOTSDataRejected(ValueError):
