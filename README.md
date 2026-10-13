@@ -56,6 +56,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/networking.md` | Configured fan server, protocol research and discovery/certificate checks |
 | `docs/nps-transport.md` | TCP connection lifecycle, framing, deadlines and verification limits |
 | `docs/binary-login-service.md` | Account login acknowledgement/result sequence and retained client key |
+| `docs/https-authorization.md` | Certificate-pinned account authorization and ticket handoff |
 | `docs/persona-protocol.md` | Original persona retrieval, identity fields and activation messages |
 | `.github/workflows/` | Windows/Linux automated checks |
 
