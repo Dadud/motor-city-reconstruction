@@ -1,11 +1,21 @@
 import struct
 import unittest
 
-from client.lobby_response import LobbyLoginSuccess
+from client.lobby_response import LobbyLoginSuccess, native_connection_rejection
 from client.nps_framing import Frame
 
 
 class LobbyResponseTests(unittest.TestCase):
+    def test_connection_rejections_preserve_native_return_codes(self):
+        for message_id, code in ((0x21e, -34), (0x22a, -135), (0x20a, -3),
+                                 (0x20b, -4), (0x213, -23), (0x22b, -140)):
+            self.assertEqual(native_connection_rejection(message_id), code)
+        for message_id in (0x120, 0x308, 0x230, 0x231, 0xffff):
+            self.assertIsNone(native_connection_rejection(message_id))
+        for message_id in (-1, 65536, True, '0x21e'):
+            with self.assertRaises(ValueError):
+                native_connection_rejection(message_id)
+
     def test_native_username_forces_terminator_without_altering_wire_bytes(self):
         for wire, native in ((b'n'*32, b'n'*31), (b'a\0b', b'a'),
                              (b'driver\0', b'driver'), (b'', b'')):

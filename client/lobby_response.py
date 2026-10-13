@@ -9,6 +9,21 @@ import struct
 from client.nps_framing import Frame
 
 
+_REJECTIONS = {0x21e: -0x22, 0x22a: -0x87, 0x20a: -3,
+               0x20b: -4, 0x213: -0x17, 0x22b: -0x8c}
+
+
+def native_connection_rejection(message_id):
+    """Known server-reply return code from 0x73a720, or None.
+
+    None does not imply success: it includes queue and unknown message IDs.
+    Names for unconfirmed rejection meanings are deliberately not guessed.
+    """
+    if type(message_id) is not int or not 0 <= message_id <= 65535:
+        raise ValueError('message ID must fit uint16')
+    return _REJECTIONS.get(message_id)
+
+
 @dataclass(frozen=True)
 class LobbyLoginSuccess:
     user_id: int

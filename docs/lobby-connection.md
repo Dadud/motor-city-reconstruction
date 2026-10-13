@@ -141,3 +141,25 @@ reconstruction's bounded parser, an explicit strictness choice.
 
 Field-reader evidence:
 `ev_a1ee5894895e7645ed03137c8708e1ed0b9fe93a81813b483d6dd8688e09d281`.
+
+## Connection rejection return values
+
+After reading a server reply, `0x73a720` handles the following rejection IDs
+with explicit native return values. `native_connection_rejection` preserves
+these values; absence from the table does not establish success.
+
+| Reply ID | Native return value | Established meaning |
+| --- | --- | --- |
+| 0x21e | -34 | Version mismatch |
+| 0x22a | -135 | Unresolved |
+| 0x20a | -3 | Unresolved |
+| 0x20b | -4 | Unresolved |
+| 0x213 | -23 | Unresolved |
+| 0x22b | -140 | Unresolved |
+
+These branches were traced statically in connection-procedure evidence
+`ev_39df527653aa4915699923f6f95d53e9aef1c2f0028e934df189e431e99c737e`.
+The native unknown-opcode fallback returns -1. Queue messages 0x230/0x231 are
+handled separately, and success remains limited to the explicit success IDs.
+The helper only classifies an ID; it does not parse rejection payloads or
+execute the connection procedure.
