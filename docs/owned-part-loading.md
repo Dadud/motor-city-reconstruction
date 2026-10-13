@@ -148,14 +148,30 @@ inversion. Its result is Python's `zlib.crc32(buffer) ^ 0xffffffff`.
 Ordinal, StatusID and text do not participate. Four controlled input buffers
 match execution of the complete original checksum routine using
 `python -m tools.owned_physics_oracle /path/to/original/mcity.exe`.
-That oracle excludes database loading and record placement.
+The same oracle now executes the full `0x67d900` loader: four records match
+every byte and the exact requested column sequence, with a fifth case
+confirming that a missing row produces 496 zero bytes. Numeric conversions,
+string copying and checksum instructions execute unchanged; query access,
+variant destruction and heap release are substituted. These are bounded CPU
+checks, not execution of the original database service or game runtime.
 
 The owned-part placement copies the record into offsets `0x404` through
 `0x5f3`, then replaces the earlier wear limit at `0x1ef` with physics
 MaxItemWear. Instance identity, damage and wear remain outside this copy.
-This encoder is an intermediate building block; startup does not yet resolve
-and enrich every owned car automatically, and it does not establish live
+The saved query explicitly filters `PartTypeID=[id]` and `Physics.Ordinal=1`.
+`Catalogue.owned_part_intermediate` now joins the actual instance's branded
+metadata to exactly that physics row. It reproduces the cleared record and
+zero wear limit when ordinal 1 is missing, rather than choosing another row.
+Text metadata placement and later calculations remain incomplete, so this
+method does not yet produce a complete playable car or establish live
 fan-server compatibility.
+
+Read-only checks against the external installed database exercised 4,257
+branded-part joins, preserving instance damage in every case. Of these,
+4,251 have an ordinal-1 physics record and six take the cleared-record path.
+All 103 body parts have physics records. One additional branded part (190087)
+has a manufacture date that the parser reports as `(Invalid Date)`; its date
+conversion remains unresolved and the authored join rejects it explicitly.
 
 Physics evidence: `ev_43236bb54bf3a2d2505832f5a1dccd831c08af8c9438503639cf67a431a88839`
 (loader) and `ev_845ede42f71e5874074abb89dde0407172aa653a3a8989ea5ce38cab1deef2c0`

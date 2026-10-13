@@ -57,6 +57,7 @@ class Catalogue:
     def __init__(self, tables):
         from .physics_data import decode_physics_table
         physics=tables.get('Physics', [])
+        self.owned_physics_rows = {(row['PartTypeID'],row['Ordinal']):dict(row) for row in physics}
         self.physics_duty = {(row['PartTypeID'], row['Ordinal']): row.get('DutyRating')
                              for row in physics}
         self.physics=decode_physics_table({key:[row[key] for row in physics] for key in physics[0]}) if physics else {}
@@ -126,6 +127,21 @@ class Catalogue:
                 model['EModel'],model['EShortModel'],model['EExtraInfo'],kind['PartFilename'])
         except (KeyError,TypeError,ValueError) as error:
             raise ValueError('owned part has missing or invalid branded metadata') from error
+
+    def owned_part_intermediate(self, part, *, text_encoding):
+        """Join instance metadata and Physics_Select ordinal 1.
+
+        Text metadata placement and later native calculations are not yet
+        included; this returns an intermediate slot rather than a playable car.
+        A missing ordinal-1 row reproduces the native cleared physics record.
+        """
+        from .owned_physics import apply_owned_physics
+        metadata = self.owned_part_metadata(part)
+        slot = metadata.apply_numeric_fields(part)
+        if metadata.part_type_id == 0:
+            return slot
+        row = self.owned_physics_rows.get((metadata.part_type_id,1))
+        return apply_owned_physics(slot,row,text_encoding=text_encoding)
 
     def tire_dimensions(self, vehicle):
         """Resolve stock wheel/axle attachments with unambiguous physics rows.

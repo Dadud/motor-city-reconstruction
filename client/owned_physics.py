@@ -58,11 +58,12 @@ def encode_owned_physics(row, *, text_encoding):
 
 
 def apply_owned_physics(slot,row, *, text_encoding):
+    """Apply a selected row, or the native zero record when no row exists."""
     if not isinstance(slot,bytes) or len(slot) != 1596:
         raise ValueError('expected owned-part intermediate slot')
-    if struct.unpack_from('<i',slot,0x1e7)[0] != row['PartTypeID']:
+    if row is not None and struct.unpack_from('<i',slot,0x1e7)[0] != row['PartTypeID']:
         raise ValueError('physics row does not match owned-part type')
-    physics = encode_owned_physics(row,text_encoding=text_encoding)
+    physics = bytes(496) if row is None else encode_owned_physics(row,text_encoding=text_encoding)
     output = bytearray(slot)
     output[0x404:0x5f4] = physics
     output[0x1ef:0x1f3] = physics[24:28]

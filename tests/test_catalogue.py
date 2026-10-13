@@ -20,6 +20,31 @@ def fixture():
 
 
 class CatalogueTests(unittest.TestCase):
+    def test_owned_physics_uses_saved_query_ordinal_one_and_clears_missing(self):
+        import struct
+        from client.owned_parts import OwnedPart
+        from client.owned_physics import encode_owned_physics
+        tables = fixture()
+        row = dict(PartTypeID=200,Ordinal=1,StatusID=3,DutyRating=4,
+                   MaxItemWear=900,Mass=13.125)
+        row.update({f'Val{i}': None for i in range(1,51)})
+        row.update({f'TextVal{i}': None for i in range(1,9)})
+        tables['Physics'] = [dict(row,Ordinal=2,MaxItemWear=800),row]
+        catalogue = Catalogue(tables)
+        catalogue.branded[2].update(RetailPrice=500,MaxItemWear=1000,
+            MfgDate='1955-01-01',EngineBlockFamilyID=None)
+        catalogue.types[200]['PartGradeID'] = 3
+        catalogue.models[20].update(BrandID=7,EShortModel='Body',EExtraInfo='details')
+        part = OwnedPart(42,2,17,25,99,50,75)
+        slot = catalogue.owned_part_intermediate(part,text_encoding='cp1252')
+        self.assertEqual(slot[0x404:0x5f4],encode_owned_physics(row,text_encoding='cp1252'))
+        self.assertEqual(struct.unpack_from('<i',slot,0x1ef)[0],900)
+        self.assertEqual(struct.unpack_from('<i',slot,0x610)[0],17)
+        del catalogue.owned_physics_rows[(200,1)]
+        slot = catalogue.owned_part_intermediate(part,text_encoding='cp1252')
+        self.assertEqual(slot[0x404:0x5f4],bytes(496))
+        self.assertEqual(struct.unpack_from('<i',slot,0x1ef)[0],0)
+
     def test_owned_metadata_joins_actual_instance_brand_without_stock_substitution(self):
         import struct
         from client.owned_parts import OwnedPart
