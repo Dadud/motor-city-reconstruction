@@ -58,6 +58,7 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/binary-login-service.md` | Account login acknowledgement/result sequence and retained client key |
 | `docs/https-authorization.md` | Certificate-pinned account authorization and ticket handoff |
 | `docs/persona-protocol.md` | Original persona retrieval, identity fields and activation messages |
+| `docs/lobby-service.md` | Queue, plaintext lobby login and persistent encrypted message transport |
 | `.github/workflows/` | Windows/Linux automated checks |
 
 REA is not included and is not a development dependency. Optional emulation tools require `pip install -e '.[oracle,catalogue]'` and a local original executable; the client does not execute that executable.

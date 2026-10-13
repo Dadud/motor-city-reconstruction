@@ -25,6 +25,19 @@ def native_connection_rejection(message_id):
 
 
 @dataclass(frozen=True)
+class LobbyQueuePosition:
+    position: int
+    total: int
+
+    @classmethod
+    def from_frame(cls, frame):
+        """0x231 uses native packing format 'ss' (0x7e7adf)."""
+        if not isinstance(frame, Frame) or frame.message_id != 0x231 or len(frame.body) != 4:
+            raise ValueError('expected a four-byte lobby queue position')
+        return cls(*struct.unpack('>HH', frame.body))
+
+
+@dataclass(frozen=True)
 class LobbyLoginSuccess:
     user_id: int
     username: bytes = field(repr=False)
