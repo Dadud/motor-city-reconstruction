@@ -13,6 +13,10 @@ recovered valuation, placeholder insertion/pruning, component ordering/linking a
 a restricted Lua execution harness, and an
 optional SDL/OpenGL platform probe; it is not yet a playable native client.
 
+The recovered assembly passes are connected through an explicit
+[postload research interface](docs/owned-postload.md). Original descriptions
+remain incomplete and must be supplied explicitly for enriched comparisons.
+
 With CMake 3.24+ and a C++20 compiler installed:
 
 ```sh

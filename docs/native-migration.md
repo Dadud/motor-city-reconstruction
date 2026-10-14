@@ -69,6 +69,13 @@ Local validation passed eleven native suites and 407 Python tests. All 96
 candidate and accepted/rejected ordering outputs match Python/C++ byte-for-byte;
 the Windows/Linux CI matrix runs the same asset-free comparison.
 
+The recovered postload sequence now connects these stages with the original skip
+flags and ordering. Enriched processing requires an explicit description callback
+because original descriptions remain incomplete. All 96 controlled sequence
+fixtures match original-code execution and Python/C++ with that boundary
+substituted. Local validation passes twelve native suites and 414 Python tests.
+See [postload sequence](owned-postload.md) for exact exclusions and safeguards.
+
 Repeat the external-asset check without persisting original bytes:
 
 ```sh
