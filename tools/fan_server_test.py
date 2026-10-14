@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import queue
 import threading
 import tkinter as tk
@@ -18,6 +19,7 @@ class TesterWindow:
         self.running = False
         self.selection = None
         self.personas = []
+        self.report = None
         window.title("Motor City fan-server connection test")
         window.geometry("680x610")
         window.minsize(590, 510)
@@ -47,6 +49,8 @@ class TesterWindow:
         self.test_button.pack(side="left")
         self.cancel_button = ttk.Button(buttons, text="Cancel", command=self.cancel, state="disabled")
         self.cancel_button.pack(side="left", padx=10)
+        self.save_button = ttk.Button(buttons, text="Save test report…", command=self.save_report, state="disabled")
+        self.save_button.pack(side="left")
         self.progress = ttk.Progressbar(panel, mode="indeterminate")
         self.progress.grid(row=6, column=0, columnspan=3, sticky="ew")
         self.status = tk.StringVar(value="Ready. No account test has run.")
@@ -82,6 +86,8 @@ class TesterWindow:
             self.status.set("Enter the installation folder, account name and password.")
             return
         self.running = True
+        self.report = None
+        self.save_button.configure(state="disabled")
         self.cancelled.clear()
         self.password.set("")
         for control in (self.root_entry, self.browse_button, self.user_entry, self.pass_entry, self.test_button):
@@ -96,16 +102,10 @@ class TesterWindow:
 
     def worker(self, root, username, password):
         try:
-            from client.fanserver_test import run_test
-            from pathlib import Path as _Path
-            data_root = _Path(root)
-            catalogue_path = data_root / 'Data' / 'DB' / 'Online.mdb'
-            if not catalogue_path.is_file():
-                catalogue_path = data_root / 'data' / 'db' / 'online.mdb'
-            use_catalogue = catalogue_path.is_file()
-            result = run_test(root, username, password, on_stage=lambda stage: self.events.put(("stage", stage)),
+            from client.fanserver_test import run_test_report
+            result = run_test_report(root, username, password, on_stage=lambda stage: self.events.put(("stage", stage)),
                               on_personas=self.request_persona, cancelled=self.cancelled.is_set,
-                              fetch_garage=True, use_catalogue=use_catalogue, probe_race_entry=True)
+                              fetch_garage=True, use_catalogue=False, probe_race_entry=False)
             self.events.put(("result", result))
         except Exception:
             # Exception contents, URLs and account payloads are never displayed.
@@ -191,14 +191,20 @@ class TesterWindow:
             return
         if self.cancelled.is_set():
             self.status.set("Test cancelled.")
-        else:
+        elif result.get('success') is True:
             self.status.set("Test finished. See the verified stages below.")
+        else:
+            self.status.set("Connection test failed. Save the report to help diagnose it.")
+        from client.fanserver_test import shareable_report
+        self.report = shareable_report(result)
+        self.save_button.configure(state="normal")
+        if 'failure_code' in self.report:
+            self.write(f"Stopped at: {self.report['last_stage']}")
+            self.write(f"Failure: {self.report['failure_code']}")
         # Deliberately exclude arbitrary text, URLs, account objects and exception repr.
         labels = {"success": "Test succeeded", "cancelled": "Cancelled", "account_authenticated": "Account authenticated",
                   "lobby_connected": "Lobby connected", "primary_connected": "Primary connected", "garage_loaded": "Garage data received",
-                  "persona_count": "Personas found", "garage_record_count": "Garage records received",
-                  "race_entry_probe_passed": "Race-entry probe passed", "positional_updates_hz": "Configured position update rate (Hz)"}
-        labels["room_channel_probe_passed"] = "Room channel probe passed"
+                  "persona_count": "Personas found", "garage_record_count": "Garage records received"}
         for key, label in labels.items():
             value = result.get(key)
             if type(value) is bool:
@@ -207,13 +213,19 @@ class TesterWindow:
                 self.write(f"{label}: {value}")
             elif type(value) is float and value > 0:
                 self.write(f"{label}: {value:.4f}")
-        kinds = result.get('recovered_task_kinds')
-        if isinstance(kinds, list) and kinds:
-            self.write(f"Recovered race-entry task kinds: {', '.join(str(kind) for kind in kinds)}")
-        interval = result.get('update_interval_seconds')
-        if isinstance(interval, (int, float)) and interval > 0:
-            self.write(f"Configured update interval (seconds): {interval:.4f}")
         self.write("This checks protocol stages and data access; it does not certify racing or full game compatibility.")
+
+    def save_report(self):
+        if self.report is None:
+            return
+        destination = filedialog.asksaveasfilename(parent=self.window, title="Save safe connection report",
+            defaultextension=".json", initialfile="fan-server-test-report.json", filetypes=[("JSON report", "*.json")])
+        if destination:
+            try:
+                Path(destination).write_text(json.dumps(self.report, indent=2) + "\n", encoding="utf-8")
+                self.status.set("Safe test report saved. It contains no account names or credentials.")
+            except OSError:
+                self.status.set("Could not save the report. Choose a writable folder.")
 
 
 def main():

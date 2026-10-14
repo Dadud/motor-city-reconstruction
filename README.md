@@ -68,9 +68,12 @@ If your installed client already points at the fan shard, you can verify the rec
 1. Clone or open this repo: [motor-city-reconstruction](https://github.com/Dadud/motor-city-reconstruction)
 2. **One-time setup:** double-click `setup-fan-server-test.cmd` (creates `.venv` and installs `network` + `catalogue` extras for login and optional part enrichment)
 3. **Preflight only** (no password): from the repo, run fan-server check without `--login` (see [fan-server testing](docs/fan-server-testing.md)).
-4. **Full live test**: double-click `test-fan-server.cmd` for the GUI, or `test-fan-server-live.cmd` for command-line login + garage + race-entry probe.
+4. **Live connection test**: double-click `test-fan-server.cmd` for the GUI, or `test-fan-server-live.cmd` for command-line login and garage-data access.
 
 Enter your fan-server account when prompted. Passwords are not saved or logged.
+The window reports the stage of any failure. Use **Save test report…** to export
+a report without credentials or persona names. Racing is not yet implemented in
+this tester; a successful connection test does not establish race compatibility.
 
 See [fan-server testing](docs/fan-server-testing.md) for success fields, CLI flags, and what “race entry probe” means (local validation only — it does not join a race).
 

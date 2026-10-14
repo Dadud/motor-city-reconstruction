@@ -76,7 +76,8 @@ class OnlineAccount:
 
     def enter_connections(self, persona_id, *, hostname, ip_address,
                           on_queue_position=None, queue_timeout=120,
-                          connect_timeout=30, attachment_timeout=20, login_timeout=120):
+                          connect_timeout=30, attachment_timeout=20, login_timeout=120,
+                          on_stage=None):
         """Activate a persona, join the lobby, then attach and log in to MCOTS.
 
         The original 0x5ef240 caller passes zero for all three extra login
@@ -98,6 +99,8 @@ class OnlineAccount:
         lobby = self.enter_lobby(persona_id, hostname=hostname, ip_address=ip_address,
             on_queue_position=on_queue_position, queue_timeout=queue_timeout)
         try:
+            if on_stage is not None:
+                on_stage('primary')
             primary = connect_primary(self.shard.transactions, record, material,
                 connect_timeout=connect_timeout, attachment_timeout=attachment_timeout,
                 login_timeout=login_timeout)
@@ -108,7 +111,7 @@ class OnlineAccount:
 
 
 def authenticate(root, shard, auth_settings, certificate_sha1, username, password,
-                 *, key_record_value=LOGIN_KEY_RECORD_VALUE):
+                 *, key_record_value=LOGIN_KEY_RECORD_VALUE, on_stage=None):
     """Authorize once, perform binary login, then download personas.
 
     The key-record value defaults to the recovered startup zero. Failures stop the
@@ -124,6 +127,10 @@ def authenticate(root, shard, auth_settings, certificate_sha1, username, passwor
     if not decision.valid:
         raise AuthorizationDenied(decision.reason_code)
     prepared = prepare_login(root, decision.ticket.encode('ascii'), key_record_value=key_record_value)
+    if on_stage is not None:
+        on_stage('login')
     account = login(shard.login, prepared)
+    if on_stage is not None:
+        on_stage('personas')
     personas = fetch_personas(shard.login, account.user_id)
     return OnlineAccount(shard, account, personas)

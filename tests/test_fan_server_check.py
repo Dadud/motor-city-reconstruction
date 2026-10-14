@@ -14,6 +14,18 @@ class FanServerCheckTests(unittest.TestCase):
                   Endpoint('host', 3), None, ())
     context = SimpleNamespace(shard=shard, auth=AuthSettings('host', 'AuthLogin'))
 
+    def test_failed_live_report_returns_failure_status(self):
+        with patch('tools.fan_server_check.prepare_context', return_value=self.context), \
+             patch('tools.fan_server_check.run_test', return_value={
+                 'success': False, 'last_stage': 'primary', 'failure_code': 'timeout'}), \
+             patch('tools.fan_server_check.getpass.getpass', side_effect=['user', 'password']), \
+             patch('tools.fan_server_check.sys.stdin.isatty', return_value=True), \
+             contextlib.redirect_stdout(io.StringIO()) as output:
+            status = main(['external', '--shard-id', '44', '--login', '--persona-id', '9'])
+        self.assertEqual(status, 1)
+        self.assertIn('"failure_code": "timeout"', output.getvalue())
+        self.assertIn('"last_stage": "primary"', output.getvalue())
+
     def test_preflight_only(self):
         with patch('tools.fan_server_check.prepare_context', return_value=self.context) as prepare:
             with contextlib.redirect_stdout(io.StringIO()) as output:

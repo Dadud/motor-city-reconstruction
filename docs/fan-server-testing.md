@@ -2,7 +2,7 @@
 
 First time only, double-click `setup-fan-server-test.cmd` to create the venv and install networking dependencies. Then double-click `test-fan-server.cmd` in the repository on Windows, or run
 `python -m tools.fan_server_test` from the repository root. The Windows launcher
-uses the project's `.venv` when available and otherwise uses `python` on PATH.
+requires the project's `.venv`; run the setup launcher if it is missing.
 For a command-line live login with garage fetch on the installed MotorCity Revival
 shard, double-click `test-fan-server-live.cmd` (edit `MCO_DATA` inside if your
 install path differs).
@@ -20,8 +20,10 @@ The tester uses the installed fan-server configuration through
 personas, lobby/primary connections and persona garage data. If persona selection
 is needed, choose the desired name in the window and press **Continue**. The
 window stays responsive while the network worker runs.
-The GUI also runs the recovered race-entry construction probe after login;
-this validates local task ordering and installed patch settings but does not join a race.
+The GUI tests live connection and garage-data requests only. Catalogue enrichment
+and local race-entry probes are optional command-line research checks. They are
+excluded from the default test so a local research check cannot be confused with
+a successful live race. The tester does not start the native driving client.
 
 **Cancel** requests cancellation between operations. An operation already waiting
 on the network may need to reach its timeout before the worker stops. Closing the
@@ -33,6 +35,13 @@ Detailed exception messages, authentication URLs, tickets, passwords and account
 object representations are withheld. Persona names are shown only for your local
 selection. This is a protocol/data-access test; successful results do not establish
 race compatibility, complete garage behavior or server-version equivalence.
+
+On failure, the window shows the last attempted stage and a fixed error category:
+authorization denied, setup failed, timeout, connection failed, network/file error,
+or protocol/data error. **Save test report…** exports only fixed status fields and
+counts. It excludes account names, persona names/IDs, server addresses and private
+exception details. Share that report when diagnosing an incompatibility. A failed
+report does not claim that earlier stages passed unless a result records them.
 
 Development checks use synthetic mocks without an account. No live account test
 is implied by shipping this interface.
@@ -65,12 +74,25 @@ Preflight without --login validates discovery, certificate pin and external iden
 | `primary_connected` | Primary MCOTS channel connected |
 | `garage_loaded` | Persona garage records received (when garage fetch is enabled) |
 | `persona_count` / `garage_record_count` | Non-zero counts mean data came back from the server |
-| `race_entry_probe_passed` | Recovered local race-entry task order validated (with `--probe-race-entry`) |
+| `race_entry_probe_passed` | Local task-construction research check passed (with `--probe-race-entry`) |
 | `room_channel_probe_passed` | Recovered room channel construction validated (same probe) |
 | `positional_updates_hz` | Should match installed patch (often **32** on TCP) |
 | `last_stage` | Final stage label; `complete` on success |
 
-Race-entry and room-channel probes **do not join a race**. They only prove the reconstructed client builds the same local task sequence and patch settings as the installed client.
+Race-entry and room-channel probes **do not join a race**. They exercise local
+construction and patch settings. Dispatcher task kinds alone do not establish
+the original runtime sequence, complete room arguments or server compatibility.
 
 If something fails, note `last_stage` and which booleans stayed false. Credentials are never included in the JSON output.
+The command-line check returns a nonzero exit status for failed or cancelled live
+tests. Error JSON includes `failure_code` and `last_stage` when the flow fails.
+
+## Current local verification
+
+On Windows, the installed configuration passes unauthenticated preflight for
+MotorCity Revival shard 44. The tester window initializes and displays a failed
+stage with report export enabled. The complete Python suite passes 502 tests,
+including stage retention, credential exclusion and failure exit-status checks.
+These checks do not constitute an authenticated account run. Your private local
+account test is still needed; server version remains unreported.
 

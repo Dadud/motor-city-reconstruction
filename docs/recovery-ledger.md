@@ -52,6 +52,12 @@ outside the published repository.
 
 ## Ordered gates
 
+Latest bounded networking increment: [C++ channel codec](lobby-channel-codec.md)
+matches 136 portable payloads and 11 rejections on Windows, with 17 native tests
+passing. The [fan-server tester](fan-server-testing.md) now records safe failure
+stages and exports private-data-free reports. Installed Revival shard 44 passes
+preflight; authenticated lobby/garage acceptance and live racing remain unverified.
+
 1. **Recovery map:** every required feature above has an owner/research path,
    concrete scenario and source evidence inventory. An unknown remains visible.
 2. **Complete vehicle:** stock and owned modified assemblies include the original

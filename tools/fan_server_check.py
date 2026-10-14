@@ -5,7 +5,7 @@ import json
 import sys
 import warnings
 
-from client.fanserver_test import FanServerSetupError, prepare_context, run_test
+from client.fanserver_test import FanServerSetupError, prepare_context, run_test_report as run_test
 
 
 class PrivateArgumentParser(argparse.ArgumentParser):
@@ -110,8 +110,11 @@ def main(argv=None):
                 'update_interval_seconds', 'recovered_task_kinds',
                 'room_channel_probe_passed',
                 'expects_room_channel_add',
+                'failure_code',
             )})
         print(json.dumps(report, indent=2))
+        if args.login and report.get('success') is not True:
+            return 2 if report.get('cancelled') else 1
         return 0
     except KeyboardInterrupt:
         print('Fan-server check cancelled.', file=sys.stderr)

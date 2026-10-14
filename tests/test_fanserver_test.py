@@ -2,13 +2,46 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-from client.fanserver_test import FanServerSetupError, prepare_context, run_test
+from client.fanserver_test import (FanServerSetupError, prepare_context, run_test,
+                                 run_test_report, shareable_report)
 from client.server_discovery import AuthSettings, DiscoverySource, Endpoint, Shard
 
 
 class FanServerTestTests(unittest.TestCase):
     shard = Shard('MotorCity Revival', '', 44, Endpoint('host', 1), Endpoint('host', 2),
                   Endpoint('host', 3), None, ())
+
+    def test_failure_report_retains_real_stage_without_exception_details(self):
+        def fail(*args, on_stage, **kwargs):
+            on_stage('authorization')
+            on_stage('login')
+            raise TimeoutError('password=private ticket=secret https://private')
+        with patch('client.fanserver_test.run_test', side_effect=fail):
+            result = run_test_report('external', 'private-user', 'private-password')
+        self.assertFalse(result['success'])
+        self.assertEqual(result['last_stage'], 'login')
+        self.assertEqual(result['failure_code'], 'timeout')
+        self.assertNotIn('private', repr(result))
+        self.assertNotIn('secret', repr(result))
+
+    def test_authorization_rejection_has_fixed_failure_code(self):
+        from client.online_account import AuthorizationDenied
+        with patch('client.fanserver_test.run_test', side_effect=AuthorizationDenied(42)):
+            result = run_test_report('external', 'user', 'password')
+        self.assertEqual(result['failure_code'], 'authorization_denied')
+        self.assertNotIn('42', repr(result))
+
+    def test_shared_report_excludes_persona_and_arbitrary_payloads(self):
+        result = shareable_report({'success': True, 'last_stage': 'complete',
+            'persona_count': 2, 'garage_record_count': 'private', 'password': 'secret',
+            'shard_name': 'private server', 'selected_persona_id': 9,
+            'failure_code': 'secret', 'account_authenticated': 'secret',
+            'server_version': 'private', 'scope': 'secret'})
+        self.assertEqual(result['persona_count'], 2)
+        self.assertFalse(result['live_race_tested'])
+        self.assertNotIn('private', repr(result))
+        self.assertNotIn('secret', repr(result))
+        self.assertNotIn('selected_persona_id', result)
 
     def test_prepare_context_requires_explicit_source_when_urls_differ(self):
         with patch('client.fanserver_test.installed_sources', return_value=(

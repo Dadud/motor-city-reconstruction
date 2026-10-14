@@ -258,10 +258,9 @@ def run_test(
         context.certificate_sha1,
         username,
         password,
+        on_stage=lambda stage: _set_stage(report, stage, on_stage),
     )
     report['account_authenticated'] = True
-    _set_stage(report, 'login', on_stage)
-    _set_stage(report, 'personas', on_stage)
     report['persona_count'] = len(account.personas.entries)
     if _cancelled(cancelled):
         report['cancelled'] = True
@@ -278,15 +277,21 @@ def run_test(
         report['cancelled'] = True
         return report
     report['selected_persona_id'] = selected
+    if _cancelled(cancelled):
+        report['cancelled'] = True
+        return report
     _set_stage(report, 'lobby', on_stage)
     with account.enter_connections(
         selected,
         hostname=context.hostname,
         ip_address=context.ip_address,
+        on_stage=lambda stage: _set_stage(report, stage, on_stage),
     ) as connections:
         report['lobby_connected'] = True
-        _set_stage(report, 'primary', on_stage)
         report['primary_connected'] = True
+        if _cancelled(cancelled):
+            report['cancelled'] = True
+            return report
         if context.fetch_garage:
             _set_stage(report, 'garage', on_stage)
             client = MCOTSDataClient(connections.primary.session, first_transaction=2)
@@ -316,3 +321,57 @@ def run_test(
     report['success'] = True
     _set_stage(report, 'complete', on_stage)
     return report
+
+
+def run_test_report(root, username, password, *, on_stage=None, **options):
+    """Return a shareable failure summary without exception text or account data.
+
+    The raising developer API remains available as run_test. Failed tests retain
+    the last attempted stage, rather than falsely implying later stages passed.
+    """
+    stage = 'preflight'
+
+    def progress(value):
+        nonlocal stage
+        if value in STAGES:
+            stage = value
+            _emit(on_stage, value)
+
+    try:
+        return run_test(root, username, password, on_stage=progress, **options)
+    except Exception as error:
+        from client.online_account import AuthorizationDenied
+        if isinstance(error, AuthorizationDenied):
+            code = 'authorization_denied'
+        elif isinstance(error, FanServerSetupError):
+            code = 'setup_failed'
+        elif isinstance(error, TimeoutError):
+            code = 'timeout'
+        elif isinstance(error, ConnectionError):
+            code = 'connection_failed'
+        elif isinstance(error, OSError):
+            code = 'network_or_file_error'
+        else:
+            code = 'protocol_or_data_error'
+        return {'success': False, 'cancelled': _cancelled(options.get('cancelled')),
+                'last_stage': stage, 'failure_code': code,
+                'server_version': 'not reported'}
+
+
+def shareable_report(result):
+    """Strict allowlist for reports that may leave this machine."""
+    output = {'report_schema': 1, 'scope': 'account/lobby/primary/garage connection test',
+              'server_version': 'not reported', 'live_race_tested': False}
+    for key in ('success', 'cancelled', 'preflight_passed', 'account_authenticated',
+                'lobby_connected', 'primary_connected', 'garage_loaded'):
+        if type(result.get(key)) is bool:
+            output[key] = result[key]
+    for key in ('persona_count', 'garage_record_count', 'part_seed_count', 'part_slot_count'):
+        if type(result.get(key)) is int and result[key] >= 0:
+            output[key] = result[key]
+    if result.get('last_stage') in STAGES:
+        output['last_stage'] = result['last_stage']
+    if result.get('failure_code') in ('authorization_denied', 'setup_failed', 'timeout',
+            'connection_failed', 'network_or_file_error', 'protocol_or_data_error'):
+        output['failure_code'] = result['failure_code']
+    return output

@@ -24,6 +24,7 @@ class OnlineAccountTests(unittest.TestCase):
             prepare.assert_not_called()
 
     def test_success_handoff_preserves_ticket_account_and_request_material(self):
+        stages = []
         prepared = PreparedLogin(b'fixture', b'c'*32)
         account = MagicMock(user_id=123, prepared_login=prepared)
         maps = PersonaMaps((PersonaMapEntry(99, 42, 44, 0, b'name'),), 1)
@@ -33,7 +34,8 @@ class OnlineAccountTests(unittest.TestCase):
              patch('client.online_account.prepare_login', return_value=prepared) as prepare, \
              patch('client.online_account.login', return_value=account) as login, \
              patch('client.online_account.fetch_personas', return_value=maps) as fetch:
-            result = authenticate('fixture', self.shard, self.settings, 'A'*40, 'user', 'password', key_record_value=9)
+            result = authenticate('fixture', self.shard, self.settings, 'A'*40, 'user', 'password', key_record_value=9, on_stage=stages.append)
+            self.assertEqual(stages, ['login', 'personas'])
             self.assertIs(result.account, account)
             self.assertIs(result.personas, maps)
             prepare.assert_called_once_with('fixture', b'private-ticket', key_record_value=9)
@@ -85,8 +87,10 @@ class OnlineAccountTests(unittest.TestCase):
             lobby.return_value.close.assert_called_once_with()
         with patch.object(OnlineAccount, 'enter_lobby', return_value=MagicMock()) as lobby, \
              patch('client.online_account.connect_primary', side_effect=ValueError('rejected')):
+            stages = []
             with self.assertRaisesRegex(ValueError, 'rejected'):
-                online.enter_connections(42, hostname=b'host', ip_address=b'127.0.0.1')
+                online.enter_connections(42, hostname=b'host', ip_address=b'127.0.0.1', on_stage=stages.append)
+            self.assertEqual(stages, ['primary'])
             lobby.return_value.close.assert_called_once_with()
 
     def test_invalid_primary_inputs_do_not_activate_persona(self):
