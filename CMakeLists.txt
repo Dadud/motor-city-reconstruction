@@ -33,6 +33,8 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/driving_engine_rpm.cpp native/src/drivetrain_coupling.cpp
   native/src/wheel_force_correction.cpp native/src/brake_thermal.cpp
   native/src/brake_forces.cpp
+  native/src/wheel_spin.cpp
+  native/src/combined_slip.cpp
   native/src/body_moments.cpp native/src/wheel_force_orientation.cpp
   native/src/collision_response.cpp native/src/collision_impulse.cpp
   native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp native/src/lobby_channel_wait.cpp
@@ -83,7 +85,7 @@ endif()
 
 if(BUILD_TESTING)
   foreach(recovered driving_engine_rpm drivetrain_coupling wheel_force_correction
-      brake_thermal brake_forces body_moments collision_response collision_impulse)
+      brake_thermal brake_forces wheel_spin combined_slip body_moments collision_response collision_impulse)
     add_executable(mco_${recovered}_test native/tests/${recovered}_test.cpp)
     target_link_libraries(mco_${recovered}_test PRIVATE mco_core)
     add_test(NAME ${recovered} COMMAND mco_${recovered}_test)

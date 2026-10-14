@@ -52,6 +52,14 @@ outside the published repository.
 
 ## Ordered gates
 
+[Wheel-spin integration](calculations/wheel-spin.md) now matches 2,592 original
+numeric cases and [combined-slip force limiting](calculations/combined-slip.md)
+matches 1,296. Their C++ ports match the Python corpora exactly. The expanded
+[shared-state force sequence](driving-force-sequence.md) checks six connected
+stages with 1,152 comparisons across repeated calls. Component delivery is
+supplied with exact argument checks; actual component effects, authentic input
+production, full caller branches and scheduler remain required.
+
 The [driving recovery map](driving-recovery-map.md) now records scheduler lists,
 conditional force-call order and comparison targets for each driving subsystem.
 The [two wheel response consumers](calculations/tire-response-curves.md) match
@@ -91,19 +99,21 @@ the enclosing drivetrain, brake, body integrator or collision tick:
 | Recovered scope | Original comparisons | Remaining enclosing behavior |
 | --- | --- | --- |
 | [Driving RPM and torque coupling](calculations/driving-engine-rpm.md) | 2,592 complete RPM cases and 868 coupling-tail cases, exact | Full mode dispatcher, earlier torque/boost/health calculation, gears and engagement producers |
-| [Wheel-force/spin correction](calculations/wheel-force-correction.md) | 2,880 complete cases, exact | Brake-force creation, coefficient producers and wheel-spin integration |
+| [Wheel-force/spin correction](calculations/wheel-force-correction.md) | 2,880 complete cases, exact | Authentic brake-force and coefficient producers; integrated driving |
 | [Brake initialization and thermal prefix](calculations/brake-thermal.md) | 432 cases, exact; world query supplied | Authentic component inputs; enclosing numeric forces now recovered separately below |
 | [Complete numeric brake update](calculations/brake-forces.md) | 376 complete cases; maximum error `0.0001220703125`; actual fade/quality/world/controller helpers | Component wear-event consumer, authentic input producers and integrated braking traces |
+| [Wheel-spin integration](calculations/wheel-spin.md) | 2,592 complete numeric cases; maximum error `1.52587890625e-5`; exact event arguments | Component effects, authentic component/input producers and caller scheduling |
+| [Combined-slip limiting](calculations/combined-slip.md) | 1,296 complete numeric cases; maximum error `0.00048828125`; exact ordered effect arguments | Authentic force/contact inputs, component effects and integrated skid traces |
 | [Body moments and force orientation](calculations/body-moments.md) | 1,440 complete moment cases, maximum error `1.1920928955078125e-7`; 243 orientation cases exact | Aero, body transforms, authentic input producers and complete velocity integration |
 | [Collision helpers](calculations/collision-helpers.md) | 1,731 response, 1,920 impulse and 48 height cases, exact | Contact detection/creation, impulse selection, persistent contacts, damage, recovery and full tick |
 
 All new native ports match their Python corpora exactly. Local Windows checks:
-47 native tests pass; 683 Python tests run, with 676 passing and seven skipped.
+49 native tests pass; 694 Python tests run, with 687 passing and seven skipped.
 `python -m tools.native_driving_compare build/native-check` runs these new
 differential corpora together; Windows/Linux CI includes the same command.
 The [shared-state force sequence](driving-force-sequence.md) adds 96 twice-repeated
-scenarios and 768 stage comparisons, with maximum error
-`1.1920928955078125e-7`. It validates four-stage output handoff while explicitly
+scenarios and 1,152 stage comparisons, with maximum error
+`0.000244140625`. It validates six-stage output handoff while explicitly
 excluding the original caller, intervening branches and scheduler.
 
 Further networking recovery: [channel argument initialization](lobby-channel-record.md)
@@ -229,8 +239,8 @@ matches 208 bounded original-function scenarios and 63 C++/Python action traces.
 The start-request wire layout, live worker/cache driver and session integration
 remain unresolved; this does not complete race entry.
 
-Current batch verification on Windows: 629 Python tests (622 pass, seven skipped)
-and 38 native checks pass, plus the separately recorded original comparisons above. Linux and live
+Current batch verification on Windows: 694 Python tests (687 pass, seven skipped)
+and 49 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in
