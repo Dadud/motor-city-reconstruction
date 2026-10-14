@@ -31,6 +31,7 @@ class RaceEntryTests(unittest.TestCase):
         self.assertEqual(probe['positional_updates_hz'], 32)
         self.assertAlmostEqual(probe['update_interval_seconds'], 1 / 32)
         self.assertTrue(probe['expects_game_start'])
+        self.assertTrue(probe['room_channel_probe_passed'])
 
     def test_not_connected_channel_add_rejected(self):
         settings = PatchNetworkSettings(True, 2, 32, 'A' * 40)

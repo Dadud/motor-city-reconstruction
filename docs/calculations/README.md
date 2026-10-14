@@ -9,6 +9,7 @@ the cylinder state and vehicle geometry articles.
 | [Engine assembly and dyno](engine-dyno.md) | How component data becomes geometry, valve movement, airflow and sampled engine outputs |
 | [Cylinder state and gas exchange](cylinder-cycle.md) | Intake/exhaust boundaries, directional mass transfer, feedback and energy terms |
 | [Vehicle motion and road contact](vehicle-motion.md) | Tire dimensions, spring parameters, wheel velocity, body motion and road height |
+| [Tire and suspension parameters](tire-suspension.md) | Tire radius, stance allowance, spring/shock validation and axle roll contribution |
 
 Each article distinguishes recovered arithmetic from inferred physical meaning
 and reconstruction choices. An equation can be established even when the name
@@ -42,3 +43,4 @@ The temporary driving and racing modules are authored development systems.
 Their acceleration, grip, 120 Hz stepping and checkpoint rules are not evidence
 of the original game's behavior. These articles identify that boundary wherever
 it affects the explanation.
+

@@ -65,11 +65,13 @@ class FanServerTestTests(unittest.TestCase):
                         'positional_updates_hz': 32,
                         'update_interval_seconds': 1 / 32,
                         'recovered_task_kinds': [0, 5, 7, 8],
+                        'room_channel_probe_passed': True,
                     }):
                         result = run_test('external', 'user', 'password', persona_id=9, probe_race_entry=True)
         self.assertTrue(result['success'])
         self.assertTrue(result['race_entry_probe_passed'])
         self.assertEqual(result['positional_updates_hz'], 32)
+        self.assertTrue(result['room_channel_probe_passed'])
         self.assertAlmostEqual(result['update_interval_seconds'], 1 / 32)
 
     def test_run_test_records_last_stage(self):

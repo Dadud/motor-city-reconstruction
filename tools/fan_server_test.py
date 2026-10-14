@@ -192,6 +192,7 @@ class TesterWindow:
                   "lobby_connected": "Lobby connected", "primary_connected": "Primary connected", "garage_loaded": "Garage data received",
                   "persona_count": "Personas found", "garage_record_count": "Garage records received",
                   "race_entry_probe_passed": "Race-entry probe passed", "positional_updates_hz": "Configured position update rate (Hz)"}
+        labels["room_channel_probe_passed"] = "Room channel probe passed"
         for key, label in labels.items():
             value = result.get(key)
             if type(value) is bool:

@@ -108,6 +108,7 @@ def main(argv=None):
                 'part_seed_count', 'part_slot_count', 'selected_persona_id', 'last_stage',
                 'race_entry_probe_passed', 'fast_join_tcp_preferred', 'positional_updates_hz',
                 'update_interval_seconds', 'recovered_task_kinds',
+                'room_channel_probe_passed',
             )})
         print(json.dumps(report, indent=2))
         return 0
