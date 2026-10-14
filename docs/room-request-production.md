@@ -89,6 +89,9 @@ One direct caller, `0x4509c0`, disconnects the old room, initializes a local
 settings structure using `0x44a460`, copies a supplied room name, copies an
 explicit-length opaque data region through `0x44ad60`, sets the readiness short
 and requested channel field, and transfers settings with `0x44db80`.
+The [settings-transfer comparison](room-settings-transfer.md) now verifies the
+selective assignment and preserved destination tails against both original
+functions, including the fields consumed by the request builder.
 That transfer calls `0x44a9d0` with destination `base + 0xa0`. It then invokes
 `0x44cf80` with waiting enabled, flag-`0x20` switch zero, and its password input.
 Thus this path derives its argument values from supplied room settings, not

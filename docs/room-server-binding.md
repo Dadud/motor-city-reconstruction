@@ -45,8 +45,9 @@ separate local work; they do not provide a new selector assignment.
 Thus the recovered production chain is connection-interface return → main
 `+0x43c` / embedded room `+0x39c` → room producer argument `+0x00`. Passing the
 configured shard ID into that argument would bypass this observed source.
-Recovering the connection registry's ID allocation and its lifetime remains
-necessary before turning this chain into a live room operation.
+The [connection registry investigation](connection-registry.md) now recovers
+ID allocation and existing-connection lookup. Registry insertion, lifetime and
+authentication remain necessary before turning this chain into a live room operation.
 
 ## Authored implementation and verification
 
@@ -83,3 +84,16 @@ authentication, sockets, queue execution and live server are never invoked.
 The original-function comparison proves this bounded binding transition. Live
 fan-server acceptance, listener integration, room settings and race entry remain
 separate verification requirements.
+
+## Native port
+
+`native/include/mco/room_server_binding.hpp` provides equivalent full-image
+state writes and explicit helper intents. The C++20 port preserves prior errors
+on success and prior selector/connected fields on failure. Its unit test and
+80 native/Python full-image, signed-return and helper-intent comparisons pass
+locally on Windows. The differential corpus covers ten return values and eight
+image lengths; it does not execute a live connection.
+
+```text
+python -m tools.native_room_server_binding_compare build/native-check/mco_room_server_binding_compare.exe
+```

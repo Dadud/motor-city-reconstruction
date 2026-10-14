@@ -128,8 +128,18 @@ The configured shard ID is not substituted for this connection result.
 Authentication, connection-handle ownership and live room selection still need
 integration and verification.
 
-Current batch verification on Windows: 554 Python tests (547 pass, seven skipped)
-and 24 native checks pass, plus the separately recorded original comparisons above. Linux and live
+The [settings assignment](room-settings-transfer.md) selectively copies the
+actual room fields, preserving string tails and unrelated state. Eighty original
+whole-image transfers match without substituted calls, and 80 C++/Python cases
+match. The [connection registry](connection-registry.md) now recovers the local
+counter (including valid initial zero and wrap) and existing-connection identity
+lookup, with 64 original counter-range cases and 144 complete original lookups.
+Native server binding also matches 80 C++/Python cases. These modules establish
+upstream sources; authentication, insertion/lifetime, listener scheduling and
+live race entry remain required.
+
+Current batch verification on Windows: 560 Python tests (553 pass, seven skipped)
+and 26 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in
