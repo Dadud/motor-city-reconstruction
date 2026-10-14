@@ -63,6 +63,9 @@ body velocity `(0, 0, 10)`, the rotational part is `(2, 0, -1)` and the wheel
 velocity is `(2, 0, 9)`. A wheel can therefore experience lateral motion even
 when the center of mass has none. This calculation is a foundation for wheel
 slip; the game's final slip-to-force law has not yet been reconstructed.
+The [26-knot wheel response consumers](tire-response-curves.md) and
+[resistance contribution](rolling-resistance.md) are now recovered separately.
+Their input producers and the complete tire update still need integration.
 
 ## Velocity and pose use distinct increments
 

@@ -22,6 +22,9 @@ endif()
 
 # This target contains recovered calculations, not prototype vehicle handling.
 add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
+  native/src/tire_response.cpp
+  native/src/rolling_resistance.cpp
+  native/src/load_transfer.cpp
   native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp native/src/lobby_channel_wait.cpp
   native/src/async_worker_record.cpp native/src/room_join_request.cpp native/src/room_join_result.cpp
   native/src/async_worker_completion.cpp
@@ -69,6 +72,21 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_load_transfer_test native/tests/load_transfer_test.cpp)
+  target_link_libraries(mco_load_transfer_test PRIVATE mco_core)
+  add_test(NAME load_transfer COMMAND mco_load_transfer_test)
+  add_executable(mco_load_transfer_compare native/tests/load_transfer_compare.cpp)
+  target_link_libraries(mco_load_transfer_compare PRIVATE mco_core)
+  add_executable(mco_rolling_resistance_test native/tests/rolling_resistance_test.cpp)
+  target_link_libraries(mco_rolling_resistance_test PRIVATE mco_core)
+  add_test(NAME rolling_resistance COMMAND mco_rolling_resistance_test)
+  add_executable(mco_rolling_resistance_compare native/tests/rolling_resistance_compare.cpp)
+  target_link_libraries(mco_rolling_resistance_compare PRIVATE mco_core)
+  add_executable(mco_tire_response_test native/tests/tire_response_test.cpp)
+  target_link_libraries(mco_tire_response_test PRIVATE mco_core)
+  add_test(NAME tire_response COMMAND mco_tire_response_test)
+  add_executable(mco_tire_response_compare native/tests/tire_response_compare.cpp)
+  target_link_libraries(mco_tire_response_compare PRIVATE mco_core)
   add_executable(mco_game_start_flow_test native/tests/game_start_flow_test.cpp)
   target_link_libraries(mco_game_start_flow_test PRIVATE mco_core)
   add_test(NAME game_start_flow COMMAND mco_game_start_flow_test)

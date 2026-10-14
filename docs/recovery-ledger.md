@@ -34,7 +34,7 @@ outside the published repository.
 | Owned and modified vehicles | Partial: enrichment/discovery and verified insertion, pruning, ordering, linking and numeric totals connected in the [postload sequence](owned-postload.md); [outer descriptions](calculations/owned-component-descriptions.md) retain explicit leaf/localization inputs | Recover part-specific descriptions and localized labels, complete DB loading/handoff, mechanical aggregates and online refresh; verify integration on actual owned cars | Load an actually modified owned car without stock substitution; compare complete hierarchy, attachments and derived values |
 | Engine calculations | Partial: standalone unboosted nineteen-knot core matches 46 complete original records; integration matches 44,635 original steps; [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Boost, native abort semantics, final curve corrections and wider domain coverage | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
 | Motion and support geometry | Recovered bounded calculations: pose updates and contact geometry; [motion](calculations/vehicle-motion.md) | Confirm full call ordering, units, wheel sizing and stance in the integrated simulation | Original versus reconstruction pose/contact traces agree under documented tolerances and identical inputs |
-| Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation and `simulation_inputs.py` stock bridge wired into `world.py`; full integrated force model unknown | Trace original force producers, steering, gears/clutch, differential, surface and aero consumers | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
+| Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation, [wheel curve consumers](calculations/tire-response-curves.md), [resistance contribution](calculations/rolling-resistance.md) and stock input bridge; full integrated force model unknown | Follow [driving recovery map](driving-recovery-map.md): complete load transfer, tire update, steering, gears/clutch, differential, surfaces and aero | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
 | Collisions | Unknown complete object/vehicle response | Recover broad/narrow phase, contact impulses, damage, recovery and update order | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
 | Offline driving | Prototype: authored 120 Hz terrain-following bicycle model; `driving.py` | Replace forces only after original calculations are verified; retain harness for comparison | Recovered model passes repeated original driving scenarios with reproducible outcomes |
 | Race rules and results | Prototype: inferred course closure and ordered gates; `racing.py` | Recover actual event definitions, start/finish rules, penalties, standings and result consumers | Original-equivalent starts, checkpoints, finish classification and timing across event types |
@@ -51,6 +51,18 @@ outside the published repository.
 | Mod kit | Partial [working data alpha](mod-kit-tutorial.md): six resource kinds, manifests, dependencies, explicit overlays and four tools; [Lua alpha](mod-lua-alpha.md) supports directory/ZIP packages, reproducible archives and real bounded native registration/inspection through `tools.modkit script` | Native game resource loading, supported gameplay events/state, script dependencies/replacements and complete compatibility documentation | Outside developer creates, validates, packages and runs a content/script mod using published instructions |
 
 ## Ordered gates
+
+The [driving recovery map](driving-recovery-map.md) now records scheduler lists,
+conditional force-call order and comparison targets for each driving subsystem.
+The [two wheel response consumers](calculations/tire-response-curves.md) match
+1,728 complete original-function cases with synthetic tables. Table production,
+slip/normal-load sources and integration into original driving remain required.
+The [wheel resistance contribution](calculations/rolling-resistance.md) matches
+1,344 complete original-function cases with its mode predicate substituted.
+Its component/input producers and integration with traction/braking remain partial.
+The [acceleration-driven load correction](calculations/load-transfer.md) matches
+1,250 complete original-function cases without substituted calls. Initial loads,
+following suspension corrections and enclosing driving integration remain partial.
 
 Further networking recovery: [channel argument initialization](lobby-channel-record.md)
 matches 36 original constructor and 36 record-copy cases, preserving allocation
@@ -175,8 +187,8 @@ matches 208 bounded original-function scenarios and 63 C++/Python action traces.
 The start-request wire layout, live worker/cache driver and session integration
 remain unresolved; this does not complete race entry.
 
-Current batch verification on Windows: 601 Python tests (594 pass, seven skipped)
-and 31 native checks pass, plus the separately recorded original comparisons above. Linux and live
+Current batch verification on Windows: 613 Python tests (606 pass, seven skipped)
+and 34 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in

@@ -17,6 +17,18 @@ jobs:
         with:
           python-version: '3.13'
       - if: runner.os == 'Linux'
+        run: python -m tools.native_tire_response_compare build/native/mco_tire_response_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_rolling_resistance_compare build/native/mco_rolling_resistance_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_load_transfer_compare build/native/mco_load_transfer_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_load_transfer_compare build/native/Release/mco_load_transfer_compare.exe
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_rolling_resistance_compare build/native/Release/mco_rolling_resistance_compare.exe
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_tire_response_compare build/native/Release/mco_tire_response_compare.exe
+      - if: runner.os == 'Linux'
         run: python -m tools.native_room_server_binding_compare build/native/mco_room_server_binding_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_room_server_binding_compare build/native/Release/mco_room_server_binding_compare.exe
