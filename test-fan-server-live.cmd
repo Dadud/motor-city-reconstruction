@@ -9,11 +9,12 @@ if not exist "%MCO_DATA%\MCO.exe" (
   pause
   exit /b 1
 )
-if exist ".venv\Scripts\python.exe" (
-  ".venv\Scripts\python.exe" -m tools.fan_server_check "%MCO_DATA%" --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage --probe-race-entry
-) else (
-  python -m tools.fan_server_check "%MCO_DATA%" --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage --probe-race-entry
+if not exist ".venv\Scripts\python.exe" (
+  echo Run setup-fan-server-test.cmd first to install dependencies.
+  pause
+  exit /b 1
 )
+".venv\Scripts\python.exe" -m tools.fan_server_check "%MCO_DATA%" --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage --probe-race-entry
 echo.
 pause
 
