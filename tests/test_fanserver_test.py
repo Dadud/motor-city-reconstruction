@@ -44,6 +44,18 @@ class FanServerTestTests(unittest.TestCase):
         self.assertEqual(result['part_slot_count'], 2)
         account.enter_connections.assert_called_once()
 
+    def test_run_test_records_last_stage(self):
+        context = SimpleNamespace(
+            root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
+            certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
+            fetch_garage=False, catalogue=None, text_encoding='cp1252')
+        with patch('client.fanserver_test.prepare_context', return_value=context), +             patch('client.fanserver_test.authenticate') as authenticate:
+            authenticate.side_effect = RuntimeError('stop')
+            with self.assertRaises(RuntimeError):
+                run_test('external', 'user', 'password', persona_id=9)
+        # authenticate is called after authorization stage is recorded
+        authenticate.assert_called_once()
+
     def test_cancelled_before_authorization(self):
         context = SimpleNamespace(
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
@@ -54,4 +66,15 @@ class FanServerTestTests(unittest.TestCase):
                 result = run_test('external', 'user', 'password', cancelled=lambda: True)
         self.assertTrue(result['cancelled'])
         self.assertFalse(result['success'])
+        authenticate.assert_not_called()
+
+    def test_cancelled_after_preflight_records_last_stage(self):
+        context = SimpleNamespace(
+            root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
+            certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
+            fetch_garage=False, catalogue=None, text_encoding='cp1252')
+        with patch('client.fanserver_test.prepare_context', return_value=context), +             patch('client.fanserver_test.authenticate') as authenticate:
+            result = run_test('external', 'user', 'password', cancelled=lambda: True)
+        self.assertTrue(result['cancelled'])
+        self.assertEqual(result['last_stage'], 'preflight')
         authenticate.assert_not_called()
