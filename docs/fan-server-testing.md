@@ -3,6 +3,9 @@
 Double-click `test-fan-server.cmd` in the repository on Windows, or run
 `python -m tools.fan_server_test` from the repository root. The Windows launcher
 uses the project's `.venv` when available and otherwise uses `python` on PATH.
+For a command-line live login with garage fetch on the installed MotorCity Revival
+shard, double-click `test-fan-server-live.cmd` (edit `MCO_DATA` inside if your
+install path differs).
 Linux needs Python with Tk support (often provided by the distribution's
 `python3-tk` package), the project dependencies and a desktop display.
 
@@ -37,6 +40,8 @@ is implied by shipping this interface.
 From an interactive terminal in the repository:
 
     python -m tools.fan_server_check "C:/Program Files (x86)/EA Games/Motor City Online" --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage
+
+On Windows you can use the same flags through `test-fan-server-live.cmd`.
 
 Use --persona-id when you already know the persona. Add --catalogue when Online.mdb is installed.
 Preflight without --login validates discovery, certificate pin and external identity only.
