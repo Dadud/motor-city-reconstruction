@@ -10,8 +10,9 @@ The C++20 migration is underway. See the [recovery ledger](docs/recovery-ledger.
 for outstanding systems and the [native migration guide](docs/native-migration.md)
 for module boundaries and verification gates. The native build currently contains
 recovered valuation, placeholder insertion/pruning, component ordering/linking and count/cost totals, bounded VIV directories, MCOTS packet framing,
-a restricted Lua execution harness, and an
-optional SDL/OpenGL platform probe; it is not yet a playable native client.
+a restricted Lua execution harness, and an optional SDL/OpenGL asset garage.
+The garage renders original FCE geometry with orbit/zoom controls; native driving
+and complete customization remain unfinished.
 
 The recovered assembly passes are connected through an explicit
 [postload research interface](docs/owned-postload.md). Original descriptions
@@ -26,10 +27,22 @@ ctest --test-dir build/native -C Release --output-on-failure
 ```
 
 The first configuration downloads hash-pinned Lua 5.4.8 sources. Enable
-`-DMCO_BUILD_PLATFORM=ON` to also build the SDL3/OpenGL 3.3 context probe
-using hash-pinned SDL 3.2.28 sources. This probe does not render game assets.
+`-DMCO_BUILD_PLATFORM=ON` to also build the SDL3/OpenGL 3.3 garage and context probe
+using hash-pinned SDL 3.2.28 sources. Launch the garage with:
+
+```sh
+build/native/mco_native_garage --data '/path/to/Motor City Online' --model data/models/32ford.viv
+```
+
+On Windows multi-configuration builds, use `build/native/Release/mco_native_garage.exe`.
+See [native garage](docs/native-garage.md) for controls and validation limits.
 Use `-DMCO_BUILD_SCRIPTING=OFF` for an offline, dependency-free calculation build.
 The Python application below remains the playable research harness.
+
+The [data mod kit alpha](docs/mod-kit-tutorial.md) includes versioned manifests,
+dependency checks, explicit resource replacements, previews and reproducible
+packages. Start with `python -m tools.modkit validate examples/mods/garage`.
+Game loading and Lua gameplay hooks remain future integration work.
 
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 
@@ -77,7 +90,8 @@ The tests use synthetic fixtures and run without original game assets or a graph
 | `docs/roadmap.md` | Work needed to reach a playable client |
 | `docs/research.md` | Evidence standards and optional verification workflow |
 | `docs/calculations/` | Explanations of recovered original engine, gas-flow and vehicle calculations |
-| `docs/mod-dev-kit.md` | Planned add-on package format, extension boundaries and developer tools |
+| `docs/mod-dev-kit.md` | Mod kit implementation status and extension boundaries |
+| `docs/mod-kit-tutorial.md` | Working data package, preview and replacement examples |
 | `docs/networking.md` | Configured fan server, protocol research and discovery/certificate checks |
 | `docs/nps-transport.md` | TCP connection lifecycle, framing, deadlines and verification limits |
 | `docs/binary-login-service.md` | Account login acknowledgement/result sequence and retained client key |

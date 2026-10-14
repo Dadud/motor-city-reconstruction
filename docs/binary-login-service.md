@@ -2,8 +2,10 @@
 
 `client/nps_login_service.py` connects the recovered login encoder, TCP transport
 and response parser. It accepts a `PreparedLogin` created after HTTPS
-authorization; it does not obtain passwords or tickets itself. The caller must
-still supply the unresolved key-record value to `prepare_login` explicitly.
+authorization; it does not obtain passwords or tickets itself. `prepare_login`
+now defaults the trailing key-record value to its recovered startup zero.
+See [key initialization](nps-key-initialization.md) for the original constructor,
+serialization comparison and scope of this finding.
 
 Original function `0x72a8f0` sends the complete 0x501 message, reads one frame
 with a 30-second wait, then reads another with a 120-second wait. It labels the

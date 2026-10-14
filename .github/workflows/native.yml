@@ -59,6 +59,14 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y xvfb xauth libgl1-mesa-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxss-dev libasound2-dev libudev-dev
       - run: cmake -S . -B build/platform -DCMAKE_BUILD_TYPE=Release -DMCO_BUILD_PLATFORM=ON -DMCO_BUILD_SCRIPTING=OFF
       - run: cmake --build build/platform --parallel 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m tools.native_garage_fixture build/garage-fixture
+      - run: xvfb-run -a build/platform/mco_native_garage --data build/garage-fixture --model data/models/synthetic.viv --smoke
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          SDL_AUDIO_DRIVER: dummy
       - run: xvfb-run -a build/platform/mco_platform_probe --smoke
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

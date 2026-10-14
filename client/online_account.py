@@ -16,7 +16,7 @@ from client.nps_login_service import AuthenticatedAccount, login
 from client.nps_persona import PersonaMaps
 from client.nps_persona_service import fetch_personas, activate_persona
 from client.nps_response import SessionKeyRecord
-from client.nps_session_request import prepare_login
+from client.nps_session_request import LOGIN_KEY_RECORD_VALUE, prepare_login
 from client.server_discovery import Shard
 
 
@@ -108,10 +108,10 @@ class OnlineAccount:
 
 
 def authenticate(root, shard, auth_settings, certificate_sha1, username, password,
-                 *, key_record_value):
+                 *, key_record_value=LOGIN_KEY_RECORD_VALUE):
     """Authorize once, perform binary login, then download personas.
 
-    The unresolved key-record value remains explicit. Failures stop the
+    The key-record value defaults to the recovered startup zero. Failures stop the
     sequence; no stage is retried and no persona is selected automatically.
     """
     if not isinstance(shard, Shard):

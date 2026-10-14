@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "api_version": "data-alpha-1",
+  "id": "example.garage",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "MotorCityReconstruction contributors",
+  "dependencies": {},
+  "resources": [
+    {"id": "example.garage:body", "kind": "vehicle", "path": "body.json"},
+    {"id": "example.garage:road", "kind": "track", "path": "road.json"},
+    {"id": "example.garage:component", "kind": "component", "path": "component.json"},
+    {"id": "example.garage:paint", "kind": "material", "path": "paint.json"},
+    {"id": "example.garage:sound", "kind": "sound", "path": "sound.json"},
+    {"id": "example.garage:ui", "kind": "ui", "path": "ui.json"}
+  ]
+}

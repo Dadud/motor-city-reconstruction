@@ -2,8 +2,8 @@
 
 The dyno's inner calculation maintains cylinder state and evaluates valve flow
 against intake and exhaust boundaries. Several stages are now reproduced exactly
-for tested float32 outputs; the complete pressure/temperature integration remains
-unfinished. The functions live in [thermodynamics.py](../../client/thermodynamics.py).
+for tested float32 outputs. The complete crank integration step is now recovered;
+the standalone dyno driver remains unfinished. The functions live in [thermodynamics.py](../../client/thermodynamics.py).
 
 ## Initialization and piston geometry
 
@@ -155,13 +155,78 @@ These are synthetic reference inputs, not a measured operating-temperature
 range. A 10,000-input sweep matched 20,000 float32 fields against bounded
 execution of the original instructions.
 
-## Remaining integration
+## Coupled crank integration
 
-Original instructions following these stages accumulate mass and energy and
-update crank geometry and cylinder state. Recovering and verifying those
-dependencies is required before the portable implementation can produce a
-complete curve. Combustion details, complete state evolution, failure handling
-and final curve corrections should not be inferred from the isolated formulas.
+[The integrator](../../client/cylinder_integration.py) recovers the complete
+`0x47ae8f–0x47b285` stage: geometry, pressure, temperature, mass, exchanged
+energy, wall energy and work. It consumes current valve transfers and already
+accumulated intake mass. Labels describe observed algebra; SI units remain
+unverified.
 
-See [verification coverage](../research.md) for the mass-exchange sample counts,
-source identity and commands to reproduce the comparisons with local game files.
+The angle interval is `f32(RPM × f32(0.0003))`. Each evolving state uses:
+
+```text
+next_value = f32(value + step × (1.5 × current_rate - 0.5 × previous_rate))
+```
+
+This has the mathematical form of a two-step Adams–Bashforth method. The native
+initialization clears derivative histories at each RPM knot. Clearing them at
+every angle would change the calculation.
+
+Outgoing intake flow selects cylinder energy plus `T × 0.06857`; incoming intake
+flow selects charge energy. Reverse exhaust flow selects the fixed native energy
+`506.7442626953125`. Signed transfer accumulates before state evolves.
+Wall exchange combines current volume, bore, prepared wall area and RPM with
+`800 - cylinder_temperature`. Combustion is a sine pulse strictly between angles
+710 and 770; exact endpoints contribute zero. Prepared fuel ratio and fuel energy
+remain explicit inputs rather than invented fuel properties.
+
+Pressure evolution balances fuel, wall and transferred energy, pressure-volume
+work, and a mass-dependent energy term. Temperature evolution then uses this
+pressure derivative, current mass and net mass exchange. Accumulated work uses
+the volume difference and the mean of old and new pressures.
+
+Advancing angle retains an unrounded intermediate for the radians store. The
+next rod projection multiplies its unrounded value by its stored float32 copy.
+Rounding either expression uniformly caused observable work differences.
+
+## Carryover and verification
+
+`0x479e2a–0x479e4d` selects pressure: knot zero starts near 44.1, knot one retains
+live pressure, and later knots copy the stored end-pressure field. The
+`carry_cycle_pressure` API retains these distinct choices. Each new knot resets
+temperature to 2000, initializes mass from selected pressure and geometry, and
+clears work, energy totals and derivative histories. Intake flow feedback lives
+outside these resets and must persist when the full driver is assembled.
+
+`tools.verify_cylinder_integration` observes the full bounded original solver
+with real power and boost helpers. The stock-derived Ford record and four
+explicit variations (compression 6 and 18; cam advance minus and plus 10) each
+complete all nineteen RPM knots and 8,927 steps. Ten persistent state fields and
+seven result fields match exactly: 151,759 float32 fields per run, or 758,795
+fields across 44,635 steps.
+
+A second run substitutes only the portable integration stage and feeds its
+outputs into subsequent original valve and cycle stages. Each of the five final
+1004-byte solver records remains byte-identical. This verifies a full feedback
+trajectory, including end-pressure carryover, rather than independently reset
+formula samples. These are CPU emulation results, not hardware observations or
+proof over every engine. Neither the game's entry point nor Windows imports run.
+
+With a locally retained JSON record containing `input_hex`, reproduce using:
+
+```text
+python -m tools.verify_cylinder_integration path/to/mcity.exe path/to/private-record.json
+```
+
+The verified source SHA-256 is
+`28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
+Static sources are REA 221 assembly and refreshed dossier
+`ev_87ab2b6c22a4418bdcf1a2a832cb6bce2d9467d2cea8fe8f9233bbdaaff87265`.
+The dossier reports full body `0x478ec0–0x47b467`; its high-pcode value-flow is
+truncated, so no completeness claim relies on that facet.
+
+Remaining work includes the standalone driver combining preparation, stateful
+valve areas and feedback, knot initialization and output stages, plus wider
+failure-domain and final-curve correction coverage. Prototype driving does not
+use these recovered calculations.

@@ -5,7 +5,9 @@ blocking developer API, including the primary MCOTS exchange. The game's
 menus, follow-up services and racing remain unfinished.
 
 `authenticate` receives an external installation, discovered shard, configured
-auth settings/certificate pin, credentials and the explicit key-record value.
+auth settings/certificate pin and credentials. The key-record value defaults
+to the [recovered startup zero](nps-key-initialization.md); an explicit research
+override remains supported.
 It checks the external public key and executable identity before transmitting
 credentials, obtains an authorization ticket, prepares binary login, requires
 login success, then requests the account's persona list. A failed stage stops

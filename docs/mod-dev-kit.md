@@ -1,8 +1,13 @@
 # Mod development kit design
 
 The project targets both a faithful portable client and a mod development kit
-with better add-on support. This document describes the intended architecture;
-the package loader, stable extension API and kit are not implemented yet.
+with better add-on support. A usable portable Python **data-alpha-1** kit now
+implements separate directory/ZIP packages, validation, inspection, deterministic
+dependency resolution, explicit replacements, SVG geometry previews and
+reproducible packaging. See the [tutorial and exact alpha contract](mod-kit-tutorial.md).
+The C++ game runtime, stable gameplay extension API and Lua mod hooks remain
+pending. The remainder describes the broader intended architecture; vehicle,
+component and track behavior support is not implied by alpha resource labels.
 
 The [calculation writeups](calculations/README.md) explain recovered original
 behavior. They will be reference material for component authors and developers
@@ -27,8 +32,9 @@ into a misleading public field definition.
 ## Package identity and layout
 
 Use an add-on directory or archive with a versioned manifest, separate from the
-user's original installation. The following layout is illustrative, not a
-currently accepted package format:
+user's original installation. The following broader layout is illustrative;
+the implemented alpha accepts JSON envelopes and the exact manifest described
+in the tutorial, with original examples under `examples/mods/garage`:
 
 ```text
 example-vehicle/

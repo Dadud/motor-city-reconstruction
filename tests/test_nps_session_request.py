@@ -7,6 +7,15 @@ from client.nps_session_request import prepare_login
 
 
 class PreparedLoginTests(unittest.TestCase):
+    def test_default_uses_original_startup_zero(self):
+        key = Mock()
+        key.encrypt_hex.return_value = b'AB'*128
+        with patch('client.nps_session_request.installed_public_key', return_value=key), \
+             patch('client.nps_session_request.installed_executable_checksum', return_value=1), \
+             patch('client.nps_session_request.secrets.token_bytes', side_effect=[bytes(32), bytes(20)]):
+            prepare_login('external', b'synthetic-ticket')
+        key.encrypt_hex.assert_called_once_with(b'\x00\x20'+bytes(36), bytes(20))
+
     def test_assembles_recovered_fields_and_retains_private_material(self):
         key = Mock()
         key.encrypt_hex.return_value = b'AB'*128

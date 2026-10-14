@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "label": "Original red replacement body",
+  "color": "#ef4444",
+  "mesh": {"vertices": [[-1,0,-2],[1,0,-2],[0,0,2]], "triangles": [[0,1,2]]}
+}

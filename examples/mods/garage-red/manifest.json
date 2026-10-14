@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "api_version": "data-alpha-1",
+  "id": "example.red",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "MotorCityReconstruction contributors",
+  "dependencies": {"example.garage": "1.0.0"},
+  "resources": [{"id": "example.red:body", "kind": "vehicle", "path": "body.json", "replaces": {"id": "example.garage:body", "version": "1.0.0"}}]
+}

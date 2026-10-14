@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "label": "Original wedge body",
+  "color": "#60a5fa",
+  "references": ["example.garage:paint"],
+  "mesh": {
+    "vertices": [[-1,0,-2],[1,0,-2],[0.7,0,2],[-0.7,0,2],[0,1,0]],
+    "triangles": [[0,1,4],[1,2,4],[2,3,4],[3,0,4]]
+  },
+  "metadata": {"purpose": "Author-created preview geometry; no recovered vehicle simulation fields"}
+}

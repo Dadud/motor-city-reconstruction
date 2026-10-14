@@ -1,7 +1,7 @@
 """Recovered binary login exchange, following external HTTPS authorization.
 
 Callers supply a PreparedLogin. This module does not acquire credentials or
-guess the unresolved key-record value required by prepare_login.
+choose key-record values; prepare_login supplies the recovered startup default.
 """
 from dataclasses import dataclass, field
 import struct

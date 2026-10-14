@@ -1,8 +1,8 @@
 """Assemble recovered login fields without opening a connection.
 
 Original 0x72a8f0 selects 32-byte session material; 0x72c3f0 serializes its
-header-free key record, encrypts it, and formats uppercase hex. Callers supply
-the unresolved key-record value explicitly. Full native RSA equivalence and
+header-free key record, encrypts it, and formats uppercase hex. Its startup
+constructor initializes the trailing value to zero. Full native RSA equivalence and
 server acceptance remain unverified.
 """
 from dataclasses import dataclass, field
@@ -14,6 +14,10 @@ from client.nps_identity import SERVICE_ID, installed_executable_checksum
 from client.nps_login import LoginPayload
 from client.nps_response import SessionKeyRecord
 
+# Global wrapper 0xb37e80 embeds the record at +4. Startup 0x72a6f0 calls
+# 0x72a700, which writes zero at embedded record +0x44 (0xb37ec8).
+LOGIN_KEY_RECORD_VALUE = 0
+
 
 @dataclass(frozen=True)
 class PreparedLogin:
@@ -21,11 +25,11 @@ class PreparedLogin:
     session_material: bytes = field(repr=False)
 
 
-def prepare_login(root, ticket, *, key_record_value):
+def prepare_login(root, ticket, *, key_record_value=LOGIN_KEY_RECORD_VALUE):
     """Prepare HTTPS-mode login with fresh OS entropy; never log its contents.
 
-    The explicit key-record value prevents treating an unresolved field as a
-    known constant. No account requests, socket writes, or state mutations occur.
+    The default reproduces the recovered startup value. An explicit override
+    remains available for research. No account requests or socket writes occur.
     """
     key = installed_public_key(root)
     checksum = installed_executable_checksum(root)

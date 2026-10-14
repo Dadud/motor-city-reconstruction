@@ -11,11 +11,21 @@ The root CMake build contains `mco_core` (owned-part valuation, type-cache resol
 placeholder insertion/pruning, type/attachment ordering, root selection and
 parent/dependency linking, VIV directories, component counts and repair/scrap/price totals,
 MCOTS framing), `mco_scripting`
-(isolated Lua execution), and optional `mco_platform_probe` (SDL/OpenGL context
-creation). There is no native gameplay application or native online client yet.
+(isolated Lua execution), optional `mco_platform_probe` (SDL/OpenGL context
+creation), and `mco_native_garage` (bounded original FCE geometry rendering).
+There is no native driving application or native online client yet.
 SDL 3.2.28 and Lua 5.4.8 source archives have SHA-256 pins in CMake. OpenSSL
 integration remains pending the online port; no TLS compatibility is implied by
 this foundation.
+
+The [native garage](native-garage.md) reads separately supplied VIV/FCE models
+and renders neutral geometry with orbit/zoom controls. Windows verification
+matched the Python reader across 315 installed models and 99,608 vertex
+positions; an original 32 Ford frame passed a foreground-pixel smoke check.
+This covers geometry, not textures, stock assembly, customization or driving.
+Linux CI renders authored tetrahedron geometry separately from original-asset
+acceptance. The [data mod kit alpha](mod-kit-tutorial.md) currently runs in the
+Python tooling; its registry is not yet loaded by this native application.
 
 The archive decoder ports `tools.viv.inventory`: BIGF/BIG4 headers, bounded
 directory entries, Latin-1 names represented as UTF-8, duplicate rejection and

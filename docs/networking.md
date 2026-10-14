@@ -432,7 +432,8 @@ The native random pool uses a time-derived input. Portable encryption takes an
 explicit 20-byte seed for reproducible checks; live callers must supply fresh
 unpredictable bytes. `prepare_login` supplies fresh OS entropy, service ID `2176`
 and the recovered executable checksum, then builds the full request. Its caller
-still supplies the unresolved key-record value explicitly. The binary login
+uses the [recovered startup zero](nps-key-initialization.md) for the trailing
+key-record value unless a research override is supplied. The binary login
 service decodes success and retains the original request key separately.
 Full native encryption comparison and live account/session acceptance remain
 unverified.

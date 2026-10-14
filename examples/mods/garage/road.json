@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "label": "Original rectangular road",
+  "color": "#64748b",
+  "mesh": {"vertices": [[-2,0,-5],[2,0,-5],[2,0,5],[-2,0,5]], "triangles": [[0,1,2],[0,2,3]]}
+}
