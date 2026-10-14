@@ -20,7 +20,6 @@ from client.lobby_channels import (
 )
 from client.server_discovery import PatchNetworkSettings
 from client.online_sync import OnlineSyncSettings
-from client.lobby_room import probe_room_channel_path
 
 _FAST_JOIN_TCP_PROTOCOLS = (CHANNEL_PROTOCOL_TCP_A, CHANNEL_PROTOCOL_TCP_B)
 
@@ -88,6 +87,7 @@ def probe_race_entry_path(settings: PatchNetworkSettings | None) -> dict:
         if decoded.kind == GAME_NETWORK_TASK_CHANNEL_ADD:
             if decoded.normalized_result(1) != 0:
                 raise ValueError('channel-add success normalization failed')
+    from client.lobby_room import probe_room_channel_path
     room_probe = probe_room_channel_path(settings)
     return {
         'race_entry_probe_passed': True,
@@ -103,4 +103,5 @@ def probe_race_entry_path(settings: PatchNetworkSettings | None) -> dict:
         'room_channel_probe_passed': room_probe['room_channel_probe_passed'],
         'expects_room_channel_add': room_probe['expects_channel_add'],
     }
+
 
