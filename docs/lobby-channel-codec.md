@@ -146,3 +146,9 @@ The [bounded original reply oracle](lobby-channel-reply-evidence.md) now matches
 eight status reads, eight result conversions and 48 pending-slot scenarios.
 It executes the original routing branch with an explicit serializer-boundary
 substitution; it does not verify live socket delivery or room entry.
+
+The [reply wait follow-up](lobby-channel-wait.md) implements original poll-count
+ordering, cancellation, disconnect precedence and reply cleanup in Python and
+C++20. It is separately compared to original code and remains outside the live
+room-entry path until authenticated request construction and listener ownership
+are recovered.

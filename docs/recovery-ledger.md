@@ -92,6 +92,13 @@ status reads, eight return conversions and 48 mailbox scenarios, with the
 serializer boundary explicitly substituted. These are bounded recovery checks,
 not authenticated joins.
 
+The [channel reply wait](lobby-channel-wait.md) now matches 25 bounded original
+scenarios and 428 Python/native scenarios, including timeout/cancel/disconnect
+precedence and cleanup. Its sleep-unit conversion matches 12 original arithmetic
+cases. All 532 Python tests and 20 local Windows native checks pass. Authenticated
+room producers, transport/listener integration and live joins remain separate
+required work; these results do not complete online acceptance.
+
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded
 original-CPU cases include the actual type-cache helper. Root selection and

@@ -34,3 +34,9 @@ and request correlation, establish patch transport selection, then compare
 authenticated room negotiation and game-start exchanges with Revival. See
 [static dispatcher evidence](lobby-channels.md) and the
 [original channel wire codec comparisons](lobby-channel-codec.md).
+
+The [room worker follow-up](room-worker-dispatch.md) identifies a separate local
+dispatcher: its task zero invokes channel-add with room-object caller values.
+Those values must be traced independently from game-worker task seven's -1/1
+constants. The new branch map narrows recovery work without establishing a
+complete entry sequence.
