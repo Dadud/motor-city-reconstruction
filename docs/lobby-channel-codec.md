@@ -90,6 +90,23 @@ assignments are corroborated statically. It does not execute the whole consumer.
 No host game startup, sockets or Windows imports run in this oracle. Original
 bytes and pseudocode remain external and are not distributed.
 
+## C++20 port
+
+`native/include/mco/lobby_channel_codec.hpp` exposes the same bounded payload
+encoder and two-field success decoder. The C++ codec belongs to `mco_core`; it
+does not open a socket or select room arguments. Its unit test covers NUL bounds,
+capacity, opaque bytes and reply validation. The native comparison tool accepts
+one binary record on stdin and writes only the encoded payload on stdout.
+
+```powershell
+python -m tools.native_lobby_channel_compare build/native-check/mco_lobby_channel_compare.exe
+```
+
+Local Windows result: 136 payloads match the original-verified Python codec,
+11 string/capacity rejections agree, and three malformed input lengths are
+rejected. All 17 native CTest checks pass. CI includes this comparison on Windows
+and Linux; these local results do not establish a Linux or live server run.
+
 Remaining work: construct records from authenticated room state, recover request
 ordering and upstream opaque fields, integrate cancellation/timeouts with the
 listener, verify UDP fallback and patched TCP preferences, and compare live
