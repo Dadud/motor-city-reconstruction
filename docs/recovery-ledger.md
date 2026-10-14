@@ -92,12 +92,13 @@ the enclosing drivetrain, brake, body integrator or collision tick:
 | --- | --- | --- |
 | [Driving RPM and torque coupling](calculations/driving-engine-rpm.md) | 2,592 complete RPM cases and 868 coupling-tail cases, exact | Full mode dispatcher, earlier torque/boost/health calculation, gears and engagement producers |
 | [Wheel-force/spin correction](calculations/wheel-force-correction.md) | 2,880 complete cases, exact | Brake-force creation, coefficient producers and wheel-spin integration |
-| [Brake initialization and thermal prefix](calculations/brake-thermal.md) | 432 cases, exact; world query supplied | Later force/fade/wear/control/event paths and authentic component inputs |
+| [Brake initialization and thermal prefix](calculations/brake-thermal.md) | 432 cases, exact; world query supplied | Authentic component inputs; enclosing numeric forces now recovered separately below |
+| [Complete numeric brake update](calculations/brake-forces.md) | 376 complete cases; maximum error `0.0001220703125`; actual fade/quality/world/controller helpers | Component wear-event consumer, authentic input producers and integrated braking traces |
 | [Body moments and force orientation](calculations/body-moments.md) | 1,440 complete moment cases, maximum error `1.1920928955078125e-7`; 243 orientation cases exact | Aero, body transforms, authentic input producers and complete velocity integration |
 | [Collision helpers](calculations/collision-helpers.md) | 1,731 response, 1,920 impulse and 48 height cases, exact | Contact detection/creation, impulse selection, persistent contacts, damage, recovery and full tick |
 
 All new native ports match their Python corpora exactly. Local Windows checks:
-46 native tests pass; 677 Python tests run, with 670 passing and seven skipped.
+47 native tests pass; 683 Python tests run, with 676 passing and seven skipped.
 `python -m tools.native_driving_compare build/native-check` runs these new
 differential corpora together; Windows/Linux CI includes the same command.
 The [shared-state force sequence](driving-force-sequence.md) adds 96 twice-repeated

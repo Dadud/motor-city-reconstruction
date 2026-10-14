@@ -2,8 +2,9 @@
 
 The authored `brake_thermal` Python/C++ module reconstructs the initialization
 and thermal prefix of `0x538960`, stopping **before `0x538ca4`**. The rest of the
-routine creates brake forces and applies wear, vibration and control effects;
-it remains unrecovered. This prefix alone is not a complete braking model.
+routine creates brake forces and applies wear and control branches; its
+[complete numeric reconstruction](brake-forces.md) is now verified separately.
+This prefix alone is not a complete braking model.
 
 Target: x86 `mcity.exe`, SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
@@ -68,6 +69,6 @@ parking combinations, reverse and adjacent speed gates, high-temperature caps
 and all represented environment modes.
 
 Thermal units, authentic component coefficients and environmental producers,
-remaining force branches, degradation/event effects and input control mapping
-remain required before claiming original braking. Invalid thermal denominators
+component degradation/event delivery and input control mapping remain required
+before claiming original braking. Invalid thermal denominators
 are rejected by the authored API; that policy is not original error handling.

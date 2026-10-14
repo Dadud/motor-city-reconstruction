@@ -134,6 +134,7 @@ remain external. Full vehicle integration and authentic-car traces remain open.
 Parallel recovery now also supplies [driving RPM and a coupling tail](calculations/driving-engine-rpm.md),
 [wheel-force/spin correction](calculations/wheel-force-correction.md),
 [brake thermal initialization](calculations/brake-thermal.md),
+[complete numeric brake forces](calculations/brake-forces.md),
 [body moments and force orientation](calculations/body-moments.md), and
 [collision calculation helpers](calculations/collision-helpers.md).
 Full dispatcher branches, authentic producers, contact creation, brake wear and
