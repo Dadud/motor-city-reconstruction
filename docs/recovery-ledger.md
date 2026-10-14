@@ -138,8 +138,18 @@ Native server binding also matches 80 C++/Python cases. These modules establish
 upstream sources; authentication, insertion/lifetime, listener scheduling and
 live race entry remain required.
 
-Current batch verification on Windows: 560 Python tests (553 pass, seven skipped)
-and 26 native checks pass, plus the separately recorded original comparisons above. Linux and live
+[Room disconnect preparation](room-disconnect.md) now resets the original settings
+fields and retains old IDs in initialized task arguments. Thirty-two disconnected
+returns and 64 connected preparations match the original; its C++ port matches
+96 Python cases. Connected pending waits, event pumping and unspecified task
+padding remain excluded. The [server disconnect follow-up](connection-disconnect.md)
+maps registry removal/reference release and matches 24 original result paths and
+216 communication destructor ownership guards with explicit substitutions.
+Actual socket closure, asynchronous cleanup, complete registry mutation and live
+reconnect still require implementation and verification.
+
+Current batch verification on Windows: 566 Python tests (559 pass, seven skipped)
+and 27 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in

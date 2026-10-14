@@ -100,3 +100,9 @@ recovered and integrated. Registry destruction releases entries and critical
 sections, but that teardown alone does not establish normal connection lifetime.
 The bounded helper is a research model and does not create an authenticated
 connection. No packet, room join or live fan-server operation was sent here.
+
+The [disconnect follow-up](connection-disconnect.md) now maps the removal chain
+and verifies interface return conversion and communication socket ownership
+guards. It does not yet implement complete registry erase/reference lifetime or
+live reconnect. [Room disconnect](room-disconnect.md) is a separate local task
+and settings reset, rather than a substitute for server logoff.
