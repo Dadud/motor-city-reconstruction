@@ -54,6 +54,8 @@ if(MCO_BUILD_SCRIPTING)
   add_library(mco_scripting native/src/script_runtime.cpp native/src/mod_script.cpp)
   target_include_directories(mco_scripting PUBLIC native/include)
   target_link_libraries(mco_scripting PRIVATE mco_lua)
+  add_executable(mco_mod_script native/src/mod_script_main.cpp)
+  target_link_libraries(mco_mod_script PRIVATE mco_scripting)
 endif()
 
 if(BUILD_TESTING)

@@ -44,7 +44,9 @@ dependency checks, explicit resource replacements, previews and reproducible
 packages. Start with `python -m tools.modkit validate examples/mods/garage`.
 Game loading and Lua gameplay hooks remain future integration work.
 The [offline Lua registration alpha](docs/mod-lua-alpha.md) provides a typed
-native content registry and inspection events; a disk package adapter is pending.
+native content registry and inspection events. Directory/ZIP script packages now
+run through the native sandbox using `python -m tools.modkit script` with the
+built `mco_mod_script` runner; game resource loading remains unfinished.
 
 The [standalone unboosted engine core](docs/calculations/cylinder-cycle.md)
 reproduces all nineteen dyno knots for verified records. Boost, final curve

@@ -5,7 +5,9 @@ with better add-on support. A usable portable Python **data-alpha-1** kit now
 implements separate directory/ZIP packages, validation, inspection, deterministic
 dependency resolution, explicit replacements, SVG geometry previews and
 reproducible packaging. See the [tutorial and exact alpha contract](mod-kit-tutorial.md).
-The C++ game runtime, stable gameplay extension API and Lua mod hooks remain
+The [offline Lua alpha](mod-lua-alpha.md) now loads directory/ZIP script packages,
+executes initialization and inspection events in the native sandbox, and creates
+reproducible script archives. Stable gameplay hooks and game loading remain
 pending. The remainder describes the broader intended architecture; vehicle,
 component and track behavior support is not implied by alpha resource labels.
 
@@ -24,8 +26,8 @@ add-ons should depend on.
 | Presentation | Skins, audio and localization | Define resource lookup and presentation interfaces as those subsystems are implemented |
 | Behavior | Explicit alternative simulation or gameplay rules | Establish stable interfaces, isolation and online compatibility policy |
 
-Data-driven packages are the initial priority. Executable scripts or native
-plug-ins need a separate design; neither is implicitly supported by this plan.
+Data packages and bounded Lua research packages have separate versioned contracts.
+Native plug-ins and gameplay scripting need further integration and verification.
 Unknown original units must remain marked unknown rather than being converted
 into a misleading public field definition.
 

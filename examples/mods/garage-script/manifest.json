@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "api_version": "script-alpha-1",
+  "id": "example.garage-script",
+  "version": "1.0.0",
+  "license": "MIT",
+  "resources": [
+    {"id": "example.garage-script:body", "kind": "vehicle", "label": "Authored garage body"}
+  ],
+  "script": "init.lua"
+}

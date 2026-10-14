@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 from client.mod_registry import ModError, build_registry, load_package, package_archive
+from client.mod_script import load_script_package, summarize_script_package, run_script_package
 
 
 def preview_svg(resource):
@@ -34,6 +35,11 @@ def preview_svg(resource):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    script = sub.add_parser('script', help='Validate or execute an offline script-alpha-1 package')
+    script.add_argument('package', help='script package directory or ZIP')
+    script.add_argument('--runner', type=Path, help='built mco_mod_script executable; omit to validate only')
+    script.add_argument('--event', choices=('inspect', 'preview'), default='inspect')
+    script.add_argument('--output', type=Path, help='write a reproducible script package ZIP')
     for command in ("validate", "inspect", "preview", "package"):
         child = sub.add_parser(command)
         child.add_argument("packages", nargs="+", help="package directories or ZIP archives; include dependencies")
@@ -44,6 +50,14 @@ def main(argv=None):
             child.add_argument("--output", required=True, type=Path, help="new ZIP output; first supplied package is packaged")
     args = parser.parse_args(argv)
     try:
+        if args.command == 'script':
+            package = load_script_package(args.package)
+            result = (run_script_package(package, args.runner, event=args.event)
+                      if args.runner else summarize_script_package(package))
+            if args.output:
+                package_archive(package, args.output)
+            print(json.dumps(result, indent=2))
+            return 0
         packages = [load_package(path) for path in args.packages]
         ordered, registry = build_registry(packages)
         if args.command == "preview":

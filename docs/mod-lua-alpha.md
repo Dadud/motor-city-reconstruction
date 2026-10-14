@@ -35,10 +35,59 @@ auto result = mco::run_mod_script(package, mco::ModResearchEvent::inspect,
 
 The host is responsible for obtaining an owned package definition, resolving its
 dependencies and applying resource replacements through an appropriate loader.
-This function does not read directories, ZIPs or manifests, and does not change
-the data-alpha-1 manifest contract. A disk script-package adapter remains pending;
-Lua registration is currently usable through the native typed host API and tests.
-There is no automatic bridge from Python data packages or a native game loader.
+This function does not read directories, ZIPs or manifests. The disk adapter below
+validates a separate script manifest and passes owned values to this native API.
+The data-alpha-1 manifest contract remains unchanged. Game loading is still pending.
+
+## Run a disk script package
+
+Build with scripting enabled (the default), then validate or execute the authored
+example from the repository root:
+
+```sh
+python -m tools.modkit script examples/mods/garage-script
+python -m tools.modkit script examples/mods/garage-script --runner build/native/mco_mod_script
+python -m tools.modkit script examples/mods/garage-script --runner build/native/mco_mod_script --event preview
+python -m tools.modkit script examples/mods/garage-script --output garage-script.zip
+```
+
+On Windows multi-configuration builds, use `build/native/Release/mco_mod_script.exe`.
+Without `--runner`, this validates the manifest and source encoding only. With a
+runner, it executes real Lua initialization and the chosen event inside the native
+sandbox. A failed run has no partial resource output. The child process has a
+10-second host timeout in addition to the native memory and instruction budgets.
+
+Directory and ZIP packages use the same bounded, portable file reader as the data
+kit. They require exactly these manifest fields:
+
+```json
+{
+  "schema_version": 1,
+  "api_version": "script-alpha-1",
+  "id": "example.script",
+  "version": "1.0.0",
+  "license": "MIT",
+  "resources": [{"id": "example.script:body", "kind": "vehicle", "label": "Authored body"}],
+  "script": "scripts/init.lua"
+}
+```
+
+`script` names one package-local UTF-8 file of at most 1 MiB. The reader selects
+that exact file; it never substitutes a resource file. Declarative resources need
+exactly `id`, `kind`, and `label`; an empty resource list is allowed for scripts
+that register all content during initialization. Labels use printable ASCII,
+including spaces. Package and resource suffix IDs are at most 80 bytes each;
+versions are at most 64 bytes. Duplicate JSON keys and unknown manifest fields
+fail validation. Script dependencies and replacements are not supported by this
+research contract yet.
+
+`--output` creates a reproducible ZIP from the validated package snapshot and
+refuses to overwrite an existing file. If a runner is supplied, execution must
+succeed before packaging occurs.
+
+The executable reads a private length-prefixed bridge from standard input. It
+always selects offline execution and produces JSON resource/note output. That
+bridge is an internal adapter, not a stable mod API or a game network protocol.
 
 ## Lifecycle and functions
 
@@ -86,4 +135,4 @@ The tests exercise seeded/scripted registration, deterministic ordering, separat
 events, online refusal, invalid identity/API versions, duplicates/foreign IDs,
 unknown game events, lifecycle restrictions, count limits, memory limits,
 instruction exhaustion, bytecode rejection and clean recovery after failure.
-Native gameplay events and a disk script-package format remain research work.
+Native gameplay events and game resource integration remain research work.

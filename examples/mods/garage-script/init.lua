@@ -1,0 +1,8 @@
+mco.register_resource('ui', 'example.garage-script:title', 'Authored garage title')
+mco.on('inspect', function(event)
+    assert(event.offline)
+    mco.emit_note('Garage resources registered')
+end)
+mco.on('preview', function(event)
+    mco.emit_note('Garage preview metadata ready')
+end)

@@ -17,6 +17,14 @@ jobs:
         with:
           python-version: '3.13'
       - if: runner.os == 'Linux'
+        env:
+          MCO_SCRIPT_RUNNER: build/native/mco_mod_script
+        run: python -m unittest discover -s tests -p test_mod_script.py -v
+      - if: runner.os == 'Windows'
+        env:
+          MCO_SCRIPT_RUNNER: build/native/Release/mco_mod_script.exe
+        run: python -m unittest discover -s tests -p test_mod_script.py -v
+      - if: runner.os == 'Linux'
         run: python -m tools.native_valuation_compare build/native/mco_valuation_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_valuation_compare build/native/Release/mco_valuation_compare.exe
