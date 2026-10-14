@@ -1,6 +1,6 @@
 # Local fan-server tester
 
-Double-click `test-fan-server.cmd` in the repository on Windows, or run
+First time only, double-click `setup-fan-server-test.cmd` to create the venv and install networking dependencies. Then double-click `test-fan-server.cmd` in the repository on Windows, or run
 `python -m tools.fan_server_test` from the repository root. The Windows launcher
 uses the project's `.venv` when available and otherwise uses `python` on PATH.
 For a command-line live login with garage fetch on the installed MotorCity Revival
@@ -73,3 +73,4 @@ Preflight without --login validates discovery, certificate pin and external iden
 Race-entry and room-channel probes **do not join a race**. They only prove the reconstructed client builds the same local task sequence and patch settings as the installed client.
 
 If something fails, note `last_stage` and which booleans stayed false. Credentials are never included in the JSON output.
+

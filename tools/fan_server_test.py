@@ -97,9 +97,15 @@ class TesterWindow:
     def worker(self, root, username, password):
         try:
             from client.fanserver_test import run_test
+            from pathlib import Path as _Path
+            data_root = _Path(root)
+            catalogue_path = data_root / 'Data' / 'DB' / 'Online.mdb'
+            if not catalogue_path.is_file():
+                catalogue_path = data_root / 'data' / 'db' / 'online.mdb'
+            use_catalogue = catalogue_path.is_file()
             result = run_test(root, username, password, on_stage=lambda stage: self.events.put(("stage", stage)),
                               on_personas=self.request_persona, cancelled=self.cancelled.is_set,
-                              probe_race_entry=True)
+                              fetch_garage=True, use_catalogue=use_catalogue, probe_race_entry=True)
             self.events.put(("result", result))
         except Exception:
             # Exception contents, URLs and account payloads are never displayed.
@@ -218,3 +224,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
