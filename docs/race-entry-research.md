@@ -1,9 +1,11 @@
 # Race entry research boundary
 
 `client/game_network.py` represents the local structure read by dispatcher
-`0x454d50`: task kind at offset 0, eight unresolved header bytes at offsets
-4–11, and operation arguments starting at offset 12. Decoding and re-encoding
-preserve the unresolved header. These structures are **not network packets**.
+`0x454d50`: task kind at offset 0, local operation ID at offset 4, worker result
+bits at offset 8, and operation arguments starting at offset 12. The
+[generic worker follow-up](async-worker-record.md) recovers these header roles.
+Decoding and re-encoding preserve the raw header representation; result bits
+are meaningful only after completion. These structures are **not network packets**.
 
 The dispatcher has ten independent cases. Their existence does not establish
 an execution order. Earlier Python code generated tasks `(0, 5, 7, 8)` with
@@ -40,3 +42,9 @@ dispatcher: its task zero invokes channel-add with room-object caller values.
 Those values must be traced independently from game-worker task seven's -1/1
 constants. The new branch map narrows recovery work without establishing a
 complete entry sequence.
+
+The [room argument producer](room-request-production.md) now supplies the
+bounded fields from explicit room state, with original comparisons and a native
+port. Actual authenticated room selection and source-state population remain
+unverified. The missing-arguments probe therefore still reports a live recovery
+gap rather than treating a synthetic argument image as a successful race join.

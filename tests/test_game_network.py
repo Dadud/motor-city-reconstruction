@@ -24,9 +24,16 @@ class GameNetworkTests(unittest.TestCase):
         self.assertIn(GAME_NETWORK_TASK_GAME_START, kinds)
         self.assertIn(GAME_NETWORK_TASK_CHANNEL_ADD, kinds)
 
-    def test_decoding_retains_unresolved_header_fields(self):
+    def test_decoding_retains_raw_worker_header_fields(self):
         payload = struct.pack('<I', 7) + b'opaque!!' + b'args'
         self.assertEqual(GameNetworkTask.decode(payload).encode(), payload)
+
+    def test_local_operation_and_result_fields(self):
+        payload = struct.pack('<III', 7, 0x87654321, 0xfffffffa) + b'args'
+        task = GameNetworkTask.decode(payload)
+        self.assertEqual(task.operation_id, 0x87654321)
+        self.assertEqual(task.worker_result_bits, 0xfffffffa)
+        self.assertEqual(task.encode(), payload)
 
     def test_invalid_header_rejected(self):
         for header in (b'short', bytearray(8)):

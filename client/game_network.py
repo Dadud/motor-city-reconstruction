@@ -19,6 +19,16 @@ class GameNetworkTask:
     argument: bytes
     opaque_header: bytes = bytes(8)
 
+    @property
+    def operation_id(self):
+        """Local worker correlation ID, not a network transaction ID."""
+        return struct.unpack('<II', self.opaque_header)[0]
+
+    @property
+    def worker_result_bits(self):
+        """Local result bits; valid only after observed worker completion."""
+        return struct.unpack('<II', self.opaque_header)[1]
+
     @classmethod
     def decode(cls, payload: bytes):
         if len(payload) < _ARGUMENT_OFFSET:

@@ -99,6 +99,26 @@ cases. All 532 Python tests and 20 local Windows native checks pass. Authenticat
 room producers, transport/listener integration and live joins remain separate
 required work; these results do not complete online acceptance.
 
+The [room-request producer](room-request-production.md) now reproduces the
+observed native argument from explicit room state: 80 original argument cases,
+three guard paths and four callback-return cases match. Its C++ port matches
+60 argument cases and five boundary rejections. The
+[composed channel pipeline](room-channel-pipeline.md) matches another 30 original
+constructor/record/payload paths under explicit synthetic allocation and binding
+inputs. [Local worker records](async-worker-record.md) now identify the previously
+opaque header as operation ID and worker result, with 42 bounded original
+comparisons. None of these supply authenticated room selection, worker queue
+ownership or a complete live race-entry flow.
+The [room result transition](room-join-result.md) matches 72 original full-image
+cases and has a native port, including successful notification arguments and
+negative-result state preservation. These bounded modules are now built into
+`mco_core`; connecting them to authenticated state and the listener remains
+required.
+
+Current batch verification on Windows: 546 Python tests and 23 native checks
+pass, plus the separately recorded original comparisons above. Linux and live
+fan-server race acceptance remain unverified.
+
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded
 original-CPU cases include the actual type-cache helper. Root selection and
