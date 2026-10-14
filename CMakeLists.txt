@@ -24,7 +24,8 @@ endif()
 add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/mcots_framing.cpp native/src/owned_dependencies.cpp native/src/owned_parent_links.cpp
   native/src/part_type_cache.cpp native/src/owned_induction.cpp native/src/owned_insertion.cpp
-  native/src/owned_aggregates.cpp native/src/owned_ordering.cpp native/src/owned_postload.cpp)
+  native/src/owned_aggregates.cpp native/src/owned_ordering.cpp native/src/owned_postload.cpp
+  native/src/owned_descriptions.cpp)
 target_include_directories(mco_core PUBLIC native/include)
 if(MSVC)
   target_compile_options(mco_core PRIVATE /W4 /fp:strict)
@@ -52,6 +53,11 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_owned_descriptions_test native/tests/owned_descriptions_test.cpp)
+  target_link_libraries(mco_owned_descriptions_test PRIVATE mco_core)
+  add_test(NAME owned_descriptions COMMAND mco_owned_descriptions_test)
+  add_executable(mco_owned_descriptions_compare native/tests/owned_descriptions_compare.cpp)
+  target_link_libraries(mco_owned_descriptions_compare PRIVATE mco_core)
   add_executable(mco_owned_postload_test native/tests/owned_postload_test.cpp)
   target_link_libraries(mco_owned_postload_test PRIVATE mco_core)
   add_test(NAME owned_postload COMMAND mco_owned_postload_test)

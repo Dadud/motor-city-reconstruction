@@ -76,6 +76,12 @@ fixtures match original-code execution and Python/C++ with that boundary
 substituted. Local validation passes twelve native suites and 414 Python tests.
 See [postload sequence](owned-postload.md) for exact exclusions and safeguards.
 
+The outer description pass now implements template copying, assembly child lists,
+spacing and whole-line length limits. Its 96 original-code cases and native/Python
+comparisons retain explicit leaf-rendering and localization substitutions. See
+[component descriptions](calculations/owned-component-descriptions.md); original
+part-specific renderers and localized resource loading remain unfinished.
+
 Repeat the external-asset check without persisting original bytes:
 
 ```sh

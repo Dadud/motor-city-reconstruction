@@ -31,7 +31,9 @@ again through the dependency pass before descriptions observe the records.
 
 ## Explicit incomplete stage
 
-Original description routine `0x6628d0` remains incomplete. It delegates branded
+The [outer description routine](calculations/owned-component-descriptions.md)
+now has recovered template copying and assembly lists. Complete description
+routine `0x6628d0` remains partial because it delegates branded
 nonassembly parts to `0x668710`, including a table of part-specific callbacks and
 wear-limit behavior; assembly descriptions also depend on attachment text and
 localized resources. The new orchestration does not silently substitute an

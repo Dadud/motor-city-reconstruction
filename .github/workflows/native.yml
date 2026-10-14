@@ -48,6 +48,10 @@ jobs:
         run: python -m tools.native_owned_postload_compare build/native/mco_owned_postload_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_owned_postload_compare build/native/Release/mco_owned_postload_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_owned_descriptions_compare build/native/mco_owned_descriptions_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_owned_descriptions_compare build/native/Release/mco_owned_descriptions_compare.exe
   linux-platform:
     runs-on: ubuntu-latest
     steps:
