@@ -87,6 +87,10 @@ Python implementation, with six invalid runner sizes rejected. All 19 local
 Windows native checks pass. The [channel reply codec](lobby-channel-codec.md)
 includes opaque `0x213` status decoding and a bounded single-pending-reply model;
 live orchestration and authenticated room arguments remain incomplete.
+The [original reply oracle](lobby-channel-reply-evidence.md) matches eight
+status reads, eight return conversions and 48 mailbox scenarios, with the
+serializer boundary explicitly substituted. These are bounded recovery checks,
+not authenticated joins.
 
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded

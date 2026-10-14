@@ -141,3 +141,8 @@ encrypted or header-bearing network packet. It has no sockets, timeout scheduler
 cancellation or reconnect handling and is not yet connected to live room entry.
 Five focused tests cover status boundaries, unsolicited/duplicate replies,
 malformed replies and reuse of the pending slot. Live acceptance remains pending.
+
+The [bounded original reply oracle](lobby-channel-reply-evidence.md) now matches
+eight status reads, eight result conversions and 48 pending-slot scenarios.
+It executes the original routing branch with an explicit serializer-boundary
+substitution; it does not verify live socket delivery or room entry.
