@@ -20,6 +20,8 @@ The tester uses the installed fan-server configuration through
 personas, lobby/primary connections and persona garage data. If persona selection
 is needed, choose the desired name in the window and press **Continue**. The
 window stays responsive while the network worker runs.
+The GUI also runs the recovered race-entry construction probe after login;
+this validates local task ordering and installed patch settings but does not join a race.
 
 **Cancel** requests cancellation between operations. An operation already waiting
 on the network may need to reach its timeout before the worker stops. Closing the
@@ -40,6 +42,9 @@ is implied by shipping this interface.
 From an interactive terminal in the repository:
 
     python -m tools.fan_server_check "C:/Program Files (x86)/EA Games/Motor City Online" --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage
+
+Add `--probe-race-entry` to include the recovered race-entry construction probe
+in the safe JSON report after login.
 
 On Windows you can use the same flags through `test-fan-server-live.cmd`.
 

@@ -44,6 +44,32 @@ class FanServerTestTests(unittest.TestCase):
         self.assertEqual(result['part_slot_count'], 2)
         account.enter_connections.assert_called_once()
 
+    def test_run_test_reports_race_entry_probe(self):
+        entry = SimpleNamespace(persona_id=9, shard_id=44, name=b'Racer' + bytes([0]))
+        personas = SimpleNamespace(entries=(entry,), find=lambda persona_id, shard_id: entry)
+        account = MagicMock()
+        account.personas = personas
+        connections = MagicMock()
+        connections.__enter__.return_value = SimpleNamespace(primary=SimpleNamespace(session=object()))
+        account.enter_connections.return_value = connections
+        context = SimpleNamespace(
+            root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
+            certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
+            fetch_garage=False, catalogue=None, text_encoding='cp1252', probe_race_entry=True)
+        with patch('client.fanserver_test.prepare_context', return_value=context):
+            with patch('client.fanserver_test.authenticate', return_value=account):
+                with patch('client.fanserver_test.installed_patch_settings', return_value=object()):
+                    with patch('client.fanserver_test.probe_race_entry_path', return_value={
+                        'race_entry_probe_passed': True,
+                        'fast_join_tcp_preferred': True,
+                        'positional_updates_hz': 32,
+                        'recovered_task_kinds': [0, 5, 7, 8],
+                    }):
+                        result = run_test('external', 'user', 'password', persona_id=9, probe_race_entry=True)
+        self.assertTrue(result['success'])
+        self.assertTrue(result['race_entry_probe_passed'])
+        self.assertEqual(result['positional_updates_hz'], 32)
+
     def test_run_test_records_last_stage(self):
         context = SimpleNamespace(
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),

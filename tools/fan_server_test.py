@@ -98,7 +98,8 @@ class TesterWindow:
         try:
             from client.fanserver_test import run_test
             result = run_test(root, username, password, on_stage=lambda stage: self.events.put(("stage", stage)),
-                              on_personas=self.request_persona, cancelled=self.cancelled.is_set)
+                              on_personas=self.request_persona, cancelled=self.cancelled.is_set,
+                              probe_race_entry=True)
             self.events.put(("result", result))
         except Exception:
             # Exception contents, URLs and account payloads are never displayed.
@@ -144,7 +145,7 @@ class TesterWindow:
                 if kind == "stage":
                     # Only the orchestration module's fixed stage names are shown.
                     stages = {"preflight": "Configuration checked", "authorization": "Authorizing account", "login": "Checking binary account login",
-                              "personas": "Reading personas", "persona": "Selecting persona", "lobby": "Connecting to lobby", "primary": "Connecting to primary service", "garage": "Reading persona garage data", "complete": "Test complete"}
+                              "personas": "Reading personas", "persona": "Selecting persona", "lobby": "Connecting to lobby", "primary": "Connecting to primary service", "garage": "Reading persona garage data", "race_entry": "Validating recovered race-entry path", "complete": "Test complete"}
                     label = stages.get(value) if isinstance(value, str) else None
                     if label:
                         self.status.set(label + "…")
@@ -189,13 +190,17 @@ class TesterWindow:
         # Deliberately exclude arbitrary text, URLs, account objects and exception repr.
         labels = {"success": "Test succeeded", "cancelled": "Cancelled", "account_authenticated": "Account authenticated",
                   "lobby_connected": "Lobby connected", "primary_connected": "Primary connected", "garage_loaded": "Garage data received",
-                  "persona_count": "Personas found", "garage_record_count": "Garage records received"}
+                  "persona_count": "Personas found", "garage_record_count": "Garage records received",
+                  "race_entry_probe_passed": "Race-entry probe passed", "positional_updates_hz": "Configured position update rate (Hz)"}
         for key, label in labels.items():
             value = result.get(key)
             if type(value) is bool:
                 self.write(f"{label}: {'yes' if value else 'no'}")
             elif type(value) is int and value >= 0:
                 self.write(f"{label}: {value}")
+        kinds = result.get('recovered_task_kinds')
+        if isinstance(kinds, list) and kinds:
+            self.write(f"Recovered race-entry task kinds: {', '.join(str(kind) for kind in kinds)}")
         self.write("This checks protocol stages and data access; it does not certify racing or full game compatibility.")
 
 

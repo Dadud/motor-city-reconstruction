@@ -21,6 +21,7 @@ from client.nps_crypto import installed_public_key
 from client.nps_identity import installed_executable_checksum
 from client.nps_persona import PersonaMapEntry
 from client.online_account import authenticate
+from client.race_entry import probe_race_entry_path
 from client.server_discovery import (
     AuthSettings,
     Shard,
@@ -39,6 +40,7 @@ STAGES = (
     'lobby',
     'primary',
     'garage',
+    'race_entry',
     'complete',
 )
 
@@ -58,6 +60,7 @@ class FanServerContext:
     fetch_garage: bool
     catalogue: Catalogue | None
     text_encoding: str | None
+    probe_race_entry: bool
 
 
 def _emit(on_stage, stage: str) -> None:
@@ -134,6 +137,7 @@ def prepare_context(
     ip_address: str | None = None,
     fetch_garage: bool = False,
     use_catalogue: bool = False,
+    probe_race_entry: bool = False,
     text_encoding: str | None = 'cp1252',
 ):
     sources = installed_sources(root)
@@ -178,6 +182,7 @@ def prepare_context(
         fetch_garage=fetch_garage,
         catalogue=catalogue,
         text_encoding=text_encoding,
+        probe_race_entry=probe_race_entry,
     )
 
 
@@ -195,6 +200,7 @@ def run_test(
     ip_address: str | None = None,
     fetch_garage: bool = True,
     use_catalogue: bool = False,
+    probe_race_entry: bool = False,
     text_encoding: str | None = 'cp1252',
     on_stage: Callable[[str], None] | None = None,
     on_personas: Callable[[list[dict]], int | None] | None = None,
@@ -214,6 +220,10 @@ def run_test(
         'garage_record_count': 0,
         'part_seed_count': 0,
         'part_slot_count': 0,
+        'race_entry_probe_passed': False,
+        'fast_join_tcp_preferred': None,
+        'positional_updates_hz': None,
+        'recovered_task_kinds': [],
         'selected_persona_id': None,
         'shard_name': None,
         'shard_id': shard_id,
@@ -228,6 +238,7 @@ def run_test(
         ip_address=ip_address,
         fetch_garage=fetch_garage,
         use_catalogue=use_catalogue,
+        probe_race_entry=probe_race_entry,
         text_encoding=text_encoding,
     )
     report['shard_name'] = context.shard.name
@@ -291,6 +302,13 @@ def run_test(
             report['garage_record_count'] = len(startup.car_pairs)
             report['part_seed_count'] = len(startup.part_seeds)
             report['part_slot_count'] = len(startup.part_slots)
+        if context.probe_race_entry:
+            _set_stage(report, 'race_entry', on_stage)
+            probe = probe_race_entry_path(installed_patch_settings(context.root))
+            report['race_entry_probe_passed'] = probe['race_entry_probe_passed']
+            report['fast_join_tcp_preferred'] = probe['fast_join_tcp_preferred']
+            report['positional_updates_hz'] = probe['positional_updates_hz']
+            report['recovered_task_kinds'] = probe['recovered_task_kinds']
     report['success'] = True
     _set_stage(report, 'complete', on_stage)
     return report

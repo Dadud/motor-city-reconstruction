@@ -45,6 +45,8 @@ def main(argv=None):
                         help='prompt privately, then perform one fan-server flow check')
     parser.add_argument('--fetch-garage', action='store_true',
                         help='fetch persona startup garage data after primary login')
+    parser.add_argument('--probe-race-entry', action='store_true',
+                        help='validate recovered race-entry task construction after login')
     parser.add_argument('--catalogue', action='store_true',
                         help='enrich owned parts when Online.mdb is installed')
     args = parser.parse_args(argv)
@@ -65,6 +67,7 @@ def main(argv=None):
             ip_address=args.ip_address,
             fetch_garage=args.fetch_garage,
             use_catalogue=args.catalogue,
+            probe_race_entry=args.probe_race_entry,
         )
         report.update({
             'shard_name': context.shard.name,
@@ -72,6 +75,7 @@ def main(argv=None):
             'preflight_passed': True,
             'fetch_garage_requested': args.fetch_garage,
             'catalogue_requested': args.catalogue,
+            'probe_race_entry_requested': args.probe_race_entry,
         })
         if args.login:
             if not sys.stdin.isatty():
@@ -94,6 +98,7 @@ def main(argv=None):
                 ip_address=args.ip_address,
                 fetch_garage=args.fetch_garage,
                 use_catalogue=args.catalogue,
+                probe_race_entry=args.probe_race_entry,
                 on_personas=_pick_persona if needs_persona else None,
             )
             report['live_fan_server_tested'] = True
@@ -101,6 +106,8 @@ def main(argv=None):
                 'success', 'cancelled', 'account_authenticated', 'lobby_connected',
                 'primary_connected', 'garage_loaded', 'persona_count', 'garage_record_count',
                 'part_seed_count', 'part_slot_count', 'selected_persona_id', 'last_stage',
+                'race_entry_probe_passed', 'fast_join_tcp_preferred', 'positional_updates_hz',
+                'recovered_task_kinds',
             )})
         print(json.dumps(report, indent=2))
         return 0
