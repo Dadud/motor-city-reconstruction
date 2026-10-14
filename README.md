@@ -64,8 +64,8 @@ If your installed client already points at the fan shard, you can verify the rec
 **Windows (easiest):**
 
 1. Clone or open this repo: [motor-city-reconstruction](https://github.com/Dadud/motor-city-reconstruction)
-2. Create the venv and install once: `python -m venv .venv` then `.\.venv\Scripts\python.exe -m pip install -e .`
-3. **Preflight only** (no password): double-click `test-fan-server-live.cmd` after editing `MCO_DATA` if needed — or run preflight via the doc below without `--login`.
+2. **One-time setup:** double-click `setup-fan-server-test.cmd` (creates `.venv` and installs `network` + `catalogue` extras for login and optional part enrichment)
+3. **Preflight only** (no password): from the repo, run fan-server check without `--login` (see [fan-server testing](docs/fan-server-testing.md)).
 4. **Full live test**: double-click `test-fan-server.cmd` for the GUI, or `test-fan-server-live.cmd` for command-line login + garage + race-entry probe.
 
 Enter your fan-server account when prompted. Passwords are not saved or logged.
@@ -142,4 +142,5 @@ REA is not included and is not a development dependency. Optional emulation tool
 ## License and assets
 
 The newly authored code is [MIT licensed](LICENSE). Original game files, decompiled pseudocode, textures, models, music and local research outputs are excluded from this repository. Supply your own installation through `--data`; the client leaves that installation unchanged. The MIT license applies to this project's authored code, not to the original game's content.
+
 
