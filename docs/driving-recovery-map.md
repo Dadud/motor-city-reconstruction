@@ -36,11 +36,14 @@ callbacks:
 The second list contains `0x520450` at priority 30, the active pose arithmetic
 using `1/64`. Other callbacks occur between and around these entries. This table
 does not omit them from a proposed implementation: it selects the driving seeds
-whose complete dependencies must be traced next. Registration and sorting do
-**not** establish list execution frequency, interleaving, or catch-up behavior.
-The list executor and its callers remain required before selecting a game-loop
-rate. In particular, `1/32`, `1/64` and support look-ahead `1/48` are arithmetic
-factors, not proof of one scheduler frequency.
+whose complete dependencies must be traced next. Registration and sorting alone
+do not establish frequency. The separately recovered [executor and driving
+interleaving](scheduler.md) now show that the first list runs on even simulation
+counters and the second on every selected subiteration. The selector chooses
+zero, one or two subiterations; outer catch-up is capped at sixteen. Clock
+production, mode producers and full outer flow remain incomplete. In particular,
+`1/32`, `1/64` and support look-ahead `1/48` are arithmetic factors, not proof
+of an independently measured frequency.
 
 Sources: scheduler registration `ev_e4a36a338cd41b44e594b999c015a71ac9673355be94969ab1b18061807422ac`;
 sorted insertion `ev_8dd8f9ab99394dc5275d0eb066ef7f3623130ac59e2efb27131b23c3c95c6744`;
@@ -113,6 +116,13 @@ inputs and units are independently confirmed.
 
 ## Integration gate
 
+The [vehicle controller](calculations/vehicle-update.md) now reproduces all six
+dispatch paths and controller-owned numeric changes, including per-wheel force
+clearing and motion accumulation. Its mandatory child executor keeps missing
+behavior explicit. A 2,607-case original comparison includes actual connected
+linear-update instructions and supplied child mutations. This does not supply
+authentic contact/engine/input producers or complete child-stage integration.
+
 The [response-table consumers](calculations/tire-response-curves.md),
 [wheel resistance contribution](calculations/rolling-resistance.md) and
 [acceleration-driven load correction](calculations/load-transfer.md) now have
@@ -139,7 +149,7 @@ Parallel recovery now also supplies [driving RPM and a coupling tail](calculatio
 [combined-slip force limiting](calculations/combined-slip.md),
 [body moments and force orientation](calculations/body-moments.md), and
 [collision calculation helpers](calculations/collision-helpers.md).
-Full dispatcher branches, authentic producers, contact creation, brake wear and
+Complete child-stage integration, authentic producers, contact creation, brake wear and
 event delivery, aero and integrated velocity/collision traces remain open. The
 native runtime includes these verified consumers without replacing the playable
 prototype with an incomplete mixture of recovered and guessed forces.

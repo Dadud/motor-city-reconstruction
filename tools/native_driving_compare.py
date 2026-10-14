@@ -9,7 +9,8 @@ def verify(directory):
     directory=Path(directory)
     results={}
     for name in ('driving_engine_rpm','drivetrain_coupling','wheel_force_correction',
-                 'brake_thermal','brake_forces','wheel_spin','combined_slip','collision_response','collision_impulse','body_moments'):
+                 'brake_thermal','brake_forces','wheel_spin','combined_slip','vehicle_update','scheduler',
+                 'collision_response','collision_impulse','body_moments'):
         runner=directory/f'mco_{name}_compare'
         if not runner.is_file(): runner=runner.with_suffix('.exe')
         module=importlib.import_module(f'tools.native_{name}_compare')

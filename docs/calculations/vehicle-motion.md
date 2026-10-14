@@ -79,7 +79,10 @@ velocity_next = velocity + acceleration / 32
 The pose update at `0x520450` uses `1/64` for position and angular increments.
 A terrain support predictor at `0x53d320` uses `velocity/48` for its look-ahead
 position. Those constants do not prove a single 32 Hz or 64 Hz game loop.
-Actual call scheduling, gating and substep ordering still need recovery.
+The [scheduler](../scheduler.md) now verifies alternating force/contact and pose
+dispatch in its driving branch. Clock timing, mode producers and the full outer
+flow remain unresolved. The [vehicle controller](vehicle-update.md) recovers
+linear gating and angular accumulation separately from this earlier helper.
 
 The body rotates around its center of mass. In the portable column-vector
 convention the incremental rotation is composed as:

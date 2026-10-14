@@ -65,6 +65,13 @@ corrections and driving-force integration remain unfinished. A
 shard preflight and optional live lobby, primary MCOTS and garage startup checks;
 no live race acceptance has yet been demonstrated.
 
+The recovered [vehicle update controller](docs/calculations/vehicle-update.md)
+and [callback scheduler](docs/scheduler.md) now have Python/C++ implementations
+and original-code comparisons. The controller preserves conditional stage order,
+force clearing and motion arithmetic; the scheduler preserves alternating force
+and pose dispatch. Authentic child-stage inputs, full integration and measured
+clock behavior remain required before replacing the playable driving prototype.
+
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 
 

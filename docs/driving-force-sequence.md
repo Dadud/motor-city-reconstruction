@@ -44,6 +44,8 @@ All stage comparisons pass with maximum absolute error
 
 Inputs use authored response tables and supplied body/component/control state.
 Original instruction bytes and raw owner captures remain private/external. The
-next integration gate requires full caller branches and authentic assembled-car
-inputs, followed by repeated original-client acceleration, braking, cornering,
+next integration gate requires connecting the separately recovered
+[vehicle controller](calculations/vehicle-update.md) and [scheduler](scheduler.md)
+to authentic assembled-car inputs, followed by repeated original-client
+acceleration, braking, cornering,
 airborne and collision traces. This check cannot replace that acceptance gate.
