@@ -35,7 +35,7 @@ outside the published repository.
 | Engine calculations | Partial: standalone unboosted nineteen-knot core matches 46 complete original records; integration matches 44,635 original steps; [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Boost, native abort semantics, final curve corrections and wider domain coverage | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
 | Motion and support geometry | Recovered bounded calculations: pose updates and contact geometry; [motion](calculations/vehicle-motion.md) | Confirm full call ordering, units, wheel sizing and stance in the integrated simulation | Original versus reconstruction pose/contact traces agree under documented tolerances and identical inputs |
 | Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation, [combined steering/tire update](calculations/tire-update.md), [wheel curve consumers](calculations/tire-response-curves.md), [resistance contribution](calculations/rolling-resistance.md) and stock input bridge; full integrated force model unknown | Follow [driving recovery map](driving-recovery-map.md): input and curve producers, integrated load sequence, gears/clutch, differential, brakes, surfaces and aero | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
-| Collisions | Unknown complete object/vehicle response | Recover broad/narrow phase, contact impulses, damage, recovery and update order | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
+| Collisions | Partial: [response, impulse-to-motion and plane-height helpers](calculations/collision-helpers.md) match original execution; complete object/vehicle response remains unknown | Recover broad/narrow phase, contact/impulse creation, damage, recovery and update order | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
 | Offline driving | Prototype: authored 120 Hz terrain-following bicycle model; `driving.py` | Replace forces only after original calculations are verified; retain harness for comparison | Recovered model passes repeated original driving scenarios with reproducible outcomes |
 | Race rules and results | Prototype: inferred course closure and ordered gates; `racing.py` | Recover actual event definitions, start/finish rules, penalties, standings and result consumers | Original-equivalent starts, checkpoints, finish classification and timing across event types |
 | Garage and customization UI | Partial garage preview and body/component presentation | Recover menus, part installation/removal, paint/material changes, validation and state transitions | Complete garage editing flow renders and persists the selected configuration correctly |
@@ -84,6 +84,26 @@ predicate scheduling and integrated driving remain required. All 39 local
 native checks pass; Python runs 639 tests, with 632 passing and seven skipped.
 These are local Windows results; Linux checks are configured in CI, not claimed
 as a completed gameplay acceptance run.
+
+Parallel driving recovery adds the following bounded increments. None completes
+the enclosing drivetrain, brake, body integrator or collision tick:
+
+| Recovered scope | Original comparisons | Remaining enclosing behavior |
+| --- | --- | --- |
+| [Driving RPM and torque coupling](calculations/driving-engine-rpm.md) | 2,592 complete RPM cases and 868 coupling-tail cases, exact | Full mode dispatcher, earlier torque/boost/health calculation, gears and engagement producers |
+| [Wheel-force/spin correction](calculations/wheel-force-correction.md) | 2,880 complete cases, exact | Brake-force creation, coefficient producers and wheel-spin integration |
+| [Brake initialization and thermal prefix](calculations/brake-thermal.md) | 432 cases, exact; world query supplied | Later force/fade/wear/control/event paths and authentic component inputs |
+| [Body moments and force orientation](calculations/body-moments.md) | 1,440 complete moment cases, maximum error `1.1920928955078125e-7`; 243 orientation cases exact | Aero, body transforms, authentic input producers and complete velocity integration |
+| [Collision helpers](calculations/collision-helpers.md) | 1,731 response, 1,920 impulse and 48 height cases, exact | Contact detection/creation, impulse selection, persistent contacts, damage, recovery and full tick |
+
+All new native ports match their Python corpora exactly. Local Windows checks:
+46 native tests pass; 677 Python tests run, with 670 passing and seven skipped.
+`python -m tools.native_driving_compare build/native-check` runs these new
+differential corpora together; Windows/Linux CI includes the same command.
+The [shared-state force sequence](driving-force-sequence.md) adds 96 twice-repeated
+scenarios and 768 stage comparisons, with maximum error
+`1.1920928955078125e-7`. It validates four-stage output handoff while explicitly
+excluding the original caller, intervening branches and scheduler.
 
 Further networking recovery: [channel argument initialization](lobby-channel-record.md)
 matches 36 original constructor and 36 record-copy cases, preserving allocation

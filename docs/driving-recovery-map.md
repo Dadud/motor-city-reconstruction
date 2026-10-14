@@ -131,6 +131,19 @@ front/rear steering geometry, slip, response curves and force gates. Its
 comparison, while the virtual observation producer and counter scheduling
 remain external. Full vehicle integration and authentic-car traces remain open.
 
+Parallel recovery now also supplies [driving RPM and a coupling tail](calculations/driving-engine-rpm.md),
+[wheel-force/spin correction](calculations/wheel-force-correction.md),
+[brake thermal initialization](calculations/brake-thermal.md),
+[body moments and force orientation](calculations/body-moments.md), and
+[collision calculation helpers](calculations/collision-helpers.md).
+Full dispatcher branches, authentic producers, contact creation, brake wear and
+event delivery, aero and integrated velocity/collision traces remain open. The
+native runtime includes these verified consumers without replacing the playable
+prototype with an incomplete mixture of recovered and guessed forces.
+The [shared-state force sequence](driving-force-sequence.md) now checks tire,
+spin correction, orientation and body-moment handoff across repeated calls.
+Its excluded caller branches remain visible; it is not a recovered full tick.
+
 First compare isolated routines against bounded original execution, recording
 every replaced call, original input/output image, rounding mode, and tolerance.
 Then compare connected stages with the original update sequence and authentic

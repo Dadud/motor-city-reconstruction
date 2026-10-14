@@ -30,6 +30,10 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/suspension_load_correction.cpp
   native/src/steering_response.cpp
   native/src/tire_update.cpp
+  native/src/driving_engine_rpm.cpp native/src/drivetrain_coupling.cpp
+  native/src/wheel_force_correction.cpp native/src/brake_thermal.cpp
+  native/src/body_moments.cpp native/src/wheel_force_orientation.cpp
+  native/src/collision_response.cpp native/src/collision_impulse.cpp
   native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp native/src/lobby_channel_wait.cpp
   native/src/async_worker_record.cpp native/src/room_join_request.cpp native/src/room_join_result.cpp
   native/src/async_worker_completion.cpp
@@ -77,6 +81,16 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  foreach(recovered driving_engine_rpm drivetrain_coupling wheel_force_correction
+      brake_thermal body_moments collision_response collision_impulse)
+    add_executable(mco_${recovered}_test native/tests/${recovered}_test.cpp)
+    target_link_libraries(mco_${recovered}_test PRIVATE mco_core)
+    add_test(NAME ${recovered} COMMAND mco_${recovered}_test)
+    add_executable(mco_${recovered}_compare native/tests/${recovered}_compare.cpp)
+    target_link_libraries(mco_${recovered}_compare PRIVATE mco_core)
+  endforeach()
+  add_executable(mco_wheel_force_orientation_compare native/tests/wheel_force_orientation_compare.cpp)
+  target_link_libraries(mco_wheel_force_orientation_compare PRIVATE mco_core)
   add_executable(mco_tire_update_test native/tests/tire_update_test.cpp)
   target_link_libraries(mco_tire_update_test PRIVATE mco_core)
   add_test(NAME tire_update COMMAND mco_tire_update_test)
