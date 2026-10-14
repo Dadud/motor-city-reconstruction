@@ -29,10 +29,19 @@ this tool makes no memory-erasure guarantee.
 
 The resulting report distinguishes public preflight from a live account test.
 It does not select a persona, enter the lobby, load a garage, modify inventory or
-race. Local validation on 2026-10-13 passed configured shard 44 public discovery
-and identity prerequisites; no account credentials were supplied. Automated
-tests use synthetic accounts and check cancellation and secret-free diagnostics.
-Full live compatibility remains unverified.
+race. For lobby, primary MCOTS and persona garage startup verification, use
+[fan-server testing](fan-server-testing.md). Local validation on 2026-10-13
+passed configured shard 44 public discovery and identity prerequisites; no
+account credentials were supplied. Automated tests use synthetic accounts and
+check cancellation and secret-free diagnostics. Full live compatibility remains
+unverified.
+
+## Fan-server flow check
+
+The CLI fan-server check extends account verification through persona selection,
+lobby connection, primary MCOTS login and optional persona startup garage data.
+See [fan-server testing](fan-server-testing.md) for Windows GUI and CLI usage,
+including shard 44 with source nps/shardlistip.ini on this installation.
 
 `authenticate` receives an external installation, discovered shard, configured
 auth settings/certificate pin and credentials. The key-record value defaults

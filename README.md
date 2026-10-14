@@ -49,8 +49,10 @@ native content registry and inspection events; a disk package adapter is pending
 The [standalone unboosted engine core](docs/calculations/cylinder-cycle.md)
 reproduces all nineteen dyno knots for verified records. Boost, final curve
 corrections and driving-force integration remain unfinished. A
-[private local account check](docs/online-account.md) is available for account
-verification; no live account or race acceptance has yet been demonstrated.
+[private local account check](docs/online-account.md) and a
+[fan-server flow check](docs/fan-server-testing.md) are available for configured
+shard preflight and optional live lobby, primary MCOTS and garage startup checks;
+no live race acceptance has yet been demonstrated.
 
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 
