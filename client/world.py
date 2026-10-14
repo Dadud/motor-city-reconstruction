@@ -6,6 +6,7 @@ from .contact import Pose, WheelRig
 from .fce import Model
 from .engine import EngineBlock
 from .scene import stock_scene
+from .simulation_inputs import VehicleSimulationInputs, build_stock_simulation_inputs
 from .track import decode_track
 from .track_surface import TrackSurface, decode_surface
 
@@ -22,6 +23,7 @@ class WorldVehicle:
     contacts: tuple
     terrain: TrackSurface
     engine: EngineBlock
+    simulation: VehicleSimulationInputs
 
 
 def load_world_vehicle(assets, catalogue, vehicle, track_bytes, skin=None):
@@ -38,7 +40,8 @@ def load_world_vehicle(assets, catalogue, vehicle, track_bytes, skin=None):
     initial = Pose.yaw(road.position, math.atan2(road.forward[0], road.forward[2]))
     pose, contacts = rig.spawn_pose(terrain, initial, radii)
     engine = catalogue.engine_block(vehicle)
-    return WorldVehicle(model, textures, flags, notes, pose, rig, radii, contacts, terrain, engine)
+    simulation = build_stock_simulation_inputs(catalogue, vehicle, rig)
+    return WorldVehicle(model, textures, flags, notes, pose, rig, radii, contacts, terrain, engine, simulation)
 
 
 def pose_matrix(pose):
