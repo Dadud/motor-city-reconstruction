@@ -118,6 +118,14 @@ The [response-table consumers](calculations/tire-response-curves.md),
 [acceleration-driven load correction](calculations/load-transfer.md) now have
 original-function comparisons and C++ ports. These bounded steps do not recover
 their surrounding input producers or complete force tick.
+The [initial normal loads](calculations/normal-load.md),
+[wheel speed projection](calculations/wheel-speed-projection.md) and
+[suspension load correction](calculations/suspension-load-correction.md) are also
+verified and ported. The [shared-state sequence](wheel-load-sequence.md) checks
+load handoff through three stages, while retaining explicit caller exclusions.
+The [speed-dependent steering input helper](calculations/steering-response.md)
+also has complete original-function comparisons and a native port. It supplies
+input shaping, not the full wheel-angle or tire-slip update.
 
 First compare isolated routines against bounded original execution, recording
 every replaced call, original input/output image, rounding mode, and tolerance.

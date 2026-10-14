@@ -25,6 +25,10 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/tire_response.cpp
   native/src/rolling_resistance.cpp
   native/src/load_transfer.cpp
+  native/src/normal_load.cpp
+  native/src/wheel_speed.cpp
+  native/src/suspension_load_correction.cpp
+  native/src/steering_response.cpp
   native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp native/src/lobby_channel_wait.cpp
   native/src/async_worker_record.cpp native/src/room_join_request.cpp native/src/room_join_result.cpp
   native/src/async_worker_completion.cpp
@@ -72,6 +76,26 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_steering_response_test native/tests/steering_response_test.cpp)
+  target_link_libraries(mco_steering_response_test PRIVATE mco_core)
+  add_test(NAME steering_response COMMAND mco_steering_response_test)
+  add_executable(mco_steering_response_compare native/tests/steering_response_compare.cpp)
+  target_link_libraries(mco_steering_response_compare PRIVATE mco_core)
+  add_executable(mco_suspension_load_test native/tests/suspension_load_test.cpp)
+  target_link_libraries(mco_suspension_load_test PRIVATE mco_core)
+  add_test(NAME suspension_load COMMAND mco_suspension_load_test)
+  add_executable(mco_suspension_load_compare native/tests/suspension_load_compare.cpp)
+  target_link_libraries(mco_suspension_load_compare PRIVATE mco_core)
+  add_executable(mco_wheel_speed_test native/tests/wheel_speed_test.cpp)
+  target_link_libraries(mco_wheel_speed_test PRIVATE mco_core)
+  add_test(NAME wheel_speed COMMAND mco_wheel_speed_test)
+  add_executable(mco_wheel_speed_compare native/tests/wheel_speed_compare.cpp)
+  target_link_libraries(mco_wheel_speed_compare PRIVATE mco_core)
+  add_executable(mco_normal_load_test native/tests/normal_load_test.cpp)
+  target_link_libraries(mco_normal_load_test PRIVATE mco_core)
+  add_test(NAME normal_load COMMAND mco_normal_load_test)
+  add_executable(mco_normal_load_compare native/tests/normal_load_compare.cpp)
+  target_link_libraries(mco_normal_load_compare PRIVATE mco_core)
   add_executable(mco_load_transfer_test native/tests/load_transfer_test.cpp)
   target_link_libraries(mco_load_transfer_test PRIVATE mco_core)
   add_test(NAME load_transfer COMMAND mco_load_transfer_test)

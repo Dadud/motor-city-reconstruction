@@ -22,6 +22,22 @@ jobs:
         run: python -m tools.native_rolling_resistance_compare build/native/mco_rolling_resistance_compare
       - if: runner.os == 'Linux'
         run: python -m tools.native_load_transfer_compare build/native/mco_load_transfer_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_normal_load_compare build/native/mco_normal_load_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_wheel_speed_compare build/native/mco_wheel_speed_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_suspension_load_compare build/native/mco_suspension_load_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_steering_response_compare build/native/mco_steering_response_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_steering_response_compare build/native/Release/mco_steering_response_compare.exe
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_suspension_load_compare build/native/Release/mco_suspension_load_compare.exe
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_wheel_speed_compare build/native/Release/mco_wheel_speed_compare.exe
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_normal_load_compare build/native/Release/mco_normal_load_compare.exe
       - if: runner.os == 'Windows'
         run: python -m tools.native_load_transfer_compare build/native/Release/mco_load_transfer_compare.exe
       - if: runner.os == 'Windows'

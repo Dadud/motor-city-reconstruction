@@ -63,6 +63,18 @@ Its component/input producers and integration with traction/braking remain parti
 The [acceleration-driven load correction](calculations/load-transfer.md) matches
 1,250 complete original-function cases without substituted calls. Initial loads,
 following suspension corrections and enclosing driving integration remain partial.
+The [initial support-mask loads](calculations/normal-load.md),
+[wheel-speed projection](calculations/wheel-speed-projection.md) and
+[following suspension correction](calculations/suspension-load-correction.md)
+now match 2,016, 1,296 and 1,730 complete original-function cases respectively.
+Their C++ ports match the Python corpora. A [shared owner-image sequence](wheel-load-sequence.md)
+matches 1,728 scenarios across three load stages, excluding intervening helpers
+and full caller/scheduler behavior. Real support/input production and complete
+tire/drivetrain integration remain required.
+The [speed-dependent steering response](calculations/steering-response.md) now
+matches 2,064 complete original-function cases and its C++ port matches the
+Python corpus. Controller/keyboard input production, maximum steering and the
+enclosing wheel geometry/slip update remain required.
 
 Further networking recovery: [channel argument initialization](lobby-channel-record.md)
 matches 36 original constructor and 36 record-copy cases, preserving allocation
@@ -187,8 +199,8 @@ matches 208 bounded original-function scenarios and 63 C++/Python action traces.
 The start-request wire layout, live worker/cache driver and session integration
 remain unresolved; this does not complete race entry.
 
-Current batch verification on Windows: 613 Python tests (606 pass, seven skipped)
-and 34 native checks pass, plus the separately recorded original comparisons above. Linux and live
+Current batch verification on Windows: 629 Python tests (622 pass, seven skipped)
+and 38 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in
