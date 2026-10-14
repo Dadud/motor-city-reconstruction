@@ -49,10 +49,11 @@ class FanServerTestTests(unittest.TestCase):
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
             certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
             fetch_garage=False, catalogue=None, text_encoding='cp1252')
-        with patch('client.fanserver_test.prepare_context', return_value=context), +             patch('client.fanserver_test.authenticate') as authenticate:
-            authenticate.side_effect = RuntimeError('stop')
-            with self.assertRaises(RuntimeError):
-                run_test('external', 'user', 'password', persona_id=9)
+        with patch('client.fanserver_test.prepare_context', return_value=context):
+            with patch('client.fanserver_test.authenticate') as authenticate:
+                authenticate.side_effect = RuntimeError('stop')
+                with self.assertRaises(RuntimeError):
+                    run_test('external', 'user', 'password', persona_id=9)
         # authenticate is called after authorization stage is recorded
         authenticate.assert_called_once()
 
@@ -73,8 +74,9 @@ class FanServerTestTests(unittest.TestCase):
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
             certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
             fetch_garage=False, catalogue=None, text_encoding='cp1252')
-        with patch('client.fanserver_test.prepare_context', return_value=context), +             patch('client.fanserver_test.authenticate') as authenticate:
-            result = run_test('external', 'user', 'password', cancelled=lambda: True)
+        with patch('client.fanserver_test.prepare_context', return_value=context):
+            with patch('client.fanserver_test.authenticate') as authenticate:
+                result = run_test('external', 'user', 'password', cancelled=lambda: True)
         self.assertTrue(result['cancelled'])
         self.assertEqual(result['last_stage'], 'preflight')
         authenticate.assert_not_called()
