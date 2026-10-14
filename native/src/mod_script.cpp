@@ -151,12 +151,19 @@ int emit_note(lua_State* state) {
 int initialize(lua_State* state) {
     // Host inputs are arguments to this protected initialization call.
     luaL_requiref(state, LUA_GNAME, luaopen_base, 1); lua_pop(state, 1);
-    for (const char* name : {"dofile", "loadfile", "load", "print", "warn", "collectgarbage", "pcall", "xpcall"}) {
+    // Lua disables instruction hooks inside __gc. Prevent script-created
+    // finalizers, including ones that would run when this state is closed.
+    for (const char* name : {"dofile", "loadfile", "load", "print", "warn", "collectgarbage", "pcall", "xpcall", "setmetatable", "getmetatable"}) {
         lua_pushnil(state); lua_setglobal(state, name);
     }
     luaL_requiref(state, LUA_MATHLIBNAME, luaopen_math, 1); lua_pop(state, 1);
     luaL_requiref(state, LUA_STRLIBNAME, luaopen_string, 1); lua_pop(state, 1);
-    lua_getglobal(state, "string"); lua_pushnil(state); lua_setfield(state, -2, "dump"); lua_pop(state, 1);
+    lua_getglobal(state, "string");
+    // Pattern backtracking runs inside C without VM instruction hooks.
+    for (const char* name : {"dump", "find", "match", "gmatch", "gsub"}) {
+        lua_pushnil(state); lua_setfield(state, -2, name);
+    }
+    lua_pop(state, 1);
     luaL_requiref(state, LUA_TABLIBNAME, luaopen_table, 1); lua_pop(state, 1);
     luaL_requiref(state, LUA_UTF8LIBNAME, luaopen_utf8, 1); lua_pop(state, 1);
     lua_createtable(state, 0, 7);

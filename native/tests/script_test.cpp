@@ -19,10 +19,18 @@ int main() {
     require(mco::run_script("assert(io == nil and os == nil and package == nil "
                             "and debug == nil and dofile == nil and loadfile == nil "
                             "and load == nil and pcall == nil and xpcall == nil "
-                            "and coroutine == nil and string.dump == nil)", 1000).success,
+                            "and coroutine == nil and string.dump == nil "
+                            "and setmetatable == nil and getmetatable == nil)", 1000).success,
             "host access and exception catching must be unavailable");
     require(!mco::run_script("io.open('secret', 'r')", 100).success,
             "file access must fail");
+    require(!mco::run_script("setmetatable({}, {__gc=function() while true do end end})", 100).success,
+            "script finalizers must not bypass the budget during state teardown");
+    require(mco::run_script("assert(string.find == nil and string.match == nil "
+                            "and string.gmatch == nil and string.gsub == nil)", 1000).success,
+            "pattern APIs must be unavailable outside the VM budget");
+    require(!mco::run_script("string.find(string.rep('a',1000), string.rep('a*',30)..'b')", 1000).success,
+            "adversarial C pattern backtracking must fail before execution");
     const auto memory = mco::run_script("local s = string.rep('x', 16 * 1024 * 1024)", 1000);
     require(!memory.success && memory.error.find("memory") != std::string::npos,
             "oversized allocation must fail without crashing");

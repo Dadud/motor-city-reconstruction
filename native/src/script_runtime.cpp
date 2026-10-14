@@ -56,7 +56,8 @@ int initialize(lua_State* state) {
     // Prevent dynamic loading, host output, collection controls, and catching a
     // budget exception in an endless protected-call loop. No coroutine library.
     for (const char* name : {"dofile", "loadfile", "load", "print", "warn",
-                             "collectgarbage", "pcall", "xpcall"}) {
+                             "collectgarbage", "pcall", "xpcall",
+                             "setmetatable", "getmetatable"}) {
         remove_global(state, name);
     }
     luaL_requiref(state, LUA_MATHLIBNAME, luaopen_math, 1);
@@ -65,8 +66,11 @@ int initialize(lua_State* state) {
     lua_pop(state, 1);
     // Binary serialization exposes VM bytecode rather than the script API.
     lua_getglobal(state, LUA_STRLIBNAME);
-    lua_pushnil(state);
-    lua_setfield(state, -2, "dump");
+    // Pattern backtracking executes in C, outside the instruction budget.
+    for (const char* name : {"dump", "find", "match", "gmatch", "gsub"}) {
+        lua_pushnil(state);
+        lua_setfield(state, -2, name);
+    }
     lua_pop(state, 1);
     luaL_requiref(state, LUA_TABLIBNAME, luaopen_table, 1);
     lua_pop(state, 1);
@@ -76,7 +80,8 @@ int initialize(lua_State* state) {
 }
 
 ScriptResult failure(lua_State* state) {
-    const char* message = lua_tostring(state, -1);
+    const char* message = lua_type(state, -1) == LUA_TSTRING
+        ? lua_tostring(state, -1) : nullptr;
     return {false, message != nullptr ? message : "script failed"};
 }
 

@@ -75,8 +75,11 @@ is shared by initialization and event execution and must be 1..100000000. Like
 the existing research runtime, it counts Lua instructions, not wall time inside
 library calls. Only textual chunks are accepted. Base/math/string/table/UTF-8
 libraries are restricted; file/process/package/debug/coroutine access, dynamic
-loaders, collection controls, host printing, exception-catching functions and
-string bytecode dumping are unavailable. Raw pointers used internally by the
+loaders, collection controls, metatable access, host printing, exception-catching functions and
+string bytecode dumping are unavailable. `string.find`, `match`, `gmatch` and
+`gsub` are also unavailable: pattern backtracking executes in C outside VM hooks.
+Metatable access prevents user-created finalizers, whose Lua execution disables
+hooks during state cleanup. Raw pointers used internally by the
 host are never exposed to Lua. Returned entries and notes are owned C++ values.
 
 The tests exercise seeded/scripted registration, deterministic ordering, separate

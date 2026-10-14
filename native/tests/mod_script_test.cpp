@@ -13,7 +13,8 @@ int main() {
             assert(mco.api_version == 'script-alpha-1')
             assert(io == nil and os == nil and package == nil and debug == nil)
             assert(load == nil and dofile == nil and pcall == nil and coroutine == nil)
-            assert(string.dump == nil)
+            assert(string.dump == nil and setmetatable == nil and getmetatable == nil)
+            assert(string.find == nil and string.match == nil and string.gmatch == nil and string.gsub == nil)
             mco.register_resource('ui', 'example.garage:title', 'Original garage')
             mco.on('inspect', function(event)
                 assert(event.offline and event.name == 'inspect')
@@ -69,6 +70,10 @@ int main() {
     require(!run(std::string("\x1bLua", 4)).success, "bytecode must fail");
     require(!run("error(42)").success && !run("error({})").success,
             "non-string error objects must fail without host coercion");
+    require(!run("setmetatable({}, {__gc=function() while true do end end})", 100).success,
+            "finalizers must be rejected before unbounded state teardown");
+    require(!run("string.find(string.rep('a',1000), string.rep('a*',30)..'b')", 1000).success,
+            "pattern backtracking must be unavailable outside the VM budget");
     require(!run("", 0).success, "zero budget must fail");
     require(!run(std::string(1024 * 1024 + 1, ' ')).success, "source bound must fail");
     require(run("").success, "fresh execution should recover after failures");
