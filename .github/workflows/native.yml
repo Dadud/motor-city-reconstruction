@@ -30,6 +30,10 @@ jobs:
         run: python -m tools.native_suspension_load_compare build/native/mco_suspension_load_compare
       - if: runner.os == 'Linux'
         run: python -m tools.native_steering_response_compare build/native/mco_steering_response_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_tire_update_compare build/native/mco_tire_update_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_tire_update_compare build/native/Release/mco_tire_update_compare.exe
       - if: runner.os == 'Windows'
         run: python -m tools.native_steering_response_compare build/native/Release/mco_steering_response_compare.exe
       - if: runner.os == 'Windows'

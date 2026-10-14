@@ -34,7 +34,7 @@ outside the published repository.
 | Owned and modified vehicles | Partial: enrichment/discovery and verified insertion, pruning, ordering, linking and numeric totals connected in the [postload sequence](owned-postload.md); [outer descriptions](calculations/owned-component-descriptions.md) retain explicit leaf/localization inputs | Recover part-specific descriptions and localized labels, complete DB loading/handoff, mechanical aggregates and online refresh; verify integration on actual owned cars | Load an actually modified owned car without stock substitution; compare complete hierarchy, attachments and derived values |
 | Engine calculations | Partial: standalone unboosted nineteen-knot core matches 46 complete original records; integration matches 44,635 original steps; [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Boost, native abort semantics, final curve corrections and wider domain coverage | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
 | Motion and support geometry | Recovered bounded calculations: pose updates and contact geometry; [motion](calculations/vehicle-motion.md) | Confirm full call ordering, units, wheel sizing and stance in the integrated simulation | Original versus reconstruction pose/contact traces agree under documented tolerances and identical inputs |
-| Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation, [wheel curve consumers](calculations/tire-response-curves.md), [resistance contribution](calculations/rolling-resistance.md) and stock input bridge; full integrated force model unknown | Follow [driving recovery map](driving-recovery-map.md): complete load transfer, tire update, steering, gears/clutch, differential, surfaces and aero | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
+| Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation, [combined steering/tire update](calculations/tire-update.md), [wheel curve consumers](calculations/tire-response-curves.md), [resistance contribution](calculations/rolling-resistance.md) and stock input bridge; full integrated force model unknown | Follow [driving recovery map](driving-recovery-map.md): input and curve producers, integrated load sequence, gears/clutch, differential, brakes, surfaces and aero | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
 | Collisions | Unknown complete object/vehicle response | Recover broad/narrow phase, contact impulses, damage, recovery and update order | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
 | Offline driving | Prototype: authored 120 Hz terrain-following bicycle model; `driving.py` | Replace forces only after original calculations are verified; retain harness for comparison | Recovered model passes repeated original driving scenarios with reproducible outcomes |
 | Race rules and results | Prototype: inferred course closure and ordered gates; `racing.py` | Recover actual event definitions, start/finish rules, penalties, standings and result consumers | Original-equivalent starts, checkpoints, finish classification and timing across event types |
@@ -73,8 +73,17 @@ and full caller/scheduler behavior. Real support/input production and complete
 tire/drivetrain integration remain required.
 The [speed-dependent steering response](calculations/steering-response.md) now
 matches 2,064 complete original-function cases and its C++ port matches the
-Python corpus. Controller/keyboard input production, maximum steering and the
-enclosing wheel geometry/slip update remain required.
+Python corpus. The [combined steering/tire update](calculations/tire-update.md)
+now matches 3,948 complete original-function cases with zero observed absolute
+error; its C++ port matches that Python corpus exactly. Original steering,
+trigonometry, both curves and the per-wheel predicate execute in the oracle;
+only virtual interface operation 5 is supplied. The
+[predicate](calculations/vehicle-gate.md) separately passes 50 original comparisons.
+Controller input, maximum steering, curve/secondary-angle/surface producers,
+predicate scheduling and integrated driving remain required. All 39 local
+native checks pass; Python runs 639 tests, with 632 passing and seven skipped.
+These are local Windows results; Linux checks are configured in CI, not claimed
+as a completed gameplay acceptance run.
 
 Further networking recovery: [channel argument initialization](lobby-channel-record.md)
 matches 36 original constructor and 36 record-copy cases, preserving allocation

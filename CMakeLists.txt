@@ -29,6 +29,7 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/wheel_speed.cpp
   native/src/suspension_load_correction.cpp
   native/src/steering_response.cpp
+  native/src/tire_update.cpp
   native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp native/src/lobby_channel_wait.cpp
   native/src/async_worker_record.cpp native/src/room_join_request.cpp native/src/room_join_result.cpp
   native/src/async_worker_completion.cpp
@@ -76,6 +77,11 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_tire_update_test native/tests/tire_update_test.cpp)
+  target_link_libraries(mco_tire_update_test PRIVATE mco_core)
+  add_test(NAME tire_update COMMAND mco_tire_update_test)
+  add_executable(mco_tire_update_compare native/tests/tire_update_compare.cpp)
+  target_link_libraries(mco_tire_update_compare PRIVATE mco_core)
   add_executable(mco_steering_response_test native/tests/steering_response_test.cpp)
   target_link_libraries(mco_steering_response_test PRIVATE mco_core)
   add_test(NAME steering_response COMMAND mco_steering_response_test)

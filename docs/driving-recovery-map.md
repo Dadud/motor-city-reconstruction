@@ -124,8 +124,12 @@ The [initial normal loads](calculations/normal-load.md),
 verified and ported. The [shared-state sequence](wheel-load-sequence.md) checks
 load handoff through three stages, while retaining explicit caller exclusions.
 The [speed-dependent steering input helper](calculations/steering-response.md)
-also has complete original-function comparisons and a native port. It supplies
-input shaping, not the full wheel-angle or tire-slip update.
+also has complete original-function comparisons and a native port. The
+[combined tire update](calculations/tire-update.md) now connects input shaping,
+front/rear steering geometry, slip, response curves and force gates. Its
+[per-wheel predicate](calculations/vehicle-gate.md) has a bounded original
+comparison, while the virtual observation producer and counter scheduling
+remain external. Full vehicle integration and authentic-car traces remain open.
 
 First compare isolated routines against bounded original execution, recording
 every replaced call, original input/output image, rounding mode, and tolerance.
