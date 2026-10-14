@@ -30,6 +30,7 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/room_disconnect.cpp
   native/src/room_disconnect_flow.cpp
   native/src/room_selection.cpp
+  native/src/game_start_flow.cpp
   native/src/lobby_channel_close.cpp
   native/src/mcots_framing.cpp native/src/nps_framing.cpp native/src/owned_dependencies.cpp native/src/owned_parent_links.cpp
   native/src/part_type_cache.cpp native/src/owned_induction.cpp native/src/owned_insertion.cpp
@@ -68,6 +69,11 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_game_start_flow_test native/tests/game_start_flow_test.cpp)
+  target_link_libraries(mco_game_start_flow_test PRIVATE mco_core)
+  add_test(NAME game_start_flow COMMAND mco_game_start_flow_test)
+  add_executable(mco_game_start_flow_compare native/tests/game_start_flow_compare.cpp)
+  target_link_libraries(mco_game_start_flow_compare PRIVATE mco_core)
   add_executable(mco_room_selection_test native/tests/room_selection_test.cpp)
   target_link_libraries(mco_room_selection_test PRIVATE mco_core)
   add_test(NAME room_selection COMMAND mco_room_selection_test)

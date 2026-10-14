@@ -170,8 +170,13 @@ an explicit authorization denial instead of a protocol/data failure. Binary
 login, personas, lobby and garage were not reached; successful live acceptance
 remains unproved, and server version remains unreported.
 
-Current batch verification on Windows: 595 Python tests (588 pass, seven skipped)
-and 30 native checks pass, plus the separately recorded original comparisons above. Linux and live
+The [game-start completion and room polling controller](game-start-flow.md) now
+matches 208 bounded original-function scenarios and 63 C++/Python action traces.
+The start-request wire layout, live worker/cache driver and session integration
+remain unresolved; this does not complete race entry.
+
+Current batch verification on Windows: 601 Python tests (594 pass, seven skipped)
+and 31 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in

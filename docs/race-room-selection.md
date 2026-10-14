@@ -119,6 +119,9 @@ These state numbers are preserved as observed values; their UI labels are not
 assigned by this research. Session setup, start request wire semantics, server
 state updates and race synchronization remain separate recovery work.
 
+The start-and-wait controller is now implemented and compared separately in
+[game-start flow](game-start-flow.md). Its driver and wire request remain incomplete.
+
 ## Evidence and comparison scope
 
 | Observation | REA Evidence |
