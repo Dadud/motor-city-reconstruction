@@ -116,3 +116,28 @@ ordering and upstream opaque fields, integrate cancellation/timeouts with the
 listener, verify UDP fallback and patched TCP preferences, and compare live
 original/reconstructed joins. Static dispatcher task kinds alone do not prove
 the race-entry sequence or fan-server acceptance.
+
+## Rejection and pending reply slot
+
+`ChannelJoinRejection` decodes opcode `0x213` as one big-endian uint32.
+The original decoder's format at `0x8e0668` is `l`; format-byte evidence is
+`ev_4b96b3648cbaa007229a29c628879813b217f444e2c6700b2ce56ada07c3ccbc`.
+The consumer preserves the raw status, returns its signed 32-bit interpretation,
+and converts `0xffffffff` to `-23`. Other error meanings remain opaque.
+
+`ChannelReplyMailbox` models a single pending slot. The original listener routes
+`0x213`, `0x214` and `0x215` to `0x74632d`; it accepts a reply only when the
+server object's waiting field (`0x194`) is nonzero and completed field (`0x190`)
+is zero, then stores the reply at `0x18c` and sets completed to one. The routing
+table evidence is `ev_844ba77da77f1074aa16e5f3f7d0b12538745b017ab641c32c4010c2cfc102b0`;
+branch evidence is `ev_ff2223ceaf87460d728cb9d1eb234786aff6a33424f4d775f29189420d31c87d`.
+These branches were inspected as original x86 instructions because Ghidra did
+not recover the enclosing handler as a function.
+
+The portable model rejects overlapping begins and malformed exact-size payloads
+as defensive boundaries. Those checks are authored safeguards, not recovered
+original error returns. Its input is an already extracted opcode payload, not an
+encrypted or header-bearing network packet. It has no sockets, timeout scheduler,
+cancellation or reconnect handling and is not yet connected to live room entry.
+Five focused tests cover status boundaries, unsolicited/duplicate replies,
+malformed replies and reuse of the pending slot. Live acceptance remains pending.

@@ -21,7 +21,7 @@ if(MCO_BUILD_PLATFORM)
 endif()
 
 # This target contains recovered calculations, not prototype vehicle handling.
-add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp native/src/lobby_channel_codec.cpp
+add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp
   native/src/mcots_framing.cpp native/src/nps_framing.cpp native/src/owned_dependencies.cpp native/src/owned_parent_links.cpp
   native/src/part_type_cache.cpp native/src/owned_induction.cpp native/src/owned_insertion.cpp
   native/src/owned_aggregates.cpp native/src/owned_ordering.cpp native/src/owned_postload.cpp
@@ -59,6 +59,11 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_lobby_channel_record_test native/tests/lobby_channel_record_test.cpp)
+  target_link_libraries(mco_lobby_channel_record_test PRIVATE mco_core)
+  add_test(NAME lobby_channel_record COMMAND mco_lobby_channel_record_test)
+  add_executable(mco_lobby_channel_record_compare native/tests/lobby_channel_record_compare.cpp)
+  target_link_libraries(mco_lobby_channel_record_compare PRIVATE mco_core)
   add_executable(mco_nps_framing_test native/tests/nps_framing_test.cpp)
   target_link_libraries(mco_nps_framing_test PRIVATE mco_core)
   add_test(NAME nps_framing COMMAND mco_nps_framing_test)

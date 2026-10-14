@@ -151,7 +151,7 @@ class TesterWindow:
                 if kind == "stage":
                     # Only the orchestration module's fixed stage names are shown.
                     stages = {"preflight": "Configuration checked", "authorization": "Authorizing account", "login": "Checking binary account login",
-                              "personas": "Reading personas", "persona": "Selecting persona", "lobby": "Connecting to lobby", "primary": "Connecting to primary service", "garage": "Reading persona garage data", "race_entry": "Validating recovered race-entry path", "complete": "Test complete"}
+                              "personas": "Reading personas", "persona": "Selecting persona", "lobby": "Connecting to lobby", "primary": "Connecting to primary service", "garage": "Reading persona garage data", "race_entry": "Reporting race-entry recovery gaps", "complete": "Test complete"}
                     label = stages.get(value) if isinstance(value, str) else None
                     if label:
                         self.status.set(label + "…")
@@ -201,6 +201,8 @@ class TesterWindow:
         if 'failure_code' in self.report:
             self.write(f"Stopped at: {self.report['last_stage']}")
             self.write(f"Failure: {self.report['failure_code']}")
+            from tools.fan_server_guidance import failure_guidance
+            self.write(failure_guidance(self.report))
         # Deliberately exclude arbitrary text, URLs, account objects and exception repr.
         labels = {"success": "Test succeeded", "cancelled": "Cancelled", "account_authenticated": "Account authenticated",
                   "lobby_connected": "Lobby connected", "primary_connected": "Primary connected", "garage_loaded": "Garage data received",

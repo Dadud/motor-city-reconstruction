@@ -2,17 +2,78 @@ import contextlib
 import getpass
 import io
 import unittest
+import tempfile
+import json
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
 from tools.fan_server_check import main
 from client.server_discovery import AuthSettings, Endpoint, Shard
+from client.fanserver_test import FanServerSetupError
 
 
 class FanServerCheckTests(unittest.TestCase):
     shard = Shard('MotorCity Revival', '', 44, Endpoint('host', 1), Endpoint('host', 2),
                   Endpoint('host', 3), None, ())
     context = SimpleNamespace(shard=shard, auth=AuthSettings('host', 'AuthLogin'))
+
+    def test_interrupt_exports_last_attempted_live_stage(self):
+        def interrupt(*args, on_stage, **kwargs):
+            on_stage('lobby')
+            raise KeyboardInterrupt()
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / 'report.json'
+            with patch('tools.fan_server_check.prepare_context', return_value=self.context), \
+                 patch('tools.fan_server_check.run_test', side_effect=interrupt), \
+                 patch('tools.fan_server_check.getpass.getpass', side_effect=['user', 'password']), \
+                 patch('tools.fan_server_check.sys.stdin.isatty', return_value=True), \
+                 contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                status = main(['external', '--shard-id', '44', '--login', '--report', str(report_path)])
+            report = json.loads(report_path.read_text(encoding='utf-8'))
+        self.assertEqual(status, 2)
+        self.assertEqual(report['last_stage'], 'lobby')
+        self.assertTrue(report['cancelled'])
+
+    def test_failed_live_report_export_excludes_private_fields(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / 'report.json'
+            with patch('tools.fan_server_check.prepare_context', return_value=self.context), \
+                 patch('tools.fan_server_check.run_test', return_value={
+                     'success': False, 'last_stage': 'garage', 'failure_code': 'protocol_or_data_error',
+                     'selected_persona_id': 923, 'password': 'secret', 'shard_name': 'private'}), \
+                 patch('tools.fan_server_check.getpass.getpass', side_effect=['user', 'password']), \
+                 patch('tools.fan_server_check.sys.stdin.isatty', return_value=True), \
+                 contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as errors:
+                status = main(['external', '--shard-id', '44', '--login', '--report', str(report_path)])
+            report = json.loads(report_path.read_text(encoding='utf-8'))
+        self.assertEqual(status, 1)
+        self.assertEqual(report['last_stage'], 'garage')
+        self.assertEqual(report['failure_code'], 'protocol_or_data_error')
+        self.assertNotIn('selected_persona_id', report)
+        self.assertNotIn('secret', repr(report))
+        self.assertNotIn('private', repr(report))
+        self.assertIn('reconstruction incompatibility', errors.getvalue())
+
+    def test_preflight_setup_failure_exports_safe_report(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / 'report.json'
+            with patch('tools.fan_server_check.prepare_context', side_effect=FanServerSetupError('ticket=secret')), \
+                 contextlib.redirect_stdout(io.StringIO()) as output, contextlib.redirect_stderr(io.StringIO()) as errors:
+                status = main(['external', '--shard-id', '44', '--report', str(report_path)])
+            report = json.loads(report_path.read_text(encoding='utf-8'))
+        self.assertEqual(status, 1)
+        self.assertEqual(report['last_stage'], 'preflight')
+        self.assertEqual(report['failure_code'], 'setup_failed')
+        self.assertNotIn('secret', output.getvalue() + errors.getvalue() + repr(report))
+
+    def test_unwritable_report_returns_failure_without_printing_private_path(self):
+        with patch('tools.fan_server_check.prepare_context', return_value=self.context), \
+             patch('tools.fan_server_check.Path.write_text', side_effect=OSError('private-path')), \
+             contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as errors:
+            status = main(['external', '--shard-id', '44', '--report', 'report.json'])
+        self.assertEqual(status, 1)
+        self.assertNotIn('private-path', errors.getvalue())
 
     def test_failed_live_report_returns_failure_status(self):
         with patch('tools.fan_server_check.prepare_context', return_value=self.context), \

@@ -4,8 +4,10 @@ import getpass
 import json
 import sys
 import warnings
+from pathlib import Path
 
-from client.fanserver_test import FanServerSetupError, prepare_context, run_test_report as run_test
+from client.fanserver_test import STAGES, FanServerSetupError, prepare_context, run_test_report as run_test, shareable_report
+from tools.fan_server_guidance import failure_guidance
 
 
 class PrivateArgumentParser(argparse.ArgumentParser):
@@ -31,6 +33,17 @@ def _pick_persona(personas):
         print('Enter the listed number.')
 
 
+def _export_report(destination, report):
+    if destination is None:
+        return True
+    try:
+        destination.write_text(json.dumps(shareable_report(report), indent=2) + '\n', encoding='utf-8')
+        return True
+    except OSError:
+        print('Could not save the safe report. Choose a writable report path.', file=sys.stderr)
+        return False
+
+
 def main(argv=None):
     parser = PrivateArgumentParser(description=__doc__)
     parser.add_argument('data', help='external original installation')
@@ -49,13 +62,21 @@ def main(argv=None):
                         help='report race-entry research gaps after login; does not join a race')
     parser.add_argument('--catalogue', action='store_true',
                         help='enrich owned parts when Online.mdb is installed')
+    parser.add_argument('--report', type=Path,
+                        help='save an allowlisted JSON report without account or server identifiers')
     args = parser.parse_args(argv)
     report = {
         'scope': 'configured shard preflight and optional live fan-server flow',
         'live_fan_server_tested': False,
         'server_version': 'not reported',
+        'last_stage': 'preflight',
     }
     username = password = None
+
+    def stage_changed(stage):
+        if stage in STAGES:
+            report['last_stage'] = stage
+
     try:
         context = prepare_context(
             args.data,
@@ -100,6 +121,7 @@ def main(argv=None):
                 use_catalogue=args.catalogue,
                 probe_race_entry=args.probe_race_entry,
                 on_personas=_pick_persona if needs_persona else None,
+                on_stage=stage_changed,
             )
             report['live_fan_server_tested'] = True
             report.update({key: result.get(key) for key in (
@@ -115,16 +137,27 @@ def main(argv=None):
                 'missing_authenticated_arguments', 'protocol_selection_unverified',
             )})
         print(json.dumps(report, indent=2))
+        report_saved = _export_report(args.report, report)
         if args.login and report.get('success') is not True:
+            print(failure_guidance(report), file=sys.stderr)
             return 2 if report.get('cancelled') else 1
-        return 0
+        return 0 if report_saved else 1
     except KeyboardInterrupt:
+        report.update(success=False, cancelled=True)
+        print(json.dumps(shareable_report(report), indent=2))
+        _export_report(args.report, report)
         print('Fan-server check cancelled.', file=sys.stderr)
         return 2
-    except FanServerSetupError as error:
-        print(f'Fan-server check setup: {error}.', file=sys.stderr)
+    except FanServerSetupError:
+        report.update(success=False, failure_code='setup_failed')
+        print(json.dumps(shareable_report(report), indent=2))
+        _export_report(args.report, report)
+        print('Fan-server check setup failed. Check the installation and configured service; use the GUI to select a persona.', file=sys.stderr)
         return 1
     except Exception as error:
+        report.update(success=False, failure_code='network_or_file_error' if isinstance(error, OSError) else 'protocol_or_data_error')
+        print(json.dumps(shareable_report(report), indent=2))
+        _export_report(args.report, report)
         print(f'Fan-server check failed ({type(error).__name__}).', file=sys.stderr)
         return 1
     finally:

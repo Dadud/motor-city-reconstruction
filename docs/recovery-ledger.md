@@ -81,6 +81,13 @@ preflight; authenticated lobby/garage acceptance and live racing remain unverifi
 
 ## Verification record requirements
 
+The [native channel-record port](native-lobby-channel-record.md) now belongs to
+the CMake build: 192 constructor and 224 record images match the original-verified
+Python implementation, with six invalid runner sizes rejected. All 19 local
+Windows native checks pass. The [channel reply codec](lobby-channel-codec.md)
+includes opaque `0x213` status decoding and a bounded single-pending-reply model;
+live orchestration and authenticated room arguments remain incomplete.
+
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded
 original-CPU cases include the actual type-cache helper. Root selection and

@@ -57,6 +57,17 @@ login. It reports missing task ordering and authenticated arguments; it does not
 construct or execute a race-entry sequence.
 
 On Windows you can use the same flags through `test-fan-server-live.cmd`.
+When launched from a terminal, append options such as
+`--persona-id 123 --report fan-server-test-report.json`. The launcher retains
+the check's exit status after its pause. `MCO_DATA` can also be set in the
+launching terminal to override the default installation folder.
+
+`--report PATH` saves a shareable JSON file on success or failure, including
+preflight failures. It contains fixed stage/category labels, booleans and counts,
+with no account names, persona IDs, server addresses or private exception text.
+Choose a writable destination; this option replaces any report at that path.
+The terminal's ordinary JSON includes local shard and persona identifiers, so
+share the exported report when asking for help.
 
 Use --persona-id when you already know the persona. Add --catalogue when Online.mdb is installed.
 Preflight without --login validates discovery, certificate pin and external identity only.
@@ -78,7 +89,7 @@ Preflight without --login validates discovery, certificate pin and external iden
 | `race_entry_probe_passed` / `room_channel_probe_passed` | Currently false: race/room entry remains incomplete |
 | `missing_task_order` / `missing_authenticated_arguments` | Outstanding recovery work (with `--probe-race-entry`) |
 | `protocol_selection_unverified` | Patch settings have not been proved to select a particular channel protocol |
-| `positional_updates_hz` | Should match installed patch (often **32** on TCP) |
+| `positional_updates_hz` | Declared installed patch rate (often **32**); does not prove actual network timing |
 | `last_stage` | Final stage label; `complete` on success |
 
 Race-entry and room-channel probes **do not join a race**. They report research
@@ -88,12 +99,16 @@ the original runtime sequence, complete room arguments or server compatibility.
 If something fails, note `last_stage` and which booleans stayed false. Credentials are never included in the JSON output.
 The command-line check returns a nonzero exit status for failed or cancelled live
 tests. Error JSON includes `failure_code` and `last_stage` when the flow fails.
+The GUI and terminal provide fixed next-step guidance. For authorization denial,
+check the account in the original client; for connection/timeout failures, compare
+server reachability from the same computer. Protocol/data failures may be
+reconstruction incompatibilities: save the failed-stage report for investigation.
 
 ## Current local verification
 
 On Windows, the installed configuration passes unauthenticated preflight for
 MotorCity Revival shard 44. The tester window initializes and displays a failed
-stage with report export enabled. The complete Python suite passes 513 tests,
+stage with report export enabled. The complete Python suite passes 525 tests,
 including stage retention, credential exclusion and failure exit-status checks.
 These checks do not constitute an authenticated account run. Your private local
 account test is still needed; server version remains unreported.

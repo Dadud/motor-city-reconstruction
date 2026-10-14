@@ -1,7 +1,7 @@
-"""Recovered channel-add payload serializer and success reply fields.
+"""Recovered channel-add payload serializer and bounded reply fields.
 
 0x7e4c30 serializes native record offsets using 0x7e4140; 0x738f00 sends
-opcode 0x106 and consumes 0x214/0x215. Unnamed native fields remain opaque.
+opcode 0x106 and consumes 0x213/0x214/0x215. Unnamed native fields remain opaque.
 This codec does not construct a complete room argument or open a live channel.
 """
 from dataclasses import dataclass, field
@@ -59,3 +59,62 @@ class ChannelJoinSuccess:
         if not isinstance(frame.body, bytes) or len(frame.body) != 8:
             raise ValueError('channel success requires two uint32 fields')
         return cls(frame.message_id, *struct.unpack('>II', frame.body))
+
+
+@dataclass(frozen=True)
+class ChannelJoinRejection:
+    """Opaque server status; only the original -1 conversion is interpreted."""
+    status: int
+
+    @classmethod
+    def from_frame(cls, frame):
+        if not isinstance(frame, Frame) or frame.message_id != 0x213:
+            raise ValueError('expected channel rejection 0x213')
+        if not isinstance(frame.body, bytes) or len(frame.body) != 4:
+            raise ValueError('channel rejection requires one uint32 field')
+        return cls(struct.unpack('>I', frame.body)[0])
+
+    @property
+    def native_result(self):
+        if self.status == 0xffffffff:
+            return -23
+        return self.status if self.status < 0x80000000 else self.status - 0x100000000
+
+
+class ChannelReplyMailbox:
+    """Bounded model of the single pending reply slot, without socket I/O.
+
+    A caller must supply an already extracted opcode payload. The original
+    listener does not correlate these replies using a wire transaction ID.
+    Timeout, cancellation and connection ownership remain outside this model.
+    """
+    def __init__(self):
+        self.waiting = False
+        self.completed = False
+        self.reply = None
+
+    def begin(self):
+        if self.waiting:
+            raise RuntimeError('a channel reply is already pending')
+        self.reply = None
+        self.completed = False
+        self.waiting = True
+
+    def receive(self, frame):
+        if not isinstance(frame, Frame):
+            raise TypeError('expected a decoded frame')
+        if frame.message_id not in (0x213, 0x214, 0x215):
+            return False
+        if not self.waiting or self.completed:
+            return False
+        reply = (ChannelJoinRejection.from_frame(frame) if frame.message_id == 0x213
+                 else ChannelJoinSuccess.from_frame(frame))
+        self.reply = reply
+        self.completed = True
+        return True
+
+    def take(self):
+        if not self.waiting or not self.completed:
+            raise RuntimeError('no completed channel reply')
+        self.waiting = False
+        return self.reply
