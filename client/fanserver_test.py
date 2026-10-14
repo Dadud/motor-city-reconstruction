@@ -65,6 +65,11 @@ def _emit(on_stage, stage: str) -> None:
         on_stage(stage)
 
 
+def _set_stage(report: dict, stage: str, on_stage) -> None:
+    report['last_stage'] = stage
+    _emit(on_stage, stage)
+
+
 def _cancelled(cancelled) -> bool:
     return bool(cancelled()) if callable(cancelled) else bool(cancelled)
 
@@ -228,11 +233,11 @@ def run_test(
     report['shard_name'] = context.shard.name
     report['shard_id'] = context.shard.identifier
     report['preflight_passed'] = True
-    _emit(on_stage, 'preflight')
+    _set_stage(report, 'preflight', on_stage)
     if _cancelled(cancelled):
         report['cancelled'] = True
         return report
-    _emit(on_stage, 'authorization')
+    _set_stage(report, 'authorization', on_stage)
     account = authenticate(
         context.root,
         context.shard,
@@ -242,13 +247,13 @@ def run_test(
         password,
     )
     report['account_authenticated'] = True
-    _emit(on_stage, 'login')
-    _emit(on_stage, 'personas')
+    _set_stage(report, 'login', on_stage)
+    _set_stage(report, 'personas', on_stage)
     report['persona_count'] = len(account.personas.entries)
     if _cancelled(cancelled):
         report['cancelled'] = True
         return report
-    _emit(on_stage, 'persona')
+    _set_stage(report, 'persona', on_stage)
     selected = _select_persona(
         account.personas,
         context.shard.identifier,
@@ -260,17 +265,17 @@ def run_test(
         report['cancelled'] = True
         return report
     report['selected_persona_id'] = selected
-    _emit(on_stage, 'lobby')
+    _set_stage(report, 'lobby', on_stage)
     with account.enter_connections(
         selected,
         hostname=context.hostname,
         ip_address=context.ip_address,
     ) as connections:
         report['lobby_connected'] = True
-        _emit(on_stage, 'primary')
+        _set_stage(report, 'primary', on_stage)
         report['primary_connected'] = True
         if context.fetch_garage:
-            _emit(on_stage, 'garage')
+            _set_stage(report, 'garage', on_stage)
             client = MCOTSDataClient(connections.primary.session, first_transaction=2)
             valuation_rates = None
             if context.catalogue is not None:
@@ -287,5 +292,5 @@ def run_test(
             report['part_seed_count'] = len(startup.part_seeds)
             report['part_slot_count'] = len(startup.part_slots)
     report['success'] = True
-    _emit(on_stage, 'complete')
+    _set_stage(report, 'complete', on_stage)
     return report

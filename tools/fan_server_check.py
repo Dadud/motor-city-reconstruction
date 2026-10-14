@@ -100,7 +100,7 @@ def main(argv=None):
             report.update({key: result.get(key) for key in (
                 'success', 'cancelled', 'account_authenticated', 'lobby_connected',
                 'primary_connected', 'garage_loaded', 'persona_count', 'garage_record_count',
-                'part_seed_count', 'part_slot_count', 'selected_persona_id',
+                'part_seed_count', 'part_slot_count', 'selected_persona_id', 'last_stage',
             )})
         print(json.dumps(report, indent=2))
         return 0
