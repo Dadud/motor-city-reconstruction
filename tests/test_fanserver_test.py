@@ -31,7 +31,7 @@ class FanServerTestTests(unittest.TestCase):
         context = SimpleNamespace(
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
             certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
-            fetch_garage=True, catalogue=None, text_encoding='cp1252')
+            fetch_garage=True, catalogue=None, text_encoding='cp1252', probe_race_entry=False)
         with patch('client.fanserver_test.prepare_context', return_value=context):
             with patch('client.fanserver_test.authenticate', return_value=account):
                 with patch('client.fanserver_test.MCOTSDataClient') as client_cls:
@@ -74,7 +74,7 @@ class FanServerTestTests(unittest.TestCase):
         context = SimpleNamespace(
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
             certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
-            fetch_garage=False, catalogue=None, text_encoding='cp1252')
+            fetch_garage=False, catalogue=None, text_encoding='cp1252', probe_race_entry=False)
         with patch('client.fanserver_test.prepare_context', return_value=context):
             with patch('client.fanserver_test.authenticate') as authenticate:
                 authenticate.side_effect = RuntimeError('stop')
@@ -87,7 +87,7 @@ class FanServerTestTests(unittest.TestCase):
         context = SimpleNamespace(
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
             certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
-            fetch_garage=False, catalogue=None, text_encoding='cp1252')
+            fetch_garage=False, catalogue=None, text_encoding='cp1252', probe_race_entry=False)
         with patch('client.fanserver_test.prepare_context', return_value=context):
             with patch('client.fanserver_test.authenticate') as authenticate:
                 result = run_test('external', 'user', 'password', cancelled=lambda: True)
@@ -99,7 +99,7 @@ class FanServerTestTests(unittest.TestCase):
         context = SimpleNamespace(
             root='external', shard=self.shard, auth=AuthSettings('host', 'AuthLogin'),
             certificate_sha1='A' * 40, hostname=b'host', ip_address=b'127.0.0.1',
-            fetch_garage=False, catalogue=None, text_encoding='cp1252')
+            fetch_garage=False, catalogue=None, text_encoding='cp1252', probe_race_entry=False)
         with patch('client.fanserver_test.prepare_context', return_value=context):
             with patch('client.fanserver_test.authenticate') as authenticate:
                 result = run_test('external', 'user', 'password', cancelled=lambda: True)
