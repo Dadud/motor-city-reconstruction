@@ -44,6 +44,28 @@ class FanServerCheckTests(unittest.TestCase):
         self.assertNotIn('private-', text)
         self.assertEqual(run_test.call_args.args[1:3], ('private-user', 'private-password'))
 
+    def test_probe_race_entry_flag_is_forwarded(self):
+        with patch('tools.fan_server_check.prepare_context', return_value=self.context):
+            with patch('tools.fan_server_check.run_test', return_value={
+                'success': True, 'cancelled': False, 'account_authenticated': True,
+                'lobby_connected': True, 'primary_connected': True, 'garage_loaded': False,
+                'race_entry_probe_passed': True, 'fast_join_tcp_preferred': True,
+                'positional_updates_hz': 32, 'update_interval_seconds': 1 / 32,
+                'recovered_task_kinds': [0, 5, 7, 8],
+            }) as run_test:
+                with patch('tools.fan_server_check.getpass.getpass',
+                           side_effect=['private-user', 'private-password']):
+                    with patch('tools.fan_server_check.sys.stdin.isatty', return_value=True):
+                        with contextlib.redirect_stdout(io.StringIO()) as output:
+                            status = main(['external', '--shard-id', '44', '--login',
+                                           '--persona-id', '9', '--probe-race-entry'])
+        self.assertEqual(status, 0)
+        text = output.getvalue()
+        self.assertIn('"probe_race_entry_requested": true', text)
+        self.assertIn('"race_entry_probe_passed": true', text)
+        self.assertIn('"update_interval_seconds"', text)
+        self.assertTrue(run_test.call_args.kwargs.get('probe_race_entry'))
+
     def test_private_transport_diagnostics_never_print(self):
         with patch('tools.fan_server_check.prepare_context',
                    side_effect=RuntimeError('https://host/?ticket=secret')):
