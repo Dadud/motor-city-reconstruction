@@ -198,9 +198,14 @@ class TesterWindow:
                 self.write(f"{label}: {'yes' if value else 'no'}")
             elif type(value) is int and value >= 0:
                 self.write(f"{label}: {value}")
+            elif type(value) is float and value > 0:
+                self.write(f"{label}: {value:.4f}")
         kinds = result.get('recovered_task_kinds')
         if isinstance(kinds, list) and kinds:
             self.write(f"Recovered race-entry task kinds: {', '.join(str(kind) for kind in kinds)}")
+        interval = result.get('update_interval_seconds')
+        if isinstance(interval, (int, float)) and interval > 0:
+            self.write(f"Configured update interval (seconds): {interval:.4f}")
         self.write("This checks protocol stages and data access; it does not certify racing or full game compatibility.")
 
 

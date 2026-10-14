@@ -107,7 +107,7 @@ def main(argv=None):
                 'primary_connected', 'garage_loaded', 'persona_count', 'garage_record_count',
                 'part_seed_count', 'part_slot_count', 'selected_persona_id', 'last_stage',
                 'race_entry_probe_passed', 'fast_join_tcp_preferred', 'positional_updates_hz',
-                'recovered_task_kinds',
+                'update_interval_seconds', 'recovered_task_kinds',
             )})
         print(json.dumps(report, indent=2))
         return 0

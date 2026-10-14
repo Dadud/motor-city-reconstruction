@@ -223,6 +223,7 @@ def run_test(
         'race_entry_probe_passed': False,
         'fast_join_tcp_preferred': None,
         'positional_updates_hz': None,
+        'update_interval_seconds': None,
         'recovered_task_kinds': [],
         'selected_persona_id': None,
         'shard_name': None,
@@ -308,6 +309,7 @@ def run_test(
             report['race_entry_probe_passed'] = probe['race_entry_probe_passed']
             report['fast_join_tcp_preferred'] = probe['fast_join_tcp_preferred']
             report['positional_updates_hz'] = probe['positional_updates_hz']
+            report['update_interval_seconds'] = probe['update_interval_seconds']
             report['recovered_task_kinds'] = probe['recovered_task_kinds']
     report['success'] = True
     _set_stage(report, 'complete', on_stage)

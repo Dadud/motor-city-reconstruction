@@ -1,7 +1,7 @@
 """Recovered plaintext lobby handshake followed by connection-local CBC frames."""
 import time
-from client.lobby_envelope import (encrypt_envelope, decrypt_envelope,
-                                   native_encrypts_message)
+from client.lobby_envelope import decrypt_envelope
+from client.lobby_send import prepare_outgoing_frame
 from client.lobby_login import LobbyLogin
 from client.lobby_response import (LobbyLoginSuccess, LobbyQueuePosition,
                                     native_connection_rejection)
@@ -36,12 +36,7 @@ class LobbyConnection:
         _timeout(timeout)
         if len(frame.encode()) > 60000:
             raise ValueError('lobby frame exceeds native receive limit')
-        if native_encrypts_message(frame.message_id):
-            outgoing = encrypt_envelope(frame, self._ciphers.send, padding=padding)
-        else:
-            if padding != b'':
-                raise ValueError('plaintext heartbeat must not have cipher padding')
-            outgoing = frame
+        outgoing = prepare_outgoing_frame(frame, self._ciphers, padding=padding)
         try:
             self._connection.send(outgoing.encode(), timeout=timeout)
         except (OSError, ValueError):
