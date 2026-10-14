@@ -12,6 +12,7 @@ local-tools/
 *.log
 .pytest_cache/
 .coverage
+fan-server-test-report*.json
 htmlcov/
 .vscode/
 .idea/

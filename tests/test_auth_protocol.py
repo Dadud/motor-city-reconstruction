@@ -43,6 +43,25 @@ class AuthProtocolTests(unittest.TestCase):
     def test_first_duplicate_value_retained(self):
         self.assertFalse(parse_ticket_response(b'Valid=FALSE\nValid=TRUE\n').valid)
 
+    def test_revival_hash_pair_denial_keeps_empty_fields_and_reason_spaces(self):
+        result = parse_ticket_response(b'#Valid#FALSE#Ticket##reasoncode#7#reasontext#synthetic denial#reasonurl##')
+        self.assertFalse(result.valid)
+        self.assertEqual((result.ticket, result.reason_code, result.reason_text), ('', '7', 'synthetic denial'))
+        self.assertNotIn('synthetic denial', repr(result))
+
+    def test_revival_hash_pair_success_and_first_duplicate(self):
+        result = parse_ticket_response(b'#Ticket#synthetic-ticket#Valid#TRUE#Valid#FALSE#reasoncode#0#')
+        self.assertTrue(result.valid)
+        self.assertEqual(result.ticket, 'synthetic-ticket')
+        self.assertNotIn('synthetic-ticket', repr(result))
+
+    def test_revival_hash_pair_malformed_and_missing_ticket(self):
+        for data in (b'#Valid#TRUE#Ticket##', b'#Valid#FALSE', b'#Valid#FALSE#dangling#',
+                     b'#Valid#FALSE##value#', b'#Valid#FALSE#\nValid=TRUE\n',
+                     b'#Valid#true#Ticket#synthetic#'):
+            with self.assertRaises(ValueError):
+                parse_ticket_response(data)
+
     def test_malformed_and_missing_success_ticket(self):
         for data in (b'Valid=TRUE\n', b'Valid=true\n', b'<html>error</html>',
                      b'Valid=FALSE\x00\n', b'\xff', b'x'*(MAX_AUTH_BYTES+1)):

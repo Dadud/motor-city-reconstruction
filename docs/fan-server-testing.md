@@ -108,9 +108,14 @@ reconstruction incompatibilities: save the failed-stage report for investigation
 
 On Windows, the installed configuration passes unauthenticated preflight for
 MotorCity Revival shard 44. The tester window initializes and displays a failed
-stage with report export enabled. The complete Python suite runs 579 tests
-(572 pass and seven are skipped),
+stage with report export enabled. The complete Python suite runs 595 tests
+(588 pass and seven are skipped),
 including stage retention, credential exclusion and failure exit-status checks.
-These checks do not constitute an authenticated account run. Your private local
-account test is still needed; server version remains unreported.
+The private live test reached authorization and uncovered a compact hash-pair
+response format. After the decoder correction, that test reports an explicit
+authorization denial. Login, personas, lobby and garage were not reached.
+See [authorization response evidence](revival-authorization-envelope.md).
+Successful account and race acceptance remain unverified; server version is
+unreported. If the same account succeeds in the original client, investigate
+request differences before attributing the denial to credentials.
 

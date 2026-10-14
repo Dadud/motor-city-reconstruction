@@ -48,3 +48,13 @@ bounded fields from explicit room state, with original comparisons and a native
 port. Actual authenticated room selection and source-state population remain
 unverified. The missing-arguments probe therefore still reports a live recovery
 gap rather than treating a synthetic argument image as a successful race join.
+
+Further recovery now distinguishes [selected-event server/lobby transition](race-join-transitions.md)
+from [race-room selection and start](race-room-selection.md). The former connects
+a secondary owner using retained authenticated identity and joins `LOBBY`;
+the latter joins the selected race room, then schedules game-worker task 5 and
+waits for room-status updates before session preparation. These are concrete
+caller paths, not a universal dispatcher sequence. The [settings selection](room-selection.md)
+port feeds the existing argument producer, while preserving the connected
+server selector. Room-list decoding, metadata construction, actual task
+execution and authenticated server observations remain incomplete.

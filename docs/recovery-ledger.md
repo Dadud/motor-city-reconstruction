@@ -155,8 +155,23 @@ maps registry removal/reference release and matches 24 original result paths and
 Actual socket closure, asynchronous cleanup, complete registry mutation and live
 reconnect still require implementation and verification.
 
-Current batch verification on Windows: 579 Python tests (572 pass, seven skipped)
-and 29 native checks pass, plus the separately recorded original comparisons above. Linux and live
+[Room settings selection](room-selection.md) now matches 144 complete original
+paths and 24 initializer cases; the C++ port matches 72 Python selections and
+24 initializers. [Race-room selection](race-room-selection.md) identifies actual
+metadata/global sources and matches 210 bounded caller cases, including 48
+unsigned decimal room-name overrides. [Selected-event connection](race-join-transitions.md)
+distinguishes secondary-server LOBBY entry from race-room start, with 28 original
+callback comparisons. Metadata construction, actual room-list/cache population,
+game task execution and live race entry remain incomplete.
+
+The first private live authorization test exposed Revival's compact hash-pair
+response. The [decoder correction](revival-authorization-envelope.md) now reports
+an explicit authorization denial instead of a protocol/data failure. Binary
+login, personas, lobby and garage were not reached; successful live acceptance
+remains unproved, and server version remains unreported.
+
+Current batch verification on Windows: 595 Python tests (588 pass, seven skipped)
+and 30 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in

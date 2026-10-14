@@ -43,6 +43,20 @@ class AuthServiceTests(unittest.TestCase):
             connection.close.assert_called_once()
             self.assertNotIn('private-password', str(context.exception))
 
+    def test_compact_revival_response_reaches_decision_and_closes_transport(self):
+        for body, valid in ((b'#Valid#FALSE#Ticket##reasoncode#7#reasontext#synthetic denial#', False),
+                            (b'#Valid#TRUE#Ticket#synthetic-ticket#reasoncode#0#', True)):
+            with patch('client.auth_service._TicketConnection') as factory:
+                connection = factory.return_value
+                response = connection.getresponse.return_value
+                response.status = 200
+                response.read.return_value = body
+                result = self.invoke()
+                self.assertEqual(result.valid, valid)
+                self.assertNotIn('synthetic-ticket', repr(result))
+                self.assertNotIn('synthetic denial', repr(result))
+                connection.close.assert_called_once()
+
     def test_non_success_http_is_not_followed(self):
         for status in (301, 401, 500):
             with patch('client.auth_service._TicketConnection') as factory:

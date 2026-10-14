@@ -56,7 +56,7 @@ class TicketResponse:
 
 
 def parse_ticket_response(data):
-    """Parse native line delimiters and exact case-sensitive result fields.
+    """Parse line responses and the observed Revival hash-pair envelope.
 
     Native keys: Valid, reasoncode, reasontext and Ticket. Other ping/URL fields
     are not acted upon. Duplicate keys retain the first parsed value. This is
@@ -71,15 +71,32 @@ def parse_ticket_response(data):
     if '\0' in text:
         raise ValueError('invalid authentication response')
     fields = {}
-    for line in text.split('\n'):
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-        for separator in ('=', ' ', '\t', ','):
-            if separator in line:
-                key, value = line.split(separator, 1)
-                fields.setdefault(key.strip(), value.strip())
-                break
+    compact = text.strip()
+    # Live Revival returns #key#value pairs, including empty Ticket on denial.
+    # This is an observed server envelope, not a claim about the DLL's line
+    # decoder. Do not translate hashes in values or reinterpret line comments.
+    if compact.startswith('#') and compact.split('#', 2)[1] in (
+            'Valid', 'Ticket', 'reasoncode', 'reasontext', 'reasonurl',
+            'pingHost', 'pingPath', 'pingtime', 'pingPort', 'igrID'):
+        if not compact.endswith('#') or '\n' in compact or '\r' in compact:
+            raise ValueError('invalid hash-pair authentication envelope')
+        tokens = compact[1:-1].split('#')
+        if len(tokens) % 2:
+            raise ValueError('incomplete hash-pair authentication field')
+        for key, value in zip(tokens[::2], tokens[1::2]):
+            if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', key):
+                raise ValueError('invalid hash-pair authentication key')
+            fields.setdefault(key, value)
+    else:
+        for line in text.split('\n'):
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            for separator in ('=', ' ', '\t', ','):
+                if separator in line:
+                    key, value = line.split(separator, 1)
+                    fields.setdefault(key.strip(), value.strip())
+                    break
     if fields.get('Valid') not in ('TRUE', 'FALSE'):
         raise ValueError('authentication response missing supported Valid field')
     valid = fields['Valid'] == 'TRUE'
