@@ -29,6 +29,7 @@ class RaceEntryTests(unittest.TestCase):
         self.assertTrue(probe['race_entry_probe_passed'])
         self.assertTrue(probe['fast_join_tcp_preferred'])
         self.assertEqual(probe['positional_updates_hz'], 32)
+        self.assertAlmostEqual(probe['update_interval_seconds'], 1 / 32)
         self.assertTrue(probe['expects_game_start'])
 
     def test_not_connected_channel_add_rejected(self):

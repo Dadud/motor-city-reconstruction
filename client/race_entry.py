@@ -19,6 +19,7 @@ from client.lobby_channels import (
     GAME_NETWORK_TASK_SERVER_CONNECT,
 )
 from client.server_discovery import PatchNetworkSettings
+from client.online_sync import OnlineSyncSettings
 
 _FAST_JOIN_TCP_PROTOCOLS = (CHANNEL_PROTOCOL_TCP_A, CHANNEL_PROTOCOL_TCP_B)
 
@@ -30,6 +31,7 @@ class RaceEntryPlan:
     tasks: tuple[GameNetworkTask, ...]
     fast_join_tcp_preferred: bool | None
     positional_updates_hz: int | None
+    update_interval_seconds: float | None
     channel_protocol: int | None
 
     @property
@@ -71,6 +73,7 @@ def build_race_entry_plan(
         tasks=tasks,
         fast_join_tcp_preferred=(None if settings is None else bool(settings.fast_join)),
         positional_updates_hz=(None if settings is None else settings.positional_updates_hz),
+        update_interval_seconds=OnlineSyncSettings.from_patch(settings).update_interval_seconds,
         channel_protocol=protocol,
     )
 
@@ -88,6 +91,7 @@ def probe_race_entry_path(settings: PatchNetworkSettings | None) -> dict:
         'race_entry_probe_passed': True,
         'fast_join_tcp_preferred': plan.fast_join_tcp_preferred,
         'positional_updates_hz': plan.positional_updates_hz,
+        'update_interval_seconds': plan.update_interval_seconds,
         'channel_protocol': plan.channel_protocol,
         'recovered_task_kinds': list(plan.task_kinds),
         'expects_server_connect': GAME_NETWORK_TASK_SERVER_CONNECT in plan.task_kinds,
