@@ -6,6 +6,14 @@ An open-source reconstruction of the Motor City Online client for modern Windows
 
 ## Quick start
 
+For a fan-server connection test on Windows, double-click
+`test-fan-server.cmd`, enter your fan-server account privately, and press
+**Test connection**. On a fresh checkout, run `setup-fan-server-test.cmd` first.
+The tester checks login, personas, lobby, primary connection and garage data
+using your installed configuration. It does not join or drive a race yet.
+Use **Save test report…** to export a report without credentials. See
+[fan-server testing](docs/fan-server-testing.md) for instructions and limits.
+
 The C++20 migration is underway. See the [recovery ledger](docs/recovery-ledger.md)
 for outstanding systems and the [native migration guide](docs/native-migration.md)
 for module boundaries and verification gates. The native build currently contains

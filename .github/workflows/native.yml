@@ -29,6 +29,14 @@ jobs:
       - if: runner.os == 'Windows'
         run: python -m tools.native_room_disconnect_compare build/native/Release/mco_room_disconnect_compare.exe
       - if: runner.os == 'Linux'
+        run: python -m tools.native_room_disconnect_flow_compare build/native/mco_room_disconnect_flow_compare
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_lobby_channel_close_compare build/native/mco_lobby_channel_close_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_lobby_channel_close_compare build/native/Release/mco_lobby_channel_close_compare.exe
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_room_disconnect_flow_compare build/native/Release/mco_room_disconnect_flow_compare.exe
+      - if: runner.os == 'Linux'
         run: python -m tools.native_room_join_request_compare build/native/mco_room_join_request_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_room_join_request_compare build/native/Release/mco_room_join_request_compare.exe

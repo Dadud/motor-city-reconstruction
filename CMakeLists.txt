@@ -28,6 +28,8 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/room_server_binding.cpp
   native/src/room_settings.cpp
   native/src/room_disconnect.cpp
+  native/src/room_disconnect_flow.cpp
+  native/src/lobby_channel_close.cpp
   native/src/mcots_framing.cpp native/src/nps_framing.cpp native/src/owned_dependencies.cpp native/src/owned_parent_links.cpp
   native/src/part_type_cache.cpp native/src/owned_induction.cpp native/src/owned_insertion.cpp
   native/src/owned_aggregates.cpp native/src/owned_ordering.cpp native/src/owned_postload.cpp
@@ -65,6 +67,16 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_lobby_channel_close_test native/tests/lobby_channel_close_test.cpp)
+  target_link_libraries(mco_lobby_channel_close_test PRIVATE mco_core)
+  add_test(NAME lobby_channel_close COMMAND mco_lobby_channel_close_test)
+  add_executable(mco_lobby_channel_close_compare native/tests/lobby_channel_close_compare.cpp)
+  target_link_libraries(mco_lobby_channel_close_compare PRIVATE mco_core)
+  add_executable(mco_room_disconnect_flow_test native/tests/room_disconnect_flow_test.cpp)
+  target_link_libraries(mco_room_disconnect_flow_test PRIVATE mco_core)
+  add_test(NAME room_disconnect_flow COMMAND mco_room_disconnect_flow_test)
+  add_executable(mco_room_disconnect_flow_compare native/tests/room_disconnect_flow_compare.cpp)
+  target_link_libraries(mco_room_disconnect_flow_compare PRIVATE mco_core)
   add_executable(mco_room_disconnect_test native/tests/room_disconnect_test.cpp)
   target_link_libraries(mco_room_disconnect_test PRIVATE mco_core)
   add_test(NAME room_disconnect COMMAND mco_room_disconnect_test)

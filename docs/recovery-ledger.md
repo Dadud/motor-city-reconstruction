@@ -141,15 +141,22 @@ live race entry remain required.
 [Room disconnect preparation](room-disconnect.md) now resets the original settings
 fields and retains old IDs in initialized task arguments. Thirty-two disconnected
 returns and 64 connected preparations match the original; its C++ port matches
-96 Python cases. Connected pending waits, event pumping and unspecified task
-padding remain excluded. The [server disconnect follow-up](connection-disconnect.md)
+96 Python cases. The [disconnect action controller](room-disconnect-flow.md)
+now reproduces pending waits, completion queries and application-pump decisions
+in 308 complete original-function scenarios; its native port matches 69 Python
+action traces. The [channel-close codec](lobby-channel-close.md) recovers the
+opcode `0x105` frame with 32 original close paths, five raw serializer cases,
+eight lower-helper logoff paths and 40 missing-registry paths; 81 native/Python
+encodings match. These remain isolated models, not live tester orchestration.
+Actual worker scheduling, container effects and unspecified task padding remain
+excluded. The [server disconnect follow-up](connection-disconnect.md)
 maps registry removal/reference release and matches 24 original result paths and
 216 communication destructor ownership guards with explicit substitutions.
 Actual socket closure, asynchronous cleanup, complete registry mutation and live
 reconnect still require implementation and verification.
 
-Current batch verification on Windows: 566 Python tests (559 pass, seven skipped)
-and 27 native checks pass, plus the separately recorded original comparisons above. Linux and live
+Current batch verification on Windows: 579 Python tests (572 pass, seven skipped)
+and 29 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in

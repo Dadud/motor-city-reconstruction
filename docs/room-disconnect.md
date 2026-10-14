@@ -18,7 +18,9 @@ With waiting disabled it requests an untracked operation and returns zero.
 With waiting enabled it requests tracking, queries completion and pumps the
 application until completion or an application abort. Completion returns the
 worker's signed result; an abort returns `-51`. These waits are observed static
-control flow and are not implemented by the stable preparation helper.
+control flow and are not implemented by the stable preparation helper. The
+[action controller](room-disconnect-flow.md) now implements that order with
+explicit driver observations, verified against 308 complete original scenarios.
 
 The stack-local task is not cleared in this producer. Its task kind and first
 eight argument bytes are initialized, but the remaining payload bytes are not
@@ -64,9 +66,10 @@ returns zero regardless of that helper's result. Thus a zero worker result alone
 does not prove a server acknowledged removal.
 
 The lower helper has a communication cleanup branch and constructs opcode
-`0x105`. Its packet argument decoding, reference lifetime and actual delivery
-still need recovery and verification. Room cleanup must not be substituted for
-the distinct server-disconnect operation.
+`0x105`. The [channel-close codec](lobby-channel-close.md) now verifies that its
+wire payload contains only the channel ID; the server selector remains local
+routing data. Reference lifetime and actual delivery still need integration and
+verification. Room cleanup must not be substituted for server disconnect.
 
 Target SHA-256:
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
