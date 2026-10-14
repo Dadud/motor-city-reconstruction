@@ -115,8 +115,21 @@ negative-result state preservation. These bounded modules are now built into
 `mco_core`; connecting them to authenticated state and the listener remains
 required.
 
-Current batch verification on Windows: 546 Python tests and 23 native checks
-pass, plus the separately recorded original comparisons above. Linux and live
+The [completion queue](async-worker-completion.md) now reconstructs destructive
+first-ID-match retrieval, including null-output removal and signed-result
+decoding, in Python and C++. Its bounded original runner matches 252 queries
+and six zero-ID exception boundaries. Real worker scheduling, locks and live
+room delivery remain outside these comparisons.
+
+The [server-selector binding](room-server-binding.md) now identifies the embedded
+room's selector as the successful local connection-interface return. Eighty
+bounded original dispatcher cases match full-image writes and helper call order.
+The configured shard ID is not substituted for this connection result.
+Authentication, connection-handle ownership and live room selection still need
+integration and verification.
+
+Current batch verification on Windows: 554 Python tests (547 pass, seven skipped)
+and 24 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The dependency-linking pass is now implemented in isolation and documented in

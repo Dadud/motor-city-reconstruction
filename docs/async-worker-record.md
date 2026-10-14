@@ -49,6 +49,11 @@ nonnull output, removes/frees that node and returns 1; an empty queue or no matc
 returns zero. The current header helpers do not implement or invoke this query;
 queue ownership and synchronization still need original comparisons.
 
+The [completion follow-up](async-worker-completion.md) now implements first-match
+destructive retrieval in an owned-record model and verifies original removal
+through a synthetic queue oracle. Real worker scheduling and synchronization
+remain separate requirements.
+
 The portable header boundary accepts immutable records of at least 12 bytes and
 preserves their entire remaining image. Exact queue-size materialization is a
 separate requirement; passing a short header here does not make it safe to pass

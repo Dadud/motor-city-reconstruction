@@ -108,7 +108,8 @@ reconstruction incompatibilities: save the failed-stage report for investigation
 
 On Windows, the installed configuration passes unauthenticated preflight for
 MotorCity Revival shard 44. The tester window initializes and displays a failed
-stage with report export enabled. The complete Python suite passes 546 tests,
+stage with report export enabled. The complete Python suite runs 554 tests
+(547 pass and seven are skipped),
 including stage retention, credential exclusion and failure exit-status checks.
 These checks do not constitute an authenticated account run. Your private local
 account test is still needed; server version remains unreported.
