@@ -135,6 +135,21 @@ The TLS option performs certificate verification without application data;
 `--fetch` performs public discovery GETs. The report labels its limited coverage.
 No account creation or persistent original configuration changes occur.
 
+## Reproduce configured fan-server flow (authorized account)
+
+After public discovery and TLS pin checks succeed, use the private flow check in an
+interactive local terminal. Credentials are read with hidden prompts only:
+
+```powershell
+python -m tools.fan_server_check "C:\Program Files (x86)\EA Games\Motor City Online" `
+  --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage
+```
+
+On this installation, pass `--source nps/shardlistip.ini` when both discovery INIs
+exist. Successful JSON output reports `lobby_connected`, `primary_connected`, and
+garage counts when `--fetch-garage` is supplied. This does not establish race
+compatibility. See [fan-server testing](fan-server-testing.md).
+
 ## Evidence required for confidence
 
 ### Encrypted lobby receive envelope
