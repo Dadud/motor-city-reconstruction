@@ -50,3 +50,26 @@ On Windows you can use the same flags through `test-fan-server-live.cmd`.
 
 Use --persona-id when you already know the persona. Add --catalogue when Online.mdb is installed.
 Preflight without --login validates discovery, certificate pin and external identity only.
+
+## What success looks like
+
+**Preflight only** (no account): JSON shows `preflight_passed: true`, shard **MotorCity Revival** (ID **44**).
+
+**Live test** (with your fan-server account):
+
+| Field | Meaning |
+| --- | --- |
+| `success` | Entire flow completed without a blocking error |
+| `account_authenticated` | Binary account login succeeded |
+| `lobby_connected` | Lobby channel connected |
+| `primary_connected` | Primary MCOTS channel connected |
+| `garage_loaded` | Persona garage records received (when garage fetch is enabled) |
+| `persona_count` / `garage_record_count` | Non-zero counts mean data came back from the server |
+| `race_entry_probe_passed` | Recovered local race-entry task order validated (with `--probe-race-entry`) |
+| `room_channel_probe_passed` | Recovered room channel construction validated (same probe) |
+| `positional_updates_hz` | Should match installed patch (often **32** on TCP) |
+| `last_stage` | Final stage label; `complete` on success |
+
+Race-entry and room-channel probes **do not join a race**. They only prove the reconstructed client builds the same local task sequence and patch settings as the installed client.
+
+If something fails, note `last_stage` and which booleans stayed false. Credentials are never included in the JSON output.

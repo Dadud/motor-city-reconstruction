@@ -109,6 +109,7 @@ def main(argv=None):
                 'race_entry_probe_passed', 'fast_join_tcp_preferred', 'positional_updates_hz',
                 'update_interval_seconds', 'recovered_task_kinds',
                 'room_channel_probe_passed',
+                'expects_room_channel_add',
             )})
         print(json.dumps(report, indent=2))
         return 0
@@ -127,3 +128,4 @@ def main(argv=None):
 
 if __name__ == '__main__':
     raise SystemExit(main())
+
