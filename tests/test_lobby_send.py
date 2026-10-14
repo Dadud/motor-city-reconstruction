@@ -17,7 +17,8 @@ class LobbySendTests(unittest.TestCase):
     def test_application_frame_is_wrapped(self):
         ciphers = LobbyCiphers(DESChaining(b'12345678'), DESChaining(b'12345678', decrypt=True))
         inner = Frame(0x601, b'abc')
-        outgoing = prepare_outgoing_frame(inner, ciphers, padding=bytes(5))
+        padding = bytes((-len(inner.encode())) % 8)
+        outgoing = prepare_outgoing_frame(inner, ciphers, padding=padding)
         self.assertEqual(outgoing.message_id, 0x1101)
         decoded = decrypt_envelope(outgoing, ciphers.receive)
         self.assertEqual(decoded.inner, inner)
