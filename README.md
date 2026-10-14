@@ -56,6 +56,22 @@ no live race acceptance has yet been demonstrated.
 
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 
+
+### Test MotorCity Revival (fan server)
+
+If your installed client already points at the fan shard, you can verify the reconstructed login path without replacing the original game.
+
+**Windows (easiest):**
+
+1. Clone or open this repo: [motor-city-reconstruction](https://github.com/Dadud/motor-city-reconstruction)
+2. Create the venv and install once: `python -m venv .venv` then `.\.venv\Scripts\python.exe -m pip install -e .`
+3. **Preflight only** (no password): double-click `test-fan-server-live.cmd` after editing `MCO_DATA` if needed — or run preflight via the doc below without `--login`.
+4. **Full live test**: double-click `test-fan-server.cmd` for the GUI, or `test-fan-server-live.cmd` for command-line login + garage + race-entry probe.
+
+Enter your fan-server account when prompted. Passwords are not saved or logged.
+
+See [fan-server testing](docs/fan-server-testing.md) for success fields, CLI flags, and what “race entry probe” means (local validation only — it does not join a race).
+
 ### Windows PowerShell
 
 ```powershell
@@ -126,3 +142,4 @@ REA is not included and is not a development dependency. Optional emulation tool
 ## License and assets
 
 The newly authored code is [MIT licensed](LICENSE). Original game files, decompiled pseudocode, textures, models, music and local research outputs are excluded from this repository. Supply your own installation through `--data`; the client leaves that installation unchanged. The MIT license applies to this project's authored code, not to the original game's content.
+
