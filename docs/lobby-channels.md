@@ -43,6 +43,11 @@ The remainder of channel negotiation, initial server-argument construction,
 the 64-byte login field's upstream source, and actual authenticated room joining
 remain unresolved. No room request was sent during this investigation.
 
+The [channel codec follow-up](lobby-channel-codec.md) recovers opcode `0x106`,
+the payload serializer, and `0x214`/`0x215` reply fields with bounded native
+comparisons. Authenticated room argument construction and live joining remain
+unresolved.
+
 ## Game network task dispatch
 
 The game dispatcher `0x454d50` reads a task kind from the first uint32 of its

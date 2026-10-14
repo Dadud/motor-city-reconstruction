@@ -23,8 +23,13 @@ class LobbyChannelTests(unittest.TestCase):
         self.assertEqual(request.validate(), CHANNEL_ERROR_NOT_CONNECTED)
 
     def test_existing_channel_rejected(self):
-        request = ChannelAddRequest(CHANNEL_PROTOCOL_TCP_A, 0, 0, True, existing_channel_id=9)
+        request = ChannelAddRequest(CHANNEL_PROTOCOL_TCP_A, 9, 0, True, existing_channel_id=9)
         self.assertEqual(request.validate(), CHANNEL_ERROR_ALREADY_OPEN)
+
+    def test_zero_channel_id_and_unrelated_channel_do_not_collide(self):
+        for requested in (0, 10):
+            request = ChannelAddRequest(CHANNEL_PROTOCOL_TCP_A, requested, 0, True, existing_channel_id=9)
+            self.assertIsNone(request.validate())
 
     def test_udp_port_mismatch_rejected(self):
         request = ChannelAddRequest(

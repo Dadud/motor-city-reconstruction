@@ -60,9 +60,8 @@ class ChannelAddRequest:
             raise ValueError('requested port must be uint16')
         if not self.server_connected:
             return CHANNEL_ERROR_NOT_CONNECTED
-        if self.existing_channel_id not in (0, self.requested_channel_id):
-            if self.existing_channel_id != 0:
-                return CHANNEL_ERROR_ALREADY_OPEN
+        if self.requested_channel_id != 0 and self.existing_channel_id == self.requested_channel_id:
+            return CHANNEL_ERROR_ALREADY_OPEN
         if self.protocol in UDP_CHANNEL_PROTOCOLS:
             if self.existing_udp_port is not None and self.requested_port not in (0, self.existing_udp_port):
                 return CHANNEL_ERROR_UDP_PORT_MISMATCH
