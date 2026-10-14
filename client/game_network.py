@@ -7,14 +7,7 @@ does not open sockets or join races.
 import struct
 from dataclasses import dataclass
 
-from client.lobby_channels import (
-    GAME_NETWORK_TASK_CHANNEL_ADD,
-    GAME_NETWORK_TASK_GAME_START,
-    GAME_NETWORK_TASK_MINI_ROOM_LIST,
-    GAME_NETWORK_TASK_SERVER_CONNECT,
-    KNOWN_GAME_NETWORK_TASKS,
-    normalize_task_result,
-)
+from client.lobby_channels import KNOWN_GAME_NETWORK_TASKS, normalize_task_result
 
 _HEADER = struct.Struct('<I')
 _ARGUMENT_OFFSET = 12
@@ -24,6 +17,7 @@ _ARGUMENT_OFFSET = 12
 class GameNetworkTask:
     kind: int
     argument: bytes
+    opaque_header: bytes = bytes(8)
 
     @classmethod
     def decode(cls, payload: bytes):
@@ -32,24 +26,21 @@ class GameNetworkTask:
         kind = _HEADER.unpack_from(payload)[0]
         if kind not in KNOWN_GAME_NETWORK_TASKS:
             raise ValueError('unknown game network task kind')
-        return cls(kind, payload[_ARGUMENT_OFFSET:])
+        return cls(kind, payload[_ARGUMENT_OFFSET:], payload[4:_ARGUMENT_OFFSET])
 
     def encode(self) -> bytes:
         if self.kind not in KNOWN_GAME_NETWORK_TASKS:
             raise ValueError('unknown game network task kind')
         if not isinstance(self.argument, bytes):
             raise ValueError('task argument must be bytes')
-        return _HEADER.pack(self.kind) + bytes(_ARGUMENT_OFFSET - 4) + self.argument
+        if not isinstance(self.opaque_header, bytes) or len(self.opaque_header) != 8:
+            raise ValueError('opaque task header must be eight bytes')
+        return _HEADER.pack(self.kind) + self.opaque_header + self.argument
 
     def normalized_result(self, native_result: int) -> int:
         return normalize_task_result(self.kind, native_result)
 
 
-def race_entry_task_kinds():
-    """Task kinds observed on the path toward rooms and game start."""
-    return (
-        GAME_NETWORK_TASK_SERVER_CONNECT,
-        GAME_NETWORK_TASK_GAME_START,
-        GAME_NETWORK_TASK_CHANNEL_ADD,
-        GAME_NETWORK_TASK_MINI_ROOM_LIST,
-    )
+def dispatched_task_kinds() -> frozenset[int]:
+    """Independent cases of 0x454d50; this set specifies no execution order."""
+    return KNOWN_GAME_NETWORK_TASKS

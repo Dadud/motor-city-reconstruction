@@ -61,9 +61,10 @@ class FanServerCheckTests(unittest.TestCase):
             with patch('tools.fan_server_check.run_test', return_value={
                 'success': True, 'cancelled': False, 'account_authenticated': True,
                 'lobby_connected': True, 'primary_connected': True, 'garage_loaded': False,
-                'race_entry_probe_passed': True, 'fast_join_tcp_preferred': True,
-                'positional_updates_hz': 32, 'update_interval_seconds': 1 / 32,
-                'recovered_task_kinds': [0, 5, 7, 8],
+                'race_entry_probe_passed': False, 'fast_join_tcp_preferred': None,
+                'positional_updates_hz': 32, 'update_interval_seconds': None,
+                'recovered_task_kinds': [], 'race_entry_implemented': False,
+                'missing_authenticated_arguments': True,
             }) as run_test:
                 with patch('tools.fan_server_check.getpass.getpass',
                            side_effect=['private-user', 'private-password']):
@@ -74,7 +75,8 @@ class FanServerCheckTests(unittest.TestCase):
         self.assertEqual(status, 0)
         text = output.getvalue()
         self.assertIn('"probe_race_entry_requested": true', text)
-        self.assertIn('"race_entry_probe_passed": true', text)
+        self.assertIn('"race_entry_probe_passed": false', text)
+        self.assertIn('"missing_authenticated_arguments": true', text)
         self.assertIn('"update_interval_seconds"', text)
         self.assertTrue(run_test.call_args.kwargs.get('probe_race_entry'))
 

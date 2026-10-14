@@ -10,7 +10,8 @@ The C++20 migration is underway. See the [recovery ledger](docs/recovery-ledger.
 for outstanding systems and the [native migration guide](docs/native-migration.md)
 for module boundaries and verification gates. The native build currently contains
 recovered valuation, placeholder insertion/pruning, component ordering/linking and count/cost totals, bounded VIV directories, MCOTS packet framing,
-a restricted Lua execution harness, and an optional SDL/OpenGL asset garage.
+plain NPS framing and the channel payload codec, a restricted Lua execution
+harness, and an optional SDL/OpenGL asset garage.
 The garage renders original FCE geometry and supported FSH textures with orbit/zoom controls; native driving
 and complete customization remain unfinished.
 
@@ -75,7 +76,9 @@ The window reports the stage of any failure. Use **Save test report…** to expo
 a report without credentials or persona names. Racing is not yet implemented in
 this tester; a successful connection test does not establish race compatibility.
 
-See [fan-server testing](docs/fan-server-testing.md) for success fields, CLI flags, and what “race entry probe” means (local validation only — it does not join a race).
+See [fan-server testing](docs/fan-server-testing.md) for success fields and CLI
+flags. The optional race-entry probe reports missing recovery work; it does not
+join a race.
 
 ### Windows PowerShell
 

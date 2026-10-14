@@ -1,88 +1,82 @@
-"""Recovered lobby room channel argument validation.
+"""Validate explicit room research inputs without selecting a live transport.
 
-Game room operation 0x44eba0 dispatches channel-add with a room argument
-structure and two caller callbacks. This module validates those inputs only;
-it does not open sockets or join live rooms.
+Task 7 at 0x454d50 supplies opaque values -1 and 1 to channel-add. Their
+storage does not establish callable callback types or task execution order.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
-
-from client.lobby_channels import (
-    CHANNEL_PROTOCOL_TCP_A,
-    ChannelAddRequest,
-)
-from client.race_entry import build_race_entry_plan
+from client.lobby_channels import ChannelAddRequest
 from client.server_discovery import PatchNetworkSettings
 
 
 @dataclass(frozen=True)
-class RoomCallbacks:
-    """Two callback slots stored at channel offsets 0x2c and 0x30."""
+class RoomCallerValues:
+    """Opaque 32-bit native values, with task 7's observed defaults.
 
-    primary: Callable[[], None] | None = None
-    secondary: Callable[[], None] | None = None
+    Signed negatives and unsigned bit patterns are accepted. No function
+    invocation or pointer dereference is permitted by this research model.
+    """
+
+    primary: int = -1
+    secondary: int = 1
 
     def validate(self) -> None:
-        for label, callback in ('primary', self.primary), ('secondary', self.secondary):
-            if callback is not None and not callable(callback):
-                raise TypeError(f'{label} room callback must be callable')
+        for label, value in ('primary', self.primary), ('secondary', self.secondary):
+            if type(value) is not int or not -(1 << 31) <= value <= 0xffffffff:
+                raise ValueError(f'{label} room caller value must fit 32 bits')
 
 
 @dataclass(frozen=True)
 class RoomChannelPlan:
-    """Validated channel-add request plus recovered race-entry task order."""
+    """Explicit admissible channel request; no execution or live join proof."""
 
     channel_request: ChannelAddRequest
-    callbacks: RoomCallbacks
-    race_entry_task_kinds: tuple[int, ...]
+    caller_values: RoomCallerValues
     channel_protocol: int
 
 
 def build_room_channel_plan(
-    settings: PatchNetworkSettings | None,
     *,
+    channel_protocol: int,
     server_connected: bool = True,
     requested_channel_id: int = 0,
     requested_port: int = 0,
-    callbacks: RoomCallbacks | None = None,
+    existing_channel_id: int = 0,
+    existing_udp_port: int | None = None,
+    caller_values: RoomCallerValues | None = None,
 ) -> RoomChannelPlan:
     """Validate room channel inputs against recovered channel-add rules."""
-    callbacks = callbacks or RoomCallbacks()
-    callbacks.validate()
-    race_plan = build_race_entry_plan(
-        settings,
-        server_connected=server_connected,
-        requested_channel_id=requested_channel_id,
-        requested_port=requested_port,
-    )
-    protocol = race_plan.channel_protocol or CHANNEL_PROTOCOL_TCP_A
+    caller_values = caller_values if caller_values is not None else RoomCallerValues()
+    caller_values.validate()
     channel_request = ChannelAddRequest(
-        protocol,
+        channel_protocol,
         requested_channel_id,
         requested_port,
         server_connected,
+        existing_channel_id,
+        existing_udp_port,
     )
     channel_error = channel_request.validate()
     if channel_error is not None:
         raise ValueError(f'room channel inputs rejected with native code {channel_error}')
     return RoomChannelPlan(
         channel_request=channel_request,
-        callbacks=callbacks,
-        race_entry_task_kinds=race_plan.task_kinds,
-        channel_protocol=protocol,
+        caller_values=caller_values,
+        channel_protocol=channel_protocol,
     )
 
 
 def probe_room_channel_path(settings: PatchNetworkSettings | None) -> dict:
-    """Return a safe summary of recovered room channel construction."""
-    plan = build_room_channel_plan(settings)
+    """Report static knowledge without fabricating a room request."""
     return {
-        'room_channel_probe_passed': True,
-        'channel_protocol': plan.channel_protocol,
-        'race_entry_task_kinds': list(plan.race_entry_task_kinds),
-        'expects_channel_add': 7 in plan.race_entry_task_kinds,
-        'expects_game_start': 5 in plan.race_entry_task_kinds,
+        'room_channel_probe_passed': False,
+        'room_join_implemented': False,
+        'channel_protocol': None,
+        'channel_add_task_kind': 7,
+        'channel_add_caller_values': [-1, 1],
+        'configured_fast_join': None if settings is None else settings.fast_join,
+        'missing_authenticated_arguments': True,
+        'protocol_selection_unverified': True,
     }
 

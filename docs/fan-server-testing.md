@@ -52,8 +52,9 @@ From an interactive terminal in the repository:
 
     python -m tools.fan_server_check "C:/Program Files (x86)/EA Games/Motor City Online" --shard-id 44 --source nps/shardlistip.ini --login --fetch-garage
 
-Add `--probe-race-entry` to include the recovered race-entry construction probe
-in the safe JSON report after login.
+Add `--probe-race-entry` to include the race-entry recovery-gap report after
+login. It reports missing task ordering and authenticated arguments; it does not
+construct or execute a race-entry sequence.
 
 On Windows you can use the same flags through `test-fan-server-live.cmd`.
 
@@ -74,13 +75,14 @@ Preflight without --login validates discovery, certificate pin and external iden
 | `primary_connected` | Primary MCOTS channel connected |
 | `garage_loaded` | Persona garage records received (when garage fetch is enabled) |
 | `persona_count` / `garage_record_count` | Non-zero counts mean data came back from the server |
-| `race_entry_probe_passed` | Local task-construction research check passed (with `--probe-race-entry`) |
-| `room_channel_probe_passed` | Recovered room channel construction validated (same probe) |
+| `race_entry_probe_passed` / `room_channel_probe_passed` | Currently false: race/room entry remains incomplete |
+| `missing_task_order` / `missing_authenticated_arguments` | Outstanding recovery work (with `--probe-race-entry`) |
+| `protocol_selection_unverified` | Patch settings have not been proved to select a particular channel protocol |
 | `positional_updates_hz` | Should match installed patch (often **32** on TCP) |
 | `last_stage` | Final stage label; `complete` on success |
 
-Race-entry and room-channel probes **do not join a race**. They exercise local
-construction and patch settings. Dispatcher task kinds alone do not establish
+Race-entry and room-channel probes **do not join a race**. They report research
+gaps and observed patch settings. Dispatcher task kinds alone do not establish
 the original runtime sequence, complete room arguments or server compatibility.
 
 If something fails, note `last_stage` and which booleans stayed false. Credentials are never included in the JSON output.
@@ -91,7 +93,7 @@ tests. Error JSON includes `failure_code` and `last_stage` when the flow fails.
 
 On Windows, the installed configuration passes unauthenticated preflight for
 MotorCity Revival shard 44. The tester window initializes and displays a failed
-stage with report export enabled. The complete Python suite passes 502 tests,
+stage with report export enabled. The complete Python suite passes 513 tests,
 including stage retention, credential exclusion and failure exit-status checks.
 These checks do not constitute an authenticated account run. Your private local
 account test is still needed; server version remains unreported.

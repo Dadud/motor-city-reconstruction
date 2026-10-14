@@ -7,7 +7,7 @@ replace server authentication.
 The singleton factory at `0x730450` installs interface table `0x84b3fc`.
 Its entry at offset 4 points to server connection routine `0x73a720`, while
 offset 8 points to channel-add routine `0x738f00`. Game room operation
-`0x44eba0` calls offset 8 with a room argument structure and two callbacks.
+`0x44eba0` calls offset 8 with a room argument structure and two caller values.
 The factory is retained by game network objects constructed at `0x44cce0`,
 `0x44fb20`, and `0x456170`.
 
@@ -18,7 +18,7 @@ It rejects an already-open nonzero channel ID with -5. A zero requested channel
 ID is permitted; the server supplies the result later.
 
 The channel object receives its user ID from the existing server connection
-field at offset `0x108`. The caller's two callback values are stored separately
+field at offset `0x108`. The caller's two opaque values are stored separately
 in channel fields `0x2c` and `0x30`.
 
 For protocols `0x2c` and `0x37`, the routine uses a UDP socket. It reuses an
@@ -49,6 +49,12 @@ comparisons. Authenticated room argument construction and live joining remain
 unresolved.
 
 ## Game network task dispatch
+
+The [channel argument follow-up](lobby-channel-record.md) implements constructor
+data writes and serializer-record copies, matching 36 cases for each against
+bounded original execution. Allocation holes and upstream room producers remain
+explicitly unresolved. The [race-entry audit](race-entry-research.md) removes
+unsupported task-order and `FastJoin` transport assumptions from research APIs.
 
 The game dispatcher `0x454d50` reads a task kind from the first uint32 of its
 input structure and passes arguments starting at byte offset 12. These are

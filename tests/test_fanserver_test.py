@@ -93,19 +93,24 @@ class FanServerTestTests(unittest.TestCase):
             with patch('client.fanserver_test.authenticate', return_value=account):
                 with patch('client.fanserver_test.installed_patch_settings', return_value=object()):
                     with patch('client.fanserver_test.probe_race_entry_path', return_value={
-                        'race_entry_probe_passed': True,
-                        'fast_join_tcp_preferred': True,
+                        'race_entry_probe_passed': False,
+                        'fast_join_tcp_preferred': None,
                         'positional_updates_hz': 32,
-                        'update_interval_seconds': 1 / 32,
-                        'recovered_task_kinds': [0, 5, 7, 8],
-                        'room_channel_probe_passed': True,
+                        'update_interval_seconds': None,
+                        'recovered_task_kinds': [],
+                        'room_channel_probe_passed': False,
+                        'race_entry_implemented': False,
+                        'missing_task_order': True,
+                        'missing_authenticated_arguments': True,
+                        'protocol_selection_unverified': True,
                     }):
                         result = run_test('external', 'user', 'password', persona_id=9, probe_race_entry=True)
         self.assertTrue(result['success'])
-        self.assertTrue(result['race_entry_probe_passed'])
+        self.assertFalse(result['race_entry_probe_passed'])
         self.assertEqual(result['positional_updates_hz'], 32)
-        self.assertTrue(result['room_channel_probe_passed'])
-        self.assertAlmostEqual(result['update_interval_seconds'], 1 / 32)
+        self.assertFalse(result['room_channel_probe_passed'])
+        self.assertIsNone(result['update_interval_seconds'])
+        self.assertTrue(result['missing_authenticated_arguments'])
 
     def test_run_test_records_last_stage(self):
         context = SimpleNamespace(

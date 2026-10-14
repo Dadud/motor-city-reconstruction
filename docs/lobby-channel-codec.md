@@ -107,6 +107,10 @@ Local Windows result: 136 payloads match the original-verified Python codec,
 rejected. All 17 native CTest checks pass. CI includes this comparison on Windows
 and Linux; these local results do not establish a Linux or live server run.
 
+The [argument constructor and record-copy follow-up](lobby-channel-record.md)
+now recovers the preceding bounded data writes. Authenticated room producers,
+allocation initialization and lifecycle remain unresolved.
+
 Remaining work: construct records from authenticated room state, recover request
 ordering and upstream opaque fields, integrate cancellation/timeouts with the
 listener, verify UDP fallback and patched TCP preferences, and compare live

@@ -46,7 +46,7 @@ def main(argv=None):
     parser.add_argument('--fetch-garage', action='store_true',
                         help='fetch persona startup garage data after primary login')
     parser.add_argument('--probe-race-entry', action='store_true',
-                        help='validate recovered race-entry task construction after login')
+                        help='report race-entry research gaps after login; does not join a race')
     parser.add_argument('--catalogue', action='store_true',
                         help='enrich owned parts when Online.mdb is installed')
     args = parser.parse_args(argv)
@@ -111,6 +111,8 @@ def main(argv=None):
                 'room_channel_probe_passed',
                 'expects_room_channel_add',
                 'failure_code',
+                'race_entry_implemented', 'configured_fast_join', 'missing_task_order',
+                'missing_authenticated_arguments', 'protocol_selection_unverified',
             )})
         print(json.dumps(report, indent=2))
         if args.login and report.get('success') is not True:

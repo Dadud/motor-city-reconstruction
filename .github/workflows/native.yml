@@ -17,6 +17,10 @@ jobs:
         with:
           python-version: '3.13'
       - if: runner.os == 'Linux'
+        run: python -m tools.native_nps_framing_compare build/native/mco_nps_framing_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_nps_framing_compare build/native/Release/mco_nps_framing_compare.exe
+      - if: runner.os == 'Linux'
         run: python -m tools.native_lobby_channel_compare build/native/mco_lobby_channel_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_lobby_channel_compare build/native/Release/mco_lobby_channel_compare.exe

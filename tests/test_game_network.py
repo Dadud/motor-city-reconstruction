@@ -1,7 +1,7 @@
 import struct
 import unittest
 
-from client.game_network import GameNetworkTask, race_entry_task_kinds
+from client.game_network import GameNetworkTask, dispatched_task_kinds
 from client.lobby_channels import GAME_NETWORK_TASK_CHANNEL_ADD, GAME_NETWORK_TASK_GAME_START
 
 
@@ -17,10 +17,21 @@ class GameNetworkTests(unittest.TestCase):
         task = GameNetworkTask(GAME_NETWORK_TASK_CHANNEL_ADD, b'')
         self.assertEqual(task.normalized_result(1), 0)
 
-    def test_race_entry_kinds_include_game_start_and_channel_add(self):
-        kinds = race_entry_task_kinds()
+    def test_dispatcher_cases_do_not_specify_execution_order(self):
+        kinds = dispatched_task_kinds()
+        self.assertIsInstance(kinds, frozenset)
+        self.assertEqual(kinds, frozenset(range(10)))
         self.assertIn(GAME_NETWORK_TASK_GAME_START, kinds)
         self.assertIn(GAME_NETWORK_TASK_CHANNEL_ADD, kinds)
+
+    def test_decoding_retains_unresolved_header_fields(self):
+        payload = struct.pack('<I', 7) + b'opaque!!' + b'args'
+        self.assertEqual(GameNetworkTask.decode(payload).encode(), payload)
+
+    def test_invalid_header_rejected(self):
+        for header in (b'short', bytearray(8)):
+            with self.assertRaises(ValueError):
+                GameNetworkTask(7, b'args', header).encode()
 
     def test_rejects_unknown_kind(self):
         payload = struct.pack('<I', 99) + bytes(8) + b'x'

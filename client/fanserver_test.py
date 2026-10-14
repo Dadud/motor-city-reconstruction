@@ -318,6 +318,9 @@ def run_test(
             report['update_interval_seconds'] = probe['update_interval_seconds']
             report['recovered_task_kinds'] = probe['recovered_task_kinds']
             report['room_channel_probe_passed'] = probe['room_channel_probe_passed']
+            for key in ('race_entry_implemented', 'configured_fast_join', 'missing_task_order',
+                        'missing_authenticated_arguments', 'protocol_selection_unverified'):
+                report[key] = probe.get(key)
     report['success'] = True
     _set_stage(report, 'complete', on_stage)
     return report
