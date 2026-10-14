@@ -3,7 +3,7 @@
 The dyno's inner calculation maintains cylinder state and evaluates valve flow
 against intake and exhaust boundaries. Several stages are now reproduced exactly
 for tested float32 outputs. The complete crank integration step is now recovered;
-the standalone dyno driver remains unfinished. The functions live in [thermodynamics.py](../../client/thermodynamics.py).
+the standalone unboosted core driver now composes those stages. The functions live in [thermodynamics.py](../../client/thermodynamics.py).
 
 ## Initialization and piston geometry
 
@@ -226,7 +226,77 @@ Static sources are REA 221 assembly and refreshed dossier
 The dossier reports full body `0x478ec0–0x47b467`; its high-pcode value-flow is
 truncated, so no completeness claim relies on that facet.
 
-Remaining work includes the standalone driver combining preparation, stateful
-valve areas and feedback, knot initialization and output stages, plus wider
-failure-domain and final-curve correction coverage. Prototype driving does not
-use these recovered calculations.
+## Standalone unboosted core driver
+
+[solve_core_record](../../client/cylinder_solver.py) now composes the recovered
+stages without reading or executing the original. It accepts an assembled
+1004-byte record and returns the same record with seven nineteen-knot result
+series populated. It preserves input fields outside those output series.
+
+The integration is connected in the observed order:
+
+| Original range | Composed role |
+| --- | --- |
+| `0x478f44–0x47901d` | Cylinder geometry and displacement |
+| `0x479062–0x4790eb`, `0x479af2–0x479b29` | Fuel energy and train-dependent fuel ratio |
+| `0x4793e6–0x479af2` | Valve events, flow tables and cam profiles |
+| `0x479b93–0x479df6` | RPM step, charge temperature and intake correction |
+| `0x479e2a–0x479f35` | Pressure carryover, mass initialization and history resets |
+| `0x479f42–0x47a145` | Exhaust and intake boundary preparation |
+| `0x47a145–0x47aa3d` | Intake/exhaust lift, effective areas and pressure correction |
+| `0x47aa3d–0x47ab69` | Exhaust wave and retained piecewise intake wave |
+| `0x47ab69–0x47ae8f` | Prior-flow intake feedback, current transfer and accumulation |
+| `0x47ae8f–0x47b285` | Coupled cylinder integration and work |
+| `0x47b285–0x47b446` | Cycle termination, fill metric and seven output series |
+
+One additional carryover is essential: the intake boundary starts with a fill
+input of 70, but `0x47b2b1` replaces it with the preceding knot's accumulated
+intake mass divided by reference mass, multiplied by 100. The next knot reuses
+that value. Calling the earlier isolated boundary API with its fixed 70 at every
+knot produced incorrect later output, despite matching the first knot.
+
+The intake wave rises linearly strictly above angle 510 through 540, then uses a
+sine branch strictly above 540 and below 650. Outside those updates it retains
+its preceding value until the next RPM reset. Consumed intake mass also persists
+when the intake valve is closed; the running intake accumulator resets at each
+knot. Intake flow/thermal/density feedback and the exhaust wave persist across
+knots. These behaviors follow the original stores rather than a physical model's
+preferred reset policy.
+
+The boost helper `0x586730` performs no boost-state updates when raw boost mode
+at record `+0x3c4` is zero. The standalone driver explicitly requires that mode.
+Evidence for the boost exclusion is REA
+`ev_c702030f77441ef2960b952c2a5920ede225a5f264571955de64e285b5bb2a88`.
+Modes 1–3, time-based native abort behavior and final curve corrections remain
+unimplemented. Invalid positive-gas-domain inputs raise an error rather than
+imitating the native zero-first-output abort. The driver is a recovered numerical
+core, not verified vehicle-driving forces.
+
+The initial comparisons cover fifteen distinct stock-derived records and the
+five integration records above. Every complete 1004-byte result matches bounded
+original execution exactly, including all 133 result floats per record. An
+authored synthetic record also matches; regression tests retain its first three
+power and boundary-pressure outputs to catch the prior-fill carryover behavior.
+
+Reproduce a complete core comparison with a locally retained input record:
+
+```text
+python -m tools.verify_cylinder_solver path/to/mcity.exe path/to/private-record.json
+```
+
+Twenty-five additional authored variations all match complete original records:
+intake modes 1–6; exhaust modes 1–7; fuel modes 9, 10, 18, 19, 20, 21 and 22;
+valve trains 2 and 3; both two-valve multipliers; and adjusted cam timing.
+Those tests use carb capacity 2400 to stay within the positive boundary domain.
+Across the fifteen stock, five integration, one base synthetic and twenty-five
+branch comparisons, 46 complete records and 6,118 result floats match exactly.
+This is bounded coverage rather than proof over every assembled record.
+
+The driver rejects non-finite or excessive valve angles, limits each knot to
+2,000 integration steps and requires angle progress after every step. Malformed
+float32 angles cannot stall the loop indefinitely.
+
+No original instructions, stock records, raw pseudocode or private captures are
+required by the portable driver or redistributed with these authored files.
+Prototype driving remains independent of this core until its remaining force,
+boost and finalization dependencies are recovered and validated.

@@ -11,7 +11,7 @@ for outstanding systems and the [native migration guide](docs/native-migration.m
 for module boundaries and verification gates. The native build currently contains
 recovered valuation, placeholder insertion/pruning, component ordering/linking and count/cost totals, bounded VIV directories, MCOTS packet framing,
 a restricted Lua execution harness, and an optional SDL/OpenGL asset garage.
-The garage renders original FCE geometry with orbit/zoom controls; native driving
+The garage renders original FCE geometry and supported FSH textures with orbit/zoom controls; native driving
 and complete customization remain unfinished.
 
 The recovered assembly passes are connected through an explicit
@@ -43,6 +43,14 @@ The [data mod kit alpha](docs/mod-kit-tutorial.md) includes versioned manifests,
 dependency checks, explicit resource replacements, previews and reproducible
 packages. Start with `python -m tools.modkit validate examples/mods/garage`.
 Game loading and Lua gameplay hooks remain future integration work.
+The [offline Lua registration alpha](docs/mod-lua-alpha.md) provides a typed
+native content registry and inspection events; a disk package adapter is pending.
+
+The [standalone unboosted engine core](docs/calculations/cylinder-cycle.md)
+reproduces all nineteen dyno knots for verified records. Boost, final curve
+corrections and driving-force integration remain unfinished. A
+[private local account check](docs/online-account.md) is available for account
+verification; no live account or race acceptance has yet been demonstrated.
 
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 

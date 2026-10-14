@@ -19,13 +19,24 @@ integration remains pending the online port; no TLS compatibility is implied by
 this foundation.
 
 The [native garage](native-garage.md) reads separately supplied VIV/FCE models
-and renders neutral geometry with orbit/zoom controls. Windows verification
+and renders geometry with supported original texture pages and orbit/zoom controls. Windows verification
 matched the Python reader across 315 installed models and 99,608 vertex
 positions; an original 32 Ford frame passed a foreground-pixel smoke check.
-This covers geometry, not textures, stock assembly, customization or driving.
+All 254 installed texture images match Python metadata and decoded-byte checksums.
+This covers geometry and supported direct-color/QFS decoding, not authentic
+materials, stock assembly, customization or driving.
 Linux CI renders authored tetrahedron geometry separately from original-asset
 acceptance. The [data mod kit alpha](mod-kit-tutorial.md) currently runs in the
 Python tooling; its registry is not yet loaded by this native application.
+The [offline script alpha](mod-lua-alpha.md) adds typed Lua resource registration
+and inspection/preview events, with a disk adapter and game integration pending.
+
+Commit `05b1332` passed Windows/Linux calculation builds and comparisons, Python
+checks, and the Linux Mesa/Xvfb native garage synthetic render. Its successors
+add texture decoding, offline registration and the standalone Python engine
+driver. Local Windows validation passes 16 native suites and 453 Python tests;
+original texture rendering and the unboosted core comparisons are documented
+in their subsystem notes. This remains a partial native game implementation.
 
 The archive decoder ports `tools.viv.inventory`: BIGF/BIG4 headers, bounded
 directory entries, Latin-1 names represented as UTF-8, duplicate rejection and

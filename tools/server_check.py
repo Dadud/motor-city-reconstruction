@@ -19,7 +19,7 @@ def main():
                         help='check pinned HTTPS certificate only, without login data')
     parser.add_argument('--auth-host', help='explicit HTTPS auth host; otherwise Windows registry')
     args = parser.parse_args()
-    report = {'compatibility': 'discovery only; authenticated protocols unimplemented',
+    report = {'compatibility': 'discovery only; no authenticated acceptance tested',
               'sources': []}
     failed = False
     try:

@@ -4,6 +4,36 @@
 blocking developer API, including the primary MCOTS exchange. The game's
 menus, follow-up services and racing remain unfinished.
 
+## Private local verification
+
+The account check tool prepares the configured public shard and external identity
+without prompting for credentials by default:
+
+```sh
+python -m tools.account_check '/path/to/Motor City Online' --shard-id 44 --source nps/shardlistip.ini
+```
+
+The installed top-level and NPS discovery files may name different URLs; select
+the exact installed source explicitly when they differ. On Linux, additionally
+supply the original configured `--auth-host` and `--auth-service`; the installed
+certificate pin remains required. Do not guess the auth host from binary ports.
+
+Add `--login` in an interactive local terminal to perform one authorization,
+binary login and persona retrieval. Both account name and password are entered
+with hidden prompts. Credentials are not accepted as command arguments or saved
+to files; account payloads, names, tickets and key material are omitted from
+output. Redirected input and an echoing input fallback are rejected. Ctrl+C
+stops the check. Network errors expose their type without private exception
+details. Python retains credential strings in process memory during the request;
+this tool makes no memory-erasure guarantee.
+
+The resulting report distinguishes public preflight from a live account test.
+It does not select a persona, enter the lobby, load a garage, modify inventory or
+race. Local validation on 2026-10-13 passed configured shard 44 public discovery
+and identity prerequisites; no account credentials were supplied. Automated
+tests use synthetic accounts and check cancellation and secret-free diagnostics.
+Full live compatibility remains unverified.
+
 `authenticate` receives an external installation, discovered shard, configured
 auth settings/certificate pin and credentials. The key-record value defaults
 to the [recovered startup zero](nps-key-initialization.md); an explicit research

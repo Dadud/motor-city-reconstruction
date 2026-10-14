@@ -1,5 +1,6 @@
 // Native geometry inspection milestone: original assets remain external.
 #include "mco/fce.hpp"
+#include "mco/textures.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL_opengl.h>
@@ -47,7 +48,12 @@ GarageOptions parse_options(int argc, char **argv) {
     throw std::runtime_error("--data and --model are required");
   return options;
 }
+struct DrawBatch {
+  std::uint32_t page;
+  size_t first, count;
+};
 struct DrawMesh {
+  std::vector<DrawBatch> batches;
   std::vector<float> vertices;
   size_t triangle_count = 0, vertex_count = 0;
 };
@@ -79,12 +85,21 @@ DrawMesh prepare_draw_mesh(const mco::FceModel &mesh) {
     throw std::runtime_error("model bounds cannot be rendered");
   for (auto &p : mesh.parts)
     for (auto &t : p.triangles)
-      for (auto index : t.indices) {
+      for (size_t corner = 0; corner < 3; ++corner) {
+        auto index = t.indices[corner];
+        if (corner == 0) {
+          if (draw.batches.empty() ||
+              draw.batches.back().page != t.texture_page)
+            draw.batches.push_back({t.texture_page, vertices.size() / 8, 0});
+          draw.batches.back().count += 3;
+        }
         for (size_t j = 0; j < 3; ++j)
           vertices.push_back((p.vertices[index][j] + p.origin[j] - center[j]) *
                              2 / extent);
         for (float n : p.normals[index])
           vertices.push_back(n);
+        vertices.push_back(t.uv[corner]);
+        vertices.push_back(t.uv[corner + 3]);
       }
   return draw;
 }
@@ -100,6 +115,7 @@ int main(int argc, char **argv) {
     auto &capture = options.capture;
     bool smoke = options.smoke;
     auto mesh = mco::load_vehicle(root, model);
+    auto textures = mco::load_vehicle_textures(root, model);
     auto draw = prepare_draw_mesh(mesh);
     auto &vertices = draw.vertices;
     auto triangle_count = draw.triangle_count;
@@ -142,6 +158,7 @@ int main(int argc, char **argv) {
     GLPROC(PFNGLVERTEXATTRIBPOINTERPROC, glVertexAttribPointer);
     GLPROC(PFNGLGETUNIFORMLOCATIONPROC, glGetUniformLocation);
     GLPROC(PFNGLUNIFORM4FPROC, glUniform4f);
+    GLPROC(PFNGLUNIFORM1IPROC, glUniform1i);
     using VoidEnum = void(APIENTRY *)(GLenum);
     using ClearColor = void(APIENTRY *)(GLfloat, GLfloat, GLfloat, GLfloat);
     using Viewport = void(APIENTRY *)(GLint, GLint, GLsizei, GLsizei);
@@ -158,15 +175,22 @@ int main(int argc, char **argv) {
     auto glGetError = proc<Error>("glGetError");
     const char *vs =
         "#version 330 core\nlayout(location=0) in vec3 p; layout(location=1) "
-        "in vec3 n; uniform vec4 camera; out float light; void main(){float "
+        "in vec3 n; layout(location=2) in vec2 uv; out vec2 texuv; uniform "
+        "vec4 camera; out float light; void main(){texuv=uv;float "
         "c=cos(camera.x),s=sin(camera.x),a=cos(camera.y),b=sin(camera.y); vec3 "
         "q=vec3(c*p.x+s*p.z,p.y,-s*p.x+c*p.z); "
         "q=vec3(q.x,a*q.y-b*q.z,b*q.y+a*q.z); float z=camera.z-q.z; "
         "gl_Position=vec4(q.x*1.7/camera.w,q.y*1.7,((100.0+0.1)/"
         "(100.0-0.1))*z-2.0*100.0*0.1/(100.0-0.1),z); "
         "light=0.28+0.72*abs(dot(normalize(n),normalize(vec3(0.4,0.8,0.6))));}";
-    const char *fs = "#version 330 core\nin float light; out vec4 color; void "
-                     "main(){color=vec4(vec3(0.42,0.67,0.82)*light,1.0);}";
+    const char *fs = R"GLSL(#version 330 core
+in float light;
+in vec2 texuv;
+uniform sampler2D image;
+uniform bool textured;
+out vec4 color;
+void main() { vec3 base=textured?texture(image,texuv).rgb:vec3(0.42,0.67,0.82); color=vec4(base*light,1.0); }
+)GLSL";
     auto shader = [&](GLenum type, const char *source) {
       auto id = glCreateShader(type);
       glShaderSource(id, 1, &source, nullptr);
@@ -202,9 +226,35 @@ int main(int argc, char **argv) {
     for (GLuint i = 0; i < 2; ++i) {
       glEnableVertexAttribArray(i);
       glVertexAttribPointer(
-          i, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+          i, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
           reinterpret_cast<void *>(size_t(i) * 3 * sizeof(float)));
     }
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          reinterpret_cast<void *>(6 * sizeof(float)));
+    using GenTextures = void(APIENTRY *)(GLsizei, GLuint *);
+    using BindTexture = void(APIENTRY *)(GLenum, GLuint);
+    using TexParameter = void(APIENTRY *)(GLenum, GLenum, GLint);
+    using TexImage = void(APIENTRY *)(GLenum, GLint, GLint, GLsizei, GLsizei,
+                                      GLint, GLenum, GLenum, const void *);
+    auto glGenTextures = proc<GenTextures>("glGenTextures");
+    auto glBindTexture = proc<BindTexture>("glBindTexture");
+    auto glTexParameteri = proc<TexParameter>("glTexParameteri");
+    auto glTexImage2D = proc<TexImage>("glTexImage2D");
+    std::vector<GLuint> gpu_textures(textures.size());
+    glGenTextures(GLsizei(gpu_textures.size()), gpu_textures.data());
+    for (size_t i = 0; i < textures.size(); ++i) {
+      auto &image = textures[i];
+      glBindTexture(GL_TEXTURE_2D, gpu_textures[i]);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width, image.height, 0,
+                   GL_RGBA, GL_UNSIGNED_BYTE, image.rgba.data());
+    }
+    GLint textured = glGetUniformLocation(program, "textured");
+    glUniform1i(glGetUniformLocation(program, "image"), 0);
     GLint camera = glGetUniformLocation(program, "camera");
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.055f, 0.07f, 0.09f, 1);
@@ -233,7 +283,13 @@ int main(int argc, char **argv) {
       glViewport(0, 0, width, height);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glUniform4f(camera, yaw, pitch, distance, float(width) / float(height));
-      glDrawArrays(GL_TRIANGLES, 0, GLsizei(vertices.size() / 6));
+      for (auto &batch : draw.batches) {
+        bool has_texture = batch.page < gpu_textures.size();
+        glUniform1i(textured, has_texture ? 1 : 0);
+        if (has_texture)
+          glBindTexture(GL_TEXTURE_2D, gpu_textures[batch.page]);
+        glDrawArrays(GL_TRIANGLES, GLint(batch.first), GLsizei(batch.count));
+      }
       if (smoke || !capture.empty()) {
         std::vector<unsigned char> pixels(size_t(width) * size_t(height) * 4);
         glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -262,7 +318,8 @@ int main(int argc, char **argv) {
               "smoke frame contains no rendered geometry or GL error");
         std::cout << "Rendered " << mesh.parts.size() << " parts, "
                   << vertex_count << " vertices, " << triangle_count
-                  << " triangles; foreground pixels=" << foreground << "\n";
+                  << " triangles, " << textures.size()
+                  << " texture pages; foreground pixels=" << foreground << "\n";
         if (smoke)
           running = false;
       }

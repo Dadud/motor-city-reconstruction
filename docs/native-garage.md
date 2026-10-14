@@ -1,6 +1,6 @@
 # Native garage geometry milestone
 
-The C++20 `mco_native_garage` executable loads the installed original vehicle archive and draws its actual FCE triangles with SDL3 and OpenGL 3.3. It is a geometry inspection milestone, with a neutral shaded surface. Original textures, damaged geometry, animation, garage UI, and gameplay are not implemented here.
+The C++20 `mco_native_garage` executable loads the installed original vehicle archive and draws its actual FCE triangles with SDL3 and OpenGL 3.3. It is a geometry and texture inspection milestone. Where an archive contains `part.fsh`, the renderer samples its decoded texture pages using original FCE UV coordinates. Missing pages retain a neutral shaded surface. Damaged geometry, animation, assembled wheels, garage UI, and gameplay are not implemented here.
 
 Build with `MCO_BUILD_PLATFORM=ON`. SDL3 is the repository's pinned dependency; OpenGL functions are obtained from SDL, without another loader dependency.
 
@@ -25,11 +25,25 @@ python tools/compare_native_fce.py build/native-zig/mco_fce_compare.exe "C:\Prog
 
 The installed dataset passed comparison for 315 archives and 99,608 local vertex positions, including each part's origin and vertex/triangle count. The Windows original `32ford.viv` smoke rendered 53 parts, 1,369 vertices and 2,294 triangles, with 25,803 foreground pixels. An optional `--capture frame.ppm` saves the actual rendered frame for inspection; keep screenshots of original geometry outside published sources.
 
-CI without original assets can generate an authored tetrahedron:
+CI without original assets can generate an authored tetrahedron and checker texture:
 
 ```text
 python tools/native_garage_fixture.py build/garage-fixture
 mco_native_garage --data build/garage-fixture --model data/models/synthetic.viv --smoke
 ```
 
-Linux needs a working OpenGL 3.3 driver/display (for CI, an Xvfb display with Mesa software rendering). This synthetic fixture validates the decoder/upload/shader/render path without implying that original geometry or assembly was exercised. The corresponding Windows smoke passed with 26,274 foreground pixels.
+Linux needs a working OpenGL 3.3 driver/display (for CI, an Xvfb display with Mesa software rendering). This synthetic fixture validates geometry/texture decoding, GPU upload, sampling and rendering without implying that original geometry or assembly was exercised. The corresponding Windows smoke passed with one texture page and 26,274 foreground pixels.
+
+
+Native texture support accepts direct-color SHPI types BGRA8888 (`0x7d`), BGR888 (`0x7f`), ARGB1555 (`0x7e`), RGB565 (`0x78`) and ARGB4444 (`0x6d`), including bounded outer-container and per-image RefPack/QFS decompression. It decodes only the first mip level. Indexed/paletted images and DXT compression remain explicit unsupported errors. Input is capped at 64 MiB, directory entries at 4,096, total pixels at 16,777,216 (64 MiB RGBA), and archive reads at 256 MiB. Attachment offsets and entry boundaries are checked before pixel reads.
+
+All 254 installed `part.fsh` images (5,242,880 RGBA pixels) matched the existing Python decoder's names, dimensions and FNV64 decoded-byte checksums. Those images use ARGB1555, RGB565 and BGRA8888; one observed per-image QFS case is `69superbee.viv`. Reproduce without saving original pixel data:
+
+```text
+python tools/compare_native_textures.py build/native-zig/mco_textures_test.exe "C:\Program Files (x86)\EA Games\Motor City Online"
+mco_native_garage --data "C:\Program Files (x86)\EA Games\Motor City Online" --model data/models/69superbee.viv --smoke --capture build/garage-textured.ppm
+```
+
+The textured Super Bee smoke passed with one texture page and 15,043 foreground pixels. Its captured frame was visually inspected. Original FCE page numbers select SHPI image order, matching the existing Python viewer; UV components are `uv[corner]` and `uv[corner+3]`. The diagnostic renderer samples RGB with opaque output. Alpha, triangle flags, visibility and authentic material/paint behavior are deliberately not inferred; decoded alpha remains preserved for later work. Separate skin selection is not implemented.
+
+Asset-free texture tests cover all five direct-color types, compressed literal/backreference images, compressed outer containers, malformed sizes/offsets/dimensions/links, unsupported codecs, truncated QFS commands, invalid backreferences and output sizes. These tests validate decoding, while the original texture smoke exercises the GPU upload and sampling path.

@@ -29,10 +29,19 @@ def write_fixture(root: Path) -> Path:
         struct.pack_into('<3f', fce, header+len(positions)*12+i*12, 0., 1., 0.)
     for i, indices in enumerate(faces):
         struct.pack_into('<4I', fce, header+len(positions)*24+i*56, 0, *indices)
-    name = b'part.fce\0'
-    offset = 16+8+len(name)
-    archive = struct.pack('>4sIII', b'BIGF', offset+len(fce), 1, offset)
-    archive += struct.pack('>II', offset, len(fce))+name+fce
+    # Authored 2x2 direct-color page also exercises native texture uploads in CI.
+    pixels = bytes((0, 255, 0, 255, 255, 255, 255, 255,
+                    255, 255, 255, 255, 0, 255, 0, 255))
+    fsh = struct.pack('<4sII4s', b'SHPI', 56, 1, b'GIMX')
+    fsh += struct.pack('<4sI', b'test', 24)
+    fsh += struct.pack('<IHH8x', (32 << 8) | 0x7d, 2, 2) + pixels
+    entries = ((b'part.fce\0', bytes(fce)), (b'part.fsh\0', fsh))
+    offset = 16 + sum(8 + len(name) for name, _ in entries)
+    archive = struct.pack('>4sIII', b'BIGF', offset + len(fce) + len(fsh), 2, offset)
+    for name, payload in entries:
+        archive += struct.pack('>II', offset, len(payload)) + name
+        offset += len(payload)
+    archive += bytes(fce) + fsh
     target = root/'Data'/'Models'/'synthetic.viv'
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(archive)
