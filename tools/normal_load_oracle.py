@@ -8,11 +8,11 @@ from tools.native_oracle import DynoOracle
 
 
 def cases():
-    for mask, pitch, bank, speed, vertical in itertools.product(range(16),
+    for mask, pitch, bank, speed, vertical, curvature in itertools.product(range(16),
             (-0.25001, -0.25, -0.03, 0, 0.03, 0.25, 0.25001),
-            (-0.1, 0, 0.1), (0, 15, 50), (0, 12)):
+            (-0.1, 0, 0.1), (0, 15, 50), (0, 12), (-40, 40)):
         yield NormalLoadInput(tuple(bool(mask & (1 << i)) for i in range(4)),
-            pitch, bank, 1450, 2.7, 1.6, 1.7, 0.55, 1.2, 1.5, speed, 40,
+            pitch, bank, 1450, 2.7, 1.6, 1.7, 0.55, 1.2, 1.5, speed, curvature,
             vertical, (9.8, 10, 9.5, 9.9))
 
 

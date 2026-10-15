@@ -176,6 +176,16 @@ remaining remote/gear and damage/effect interfaces explicitly supplied.
 
 ## Immediate playable milestone
 
+Load production, control smoothing and body/environment now feed the same
+[controller force pipeline](driving-pipeline.md), with actual original support
+prediction included in its larger comparison. Terrain projection, full engine
+and brake handoffs, preparation and authentic initialization remain open.
+The separate [engine pipeline](calculations/engine-pipeline.md) connects torque
+and thermal calculations across persistent calls; it still requires its actual
+clutch/gear/wheel-drive producers. [Owner mass/inertia binding](calculations/owner-binding.md)
+is recovered from explicit finalized configuration/model inputs, while creation
+of those finalized inputs remains a startup blocker.
+
 The [typed driving pipeline](driving-pipeline.md) now connects six recovered
 force stages to the controller and binds support results to its branch/contact
 state. The [stock startup audit](calculations/stock-driving-startup.md) reads the

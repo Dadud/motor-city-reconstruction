@@ -20,8 +20,8 @@ std::array<float, 4> normal_load(const NormalLoadInput& state) {
     const double front = stored(state.front_lever), rear = stored(state.rear_lever);
     const double speed = stored(state.speed), curvature = stored(state.curvature_scale);
     const double vertical = stored(state.vertical_correction);
-    if (mass <= 0 || wheelbase <= 0 || ft <= 0 || rt <= 0 || curvature <= 0)
-        throw std::invalid_argument("positive mass, dimensions and curvature scale required");
+    if (mass <= 0 || wheelbase <= 0 || ft <= 0 || rt <= 0 || curvature == 0)
+        throw std::invalid_argument("positive mass/dimensions and nonzero signed curvature scale required");
     const auto& support = state.support;
     const auto count = std::count(support.begin(), support.end(), true);
     if (count < 2 || std::abs(pitch) > 0.25) return {};

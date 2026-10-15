@@ -36,6 +36,11 @@ class NormalLoadTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 normal_load(replace(self.state,**changes))
 
+    def test_opposite_turn_radius_is_valid(self):
+        positive=normal_load(replace(self.state,bank=.07,speed=18,curvature_scale=40))
+        negative=normal_load(replace(self.state,bank=.07,speed=18,curvature_scale=-40))
+        self.assertEqual(negative,positive)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -10,7 +10,7 @@ def verify(directory):
     results={}
     for name in ('driving_engine_rpm','drivetrain_coupling','wheel_force_correction',
                  'brake_thermal','brake_forces','wheel_spin','combined_slip','vehicle_update',
-                 'engine_update','engine_torque_update','body_vertical_load','body_resistance','air_density',
+                 'engine_update','engine_torque_update','engine_pipeline','body_vertical_load','body_resistance','air_density',
                  'vehicle_preparation','scheduler',
                  'wind','drafting','body_environment','control_update','drivetrain_links',
                  'collision_response','collision_impulse','body_moments'):

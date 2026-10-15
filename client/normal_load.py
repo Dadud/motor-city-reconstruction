@@ -32,8 +32,8 @@ def normal_load(state: NormalLoadInput):
         (state.pitch, state.bank, state.mass, state.wheelbase, state.front_track,
          state.rear_track, state.height_parameter, state.front_lever, state.rear_lever,
          state.speed, state.curvature_scale, state.vertical_correction))
-    if mass <= 0 or min(wheelbase, ft, rt, curvature) <= 0:
-        raise ValueError('positive mass, dimensions and curvature scale required')
+    if mass <= 0 or min(wheelbase, ft, rt) <= 0 or curvature == 0:
+        raise ValueError('positive mass/dimensions and nonzero signed curvature scale required')
     support = state.support
     if sum(support) < 2 or abs(pitch) > 0.25:
         return (0.0,) * 4

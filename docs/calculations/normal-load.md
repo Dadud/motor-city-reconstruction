@@ -67,7 +67,11 @@ load_i = max(0, float32((wheel_scale_i - vertical_correction + banking) × load_
 ```
 
 `wheel_scale_i`, `vertical_correction` and `curvature_scale` are explicit observed
-inputs; their complete producers and units are unresolved. The initial baseline
+inputs. The connected controller supplies its signed turning-radius field for
+`curvature_scale`. Negative radii are valid: the original divides before taking
+the absolute banking term. The API rejects zero to expose the unresolved singular
+case instead of substituting a radius. Complete producers and units for the
+other observations remain unresolved. The initial baseline
 is not itself a final force in newtons. The implementation does not add gravity,
 spring compression or a guessed damping law to these equations.
 
@@ -80,13 +84,14 @@ python -m tools.native_normal_load_compare build/native-check/mco_normal_load_co
 ```
 
 The Windows bounded run executes the entire original routine and its sine/cosine
-helpers with no substituted calls. All 2,016 cases match the stored loads exactly.
+helpers with no substituted calls. All 4,032 cases match the stored loads exactly.
 It checks all four normal loads, the eight cleared force components and every
 other owner/configuration byte. The decompiler's x87 return is not used as a
 semantic output; the comparison excludes it. Cases cover every support mask,
 both pitch signs and the exact attitude gate, both bank signs, banking saturation
-and negative final-load clamping. Four unit tests cover masks, redistribution,
-gates and invalid observations. The C++ port matches all 2,016 Python corpus
+and negative final-load clamping. The expanded corpus includes both radius signs.
+Five unit tests cover masks, redistribution, gates and invalid observations.
+The C++ port matches all 4,032 Python corpus
 cases exactly; its comparison is included in Windows/Linux CI.
 
 The authored API rejects malformed support masks, nonfinite values and invalid

@@ -52,6 +52,16 @@ outside the published repository.
 
 ## Ordered gates
 
+The larger [driving pipeline](driving-pipeline.md) now compares 288 original
+controller ticks with actual support prediction, input smoothing, load producers,
+body environment and tire-force stages. Terrain selection/projection, remaining
+preparation, engine/brake integration and actual component delivery remain supplied.
+The [separate engine pipeline](calculations/engine-pipeline.md) passes 514 original
+scenarios and 1,696 retained ticks with zero error and has a native port. The
+[owner-binding producers](calculations/owner-binding.md) pass 154 original numeric
+cases; finalized configuration/model inputs are still explicit observations.
+These results expand integration coverage without completing faithful driving.
+
 The [controller force pipeline](driving-pipeline.md) now checks 288 complete
 original controller calls with six actual force stages and linear integration.
 Its typed support adapter consumes the separately verified

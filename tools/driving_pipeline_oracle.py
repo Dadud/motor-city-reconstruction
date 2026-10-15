@@ -17,6 +17,7 @@ from client.driving_support import DrivingSupport
 from client.support_prediction import SupportQuery
 from client.vehicle_update import update_vehicle, apply_linear_update
 from client.wheel_spin import SpinWheel, WheelSpinState
+from client.tire_response import f32
 from tools.native_oracle import DynoOracle
 from tools.tire_update_oracle import cases as tire_cases
 from tools.vehicle_update_oracle import (cases as controller_cases, encode, STAGES,
@@ -126,7 +127,12 @@ def expected_image(previous, state, inputs, owner, surfaces):
     return target
 
 
-def verify(executable, actual_support=False):
+def verify(executable, actual_support=False, extension=None):
+    """Compare the controller; optional research extension binds more children.
+
+    Extension methods prepare/install/wrap/expected/check/nested/mode supply
+    subsystem-specific memory and observations. Runtime executors remain separate.
+    """
     from unicorn import UC_HOOK_CODE
     o = DynoOracle(executable); cpu, reg = o.cpu, o.reg
     owner, config, interface, vtable, surfaces = (o.inputs+off for off in (0, 0x3000, 0x4000, 0x4100, 0x5000))
@@ -139,6 +145,9 @@ def verify(executable, actual_support=False):
     actual_calls, actual_effects, query_calls, projection_queries = [], [], [], []
     driver = None; current_stage = None; effect_mutated = False
     actual_stages = DrivingForces.stages | {'linear_update'}
+    if extension is not None:
+        actual_stages = actual_stages | extension.stages
+        extension.install(o, owner, config, interface, query)
     if actual_support:
         actual_stages = actual_stages | {'predict_support'}
         cpu.mem_write(0x8c4674, b'\0'); cpu.mem_write(0x8c465c, b'\0')
@@ -150,6 +159,8 @@ def verify(executable, actual_support=False):
         # The tire stage calls the same query and steering helpers internally.
         # Their real bodies must run; only direct controller children are supplied.
         if not internal and not 0x53c140 <= ret < 0x53d320:
+            if extension is not None:
+                extension.nested(cpu, reg, stage, ret)
             return
         slot = None
         if stage not in ('global_mode', 'followup_enabled', 'followup_ready'):
@@ -173,6 +184,8 @@ def verify(executable, actual_support=False):
     def mode(cpu, address, size, user):
         stack = cpu.reg_read(reg.UC_X86_REG_ESP)
         ret, operation, argument = struct.unpack('<III', cpu.mem_read(stack, 12))
+        if extension is not None and extension.mode(cpu, reg, operation, argument, interface):
+            return
         if operation not in (5, 16) or argument != owner or cpu.reg_read(reg.UC_X86_REG_ECX) != interface:
             raise AssertionError('tire mode query arguments')
         if operation == 16:
@@ -219,9 +232,12 @@ def verify(executable, actual_support=False):
         cpu.reg_write(reg.UC_X86_REG_EIP, target)
     for address in (0x591500, 0x591180): cpu.hook_add(UC_HOOK_CODE, effect, begin=address, end=address)
     count, ticks, maximum, event_maximum, stage_total, mutation_ticks = 0, 0, 0., 0., 0, 0
-    branches = {}; projection_count = 0
-    for state, inputs, observations in cases():
+    branches = {}; projection_count = 0; radius_error = 0.
+    corpus = cases() if extension is None else extension.cases()
+    for state, inputs, observations in corpus:
         image, data = initialize(state, inputs, owner, config, surfaces)
+        if extension is not None:
+            extension.prepare(o, owner, config, surfaces, state, inputs, observations, image, data)
         prediction = None
         if actual_support:
             prediction, _ = next(support_cases())
@@ -239,6 +255,8 @@ def verify(executable, actual_support=False):
                     image[start+off:start+off+size] = support_image[start+off:start+off+size]
                 state.wheels[i].surface_record = wheel.record.surface_code
                 cpu.mem_write(_address(wheel.record.surface_id)+4, bytes([wheel.record.surface_code]))
+        if extension is not None:
+            extension.ready(image, data)
         cpu.mem_write(owner, bytes(image)); cpu.mem_write(config, bytes(data))
         cpu.mem_write(0xa384c8, struct.pack('<I', int(state.orientation_disabled)))
         cpu.mem_write(0xa65bce, bytes([int(state.grip_boost)]))
@@ -263,6 +281,8 @@ def verify(executable, actual_support=False):
         if actual_support:
             support = DrivingSupport(prediction, py_project, external)
         pipeline = DrivingForces(inputs, support if support is not None else external, effects)
+        if extension is not None:
+            pipeline.external = extension.wrap(pipeline.external)
         for tick in range(2):
             o._reset(); actual_calls.clear(); actual_effects.clear(); query_calls.clear(); expected_effects.clear()
             projection_queries.clear(); python_projection_queries.clear()
@@ -285,8 +305,11 @@ def verify(executable, actual_support=False):
                         raise AssertionError((count, tick, 'component argument', event, expected_event))
                     event_maximum = max(event_maximum, error)
             if len(query_calls) != (4 if result.branch == 'supported' else 0):
-                raise AssertionError('tire mode observation count differs')
+                raise AssertionError(('tire mode observation count differs', count, tick,
+                    result.branch, len(query_calls), actual_calls))
             target = expected_image(image, result.state, pipeline.inputs, owner, surfaces)
+            if extension is not None:
+                extension.expected(target, result.state, pipeline.inputs)
             if actual_support:
                 if projection_queries != python_projection_queries or len(projection_queries) != 4:
                     raise AssertionError((count, tick, 'support query points/context/order', projection_queries,
@@ -299,6 +322,8 @@ def verify(executable, actual_support=False):
                 projection_count += len(projection_queries)
             actual = bytes(cpu.mem_read(owner, len(image)))
             positions = set(SCALARS)
+            if extension is not None:
+                positions.update(extension.float_offsets())
             for off, name in VECTORS.items(): positions.update(off+4*i for i in range(len(getattr(state, name))))
             for i in range(4):
                 start = 0x5fc+i*0x10c
@@ -308,12 +333,30 @@ def verify(executable, actual_support=False):
             for off in positions:
                 a, b = struct.unpack_from('<f', actual, off)[0], struct.unpack_from('<f', target, off)[0]
                 error = abs(a-b)
+                if off in (0xbe8, 0xbec) and error > max(.0005, abs(a)*4e-7):
+                    # Reciprocal yaw near zero amplifies tiny, already checked
+                    # carried angular differences. Verify each controller's
+                    # radius exactly against ITS input motion, rather than
+                    # relaxing tolerances on any simulated force or velocity.
+                    axis = 1 if off == 0xbe8 else 0
+                    previous_angular = struct.unpack_from('<3f', image, 0x38)[axis]
+                    previous_forward = struct.unpack_from('<f', image, 0x1c)[0]
+                    def radius(forward, angular):
+                        return 4000000. if angular == 0 else f32(forward/(angular*f32(6.2831855)))
+                    if a == radius(previous_forward, previous_angular) and b == radius(state.linear_velocity[2], state.angular_velocity[axis]):
+                        radius_error = max(radius_error, error)
+                        target[off:off+4] = actual[off:off+4]
+                        continue
                 if not math.isfinite(a) or error > max(.0005, abs(a)*4e-7):
-                    raise AssertionError((count, tick, hex(off), a, b, error, observations))
+                    raise AssertionError((count, tick, hex(off), a, b, error, observations,
+                        'prior motion', struct.unpack_from('<3f',image,0x14), state.linear_velocity,
+                        struct.unpack_from('<3f',image,0x38), state.angular_velocity))
                 maximum = max(maximum, error); target[off:off+4] = actual[off:off+4]
             if actual != target or bytes(cpu.mem_read(config, len(data))) != data:
                 off = next((i for i, (a, b) in enumerate(zip(actual, target)) if a != b), None)
                 raise AssertionError((count, tick, 'unexpected owner/configuration write', off))
+            if extension is not None:
+                extension.check(o)
             stage_total += sum(c.stage in DrivingForces.stages for c in result.calls)
             image = bytearray(actual); state = result.state; ticks += 1
             mutation_ticks += int(effect_mutated)
@@ -323,6 +366,7 @@ def verify(executable, actual_support=False):
         component_mutation_ticks=mutation_ticks,
         branches=branches, support_projection_queries=projection_count,
         maximum_absolute_error=maximum, maximum_effect_argument_error=event_maximum,
+        maximum_conditioned_radius_error=radius_error,
         scope=('complete original 53c140 controller, actual support predictor/scalar transforms, six actual force stages and actual 540c30; terrain projection, other stages and service/component delivery supplied; ordered queries/calls/effects and full owner bytes checked'
                if actual_support else 'complete original 53c140 controller with six actual force stages and actual 540c30; other stages and service/component delivery supplied; ordered calls/effects and full owner bytes checked'))
 
