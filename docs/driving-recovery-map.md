@@ -71,6 +71,15 @@ are visibly incorrect, so instruction-level checks are required for widths,
 calling conventions and floating-point storage boundaries.
 Source: `ev_6691a574a2c8313463ca5c8b1ffb2fa16c4305a4463d43be27ab00b2f64f2e84`.
 
+Focused recovery corrects one earlier working label: `0x540fd0` handles control
+and gear-input smoothing, so the controller action is `control_update`.
+It is not an aerodynamic force stage. The body-resistance producer is
+`0x536480`, followed by axle vertical-load adjustment at `0x536250`.
+Their calculations and remaining environmental inputs are documented separately.
+`0x54ebe0` prepares body-angle smoothing and transforms; `0x427da0` contributes
+surface support disturbance. These identifications do not by themselves connect
+the authentic input producers to a complete driving tick.
+
 ## Subsystem recovery targets
 
 | Required behavior | Original seeds and bounded observation | Next comparison scenarios |

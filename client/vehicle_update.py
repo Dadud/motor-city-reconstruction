@@ -175,7 +175,7 @@ def update_vehicle(state, execute):
     if mode:
         s.speed=s.alternate_speed
         s.local_angular=transform(s.angular_velocity,s.to_local);project_velocity()
-        call('predict_support');call('prepare_vehicle');call('aero')
+        call('predict_support');call('prepare_vehicle');call('control_update')
         steering=f32(s.maximum_steering*call('steering_angle'))
         call('project_wheels')
         for i,w in enumerate(s.wheels):
@@ -252,7 +252,7 @@ def update_vehicle(state, execute):
         s.local_linear=ZERO;s.local_acceleration=ZERO;s.local_angular=ZERO;s.local_angular_acceleration=ZERO
     else:project_velocity()
     s.local_angular=transform(s.angular_velocity,s.to_local)
-    for stage in ('project_wheels','aero','body_moment_inputs','body_forces'):call(stage)
+    for stage in ('project_wheels','control_update','body_moment_inputs','body_forces'):call(stage)
     acceleration=transform(s.linear_acceleration,s.to_local)
     s.local_acceleration=(acceleration[0],0.,acceleration[2])
     for stage in ('load_transfer','suspension_loads','resistance','engine','brakes','tires','wheel_correction'):call(stage)

@@ -72,6 +72,12 @@ force clearing and motion arithmetic; the scheduler preserves alternating force
 and pose dispatch. Authentic child-stage inputs, full integration and measured
 clock behavior remain required before replacing the playable driving prototype.
 
+The native calculation library also includes the recovered [engine startup and
+mode dispatcher](docs/calculations/engine-update.md), [body resistance](docs/calculations/body-resistance.md),
+[axle-load adjustment](docs/calculations/body-vertical-load.md) and
+[orientation/support preparation](docs/calculations/vehicle-preparation.md).
+Each documents original-function comparisons and remaining input dependencies.
+
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 
 

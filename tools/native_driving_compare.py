@@ -9,7 +9,9 @@ def verify(directory):
     directory=Path(directory)
     results={}
     for name in ('driving_engine_rpm','drivetrain_coupling','wheel_force_correction',
-                 'brake_thermal','brake_forces','wheel_spin','combined_slip','vehicle_update','scheduler',
+                 'brake_thermal','brake_forces','wheel_spin','combined_slip','vehicle_update',
+                 'engine_update','body_vertical_load','body_resistance','air_density',
+                 'vehicle_preparation','scheduler',
                  'collision_response','collision_impulse','body_moments'):
         runner=directory/f'mco_{name}_compare'
         if not runner.is_file(): runner=runner.with_suffix('.exe')

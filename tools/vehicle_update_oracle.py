@@ -14,7 +14,7 @@ STAGES={
     0x427da0:'support_bookkeeping',0x535fe0:'tilted_motion',0x548260:'refresh_motion',
     0x402a20:'flagged_motion',0x536250:'body_forces',0x540c30:'linear_update',
     0x536480:'body_moment_inputs',0x53d920:'normal_loads',0x53e390:'grip_observation',
-    0x55cfc0:'vehicle_gate',0x53e030:'project_wheels',0x540fd0:'aero',
+    0x55cfc0:'vehicle_gate',0x53e030:'project_wheels',0x540fd0:'control_update',
     0x53e680:'load_transfer',0x53e980:'suspension_loads',0x53e3d0:'resistance',
     0x545af0:'engine',0x538960:'brakes',0x53ecf0:'tires',0x53e130:'wheel_correction',
     0x5400b0:'wheel_spin',0x53fb30:'combined_slip',0x540520:'force_orientation',

@@ -14,7 +14,7 @@ It is not yet the complete playable force solver.
 The controller observes global mode before testing whether the vehicle is active.
 An inactive vehicle receives no further child calls. An active alternate-mode
 vehicle takes a separate path: it projects velocity, predicts support, prepares
-the vehicle, obtains aero/steering/wheel projections, sets supported wheel loads
+the vehicle, updates control smoothing and steering/wheel projections, sets supported wheel loads
 from `mass * float32(2.4525)`, updates wheel spin/phase and calls the engine.
 It does not run the normal tire sequence or the usual post-update tail.
 
@@ -46,7 +46,7 @@ limiting. A false first query therefore does not imply the second is false.
 The supported child sequence is:
 
 ```text
-wheel projection → aero → moment inputs → body forces
+wheel projection → control smoothing → moment inputs → body forces
 load transfer → suspension loads → resistance → engine → brakes
 tires → wheel correction → [wheel spin → combined slip]
 [force orientation] → body moments → linear update

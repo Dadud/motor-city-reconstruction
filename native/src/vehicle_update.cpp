@@ -111,7 +111,7 @@ VehicleUpdateOutput update_vehicle(VehicleUpdateState s, const VehicleStageExecu
     project();
     call("predict_support");
     call("prepare_vehicle");
-    call("aero");
+    call("control_update");
     const double steering = stored(s.maximum_steering * call("steering_angle"));
     call("project_wheels");
     for (int i = 0; i < 4; ++i) {
@@ -242,7 +242,7 @@ VehicleUpdateOutput update_vehicle(VehicleUpdateState s, const VehicleStageExecu
   } else
     project();
   s.local_angular = transform_update_vector(s.angular_velocity, s.to_local);
-  for (const auto *stage : {"project_wheels", "aero", "body_moment_inputs", "body_forces"})
+  for (const auto *stage : {"project_wheels", "control_update", "body_moment_inputs", "body_forces"})
     call(stage);
   const auto acceleration = transform_update_vector(s.linear_acceleration, s.to_local);
   s.local_acceleration = {acceleration[0], 0, acceleration[2]};
