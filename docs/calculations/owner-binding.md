@@ -83,3 +83,6 @@ write performed by the original helper. Native/Python comparisons pass 180
 mass/inertia, lever, COM and scale cases with exact output bits on MSVC and
 Zig/Clang. See [complete body construction](body-construction.md) for the connected
 startup phase and new REA evidence.
+The initializer's [load, balance and brake producers](startup-balance.md) also
+have complete bounded Python/C++ translations. Projected area, shift thresholds
+and complete initializer state publication remain separate work.

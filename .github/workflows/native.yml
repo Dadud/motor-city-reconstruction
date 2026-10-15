@@ -184,6 +184,10 @@ jobs:
         run: python -m tools.native_body_startup_compare build/native/mco_body_startup_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_body_startup_compare build/native/Release/mco_body_startup_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_startup_balance_compare build/native/mco_startup_balance_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_startup_balance_compare build/native/Release/mco_startup_balance_compare.exe
   linux-platform:
     runs-on: ubuntu-latest
     steps:

@@ -1,4 +1,34 @@
 {
+  "0x54a0e0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete startup load coefficient in finite supported domain. Compared as part of 372 coefficient calls on 54 authored and eight stock configurations; all output bits exact. Units remain unresolved. See startup-balance writeup.",
+    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+  },
+  "0x53acc0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete startup balance coefficient in supported configuration domain, with actual tire response children and both alternate-load modes. Compared as part of 372 coefficient calls including eight stock configurations; output bits exact. Not integrated suspension/handling acceptance.",
+    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+  },
+  "0x53b040": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete startup brake balance in finite nonzero-denominator domain, with actual brake children. Compared as part of 372 coefficient calls including eight supported stock configurations; all float32 output bits exact. Original stored versus retained precision preserved.",
+    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+  },
+  "0x538820": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete brake diameter selection, original stored float constants and default behavior. Twenty-four direct original calls, plus dependent startup brake comparisons. Native/Python output bits exact.",
+    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+  },
+  "0x5399d0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete brake capacity numeric helper in finite supported domain. 144 direct original comparisons across diameter, material/construction defaults, pressure and auxiliary modes; double output bits exact. Also verified through stock brake-balance callers.",
+    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+  },
   "0x51ed40": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",

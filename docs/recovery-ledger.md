@@ -30,6 +30,9 @@ sample customization](calculations/body-construction.md), native owner-binding
 producers, and a connected startup-body phase matching 320 original scenarios.
 The main owner initializer and upstream model assembly remain partial; this does
 not close the original driving acceptance gate.
+The main initializer's [load, balance and brake producers](calculations/startup-balance.md)
+are now also translated in Python/C++; their complete original calls match on
+authored configurations and all eight supported stock configurations.
 
 | Feature | Current status and evidence | Remaining recovery path | Acceptance scenario |
 | --- | --- | --- | --- |
