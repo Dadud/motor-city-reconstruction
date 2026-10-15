@@ -45,7 +45,13 @@ comparisons. Authentic component loaders must still produce the finalized
 configuration; these equations do not supply missing stock ratios or mass.
 
 `client.stock_driving_state` exposes these facts and a machine-readable missing
-input report. `construct_observed_state` requires **every** field of a selected
+input report. The [assembly numeric finalizer](assembly-finalization.md) now
+provides the original component-based weight fraction and numeric postload tail,
+with exact original and native comparisons. It consumes loaded component mass
+slots; it does not provide missing parts or total mass. This stage precedes owner
+binding and final engine curves.
+
+`construct_observed_state` requires **every** field of a selected
 recovered record, including fields with research defaults. Nested wheel, engine
 and brake records must be typed explicitly. Supplying a complete observation
 record does not establish its provenance; numeric validation remains in the

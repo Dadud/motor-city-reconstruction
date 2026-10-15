@@ -152,6 +152,14 @@ jobs:
         run: python -m tools.native_owned_descriptions_compare build/native/mco_owned_descriptions_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_owned_descriptions_compare build/native/Release/mco_owned_descriptions_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_assembly_weight_compare build/native/mco_assembly_weight_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_assembly_weight_compare build/native/Release/mco_assembly_weight_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_assembly_finalization_compare build/native/mco_assembly_finalization_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_assembly_finalization_compare build/native/Release/mco_assembly_finalization_compare.exe
   linux-platform:
     runs-on: ubuntu-latest
     steps:

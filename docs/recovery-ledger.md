@@ -52,6 +52,14 @@ outside the published repository.
 
 ## Ordered gates
 
+The [assembly numeric finalizer](calculations/assembly-finalization.md) now
+recalculates component-based weight distribution and the original postload
+fallbacks, overrides and weighted accumulator. The complete weight helper and
+the enclosing numeric tail each match 728 original executions exactly; native
+ports retain corresponding differential runners. This supplies another startup
+producer, but does not complete component loading, total mass accumulation,
+quality updates or engine-curve finalization. The stock driving gate remains open.
+
 The [connected drivetrain](calculations/drivetrain-stages.md) now executes all
 eight engine driving children with brakes, loads, environment and tires in the
 Python research harness. The five newly recovered numeric bodies pass 3,360
