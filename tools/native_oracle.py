@@ -444,6 +444,9 @@ class DynoOracle:
         """
         if not isinstance(assembled, bytes) or len(assembled) != 0x820:
             raise ValueError('oracle builder requires a 0x820-byte assembled structure')
+        # A previous full finalizer call may cache a block spanning the bounded
+        # stop address. Recompile its blocks for this entry-to-solver boundary.
+        self.cpu.ctl_remove_cache(0x46d1d0,0x46dbd9)
         self._reset()
         self.cpu.mem_write(0x72000000, bytes(0x10000))
         address = self.inputs+0x2000

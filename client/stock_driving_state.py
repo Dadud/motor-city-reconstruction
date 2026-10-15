@@ -153,11 +153,11 @@ def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=N
                                 (c.surface.block, c.surface.descriptor)) for c in world.contacts),
         original_spawn_verified=False, support_flags_verified=False)
     unresolved = dict(
-        configuration='Body initialization, fourteen component loaders including tire templates, and numeric postload are available; finish remaining loaders, engine curves, full dispatch/quality and initialized owner binding.',
+        configuration='Body initialization, twenty-three component loaders including tire templates, and numeric postload are available; finish remaining loaders, full dispatch/quality and initialized owner binding.',
         mass_inertia='Whole-car mass, gravity parameter, centre of mass, inverse mass and rotational inertia are not engine-block mass or mesh bounds.',
         geometry='Body configuration supplies catalogue wheelbase/tracks; verify final owner binding, front/rear levers, area/height and transforms.',
         contacts='Recover original spawn/settling and contact flags, wheel scales, support corrections and surface coefficient lookup; clearance gaps are not suspension compression.',
-        engine='Supply final assembled torque knots, idle/max/limiter RPM and initialized dispatcher fields. Transmission/rear-end loaders now produce ratios, losses and final drive; complete remaining component and rear-tire loading before final gear binding.',
+        engine='Ordinary unboosted curves and idle/max RPM are recovered in Python; bind complete engine inputs and initialized dispatcher fields. Transmission/rear-end and tire loaders supply gear inputs; complete assembly before final gear binding. Special carburetor and boost remain open.',
         drivetrain='Supply original clutch/gear/differential state, assembled ratios and effect consumers; do not substitute prototype gearing.',
         brakes='Bind original brake material, thermal/cooling/capacity parameters, distribution, quality, component codes and initial temperatures/countdowns.',
         tires='Bind two complete 26-knot axle response curves, angle coefficients, grip/quality/wear, steering limits and native spin scales.',

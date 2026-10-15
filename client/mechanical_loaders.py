@@ -375,8 +375,139 @@ def load_tire(configuration,component,templates=None):
     return m.result(0 if valid else 2)
 
 
+def _duty_quality(m,duty):
+    struct.pack_into('<f',m.part,0x1c,.75 if duty==0 else 2. if duty==2 else 4. if duty==3 else 1.)
+
+
+def _disabled_by_installation(m):
+    def word(offset):return struct.unpack_from('<I',m.part,offset)[0]
+    return (word(0x96c)!=0 and word(0x930)!=0 and word(0x51b)!=0 and
+        word(0x527)!=0 and word(0x527)<=word(0x94c))
+
+
+def load_intake_manifold(configuration,component):
+    """Complete 0x54af40: family check, flow, material and truncating metadata."""
+    m=_Image(configuration,component)
+    if m.count()!=4:return m.fail(1)
+    if not (m.bounded(0x30,5,50) and m.rounded_between(0x3c,0,2) and
+            m.rounded_between(0x40,0,9) and m.trunc(0x40)!=9 and
+            m.bounded(0x44,.9,1.1) and _same_engine_family(m)):return m.fail(2)
+    m.add_mass();m.copy(0x3a4,0x30);m.copy(0x3b4,0x44);m.copy(0x3b8,0x53b)
+    for destination,source in ((0x3ac,0x3c),(0x3b0,0x40)):
+        m.integer(destination,m.nearest(source))
+    m.integer(0x3a8,m.trunc(0x34));m.integer(0x3bc,m.trunc(0x48))
+    _material_quality(m,0x40,head=True)
+    return m.result(0)
+
+
+def load_carburetor(configuration,component):
+    """Complete 0x54b0a0; quality uses truncated duty, unlike most loaders."""
+    m=_Image(configuration,component)
+    if m.count()!=3:return m.fail(1)
+    if not (m.bounded(0x30,1,10) and m.rounded_between(0x3c,0,6) and
+            m.bounded(0x40,.9,1.1) and m.bounded(0x44,100,1600)):return m.fail(2)
+    m.add_mass();m.copy(0x3c0,0x30);m.copy(0x3d0,0x40)
+    m.copy(0x3d4,0x53b);m.copy(0x3cc,0x44)
+    m.integer(0x3c8,m.nearest(0x3c));duty=m.trunc(0x34)
+    m.integer(0x3c4,duty);_duty_quality(m,duty)
+    return m.result(0)
+
+
+def load_air_cleaner(configuration,component):
+    """Complete 0x54b360 including the original installation-state override."""
+    m=_Image(configuration,component)
+    if m.count()!=0:return m.fail(1)
+    if not (m.bounded(0x30,2,15) and m.rounded_between(0x34,0,3)):return m.fail(2)
+    m.add_mass();m.copy(0x3ec,0x30);m.integer(0x3f0,m.nearest(0x34))
+    loss=min(f32(.01),max(f32(.0025),f32((m.number(0x34)+1)*f32(.0025))))
+    m.put(0x3f4,0. if _disabled_by_installation(m) else loss);m.quality()
+    return m.result(0)
+
+
+def load_exhaust_manifold(configuration,component):
+    """Complete 0x54c710 with original family/type/material validation."""
+    m=_Image(configuration,component)
+    if m.count()!=3:return m.fail(1)
+    if not (_same_engine_family(m) and m.bounded(0x30,5,50) and
+            m.rounded_between(0x3c,0,3) and m.rounded_between(0x40,0,9) and
+            m.trunc(0x40) not in (8,9) and m.bounded(0x44,.9,1.1)):return m.fail(2)
+    m.add_mass();m.copy(0x574,0x30);m.copy(0x584,0x44);m.copy(0x588,0x53b)
+    for destination,source in ((0x578,0x34),(0x57c,0x3c),(0x580,0x40)):
+        m.integer(destination,m.nearest(source))
+    _material_quality(m,0x40,head=True)
+    return m.result(0)
+
+
+def load_exhaust_pipe(configuration,component):
+    """Complete 0x54c860: nonzero value two clears three before validation."""
+    m=_Image(configuration,component)
+    if m.count()!=3:return m.fail(1)
+    if m.number(0x40)!=0:struct.pack_into('<f',m.part,0x44,0.)
+    if not (m.bounded(0x30,1,15) and m.bounded(0x44,0,15) and
+            m.rounded_between(0x40,0,1) and
+            not (m.nearest(0x40)!=0 and m.number(0x44)>0) and
+            m.rounded_between(0x3c,0,9) and m.trunc(0x3c)!=9):return m.result(2)
+    m.add_mass();m.copy(0x58c,0x30);m.copy(0x59c,0x44)
+    for destination,source in ((0x590,0x34),(0x594,0x3c),(0x598,0x40)):
+        m.integer(destination,m.nearest(source))
+    m.quality();return m.result(0)
+
+
+def load_muffler(configuration,component):
+    """Complete 0x54ca90; gain depends on the preceding exhaust manifold."""
+    m=_Image(configuration,component)
+    if m.count()!=2:return m.fail(1)
+    if not (m.bounded(0x30,2,20) and m.rounded_between(0x3c,0,4) and
+            m.rounded_between(0x40,0,1)):return m.fail(2)
+    m.add_mass();m.copy(0x5a0,0x30)
+    for destination,source in ((0x5a4,0x34),(0x5a8,0x3c),(0x5ac,0x40)):
+        m.integer(destination,m.nearest(source))
+    kind=struct.unpack_from('<i',m.out,0x57c)[0]
+    m.put(0x5b0,{0:.0125,1:.015,2:.024,3:.016}.get(kind,0.) if m.nearest(0x40)==1 else 0.)
+    m.quality();return m.result(0)
+
+
+def load_cooling(configuration,component):
+    """Complete 0x54c440, preserving the 1.07 capacity factor."""
+    m=_Image(configuration,component)
+    if m.count()!=4:return m.fail(1)
+    if not (m.bounded(0x30,20,50) and m.bounded(0x3c,10,50) and
+            m.bounded(0x40,.01,.1) and m.bounded(0x44,.01,.2) and
+            m.bounded(0x48,100,150) and m.rounded_between(0x34,0,3)):return m.fail(2)
+    m.add_mass();m.copy(0x4d4,0x30);m.integer(0x4d8,m.nearest(0x34))
+    m.put(0x4dc,m.number(0x3c)*f32(1.07));m.copy(0x4e0,0x53b)
+    for destination,source in ((0x4e4,0x40),(0x4e8,0x44),(0x4ec,0x48)):
+        m.copy(destination,source)
+    m.quality();return m.result(0)
+
+
+def load_electrical(configuration,component):
+    """Complete 0x54c550, including truncating RPM metadata."""
+    m=_Image(configuration,component)
+    if m.count()!=2:return m.fail(1)
+    if not (m.bounded(0x30,10,50) and m.rounded_between(0x34,0,3) and
+            m.bounded(0x3c,7000,12000) and m.bounded(0x40,100,2000)):return m.fail(2)
+    m.add_mass();m.copy(0x4c0,0x30);m.integer(0x4c4,m.nearest(0x34))
+    m.copy(0x4c8,0x53b);m.integer(0x4cc,m.trunc(0x3c));m.copy(0x4d0,0x40)
+    m.quality();return m.result(0)
+
+
+def load_lubrication(configuration,component):
+    """Complete 0x54c340."""
+    m=_Image(configuration,component)
+    if m.count()!=2:return m.fail(1)
+    if not (m.bounded(0x30,5,50) and m.bounded(0x3c,4,20) and
+            m.bounded(0x40,.0005,.001) and m.rounded_between(0x34,0,3)):return m.fail(2)
+    m.add_mass();m.copy(0x4f0,0x30);m.integer(0x4f4,m.nearest(0x34))
+    m.copy(0x4f8,0x53b);m.copy(0x4fc,0x3c);m.copy(0x500,0x40)
+    m.quality();return m.result(0)
+
+
 MECHANICAL_LOADERS={160001:load_engine_block,130001:load_transmission,
     140001:load_rear_end,100001:load_wheel_rim,12001:load_spring,
     11001:load_shock,10001:load_brake,1000001:load_cylinder_head,
     1100001:load_camshaft,1200001:load_valve_train,180001:load_crankshaft,
-    190001:load_connecting_rods,200001:load_pistons,110001:load_tire}
+    190001:load_connecting_rods,200001:load_pistons,110001:load_tire,
+    320001:load_intake_manifold,330001:load_carburetor,340001:load_air_cleaner,
+    280001:load_exhaust_manifold,290001:load_exhaust_pipe,300001:load_muffler,
+    230001:load_cooling,240001:load_electrical,250001:load_lubrication}

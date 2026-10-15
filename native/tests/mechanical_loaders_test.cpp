@@ -4,11 +4,15 @@ int main() {
     const std::array<std::byte,0x820> config{};
     const std::array<std::byte,0x984> part{};
     for(auto kind:{160001U,130001U,140001U,100001U,12001U,11001U,10001U,
-            1000001U,1100001U,1200001U,180001U,190001U,200001U}) {
+            1000001U,1100001U,1200001U,180001U,190001U,200001U,
+            320001U,330001U,280001U,290001U,300001U,230001U,240001U,250001U}) {
         const auto out=mco::load_mechanical_component(kind,config,part);
         if(out.status!=1 || out.configuration!=config || out.component!=part)
             throw std::runtime_error("mechanical count rejection must preserve images");
     }
+    const auto air=mco::load_mechanical_component(340001,config,part);
+    if(air.status!=2 || air.configuration!=config || air.component!=part)
+        throw std::runtime_error("air cleaner accepts zero count but rejects zero mass");
     bool rejected=false;
     try {mco::load_mechanical_component(999,config,part);}
     catch(const std::invalid_argument&) {rejected=true;}

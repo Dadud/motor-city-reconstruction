@@ -1,10 +1,11 @@
 # Driving recovery map
 
 The [mechanical startup loaders](calculations/mechanical-component-loading.md)
-now cover fourteen component kinds in Python and C++, with original validation
+now cover twenty-three component kinds in Python and C++, with original validation
 and quality, including tire curves from eighteen external auxiliary records.
-Twenty-nine selected actual Ford component calls match original execution in
-sequence. Complete assembly and startup are still required before these
+Thirty-eight selected actual Ford component calls match original execution in
+sequence. The [ordinary unboosted engine finalizer](calculations/engine-curve-finalization.md)
+matches eight stock engines in Python. Complete assembly and startup are still required before these
 producers can initialize the recovered driving model.
 
 This map identifies the original routines needed to replace the current driving

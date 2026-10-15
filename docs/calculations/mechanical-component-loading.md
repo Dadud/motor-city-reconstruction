@@ -1,8 +1,9 @@
 # Mechanical component loading
 
-The reconstructed startup now has fourteen complete component loaders in Python
+The reconstructed startup now has twenty-three complete component loaders in Python
 and C++: engine block, head, camshaft, crankshaft, rods, pistons, valve train,
-transmission, rear end, wheel rims, springs, shocks, brakes and tires.
+transmission, rear end, wheel rims, springs, shocks, brakes, tires, intake manifold,
+carburetor, air cleaner, exhaust manifold, pipe, muffler, cooling, electrical and lubrication.
 They retain original validation, rounding, mass accumulation, configuration writes
 and component quality. They do not complete vehicle assembly or start the driving
 model. Remaining engine/auxiliary/cosmetic components, grouping
@@ -35,6 +36,15 @@ Separately supplied `mcity.exe`, SHA-256
 | Tire validation | `0x545030` | `ev_48548f9764fb633c725aaedf17d7f4f9348a247bc5a0b4c091c4694d3fe69e35` |
 | Tire post-validation | `0x545110` | `ev_15e833e423670d5e2d7581403e7cdc14b160d350251de577bf581f90a0c4dbc4` |
 | Tire auxiliary producer | `0x67e520` | `ev_8431a9a933d00fdf6263e3d4c0b39f08a1f46000afa5ba79bc9e39dc8d19da9c` |
+| Intake manifold | `0x54af40` | `ev_e3e692b283f35a09d9f55ae0a4c1ee143ce922fead52ab059d38fe23f7184eb6` |
+| Carburetor | `0x54b0a0` | `ev_779783aad82910a8b1f8c2b65415063f2d6e270b4016b9b41dc71fd938b518f8` |
+| Air cleaner | `0x54b360` | `ev_dd48cbddb6c12aa5efd9b51e8e5c4551221a67af89fdd6cda7e6aebda24c4588` |
+| Exhaust manifold | `0x54c710` | `ev_8db65c323a673c47207ea203501ddd9af1c30f1d126a7f86fa4ab5081aa8d5f6` |
+| Exhaust pipe | `0x54c860` | `ev_140819b7af8724cb345ca5ea5d9b910285d6b70363b42e769a155b5c57a9e163` |
+| Muffler | `0x54ca90` | `ev_faa26a510b25809e61f735142b9bae5b72e52185473352525627b81c4227efc0` |
+| Cooling | `0x54c440` | `ev_52a94512608e44afdb67de7af07f2951ce9f9480f59356b4b7be5d048beb1e4d` |
+| Electrical | `0x54c550` | `ev_ed309b8bbfc3a9a9d4332a8a30795ba433f6b0fed62a1723f14480868a2966fa` |
+| Lubrication | `0x54c340` | `ev_730e9a267ae0e604e98bf763ac300dcb0cf8887d37957583df0035d0144a793a` |
 
 These are authored reconstructions from shipped instructions, not recovered
 original source. Original bytes, decompiler output and private captures are not
@@ -88,7 +98,16 @@ middle of `0x52c2e0` are explicitly excluded from the physics-copy implementatio
 
 ## Original mass and response rules
 
-All fourteen loaders preserve float32 mass accumulator stores. Their component mass
+Auxiliary loaders preserve several non-obvious rules. Carburetor quality uses
+truncated duty, while most quality selection rounds. The air cleaner expects zero
+numeric values and can suppress its loss through installation metadata. A nonzero
+pipe flag clears its contribution before semantic validation, even on a later
+failure. Muffler gain depends on the already loaded exhaust manifold, making
+dispatch order observable. Electrical RPM metadata truncates; cooling capacity
+uses the original float32 `1.07` multiplier. These fields feed the
+[engine curve finalizer](engine-curve-finalization.md).
+
+All twenty-three loaders preserve float32 mass accumulator stores. Their component mass
 uses the original mechanical mass unit, documented as kg by the catalogue
 component interpretation. Several rules distinguish total mass from axle-group
 slots used by the [weight finalizer](assembly-finalization.md):
@@ -208,10 +227,13 @@ The current checks establish:
   eighteen installed records. Allocator and typed database services are replaced;
   packing/clearing/control flow runs original instructions. Every table byte
   except the process-specific allocation handle matches. Jet execution is untested.
-- Twenty-nine selected Ford loader calls in their original relative dispatch order:
+- Nine auxiliary loaders: 2,093 original cases, including nine actual Ford components.
+  Validators, installation overrides, family checks and pre-rejection writes execute
+  original instructions; statuses and both complete output images match.
+- Thirty-eight selected Ford loader calls in their original relative dispatch order:
   every resulting configuration/component image matches original execution.
   Other loaders are skipped, so this is a partial assembly comparison.
-- C++ ports: 4,505 authored original-comparison cases match Python exactly.
+- C++ ports: 6,589 authored original-comparison cases match Python exactly.
 
 The Ford comparison uses actual catalogue rows with explicitly authored zero
 damage/zero wear and temporary fixture IDs. It does not claim those IDs identify
@@ -227,6 +249,7 @@ python -m tools.mechanical_pairing_oracle '<game>/mcity.exe'
 python -m tools.mechanical_engine_block_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.mechanical_loaders_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.engine_component_loaders_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
+python -m tools.engine_auxiliary_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.tire_loader_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.tire_templates_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.stock_mechanical_oracle '<game>/mcity.exe' '<game>/data/db/Online.mdb'

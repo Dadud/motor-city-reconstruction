@@ -226,6 +226,99 @@ ComponentLoadResult tire(Image& m,std::span<const std::byte> templates) {
         m.existing(0x144+shift)>=127. && m.existing(0x144+shift)<=508.)) m.out.status=2;
     return m.out;
 }
+bool disabled_by_installation(const Image& m) {
+    const auto& p=m.out.component;
+    return word(p,0x96c)!=0 && word(p,0x930)!=0 && word(p,0x51b)!=0 &&
+        word(p,0x527)!=0 && word(p,0x527)<=word(p,0x94c);
+}
+void duty_quality(Image& m,std::int32_t duty) {
+    m.quality_value(duty==0 ? .75 : duty==2 ? 2. : duty==3 ? 4. : 1.);
+}
+ComponentLoadResult auxiliary(Image& m,std::uint32_t kind) {
+    const unsigned count=kind==340001 ? 0 : kind==320001 || kind==230001 ? 4 :
+        kind==330001 || kind==280001 || kind==290001 ? 3 : 2;
+    if(m.count()!=count) return m.fail(1);
+    bool valid=false;
+    switch(kind) {
+    case 320001:
+        valid=m.bounded(0x30,5.f,50.f) && m.rounded_between(0x3c,0,2) &&
+            m.rounded_between(0x40,0,9) && truncated(m.number(0x40))!=9 &&
+            m.bounded(0x44,.9f,1.1f) && same_engine_family(m);break;
+    case 330001:
+        valid=m.bounded(0x30,1.f,10.f) && m.rounded_between(0x3c,0,6) &&
+            m.bounded(0x40,.9f,1.1f) && m.bounded(0x44,100.f,1600.f);break;
+    case 340001:
+        valid=m.bounded(0x30,2.f,15.f) && m.rounded_between(0x34,0,3);break;
+    case 280001: {
+        const auto material=truncated(m.number(0x40));
+        valid=same_engine_family(m) && m.bounded(0x30,5.f,50.f) &&
+            m.rounded_between(0x3c,0,3) && m.rounded_between(0x40,0,9) &&
+            material!=8 && material!=9 && m.bounded(0x44,.9f,1.1f);break;
+    }
+    case 290001:
+        if(m.number(0x40)!=0) put_word(m.out.component,0x44,0);
+        valid=m.bounded(0x30,1.f,15.f) && m.bounded(0x44,0.f,15.f) &&
+            m.rounded_between(0x40,0,1) && !(nearest(m.number(0x40))!=0 && m.number(0x44)>0) &&
+            m.rounded_between(0x3c,0,9) && truncated(m.number(0x3c))!=9;break;
+    case 300001:
+        valid=m.bounded(0x30,2.f,20.f) && m.rounded_between(0x3c,0,4) && m.rounded_between(0x40,0,1);break;
+    case 230001:
+        valid=m.bounded(0x30,20.f,50.f) && m.bounded(0x3c,10.f,50.f) &&
+            m.bounded(0x40,.01f,.1f) && m.bounded(0x44,.01f,.2f) &&
+            m.bounded(0x48,100.f,150.f) && m.rounded_between(0x34,0,3);break;
+    case 240001:
+        valid=m.bounded(0x30,10.f,50.f) && m.rounded_between(0x34,0,3) &&
+            m.bounded(0x3c,7000.f,12000.f) && m.bounded(0x40,100.f,2000.f);break;
+    case 250001:
+        valid=m.bounded(0x30,5.f,50.f) && m.bounded(0x3c,4.f,20.f) &&
+            m.bounded(0x40,.0005f,.001f) && m.rounded_between(0x34,0,3);break;
+    }
+    if(!valid) {m.out.status=2;return m.out;}
+    m.add_mass();
+    switch(kind) {
+    case 320001:
+        m.copy(0x3a4,0x30);m.copy(0x3b4,0x44);m.copy(0x3b8,0x53b);
+        m.integer(0x3ac,nearest(m.number(0x3c)));m.integer(0x3b0,nearest(m.number(0x40)));
+        m.integer(0x3a8,truncated(m.number(0x34)));m.integer(0x3bc,truncated(m.number(0x48)));
+        material_quality(m,0x40,true);break;
+    case 330001: {
+        m.copy(0x3c0,0x30);m.copy(0x3d0,0x40);m.copy(0x3d4,0x53b);m.copy(0x3cc,0x44);
+        m.integer(0x3c8,nearest(m.number(0x3c)));const auto duty=truncated(m.number(0x34));
+        m.integer(0x3c4,duty);duty_quality(m,duty);break;
+    }
+    case 340001: {
+        m.copy(0x3ec,0x30);m.integer(0x3f0,nearest(m.number(0x34)));
+        const double loss=std::clamp(static_cast<float>((m.number(0x34)+1)*.0025f),.0025f,.01f);
+        m.put(0x3f4,disabled_by_installation(m) ? 0. : loss);m.quality();break;
+    }
+    case 280001:
+        m.copy(0x574,0x30);m.copy(0x584,0x44);m.copy(0x588,0x53b);
+        m.integer(0x578,nearest(m.number(0x34)));m.integer(0x57c,nearest(m.number(0x3c)));
+        m.integer(0x580,nearest(m.number(0x40)));material_quality(m,0x40,true);break;
+    case 290001:
+        m.copy(0x58c,0x30);m.copy(0x59c,0x44);m.integer(0x590,nearest(m.number(0x34)));
+        m.integer(0x594,nearest(m.number(0x3c)));m.integer(0x598,nearest(m.number(0x40)));m.quality();break;
+    case 300001: {
+        m.copy(0x5a0,0x30);m.integer(0x5a4,nearest(m.number(0x34)));
+        m.integer(0x5a8,nearest(m.number(0x3c)));m.integer(0x5ac,nearest(m.number(0x40)));
+        const auto manifold=std::bit_cast<std::int32_t>(word(m.out.configuration,0x57c));
+        constexpr std::array<float,4> gain{.0125f,.015f,.024f,.016f};
+        m.put(0x5b0,nearest(m.number(0x40))==1 && manifold>=0 && manifold<4 ? gain[manifold] : 0.f);
+        m.quality();break;
+    }
+    case 230001:
+        m.copy(0x4d4,0x30);m.integer(0x4d8,nearest(m.number(0x34)));
+        m.put(0x4dc,m.number(0x3c)*1.07f);m.copy(0x4e0,0x53b);
+        m.copy(0x4e4,0x40);m.copy(0x4e8,0x44);m.copy(0x4ec,0x48);m.quality();break;
+    case 240001:
+        m.copy(0x4c0,0x30);m.integer(0x4c4,nearest(m.number(0x34)));m.copy(0x4c8,0x53b);
+        m.integer(0x4cc,truncated(m.number(0x3c)));m.copy(0x4d0,0x40);m.quality();break;
+    case 250001:
+        m.copy(0x4f0,0x30);m.integer(0x4f4,nearest(m.number(0x34)));m.copy(0x4f8,0x53b);
+        m.copy(0x4fc,0x3c);m.copy(0x500,0x40);m.quality();break;
+    }
+    return m.out;
+}
 ComponentLoadResult transmission(Image& m) {
     if(m.count()!=19) return m.fail(1);
     bool valid=m.bounded(0x30,20.f,100.f) && m.rounded_between(0x3c,0,1) &&
@@ -311,6 +404,8 @@ ComponentLoadResult load_mechanical_component(std::uint32_t kind,
         case 190001:return connecting_rods(image);
         case 200001:return pistons(image);
         case 110001:return tire(image,tire_templates);
+        case 320001:case 330001:case 340001:case 280001:case 290001:
+        case 300001:case 230001:case 240001:case 250001:return auxiliary(image,kind);
         case 130001:return transmission(image);
         case 140001:return rear_end(image);
         case 100001:return rim(image);

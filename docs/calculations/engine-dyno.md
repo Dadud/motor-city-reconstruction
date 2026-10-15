@@ -142,16 +142,17 @@ more familiar horsepower/torque conversion constant would change the game.
 Intermediate work/loss outputs are computed before the power clamp. Their exact
 stores are retained in `work_outputs`.
 
-Final stock-curve conversion, penalties, low-RPM behavior and remaining boost/fuel
-branches are incomplete. These outputs should therefore be described as native
-solver fields, not a finished engine's verified wheel horsepower.
+The [ordinary unboosted finalizer](engine-curve-finalization.md) now recovers
+stock-curve conversion, penalties and low-RPM behavior in Python. Special
+carburetor and boost branches remain incomplete. These outputs should be
+described as native solver fields, not verified wheel horsepower.
 
 ## What this tells us about tuning
 
 The recovered data path gives bore, stroke, compression, valve size, timing, lift
 and airflow a route into cylinder work. That supports reconstructing component
 tuning through the original model. It does not yet justify claims such as a
-particular cam adding a particular amount of power: the full cycle and finalizer
-must first be reproduced.
+particular cam adding a particular amount of power across all configurations:
+modified engines and remaining special modes still require broader comparisons.
 
 Continue with [cylinder state and gas exchange](cylinder-cycle.md).

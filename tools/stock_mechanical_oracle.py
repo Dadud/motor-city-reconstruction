@@ -10,6 +10,7 @@ from client.tire_templates import load_tire_templates
 from tools.inspect_stock_mechanical import stock_slots,selected_parts
 from tools.mechanical_loaders_oracle import ENTRIES
 from tools.engine_component_loaders_oracle import ENTRIES as ENGINE_ENTRIES
+from tools.engine_auxiliary_oracle import ENTRIES as AUXILIARY_ENTRIES
 from tools.native_oracle import DynoOracle
 
 
@@ -23,6 +24,7 @@ def verify(executable,database,vehicle=101):
     cpu.mem_write(target,image);count=0
     entries=dict(ENTRIES)
     entries.update(ENGINE_ENTRIES)
+    entries.update(AUXILIARY_ENTRIES)
     entries[160001]=0x54a5a0
     entries[110001]=0x54e170
     for kind,part in selected_parts(parts):

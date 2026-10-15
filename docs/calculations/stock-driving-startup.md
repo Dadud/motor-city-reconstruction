@@ -47,10 +47,12 @@ configuration; these equations do not supply missing stock ratios or mass.
 The [mechanical component loaders](mechanical-component-loading.md) now produce
 the actual Ford's transmission ratios/losses and final drive, plus engine block,
 head, camshaft, crankshaft, rods, pistons, valve-train, rim, spring, shock, brake
-and tire configuration. Twenty-nine selected stock loads match original execution
+and tire configuration, plus nine intake/exhaust/auxiliary engine components.
+Thirty-eight selected stock loads match original execution
 in sequence. The matching C++ loaders are also available. Tire curves now come
-from the original external auxiliary table; complete engine curves still require
-remaining component loaders and finalization.
+from the original external auxiliary table. The Python
+[ordinary unboosted engine finalizer](engine-curve-finalization.md) now matches
+eight stock engines; special carburetor/boost modes and its native port remain open.
 `tools.inspect_stock_mechanical` reports this partial loading with explicit
 damage/wear fixture inputs and remaining unsupported component handling. Its mass
 accumulator remains incomplete and cannot initialize the owner as a complete car.
@@ -60,7 +62,7 @@ input report. The [assembly numeric finalizer](assembly-finalization.md) now
 provides the original component-based weight fraction and numeric postload tail,
 with exact original and native comparisons. It consumes loaded component mass
 slots; it does not provide missing parts or total mass. This stage precedes owner
-binding and final engine curves.
+binding and complete engine integration.
 
 `construct_observed_state` requires **every** field of a selected
 recovered record, including fields with research defaults. Nested wheel, engine

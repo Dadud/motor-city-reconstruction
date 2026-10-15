@@ -32,7 +32,7 @@ outside the published repository.
 | Tracks and world presentation | Partial: base track meshes, spatial lookup and support; `track*.py`, `world.py` | Objects, effects, material/render ordering, visibility and full track variants | Traverse every supported track with original assets; compare landmarks, surfaces and object placement |
 | Catalogue and stock assembly | Partial: typed catalogue, physics fields and component interpretation; `catalogue.py`, `assembly.py`, `physics_data.py` | Resolve unsupported assemblies, conversion cases, dimensions and nested placement | Assemble stock corpus with explicit reports for every rejected record; compare complete geometry and component inputs |
 | Owned and modified vehicles | Partial: enrichment/discovery and verified insertion, pruning, ordering, linking and numeric totals connected in the [postload sequence](owned-postload.md); [outer descriptions](calculations/owned-component-descriptions.md) retain explicit leaf/localization inputs | Recover part-specific descriptions and localized labels, complete DB loading/handoff, mechanical aggregates and online refresh; verify integration on actual owned cars | Load an actually modified owned car without stock substitution; compare complete hierarchy, attachments and derived values |
-| Engine calculations | Partial: standalone unboosted nineteen-knot core matches 46 complete original records; integration matches 44,635 original steps; [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Boost, native abort semantics, final curve corrections and wider domain coverage | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
+| Engine calculations | Partial: standalone unboosted nineteen-knot core matches 46 complete original records; integration matches 44,635 original steps; ordinary final curves match eight stock engines and 35 isolated branch cases; [finalization](calculations/engine-curve-finalization.md), [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Boost, special carburetor mode, native finalizer port, native abort semantics and wider domain coverage | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
 | Motion and support geometry | Recovered bounded calculations: pose updates and contact geometry; [motion](calculations/vehicle-motion.md) | Confirm full call ordering, units, wheel sizing and stance in the integrated simulation | Original versus reconstruction pose/contact traces agree under documented tolerances and identical inputs |
 | Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation, [combined steering/tire update](calculations/tire-update.md), [wheel curve consumers](calculations/tire-response-curves.md), [resistance contribution](calculations/rolling-resistance.md) and stock input bridge; full integrated force model unknown | Follow [driving recovery map](driving-recovery-map.md): input and curve producers, integrated load sequence, gears/clutch, differential, brakes, surfaces and aero | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
 | Collisions | Partial: [response, impulse-to-motion and plane-height helpers](calculations/collision-helpers.md) match original execution; complete object/vehicle response remains unknown | Recover broad/narrow phase, contact/impulse creation, damage, recovery and update order | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
@@ -52,18 +52,21 @@ outside the published repository.
 
 ## Ordered gates
 
-Fourteen [mechanical component loaders](calculations/mechanical-component-loading.md)
+Twenty-three [mechanical component loaders](calculations/mechanical-component-loading.md)
 now recover engine-block, head, camshaft, crankshaft, rods, pistons, valve-train,
 transmission, rear-end, rim, spring, shock, brake and tire validation, writes and
-quality. Their complete bodies match 4,534 original cases, including twenty-nine
-actual stock Ford components. Another twenty-nine-call partial stock sequence
-matches all original images. Native ports match 4,505
+quality, plus nine intake/exhaust/auxiliary engine loaders. Their complete bodies
+match 6,627 original cases, including thirty-eight actual stock Ford components.
+Another thirty-eight-call partial stock sequence matches all original images.
+Native ports match 6,589
 authored cases; the mechanical numeric copy and paired expansion have separate
 bounded comparisons. The stock inspector expands 45 catalogue entries to 57
 components and reports unsupported handling explicitly. Tire auxiliary packing
 matches six original runs including eighteen actual database rows, with substituted
-typed DB/allocator services. Remaining loaders, full dispatch/quality, engine
-curves, geometry and owner startup still block driving.
+typed DB/allocator services. The [ordinary unboosted engine finalizer](calculations/engine-curve-finalization.md)
+matches eight complete stock configurations and 35 isolated branch cases in Python.
+Remaining loaders, full dispatch/quality, special engine modes, native engine-curve
+port, geometry and owner startup still block driving.
 
 The [assembly numeric finalizer](calculations/assembly-finalization.md) now
 recalculates component-based weight distribution and the original postload
@@ -71,7 +74,7 @@ fallbacks, overrides and weighted accumulator. The complete weight helper and
 the enclosing numeric tail each match 728 original executions exactly; native
 ports retain corresponding differential runners. This supplies another startup
 producer, but does not complete component loading, total mass accumulation,
-quality updates or engine-curve finalization. The stock driving gate remains open.
+quality updates or full startup. The stock driving gate remains open.
 
 The [connected drivetrain](calculations/drivetrain-stages.md) now executes all
 eight engine driving children with brakes, loads, environment and tires in the
