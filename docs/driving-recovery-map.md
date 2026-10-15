@@ -209,6 +209,12 @@ explicit required service rather than using prototype height-selection rules.
 
 Prioritize one stock car on the original Drag track through the recovered
 simulation. Passing more isolated routines alone does not close this milestone.
+The Python engine bridge now connects recovered torque, condition and RPM bodies
+to the integrated controls/load/environment/force controller; 288 original ticks
+check shared publication, carryover and nested ordering. Engine setup/control,
+clutch/engagement and wheel-drive distribution remain supplied, as do brakes,
+terrain projection and remaining preparation. The next integration must replace
+those supplied bodies before treating this as a driving implementation.
 Connect authentic catalogue/geometry inputs to one shared car state, then the
 controller's support, control, environment, engine, brake, tire and motion stages
 in observed order. Preserve scheduler counters and repeated state carryover.

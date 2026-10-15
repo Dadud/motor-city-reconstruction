@@ -116,9 +116,9 @@ for example, body pitch at `+0xbf4` is represented by both environment body pitc
 and the load context's suspension-pitch observation. These records are not a
 complete automatically initialized game state.
 
-The [engine pipeline](calculations/engine-pipeline.md) separately connects its
-dispatcher, torque and condition/thermal stages in Python and C++. It is not yet
-bound into this full controller comparison. The [owner binding](calculations/owner-binding.md)
+The [engine pipeline](calculations/engine-pipeline.md) connects its dispatcher,
+torque and condition/thermal stages in Python and C++. The Python controller
+also has the shared-state bridge described below. The [owner binding](calculations/owner-binding.md)
 now produces inertia, mass and axle levers from explicit finalized configuration
 and geometry; authentic assembly finalization remains required.
 
@@ -152,3 +152,48 @@ The shared comparison harness has extension hooks for subsystem initialization,
 actual child selection, nested observations and extra output checks. This avoids
 duplicating the complete controller emulator for every integration step; these
 hooks are research tools and are not part of the stable mod API.
+
+## Engine bound into the vehicle tick
+
+`client/driving_engine.py` wraps the retained controls/load/environment executor.
+It executes the recovered engine pipeline when the controller reaches its engine
+call, then publishes outputs before brakes and tire forces run. This is Python
+research integration; the complete connected controller is not yet a native
+gameplay path.
+
+| Shared original field | Producer/consumer handoff |
+| --- | --- |
+| `+0x474` | Controller vehicle flags and engine dispatcher |
+| `+0xae4` | Smoothed control flags, engine activation/torque flags, then next tick's controls |
+| `+0xa94`, `+0xa90` | Shaped throttle/service brake and engine inputs; callback writes return to force/control views |
+| `+0xab4` | Engine RPM and later wheel-spin limit |
+| `+0xa44`, `+0xa2c` | Controller local forward velocity/speed and engine cooling/effects |
+| `+0xaa0` | Curve torque and the next suspension load correction; distinct from effective torque at `+0xaa4` |
+| `+0xa69` | Selected gear byte, condition routine's mode and force direction; distinct from RPM helper gear index at `+0xb54` |
+| `+0x34c` and weather/counter globals | Existing environment context and engine environment calculations |
+
+Each explicit engine callback receives the current engine owner, controller and
+force inputs. Shared aliases must be changed through the engine argument;
+publication occurs before and after the callback and at pipeline completion.
+Other controller/force fields remain available to the required wheel-drive
+implementation. Configuration `+0x68c` aliases the existing assisted-gears and
+third-system observations; inconsistent input views are rejected.
+
+```powershell
+python -m tools.driving_engine_pipeline_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --actual-support
+```
+
+The comparison passes 144 scenarios/288 retained ticks, with 192 engine calls
+on supported ticks and 96 low-support ticks that correctly skip the engine.
+It retains the 1,152 terrain queries and 864 tire-force calls. The corpus without
+actual support executes 288 engine calls and 1,296 tire-force calls, including
+14 component-mutation ticks. Supplied engine-setup/finalize mutations also check
+throttle, flag and curve-torque publication across ticks. Nested engine call
+order/arguments, control calls, configuration, complete owner and peer state are
+compared. Maximum ordinary errors and the separately checked conditioned radius
+are unchanged from the control/load/environment comparison above.
+
+The original dispatcher, torque, RPM, curve, condition and thermal bodies run.
+Engine setup/control, engagement/clutch, wheel-drive distribution, finalization,
+brakes, terrain projection and remaining preparation are still supplied. These
+results establish the connections, not a stock car's acceleration or handling.

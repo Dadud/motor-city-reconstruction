@@ -279,9 +279,17 @@ matches 208 bounded original-function scenarios and 63 C++/Python action traces.
 The start-request wire layout, live worker/cache driver and session integration
 remain unresolved; this does not complete race entry.
 
-Current batch verification on Windows: 712 Python tests (705 pass, seven skipped)
-and 51 native checks pass, plus the separately recorded original comparisons above. Linux and live
+Current batch verification on Windows: 830 Python tests (823 pass, seven skipped)
+and 63 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
+
+The [engine-to-controller bridge](driving-pipeline.md#engine-bound-into-the-vehicle-tick)
+now compares 288 retained original vehicle ticks with real controls, loads,
+environment, engine torque/RPM/condition and tire forces connected. With actual
+support prediction, 192 supported ticks execute the engine and 96 low-support
+ticks skip it. Terrain projection, remaining preparation, engine setup/control,
+engagement/clutch, wheel-drive distribution, finalization and brakes remain
+supplied. Original stock-car startup and faithful driving acceptance remain open.
 
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded

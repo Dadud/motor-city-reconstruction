@@ -1,5 +1,12 @@
 # Connected engine pipeline
 
+The Python pipeline is also bound to the vehicle tick by
+[`DrivingEngine`](../driving-pipeline.md#engine-bound-into-the-vehicle-tick).
+That comparison now includes real input smoothing, load/environment producers
+and tire forces, with explicitly supplied setup/clutch/wheel-drive and brake
+boundaries. The C++ engine pipeline remains independently verified; a complete
+native driving integration is still required.
+
 `client/engine_pipeline.py` and `native/src/engine_pipeline.cpp` connect the
 recovered engine dispatcher (`0x545af0`) to the complete torque update
 (`0x547120`) and both condition/thermal routines (`0x546330`, `0x5464c0`).

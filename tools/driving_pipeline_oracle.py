@@ -218,6 +218,8 @@ def verify(executable, actual_support=False, extension=None):
         cpu.hook_add(UC_HOOK_CODE, terrain, begin=0x42e010, end=0x42e010)
     def effect(cpu, address, size, user):
         nonlocal effect_mutated
+        if extension is not None and getattr(extension, 'effect', lambda *args: False)(cpu, reg, address):
+            return
         stack = cpu.reg_read(reg.UC_X86_REG_ESP)
         _, operation, amount = struct.unpack('<IIf', cpu.mem_read(stack, 12))
         if cpu.reg_read(reg.UC_X86_REG_ECX) != owner+0xcc8 or operation not in (1, 2):
@@ -354,7 +356,8 @@ def verify(executable, actual_support=False, extension=None):
                 maximum = max(maximum, error); target[off:off+4] = actual[off:off+4]
             if actual != target or bytes(cpu.mem_read(config, len(data))) != data:
                 off = next((i for i, (a, b) in enumerate(zip(actual, target)) if a != b), None)
-                raise AssertionError((count, tick, 'unexpected owner/configuration write', off))
+                raise AssertionError((count, tick, 'unexpected owner/configuration write', off,
+                    None if off is None else (actual[off:off+8].hex(), target[off:off+8].hex())))
             if extension is not None:
                 extension.check(o)
             stage_total += sum(c.stage in DrivingForces.stages for c in result.calls)
