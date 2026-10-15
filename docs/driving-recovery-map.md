@@ -176,6 +176,27 @@ remaining remote/gear and damage/effect interfaces explicitly supplied.
 
 ## Immediate playable milestone
 
+The [typed driving pipeline](driving-pipeline.md) now connects six recovered
+force stages to the controller and binds support results to its branch/contact
+state. The [stock startup audit](calculations/stock-driving-startup.md) reads the
+actual vehicle 101/Drag inputs and identifies missing assembled configuration
+instead of substituting research defaults. Complete authentic startup remains
+open; the pipeline is not yet selected by the playable client.
+
+The [body configuration initializer](calculations/body-configuration.md) now
+supplies actual catalogue wheelbase, tracks, body-base mass and clearance
+references. These are reported separately from mesh measurements and final
+assembled-car values. Original owner binding and remaining component aggregation
+still need recovery.
+
+The complete [engine torque update](calculations/engine-torque-update.md) now
+recovers engine braking, condition deductions, nonlinear throttle gain, coupling,
+RPM update and ordered damage/effect requests. Boost and pulse generation,
+catalogue-derived setup and actual component effects remain explicit boundaries.
+The [support predictor](calculations/support-prediction.md) reproduces original
+transform precision and contact arithmetic, retaining terrain projection as an
+explicit required service rather than using prototype height-selection rules.
+
 Prioritize one stock car on the original Drag track through the recovered
 simulation. Passing more isolated routines alone does not close this milestone.
 Connect authentic catalogue/geometry inputs to one shared car state, then the

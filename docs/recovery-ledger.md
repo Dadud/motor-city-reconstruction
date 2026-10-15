@@ -52,6 +52,24 @@ outside the published repository.
 
 ## Ordered gates
 
+The [controller force pipeline](driving-pipeline.md) now checks 288 complete
+original controller calls with six actual force stages and linear integration.
+Its typed support adapter consumes the separately verified
+[predictor](calculations/support-prediction.md). The
+[complete torque consumer](calculations/engine-torque-update.md) matches 1,094
+original cases, with producer/effect boundaries explicitly supplied. The
+[stock startup audit](calculations/stock-driving-startup.md) identifies actual
+vehicle 101/Drag data and missing assembled inputs. None of these closes the
+offline driving gate: authentic initialization, terrain service, remaining child
+integration, event interleaving and driven original-client comparisons remain.
+
+The connected support variant executes another 288 original controller ticks,
+including low-support branches, with 1,152 exact terrain-query handoffs. Terrain
+projection remains supplied. The [body configuration initializer](calculations/body-configuration.md)
+matches all configuration bytes across 146 records, including actual vehicle 101.
+Those outputs now appear in the stock inspector; final assembled mass/inertia
+and semantic validation remain open.
+
 [Wheel-spin integration](calculations/wheel-spin.md) now matches 2,592 original
 numeric cases and [combined-slip force limiting](calculations/combined-slip.md)
 matches 1,296. Their C++ ports match the Python corpora exactly. The expanded
