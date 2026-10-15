@@ -38,6 +38,15 @@ class RecoveryCatalogueTests(unittest.TestCase):
             (root/'decompilation.jsonl').write_text('\n'.join(json.dumps(dict(address='00401000', status=s))
                 for s in ('timeout', 'failed')))
             self.assertEqual(module_metadata(root, 'abc')['summary']['decompilation']['failed'], 1)
+            self.assertEqual(module_metadata(root, 'abc')['summary']['export_pass'], 'all-internal-attempted')
+
+    def test_enumeration_alone_is_incomplete(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); self.fixture(root)
+            summary = module_metadata(root, 'abc')['summary']
+            self.assertEqual(summary['internal_entries'], 1)
+            self.assertEqual(summary['export_pass'], 'incomplete')
+            self.assertEqual(summary['decompilation']['not-attempted'], 1)
 
     def test_raw_output_outside_private_directory_rejected(self):
         with self.assertRaises(ValueError): private_output(Path('docs/recovery/raw'))

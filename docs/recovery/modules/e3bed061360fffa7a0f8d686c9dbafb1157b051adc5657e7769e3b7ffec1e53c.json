@@ -1,0 +1,2146 @@
+{
+  "target_sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "19fbd5a239f8a7d6277eb9bc6e66d3efb0b22db14c8dd77a7a052baab5dc100a"
+  },
+  "summary": {
+    "function_entries": 589,
+    "decompilation": {
+      "success": 480,
+      "external": 109
+    },
+    "thunks": 30,
+    "internal_entries": 480,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "KERNEL32.DLL::GetModuleHandleA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "KERNEL32.DLL::GetFullPathNameA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "KERNEL32.DLL::GetFileAttributesA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "KERNEL32.DLL::SetFileAttributesA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "KERNEL32.DLL::InitializeCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "KERNEL32.DLL::DeleteCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7",
+      "name": "KERNEL32.DLL::EnterCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x8",
+      "name": "KERNEL32.DLL::LeaveCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x9",
+      "name": "KERNEL32.DLL::GetLocaleInfoA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xa",
+      "name": "KERNEL32.DLL::GetVersionExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xb",
+      "name": "KERNEL32.DLL::Sleep",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xc",
+      "name": "KERNEL32.DLL::FreeLibrary",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xd",
+      "name": "KERNEL32.DLL::GetProcAddress",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xe",
+      "name": "KERNEL32.DLL::LoadLibraryA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xf",
+      "name": "KERNEL32.DLL::FindNextFileA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x10",
+      "name": "KERNEL32.DLL::FindFirstFileA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x11",
+      "name": "KERNEL32.DLL::GetComputerNameA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x12",
+      "name": "KERNEL32.DLL::SetEvent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x13",
+      "name": "KERNEL32.DLL::TlsSetValue",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x14",
+      "name": "KERNEL32.DLL::TlsGetValue",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x15",
+      "name": "KERNEL32.DLL::GetSystemInfo",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x16",
+      "name": "KERNEL32.DLL::GetCurrentDirectoryA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x17",
+      "name": "KERNEL32.DLL::GetWindowsDirectoryA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x18",
+      "name": "KERNEL32.DLL::TlsAlloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x19",
+      "name": "KERNEL32.DLL::CreateEventA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1a",
+      "name": "KERNEL32.DLL::CloseHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1b",
+      "name": "KERNEL32.DLL::ResetEvent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1c",
+      "name": "KERNEL32.DLL::DisableThreadLibraryCalls",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1d",
+      "name": "KERNEL32.DLL::FindClose",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1e",
+      "name": "KERNEL32.DLL::GetModuleFileNameA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1f",
+      "name": "USER32.DLL::MsgWaitForMultipleObjects",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x20",
+      "name": "USER32.DLL::PeekMessageA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x21",
+      "name": "USER32.DLL::DispatchMessageA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x22",
+      "name": "ADVAPI32.DLL::GetUserNameA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x23",
+      "name": "WSOCK32.DLL::WSASetBlockingHook",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x24",
+      "name": "WSOCK32.DLL::WSAUnhookBlockingHook",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x25",
+      "name": "WSOCK32.DLL::select",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x26",
+      "name": "WSOCK32.DLL::WSASetLastError",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x27",
+      "name": "WSOCK32.DLL::gethostname",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x28",
+      "name": "WSOCK32.DLL::WSACancelBlockingCall",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x29",
+      "name": "WSOCK32.DLL::recv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2a",
+      "name": "WSOCK32.DLL::ioctlsocket",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2b",
+      "name": "WSOCK32.DLL::send",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2c",
+      "name": "WSOCK32.DLL::socket",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2d",
+      "name": "WSOCK32.DLL::WSAGetLastError",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2e",
+      "name": "WSOCK32.DLL::htons",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2f",
+      "name": "WSOCK32.DLL::connect",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x30",
+      "name": "WSOCK32.DLL::closesocket",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x31",
+      "name": "WSOCK32.DLL::inet_addr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x32",
+      "name": "WSOCK32.DLL::gethostbyname",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x33",
+      "name": "WSOCK32.DLL::inet_ntoa",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x34",
+      "name": "WSOCK32.DLL::WSAStartup",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x35",
+      "name": "WSOCK32.DLL::WSACleanup",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x36",
+      "name": "MSVCRT.DLL::free",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x37",
+      "name": "MSVCRT.DLL::ftol",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x38",
+      "name": "MSVCRT.DLL::strchr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x39",
+      "name": "MSVCRT.DLL::_eof",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3a",
+      "name": "MSVCRT.DLL::_write",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3b",
+      "name": "MSVCRT.DLL::_ltoa",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3c",
+      "name": "MSVCRT.DLL::_strcmpi",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3d",
+      "name": "MSVCRT.DLL::_strnicmp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3e",
+      "name": "MSVCRT.DLL::_strlwr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3f",
+      "name": "MSVCRT.DLL::ftime",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x40",
+      "name": "MSVCRT.DLL::_read",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x41",
+      "name": "MSVCRT.DLL::_stricmp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x42",
+      "name": "MSVCRT.DLL::_unlink",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x43",
+      "name": "MSVCRT.DLL::_lseek",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x44",
+      "name": "MSVCRT.DLL::_rmdir",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x45",
+      "name": "MSVCRT.DLL::_strdup",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x46",
+      "name": "MSVCRT.DLL::_adjust_fdiv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x47",
+      "name": "MSVCRT.DLL::initterm",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x48",
+      "name": "MSVCRT.DLL::strrchr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x49",
+      "name": "MSVCRT.DLL::_access",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4a",
+      "name": "MSVCRT.DLL::strlen",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4b",
+      "name": "MSVCRT.DLL::malloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4c",
+      "name": "MSVCRT.DLL::sprintf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4d",
+      "name": "MSVCRT.DLL::printf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4e",
+      "name": "MSVCRT.DLL::memset",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4f",
+      "name": "MSVCRT.DLL::memcpy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x50",
+      "name": "MSVCRT.DLL::calloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x51",
+      "name": "MSVCRT.DLL::_mkdir",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x52",
+      "name": "MSVCRT.DLL::strncat",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x53",
+      "name": "MSVCRT.DLL::srand",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x54",
+      "name": "MSVCRT.DLL::strcat",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x55",
+      "name": "MSVCRT.DLL::strcpy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x56",
+      "name": "MSVCRT.DLL::strcmp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x57",
+      "name": "MSVCRT.DLL::memmove",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x58",
+      "name": "MSVCRT.DLL::_open",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x59",
+      "name": "MSVCRT.DLL::_filelength",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5a",
+      "name": "MSVCRT.DLL::_splitpath",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5b",
+      "name": "MSVCRT.DLL::rename",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5c",
+      "name": "MSVCRT.DLL::stat",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5d",
+      "name": "MSVCRT.DLL::_chmod",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5e",
+      "name": "MSVCRT.DLL::qsort",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5f",
+      "name": "MSVCRT.DLL::atol",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x60",
+      "name": "MSVCRT.DLL::strncpy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x61",
+      "name": "MSVCRT.DLL::atoi",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x62",
+      "name": "MSVCRT.DLL::__p__pctype",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x63",
+      "name": "MSVCRT.DLL::_isctype",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x64",
+      "name": "MSVCRT.DLL::__p___mb_cur_max",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x65",
+      "name": "MSVCRT.DLL::strtok",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x66",
+      "name": "MSVCRT.DLL::strstr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x67",
+      "name": "MSVCRT.DLL::strpbrk",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x68",
+      "name": "MSVCRT.DLL::rand",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x69",
+      "name": "MSVCRT.DLL::sscanf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6a",
+      "name": "MSVCRT.DLL::_errno",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6b",
+      "name": "MSVCRT.DLL::time",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6c",
+      "name": "MSVCRT.DLL::_close",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6d",
+      "name": "MSVCRT.DLL::_commit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6e",
+      "name": "MSVCRT.DLL::realloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x1000e023",
+      "name": "Ordinal_53",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e023",
+      "name": "mrbSetProperty",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e077",
+      "name": "Ordinal_29",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e077",
+      "name": "mrbGetProperty",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e08f",
+      "name": "Ordinal_46",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e08f",
+      "name": "mrbRemoveProperty",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e0b2",
+      "name": "Ordinal_30",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e0b2",
+      "name": "mrbGetPublishedProperty",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e1c6",
+      "name": "Ordinal_36",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e1c6",
+      "name": "mrbIsRepairNeeded",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e21f",
+      "name": "Ordinal_47",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e21f",
+      "name": "mrbRepair",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e2d9",
+      "name": "Ordinal_16",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e2d9",
+      "name": "mrbClean",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e35b",
+      "name": "Ordinal_58",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e35b",
+      "name": "mrbVerify",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e369",
+      "name": "Ordinal_59",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000e369",
+      "name": "mrbVerifyEx",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000ed0e",
+      "name": "Ordinal_37",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000ed0e",
+      "name": "mrbIsUpdateAvailable",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000ed23",
+      "name": "Ordinal_38",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000ed23",
+      "name": "mrbIsUpdateAvailableEx",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000ed6f",
+      "name": "Ordinal_57",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000ed6f",
+      "name": "mrbUpdate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000f891",
+      "name": "Ordinal_35",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000f891",
+      "name": "mrbIsPrepareNeeded",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000f8a4",
+      "name": "Ordinal_42",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000f8a4",
+      "name": "mrbPrepare",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000f8b7",
+      "name": "Ordinal_43",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000f8b7",
+      "name": "mrbPrepareEx",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000fb25",
+      "name": "Ordinal_33",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000fb25",
+      "name": "mrbInitUpdate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010355",
+      "name": "Ordinal_55",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010355",
+      "name": "mrbTermUpdate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010514",
+      "name": "Ordinal_44",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010514",
+      "name": "mrbPrintIndex",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100105c3",
+      "name": "Ordinal_39",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100105c3",
+      "name": "mrbLookupHoldingAreaFile",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100106b7",
+      "name": "Ordinal_13",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100106b7",
+      "name": "mrbBrowseHoldingAreaDir",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010756",
+      "name": "Ordinal_40",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010756",
+      "name": "mrbNextHoldingAreaFile",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100107bc",
+      "name": "Ordinal_15",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100107bc",
+      "name": "mrbCancelUpdate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001089d",
+      "name": "Ordinal_12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001089d",
+      "name": "mrbAppendLog",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010912",
+      "name": "Ordinal_49",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010912",
+      "name": "mrbSetLocation",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010a82",
+      "name": "Ordinal_25",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010a82",
+      "name": "mrbGetLocation",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010ae4",
+      "name": "Ordinal_26",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10010ae4",
+      "name": "mrbGetMessageText",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012704",
+      "name": "Ordinal_14",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012704",
+      "name": "mrbCanUndo",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001272c",
+      "name": "Ordinal_56",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001272c",
+      "name": "mrbUndo",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100127ff",
+      "name": "Ordinal_60",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100127ff",
+      "name": "mrbVersion",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012805",
+      "name": "Ordinal_34",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012805",
+      "name": "mrbIsChannelSigned",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012847",
+      "name": "Ordinal_31",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012847",
+      "name": "mrbGetSigningScope",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001286b",
+      "name": "Ordinal_21",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001286b",
+      "name": "mrbGetCertFieldCount",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001288a",
+      "name": "Ordinal_19",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001288a",
+      "name": "mrbGetCertField",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100128ab",
+      "name": "Ordinal_20",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100128ab",
+      "name": "mrbGetCertFieldByIndex",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100128dd",
+      "name": "Ordinal_22",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100128dd",
+      "name": "mrbGetCertFingerPrint",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012901",
+      "name": "Ordinal_24",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012901",
+      "name": "mrbGetCertSerialNo",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012925",
+      "name": "Ordinal_18",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012925",
+      "name": "mrbGetCertDates",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012949",
+      "name": "Ordinal_9",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012949",
+      "name": "mrbAcceptTestCertificates",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001295f",
+      "name": "Ordinal_10",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001295f",
+      "name": "mrbAddLocalFile",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012b0e",
+      "name": "Ordinal_48",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012b0e",
+      "name": "mrbSetCastanetDirSuffix",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012d50",
+      "name": "Ordinal_50",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012d50",
+      "name": "mrbSetMaxReceiveRate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012d69",
+      "name": "Ordinal_51",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10012d69",
+      "name": "mrbSetMaxTransmitRate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013294",
+      "name": "Ordinal_52",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013294",
+      "name": "mrbSetPrepareFilter",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100132a3",
+      "name": "Ordinal_32",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100132a3",
+      "name": "mrbInitPluginConnection",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001339e",
+      "name": "Ordinal_54",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1001339e",
+      "name": "mrbTermPluginConnection",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100133d2",
+      "name": "Ordinal_41",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100133d2",
+      "name": "mrbOpenPC",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100136cb",
+      "name": "Ordinal_11",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100136cb",
+      "name": "mrbAddPCField",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100136e3",
+      "name": "Ordinal_27",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100136e3",
+      "name": "mrbGetPCField",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100136f6",
+      "name": "Ordinal_61",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100136f6",
+      "name": "mrbWriteToPC",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013750",
+      "name": "Ordinal_45",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013750",
+      "name": "mrbReadFromPC",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013783",
+      "name": "Ordinal_28",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013783",
+      "name": "mrbGetPCReply",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100137c9",
+      "name": "Ordinal_23",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100137c9",
+      "name": "mrbGetCertIsExpired",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013805",
+      "name": "Ordinal_17",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10013805",
+      "name": "mrbGetBytesReceived",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015c60",
+      "name": "Ordinal_64",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015c60",
+      "name": "mrb_inflateInit",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015ca0",
+      "name": "Ordinal_69",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015ca0",
+      "name": "mrb_inflateTerm",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015cc0",
+      "name": "Ordinal_62",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015cc0",
+      "name": "mrb_inflate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d60",
+      "name": "Ordinal_70",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d60",
+      "name": "mrb_inflateTotalIn",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d70",
+      "name": "Ordinal_71",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d70",
+      "name": "mrb_inflateTotalOut",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d80",
+      "name": "Ordinal_66",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d80",
+      "name": "mrb_inflateRemaining",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d90",
+      "name": "Ordinal_65",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015d90",
+      "name": "mrb_inflateNeedsInput",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015da0",
+      "name": "Ordinal_68",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015da0",
+      "name": "mrb_inflateSetInput",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015dc0",
+      "name": "Ordinal_67",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015dc0",
+      "name": "mrb_inflateReset",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015de0",
+      "name": "Ordinal_63",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015de0",
+      "name": "mrb_inflateFinished",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015df0",
+      "name": "Ordinal_72",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015df0",
+      "name": "zlibVersion",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015e30",
+      "name": "Ordinal_1",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015e30",
+      "name": "adler32",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015f60",
+      "name": "Ordinal_6",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015f60",
+      "name": "inflateReset",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015fb0",
+      "name": "Ordinal_3",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10015fb0",
+      "name": "inflateEnd",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016000",
+      "name": "Ordinal_4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016000",
+      "name": "inflateInit2_",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016110",
+      "name": "Ordinal_5",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016110",
+      "name": "inflateInit_",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016130",
+      "name": "Ordinal_2",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016130",
+      "name": "inflate",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016560",
+      "name": "Ordinal_7",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016560",
+      "name": "inflateSetDictionary",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100165f0",
+      "name": "Ordinal_8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100165f0",
+      "name": "inflateSync",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10016ad0",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "nps/mrbupd.dll"
+  ],
+  "functions": [
+    {"address": "0x10001000", "name": "FUN_10001000", "external": false, "thunk": false, "body_bytes": 23, "direct_callees": ["0x10001017", "0x10016742"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001017", "name": "FUN_10001017", "external": false, "thunk": false, "body_bytes": 411, "direct_callees": ["0x10002a6c", "0x10002b01", "0x10002ca5", "0x10002def"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100011b2", "name": "FUN_100011b2", "external": false, "thunk": false, "body_bytes": 10, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100011bc", "name": "FUN_100011bc", "external": false, "thunk": false, "body_bytes": 27, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100011d7", "name": "FUN_100011d7", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001203", "name": "FUN_10001203", "external": false, "thunk": false, "body_bytes": 124, "direct_callees": ["0x10016790", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000127f", "name": "FUN_1000127f", "external": false, "thunk": false, "body_bytes": 197, "direct_callees": ["0x10016790", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001344", "name": "FUN_10001344", "external": false, "thunk": false, "body_bytes": 126, "direct_callees": ["0x10001017", "0x10002a6c", "0x10002b01", "0x10002c7f", "0x10002d2c", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100013c2", "name": "FUN_100013c2", "external": false, "thunk": false, "body_bytes": 53, "direct_callees": ["0x1000d04d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100013f7", "name": "FUN_100013f7", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": ["0x1000cee9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001431", "name": "FUN_10001431", "external": false, "thunk": false, "body_bytes": 2932, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001fa5", "name": "FUN_10001fa5", "external": false, "thunk": false, "body_bytes": 371, "direct_callees": ["0x10001431", "0x10016750", "0x10016790", "0x100167b6", "0x100167bc", "0x100167d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002118", "name": "FUN_10002118", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002140", "name": "FUN_10002140", "external": false, "thunk": false, "body_bytes": 39, "direct_callees": ["0x100011d7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002167", "name": "FUN_10002167", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": ["0x10016800"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002196", "name": "FUN_10002196", "external": false, "thunk": false, "body_bytes": 652, "direct_callees": ["0x10002456", "0x100024d6", "0x10002af9", "0x100030d1", "0x100030e4", "0x10003121", "0x1000ce68", "0x10016830"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002456", "name": "FUN_10002456", "external": false, "thunk": false, "body_bytes": 128, "direct_callees": ["0x10002e49", "0x10003090", "0x100065dd"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100024d6", "name": "FUN_100024d6", "external": false, "thunk": false, "body_bytes": 115, "direct_callees": ["0x10002e49", "0x100065dd"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002549", "name": "FUN_10002549", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10003626"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002554", "name": "FUN_10002554", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": ["0x10002549", "EXTERNAL:0x51"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002571", "name": "FUN_10002571", "external": false, "thunk": false, "body_bytes": 285, "direct_callees": ["0x10002549", "0x10002554", "0x10002571", "0x10016860", "0x10016866", "EXTERNAL:0x38", "EXTERNAL:0x52"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000268e", "name": "FUN_1000268e", "external": false, "thunk": false, "body_bytes": 182, "direct_callees": ["0x1000268e", "0x10002744", "0x100028b4", "0x100034df", "0x1000369e", "0x10016860", "0x10016866", "EXTERNAL:0x44"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002744", "name": "FUN_10002744", "external": false, "thunk": false, "body_bytes": 368, "direct_callees": ["0x10002549", "0x10016742", "0x100167bc", "0x10016860", "0x10016866", "0x1001686c", "EXTERNAL:0x10", "EXTERNAL:0x1d", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x50", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100028b4", "name": "FUN_100028b4", "external": false, "thunk": false, "body_bytes": 43, "direct_callees": ["EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100028df", "name": "FUN_100028df", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["0x10002c43", "0x10002def"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002911", "name": "FUN_10002911", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002942", "name": "FUN_10002942", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["0x100028df", "0x10002b01", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000296a", "name": "FUN_1000296a", "external": false, "thunk": false, "body_bytes": 153, "direct_callees": ["0x10002b97"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002a03", "name": "FUN_10002a03", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x10002911", "0x10002942", "0x1000296a", "0x10002aa0", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002a5a", "name": "FUN_10002a5a", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002a6c", "name": "FUN_10002a6c", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002aa0", "name": "FUN_10002aa0", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002ac2", "name": "FUN_10002ac2", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002af9", "name": "FUN_10002af9", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002b01", "name": "FUN_10002b01", "external": false, "thunk": false, "body_bytes": 43, "direct_callees": ["0x10002b2c", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002b2c", "name": "FUN_10002b2c", "external": false, "thunk": false, "body_bytes": 107, "direct_callees": ["0x1000cce8", "0x100167bc", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002b97", "name": "FUN_10002b97", "external": false, "thunk": false, "body_bytes": 124, "direct_callees": ["0x10002b2c", "0x100167bc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002c13", "name": "FUN_10002c13", "external": false, "thunk": false, "body_bytes": 48, "direct_callees": ["0x10002b97", "0x10016742"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002c43", "name": "FUN_10002c43", "external": false, "thunk": false, "body_bytes": 42, "direct_callees": ["0x10002b2c", "0x1000cd61"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002c6d", "name": "FUN_10002c6d", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002c7f", "name": "FUN_10002c7f", "external": false, "thunk": false, "body_bytes": 38, "direct_callees": ["0x100167bc", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002ca5", "name": "FUN_10002ca5", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": ["0x100167bc", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002cd4", "name": "FUN_10002cd4", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x10002b97"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002cf8", "name": "FUN_10002cf8", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["0x10002b97"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002d2c", "name": "FUN_10002d2c", "external": false, "thunk": false, "body_bytes": 140, "direct_callees": ["0x10002b97", "0x10016800"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002db8", "name": "FUN_10002db8", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["0x10002b97", "0x10002cd4", "0x10016742"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002def", "name": "FUN_10002def", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": ["0x10002b97"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002e03", "name": "FUN_10002e03", "external": false, "thunk": false, "body_bytes": 70, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002e49", "name": "FUN_10002e49", "external": false, "thunk": false, "body_bytes": 313, "direct_callees": ["0x10002f82", "0x10002fe0", "0x100033d7", "0x1000cdf4", "0x10015cc0", "0x10015d60", "0x10015d90", "0x10015da0", "0x10015de0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002f82", "name": "FUN_10002f82", "external": false, "thunk": false, "body_bytes": 94, "direct_callees": ["0x1000cc72", "EXTERNAL:0x57"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002fe0", "name": "FUN_10002fe0", "external": false, "thunk": false, "body_bytes": 80, "direct_callees": ["0x10002f82", "0x100167bc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003030", "name": "FUN_10003030", "external": false, "thunk": false, "body_bytes": 96, "direct_callees": ["0x10002e49", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003090", "name": "FUN_10003090", "external": false, "thunk": false, "body_bytes": 27, "direct_callees": ["0x1000cd43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100030ab", "name": "FUN_100030ab", "external": false, "thunk": false, "body_bytes": 38, "direct_callees": ["0x10015ca0", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100030d1", "name": "FUN_100030d1", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x10002e49"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100030e4", "name": "FUN_100030e4", "external": false, "thunk": false, "body_bytes": 61, "direct_callees": ["0x10002e49"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003121", "name": "FUN_10003121", "external": false, "thunk": false, "body_bytes": 79, "direct_callees": ["0x10002e49"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003170", "name": "FUN_10003170", "external": false, "thunk": false, "body_bytes": 305, "direct_callees": ["0x10002e49", "0x100167d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100032a1", "name": "FUN_100032a1", "external": false, "thunk": false, "body_bytes": 121, "direct_callees": ["0x10002e49", "0x100030e4", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000331a", "name": "FUN_1000331a", "external": false, "thunk": false, "body_bytes": 139, "direct_callees": ["0x100030d1", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100033a5", "name": "FUN_100033a5", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["0x10015c60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100033d7", "name": "FUN_100033d7", "external": false, "thunk": false, "body_bytes": 62, "direct_callees": ["0x10003030", "0x10015d60", "0x10015dc0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003415", "name": "FUN_10003415", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000341d", "name": "FUN_1000341d", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003430", "name": "FUN_10003430", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003445", "name": "FUN_10003445", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000345d", "name": "FUN_1000345d", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003475", "name": "FUN_10003475", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["EXTERNAL:0x6c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003481", "name": "FUN_10003481", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["EXTERNAL:0x43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003493", "name": "FUN_10003493", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": ["EXTERNAL:0x43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100034a7", "name": "FUN_100034a7", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["EXTERNAL:0x59"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100034b3", "name": "FUN_100034b3", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x10003430", "0x10003475", "0x100034a7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100034df", "name": "FUN_100034df", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["EXTERNAL:0x42"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100034eb", "name": "FUN_100034eb", "external": false, "thunk": false, "body_bytes": 136, "direct_callees": ["EXTERNAL:0x41", "EXTERNAL:0x4c", "EXTERNAL:0x5a", "EXTERNAL:0x5b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003573", "name": "FUN_10003573", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["EXTERNAL:0x5c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000358f", "name": "FUN_1000358f", "external": false, "thunk": false, "body_bytes": 94, "direct_callees": ["0x1001686c", "EXTERNAL:0x10", "EXTERNAL:0x1d", "EXTERNAL:0x2"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100035ed", "name": "FUN_100035ed", "external": false, "thunk": false, "body_bytes": 57, "direct_callees": ["EXTERNAL:0x10", "EXTERNAL:0x1d", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003626", "name": "FUN_10003626", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["EXTERNAL:0x5c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000364e", "name": "FUN_1000364e", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["EXTERNAL:0x5c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003676", "name": "FUN_10003676", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["EXTERNAL:0x5c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000369e", "name": "FUN_1000369e", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["EXTERNAL:0x5d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100036b0", "name": "FUN_100036b0", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["EXTERNAL:0x5d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100036c2", "name": "FUN_100036c2", "external": false, "thunk": false, "body_bytes": 134, "direct_callees": ["0x10003430", "0x10003475", "0x100034a7", "0x10003573", "EXTERNAL:0x36", "EXTERNAL:0x40", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003748", "name": "FUN_10003748", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["EXTERNAL:0x3"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000377f", "name": "FUN_1000377f", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": ["EXTERNAL:0x4"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100037b9", "name": "FUN_100037b9", "external": false, "thunk": false, "body_bytes": 46, "direct_callees": ["EXTERNAL:0x38", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100037e7", "name": "FUN_100037e7", "external": false, "thunk": false, "body_bytes": 97, "direct_callees": ["0x10016880", "EXTERNAL:0x4b", "EXTERNAL:0x5", "EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003848", "name": "FUN_10003848", "external": false, "thunk": false, "body_bytes": 46, "direct_callees": ["0x10003b3f", "EXTERNAL:0x36", "EXTERNAL:0x6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003876", "name": "FUN_10003876", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000387e", "name": "FUN_1000387e", "external": false, "thunk": false, "body_bytes": 105, "direct_callees": ["0x10003c81", "0x10003c86", "0x10003c95"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100038e7", "name": "FUN_100038e7", "external": false, "thunk": false, "body_bytes": 37, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000390c", "name": "FUN_1000390c", "external": false, "thunk": false, "body_bytes": 102, "direct_callees": ["0x10003c86", "0x10003c95"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003972", "name": "FUN_10003972", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x1000398b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000398b", "name": "FUN_1000398b", "external": false, "thunk": false, "body_bytes": 259, "direct_callees": ["0x1000398b", "0x10003b82", "0x10003c81", "0x10003c86", "0x10003c95", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003a8e", "name": "FUN_10003a8e", "external": false, "thunk": false, "body_bytes": 177, "direct_callees": ["0x10003c81", "0x10003c86", "0x10003c95", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003b3f", "name": "FUN_10003b3f", "external": false, "thunk": false, "body_bytes": 67, "direct_callees": ["0x10003c86", "0x10003c95", "0x10003ca4"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003b82", "name": "FUN_10003b82", "external": false, "thunk": false, "body_bytes": 142, "direct_callees": ["0x10016880", "EXTERNAL:0x36", "EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003c10", "name": "FUN_10003c10", "external": false, "thunk": false, "body_bytes": 92, "direct_callees": ["0x10016742"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003c81", "name": "FUN_10003c81", "external": false, "thunk": false, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003c86", "name": "FUN_10003c86", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": ["EXTERNAL:0x7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003c95", "name": "FUN_10003c95", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": ["EXTERNAL:0x8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003ca4", "name": "FUN_10003ca4", "external": false, "thunk": false, "body_bytes": 53, "direct_callees": ["EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003cd9", "name": "FUN_10003cd9", "external": false, "thunk": false, "body_bytes": 245, "direct_callees": ["0x10003dce", "0x1000d748", "0x100167b6", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x60", "EXTERNAL:0x61"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003dce", "name": "FUN_10003dce", "external": false, "thunk": false, "body_bytes": 63, "direct_callees": ["0x100166d0", "0x100166d6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003e0d", "name": "FUN_10003e0d", "external": false, "thunk": false, "body_bytes": 89, "direct_callees": ["0x10003e66", "0x10004fe9", "0x1000d87a", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003e66", "name": "WSOCK32.DLL::WSACleanup", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003e6b", "name": "FUN_10003e6b", "external": false, "thunk": false, "body_bytes": 38, "direct_callees": ["0x10003e91"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003e91", "name": "FUN_10003e91", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x10016750", "EXTERNAL:0x3f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003ec9", "name": "FUN_10003ec9", "external": false, "thunk": false, "body_bytes": 133, "direct_callees": ["0x10004c83", "0x10005037", "EXTERNAL:0x41"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003f4e", "name": "FUN_10003f4e", "external": false, "thunk": false, "body_bytes": 332, "direct_callees": ["0x100037e7", "0x1000d4a1", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c", "EXTERNAL:0x60", "EXTERNAL:0x61"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000409a", "name": "FUN_1000409a", "external": false, "thunk": false, "body_bytes": 313, "direct_callees": ["0x1000341d", "0x10003ec9", "0x10004610", "0x10004b14", "0x10004fe9", "0x1000c750", "0x1000c7fe", "0x1000d3ae", "0x1000d42b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100041d3", "name": "FUN_100041d3", "external": false, "thunk": false, "body_bytes": 76, "direct_callees": ["0x100166dc", "0x100166e2", "0x100166e8", "0x100167bc", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000421f", "name": "FUN_1000421f", "external": false, "thunk": false, "body_bytes": 737, "direct_callees": ["0x10002ac2", "0x10002af9", "0x10002b01", "0x10002c13", "0x10002c43", "0x100041d3", "0x10004610", "0x10004645", "0x1000ce68", "0x1000d665", "0x1000d8d8", "EXTERNAL:0x36", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004500", "name": "FUN_10004500", "external": false, "thunk": false, "body_bytes": 179, "direct_callees": ["0x10003848", "0x10003e6b", "0x10004610", "0x10004fe9", "0x1000507a", "0x100050d1", "0x1000d502", "EXTERNAL:0x36", "EXTERNAL:0x41"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100045b3", "name": "FUN_100045b3", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x10004fe9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100045cc", "name": "FUN_100045cc", "external": false, "thunk": false, "body_bytes": 68, "direct_callees": ["0x10003972", "0x1000d52b", "EXTERNAL:0x3e", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004610", "name": "FUN_10004610", "external": false, "thunk": false, "body_bytes": 53, "direct_callees": ["0x1000387e", "EXTERNAL:0x36", "EXTERNAL:0x3e", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004645", "name": "FUN_10004645", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x1000d662"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004653", "name": "FUN_10004653", "external": false, "thunk": false, "body_bytes": 69, "direct_callees": ["EXTERNAL:0x62", "EXTERNAL:0x63", "EXTERNAL:0x64"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004698", "name": "FUN_10004698", "external": false, "thunk": false, "body_bytes": 789, "direct_callees": ["0x10002af9", "0x10002e49", "0x1000331a", "0x10003b3f", "0x100045b3", "0x100045cc", "0x10004653", "0x100049ad", "0x10004a2b", "0x1000507a", "0x1000ce68", "0x1000d6a9", "0x10016742", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x3d", "EXTERNAL:0x45", "EXTERNAL:0x60", "EXTERNAL:0x61", "EXTERNAL:0x65", "EXTERNAL:0x66"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100049ad", "name": "FUN_100049ad", "external": false, "thunk": false, "body_bytes": 110, "direct_callees": ["0x10016742", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004a1b", "name": "FUN_10004a1b", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004a23", "name": "FUN_10004a23", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004a2b", "name": "FUN_10004a2b", "external": false, "thunk": false, "body_bytes": 123, "direct_callees": ["0x10004610", "0x10016742", "EXTERNAL:0x5f", "EXTERNAL:0x62", "EXTERNAL:0x63", "EXTERNAL:0x64"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004aa6", "name": "FUN_10004aa6", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004ad7", "name": "FUN_10004ad7", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004adf", "name": "FUN_10004adf", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x1000502f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004aed", "name": "FUN_10004aed", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x10004ad7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004afb", "name": "FUN_10004afb", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x10003b3f", "0x1000d6a9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004b14", "name": "FUN_10004b14", "external": false, "thunk": false, "body_bytes": 367, "direct_callees": ["0x10002ac2", "0x10002b01", "0x10002c13", "0x10002c43", "0x100041d3", "0x10004698", "0x1000d8d8", "EXTERNAL:0x36", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004c83", "name": "FUN_10004c83", "external": false, "thunk": false, "body_bytes": 167, "direct_callees": ["0x10002e03", "0x10004d2a", "0x10004e2c", "0x1000cbf5", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004d2a", "name": "FUN_10004d2a", "external": false, "thunk": false, "body_bytes": 258, "direct_callees": ["0x100166e2", "0x100166e8", "0x100166ee", "0x100166f4", "0x100166fa", "0x10016700", "0x10016706", "0x100167bc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004e2c", "name": "FUN_10004e2c", "external": false, "thunk": false, "body_bytes": 295, "direct_callees": ["0x10004d2a", "0x10004f53", "0x1000d441", "0x100166e2", "0x100166e8", "0x100166ee", "0x10016700", "0x1001670c", "0x10016712", "0x100167bc", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004f53", "name": "FUN_10004f53", "external": false, "thunk": false, "body_bytes": 150, "direct_callees": ["0x10002a6c", "0x10002b01", "0x10002b97", "0x10002c6d", "0x10002c7f", "0x10002cd4", "0x10002def", "EXTERNAL:0x22"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004fe9", "name": "FUN_10004fe9", "external": false, "thunk": false, "body_bytes": 70, "direct_callees": ["0x100030ab", "0x1000c780", "0x1000cc36", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000502f", "name": "FUN_1000502f", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005037", "name": "FUN_10005037", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": ["0x10016718"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005056", "name": "FUN_10005056", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x10002af9", "0x1000cd92"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000507a", "name": "FUN_1000507a", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005086", "name": "FUN_10005086", "external": false, "thunk": false, "body_bytes": 75, "direct_callees": ["0x10002e49"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100050d1", "name": "FUN_100050d1", "external": false, "thunk": false, "body_bytes": 88, "direct_callees": ["0x10005056", "0x10005086", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005129", "name": "FUN_10005129", "external": false, "thunk": false, "body_bytes": 342, "direct_callees": ["0x10016742", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000527f", "name": "FUN_1000527f", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["EXTERNAL:0x4b", "EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100052d2", "name": "FUN_100052d2", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x1000527f", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000530a", "name": "FUN_1000530a", "external": false, "thunk": false, "body_bytes": 125, "direct_callees": ["0x10001344", "0x10003c10", "0x1000527f", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005387", "name": "FUN_10005387", "external": false, "thunk": false, "body_bytes": 157, "direct_callees": ["0x1000527f", "0x10005387", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005424", "name": "FUN_10005424", "external": false, "thunk": false, "body_bytes": 69, "direct_callees": ["0x10005424", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005469", "name": "FUN_10005469", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005477", "name": "FUN_10005477", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005485", "name": "FUN_10005485", "external": false, "thunk": false, "body_bytes": 9, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000548e", "name": "FUN_1000548e", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100054a0", "name": "FUN_100054a0", "external": false, "thunk": false, "body_bytes": 327, "direct_callees": ["0x100011bc", "0x10003c10", "0x1000548e", "0x100054a0", "0x10016750"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100055e7", "name": "FUN_100055e7", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x100055fa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100055fa", "name": "FUN_100055fa", "external": false, "thunk": false, "body_bytes": 329, "direct_callees": ["0x1000882e", "0x1000884a", "0x10016742", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x41"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005743", "name": "FUN_10005743", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x100055fa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005756", "name": "FUN_10005756", "external": false, "thunk": false, "body_bytes": 575, "direct_callees": ["0x100011bc", "0x100052d2", "0x10005424", "0x10005469", "0x10005756", "0x10005995", "0x100059f0", "0x1000882e", "0x1000884a", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005995", "name": "FUN_10005995", "external": false, "thunk": false, "body_bytes": 91, "direct_callees": ["EXTERNAL:0x36", "EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100059f0", "name": "FUN_100059f0", "external": false, "thunk": false, "body_bytes": 162, "direct_callees": ["0x1000527f", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005a92", "name": "FUN_10005a92", "external": false, "thunk": false, "body_bytes": 247, "direct_callees": ["0x10005424", "0x10005995", "0x10005a92", "0x1000882e", "0x1000884a", "0x1001686c", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005b89", "name": "FUN_10005b89", "external": false, "thunk": false, "body_bytes": 16, "direct_callees": ["0x10005a92"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005b99", "name": "FUN_10005b99", "external": false, "thunk": false, "body_bytes": 157, "direct_callees": ["0x10005b99", "0x10016860", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005c36", "name": "FUN_10005c36", "external": false, "thunk": false, "body_bytes": 161, "direct_callees": ["0x10005b99", "0x10016860", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005cd7", "name": "FUN_10005cd7", "external": false, "thunk": false, "body_bytes": 109, "direct_callees": ["0x10001344", "0x10005d44", "0x1000ceb5", "0x1000cee9", "0x1000cf89", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005d44", "name": "FUN_10005d44", "external": false, "thunk": false, "body_bytes": 266, "direct_callees": ["0x100013f7", "0x10005469", "0x10005d44", "0x1000ce91", "0x1000ceb5", "0x1000cee9", "0x1000cf75", "0x1000cf89"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005e4e", "name": "FUN_10005e4e", "external": false, "thunk": false, "body_bytes": 148, "direct_callees": ["0x10005ee2", "0x1000600b", "0x1000cffe", "0x1000d04d", "0x1000d19a", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005ee2", "name": "FUN_10005ee2", "external": false, "thunk": false, "body_bytes": 297, "direct_callees": ["0x100013c2", "0x100052d2", "0x1000530a", "0x10005ee2", "0x1000cfc1", "0x1000cffe", "0x1000d04d", "0x1000d17e", "0x1000d19a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000600b", "name": "FUN_1000600b", "external": false, "thunk": false, "body_bytes": 204, "direct_callees": ["0x100013c2", "0x100052d2", "0x1000530a", "0x1000600b", "0x1000cfc1", "0x1000d17e", "0x1000d19a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100060d7", "name": "FUN_100060d7", "external": false, "thunk": false, "body_bytes": 93, "direct_callees": ["0x100011b2", "0x1000398b", "0x100060d7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006134", "name": "FUN_10006134", "external": false, "thunk": false, "body_bytes": 80, "direct_callees": ["0x100037e7", "0x10003848", "0x10006184"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006184", "name": "FUN_10006184", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["0x1000387e", "0x1000398b", "0x10006184"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100061d7", "name": "FUN_100061d7", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": ["0x100011d7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006211", "name": "FUN_10006211", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["0x10016800"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006242", "name": "FUN_10006242", "external": false, "thunk": false, "body_bytes": 362, "direct_callees": ["0x10001344", "0x10005469", "0x100054a0", "0x10006242", "0x10016742", "EXTERNAL:0x36", "EXTERNAL:0x4d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100063ac", "name": "FUN_100063ac", "external": false, "thunk": false, "body_bytes": 146, "direct_callees": ["0x1001686c", "EXTERNAL:0x3c", "EXTERNAL:0x9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000643e", "name": "FUN_1000643e", "external": false, "thunk": false, "body_bytes": 146, "direct_callees": ["0x1001686c", "EXTERNAL:0x3c", "EXTERNAL:0x9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100064d0", "name": "FUN_100064d0", "external": false, "thunk": false, "body_bytes": 53, "direct_callees": ["0x10002118", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006505", "name": "FUN_10006505", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000653d", "name": "FUN_1000653d", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["0x1000cc36", "0x1000cce8", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006574", "name": "FUN_10006574", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100065a6", "name": "FUN_100065a6", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["0x10001fa5"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100065dd", "name": "FUN_100065dd", "external": false, "thunk": false, "body_bytes": 242, "direct_callees": ["0x10001431", "0x1000cce8", "0x100167bc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100066cf", "name": "FUN_100066cf", "external": false, "thunk": false, "body_bytes": 282, "direct_callees": ["0x10001431", "0x1000cc72", "0x1000cdf4", "0x100167bc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100067e9", "name": "FUN_100067e9", "external": false, "thunk": false, "body_bytes": 545, "direct_callees": ["0x10003445", "0x10003475", "0x10003876", "0x1000387e", "0x100038e7", "0x1000390c", "0x1000cc17", "0x1000cc36", "0x1000cce8", "0x1000cf75", "0x10016742", "EXTERNAL:0x36", "EXTERNAL:0x50", "EXTERNAL:0x5e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006a1e", "name": "FUN_10006a1e", "external": false, "thunk": false, "body_bytes": 863, "direct_callees": ["0x10003430", "0x10003475", "0x10003b3f", "0x10006d7d", "0x1000cc17", "0x1000cc36", "0x1000cdf4", "0x1000d17e", "0x10016742", "0x10016830", "EXTERNAL:0x45", "EXTERNAL:0x52"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006d7d", "name": "FUN_10006d7d", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["0x10003972"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006d92", "name": "FUN_10006d92", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["0x1000387e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006daa", "name": "FUN_10006daa", "external": false, "thunk": false, "body_bytes": 57, "direct_callees": ["0x1000387e", "EXTERNAL:0x69"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006de3", "name": "FUN_10006de3", "external": false, "thunk": false, "body_bytes": 16, "direct_callees": ["0x10003a8e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006df3", "name": "FUN_10006df3", "external": false, "thunk": false, "body_bytes": 99, "direct_callees": ["0x10006e56", "0x1000acec", "0x1000b58c", "0x10010b46", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006e56", "name": "FUN_10006e56", "external": false, "thunk": false, "body_bytes": 6536, "direct_callees": ["0x10001000", "0x100011b2", "0x100011d7", "0x10002554", "0x10002a03", "0x10002a6c", "0x10002af9", "0x10002b01", "0x10002c6d", "0x10002c7f", "0x10003030", "0x100030d1", "0x100030e4", "0x10003121", "0x10003170", "0x100032a1", "0x10003430", "0x10003445", "0x10003475", "0x100034a7", "0x100034b3", "0x10003573", "0x100037e7", "0x10003848", "0x1000387e", "0x10003972", "0x10003f4e", "0x1000409a", "0x1000421f", "0x10004500", "0x100045cc", "0x10004610", "0x10004698", "0x10004a1b", "0x10004a23", "0x10004aa6", "0x10004ad7", "0x10004adf", "0x10004aed", "0x10004afb", "0x1000527f", "0x1000530a", "0x10005387", "0x10005424", "0x100054a0", "0x100055e7", "0x10005756", "0x10005b89", "0x10005b99", "0x10005cd7", "0x100060d7", "0x10006df3", "0x10006e56", "0x1000880e", "0x1000882e", "0x1000884a", "0x10008880", "0x100088bb", "0x100088ec", "0x1000892e", "0x100089a6", "0x10008a82", "0x10008b72", "0x10008f0f", "0x10008f45", "0x100095ba", "0x1000ab61", "0x1000acec", "0x1000bd63", "0x1000c3fd", "0x1000cc17", "0x1000cc36", "0x1000ce68", "0x1000d4a1", "0x1000d502", "0x1000d52b", "0x1000d6cc", "0x1000e023", "0x1000e077", "0x1000e08f", "0x10010a82", "0x10010b46", "0x10010b75", "0x10010e5b", "0x10010f6e", "0x100110da", "0x10011218", "0x10011f22", "0x10011f8d", "0x1001200e", "0x10012d82", "0x10012f05", "0x100130f4", "0x10016742", "0x10016860", "0x10016866", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x3b", "EXTERNAL:0x41", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000880e", "name": "FUN_1000880e", "external": false, "thunk": false, "body_bytes": 32, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000882e", "name": "FUN_1000882e", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000884a", "name": "FUN_1000884a", "external": false, "thunk": false, "body_bytes": 54, "direct_callees": ["EXTERNAL:0x4b", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008880", "name": "FUN_10008880", "external": false, "thunk": false, "body_bytes": 59, "direct_callees": ["EXTERNAL:0x45", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100088bb", "name": "FUN_100088bb", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100088ec", "name": "FUN_100088ec", "external": false, "thunk": false, "body_bytes": 66, "direct_callees": ["EXTERNAL:0x45", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000892e", "name": "FUN_1000892e", "external": false, "thunk": false, "body_bytes": 120, "direct_callees": ["0x10016880", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100089a6", "name": "FUN_100089a6", "external": false, "thunk": false, "body_bytes": 220, "direct_callees": ["0x100063ac", "0x1000643e", "0x10016866", "EXTERNAL:0x3f", "EXTERNAL:0x4c", "EXTERNAL:0xa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008a82", "name": "FUN_10008a82", "external": false, "thunk": false, "body_bytes": 240, "direct_callees": ["0x10003e91", "0x1000cce8", "0x1000cd61", "0x1000ce3c", "0x10011f22", "0x10011f8d", "0x1001200e", "EXTERNAL:0xb"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008b72", "name": "FUN_10008b72", "external": false, "thunk": false, "body_bytes": 148, "direct_callees": ["0x10002cd4", "0x10002cf8", "0x10002d2c", "0x10002db8", "0x10002def", "0x10008c06", "0x10008e2f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008c06", "name": "FUN_10008c06", "external": false, "thunk": false, "body_bytes": 457, "direct_callees": ["0x10002a6c", "0x10002b01", "0x10002b97", "0x10002c6d", "0x10002c7f", "0x10002cf8", "0x10002db8", "0x10002def", "0x10003876", "0x1000387e", "0x100038e7", "0x1000390c", "0x10003972", "0x10003a8e", "0x10008dcf", "0x1000e077", "0x10016742", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008dcf", "name": "FUN_10008dcf", "external": false, "thunk": false, "body_bytes": 96, "direct_callees": ["0x100166dc", "0x100166e2", "0x10016700", "0x1001671e", "0x100167bc", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008e2f", "name": "FUN_10008e2f", "external": false, "thunk": false, "body_bytes": 224, "direct_callees": ["0x10002af9", "0x10002cd4", "0x10002db8", "0x10005469", "0x10005477", "0x10008e2f", "0x1000ce68"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008f0f", "name": "FUN_10008f0f", "external": false, "thunk": false, "body_bytes": 54, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008f45", "name": "FUN_10008f45", "external": false, "thunk": false, "body_bytes": 1653, "direct_callees": ["0x10002a03", "0x10002a6c", "0x10002af9", "0x10002b01", "0x10002c6d", "0x10002c7f", "0x100030d1", "0x100030e4", "0x10003121", "0x100032a1", "0x10003f4e", "0x1000409a", "0x1000421f", "0x10004500", "0x100045cc", "0x10004610", "0x10004698", "0x10004a1b", "0x10004aa6", "0x10004ad7", "0x10004adf", "0x10004aed", "0x10008a82", "0x1000ce68", "0x1000d6a9", "0x1000d6cc", "0x1000e077", "0x10010b46", "0x10012d82", "0x100130f4", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100095ba", "name": "FUN_100095ba", "external": false, "thunk": false, "body_bytes": 3666, "direct_callees": ["0x10001000", "0x100011bc", "0x10001203", "0x10002554", "0x10002a03", "0x10002a6c", "0x10002af9", "0x10002b01", "0x10002c6d", "0x10002c7f", "0x100030d1", "0x100030e4", "0x10003121", "0x10003170", "0x100032a1", "0x100033a5", "0x100033d7", "0x1000387e", "0x10003a8e", "0x10003f4e", "0x1000409a", "0x1000421f", "0x10004500", "0x100045cc", "0x10004610", "0x10004698", "0x10004a1b", "0x10004aa6", "0x10004ad7", "0x10004adf", "0x10004aed", "0x10004afb", "0x1000880e", "0x1000882e", "0x1000884a", "0x100088bb", "0x10008a82", "0x10008f45", "0x100095ba", "0x1000a438", "0x1000a636", "0x1000ce68", "0x1000d5a0", "0x1000d662", "0x1000d665", "0x1000d6cc", "0x1000e077", "0x10010b46", "0x10011f22", "0x1001200e", "0x10012d82", "0x10012f05", "EXTERNAL:0x36", "EXTERNAL:0x3b", "EXTERNAL:0x41", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a438", "name": "FUN_1000a438", "external": false, "thunk": false, "body_bytes": 510, "direct_callees": ["0x10002cd4", "0x10002cf8", "0x10002d2c", "0x10002db8", "0x10002def", "0x10008c06", "0x1000d662", "0x1000d665", "0x1000d6cc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a636", "name": "FUN_1000a636", "external": false, "thunk": false, "body_bytes": 1195, "direct_callees": ["0x100011bc", "0x100011d7", "0x10001203", "0x10002196", "0x10002af9", "0x10002e03", "0x10002e49", "0x10003030", "0x100030ab", "0x10003415", "0x10003430", "0x1000345d", "0x100034df", "0x1000387e", "0x10005b99", "0x100064d0", "0x10006505", "0x1000653d", "0x100065a6", "0x100065dd", "0x1000aae1", "0x1000cc17", "0x1000cc36", "0x1000cd43", "0x1000cdf4", "0x1000ce68", "0x10010a82", "0x10010b46", "0x10010e5b", "0x10010f6e", "0x10011f8d", "0x10016830", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x4c", "EXTERNAL:0x6a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000aae1", "name": "FUN_1000aae1", "external": false, "thunk": false, "body_bytes": 128, "direct_callees": ["0x10003430", "0x100064d0", "0x1000653d", "0x10006574", "0x100066cf", "0x1000cc17", "0x10016830"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ab61", "name": "FUN_1000ab61", "external": false, "thunk": false, "body_bytes": 395, "direct_callees": ["0x10002af9", "0x10002e49", "0x10003445", "0x1000cc17", "0x1000cc36", "0x1000cce8", "0x1000cdf4", "0x1000ce68", "0x10010b46", "0x10010f6e", "0x10011f8d", "0x10016830", "EXTERNAL:0x36", "EXTERNAL:0x4c", "EXTERNAL:0x6a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000acec", "name": "FUN_1000acec", "external": false, "thunk": false, "body_bytes": 106, "direct_callees": ["EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ae42", "name": "FUN_1000ae42", "external": false, "thunk": false, "body_bytes": 463, "direct_callees": ["0x10002b97", "0x10002cd4", "0x10002cf8", "0x10002d2c", "0x10002db8", "0x10002def", "0x10008c06", "0x10008e2f", "0x1000d662", "0x1000d665", "0x1000d6cc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b011", "name": "FUN_1000b011", "external": false, "thunk": false, "body_bytes": 482, "direct_callees": ["0x10002b97", "0x10002cd4", "0x10002cf8", "0x10002d2c", "0x10002db8", "0x10002def", "0x10008c06", "0x10008e2f", "0x1000d662", "0x1000d665", "0x1000d6cc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b1f3", "name": "FUN_1000b1f3", "external": false, "thunk": false, "body_bytes": 79, "direct_callees": ["0x10002af9", "0x100030d1", "0x1000ce68"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b242", "name": "FUN_1000b242", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x10002af9", "0x100030e4", "0x1000ce68"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b27a", "name": "FUN_1000b27a", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b2ae", "name": "FUN_1000b2ae", "external": false, "thunk": false, "body_bytes": 361, "direct_callees": ["0x10002b97", "0x10002cd4", "0x10002cf8", "0x10002d2c", "0x10002db8", "0x10002def", "0x10008c06", "0x1000d692", "0x1000d6cc", "0x10016866", "EXTERNAL:0x38", "EXTERNAL:0x61"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b417", "name": "FUN_1000b417", "external": false, "thunk": false, "body_bytes": 373, "direct_callees": ["0x10002b97", "0x10002cd4", "0x10002cf8", "0x10002d2c", "0x10002db8", "0x10002def", "0x10008c06", "0x1000d692", "0x1000d6cc", "0x10016866", "EXTERNAL:0x38", "EXTERNAL:0x61"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b58c", "name": "FUN_1000b58c", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b598", "name": "FUN_1000b598", "external": false, "thunk": false, "body_bytes": 833, "direct_callees": ["0x100037e7", "0x10016860", "EXTERNAL:0x1", "EXTERNAL:0x1e", "EXTERNAL:0x36", "EXTERNAL:0x4b", "EXTERNAL:0xc", "EXTERNAL:0xd", "EXTERNAL:0xe"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b8d9", "name": "FUN_1000b8d9", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x10003848", "EXTERNAL:0x36", "EXTERNAL:0xc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b911", "name": "FUN_1000b911", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": ["0x1000b933"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b933", "name": "FUN_1000b933", "external": false, "thunk": false, "body_bytes": 453, "direct_callees": ["0x1000387e", "0x10003972", "0x10003b3f", "0x1000c481", "0x1000c502", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000baf8", "name": "FUN_1000baf8", "external": false, "thunk": false, "body_bytes": 92, "direct_callees": ["0x1000bb54"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bb54", "name": "FUN_1000bb54", "external": false, "thunk": false, "body_bytes": 470, "direct_callees": ["0x1000127f", "0x100055e7", "0x1000bb54", "0x1000bd2a", "0x10016742", "0x10016866", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bd2a", "name": "FUN_1000bd2a", "external": false, "thunk": false, "body_bytes": 57, "direct_callees": ["0x10016742", "0x1001686c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bd63", "name": "FUN_1000bd63", "external": false, "thunk": false, "body_bytes": 1632, "direct_callees": ["0x10003573", "0x100036c2", "0x100037e7", "0x10003848", "0x1000387e", "0x100055e7", "0x10006a1e", "0x1000b911", "0x1000b933", "0x1000baf8", "0x1000c3c3", "0x1000e023", "0x1000e077", "0x1000e08f", "0x1001053b", "0x10016830", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c3c3", "name": "FUN_1000c3c3", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": ["EXTERNAL:0x6b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c3fd", "name": "FUN_1000c3fd", "external": false, "thunk": false, "body_bytes": 132, "direct_callees": ["0x100055e7", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c481", "name": "FUN_1000c481", "external": false, "thunk": false, "body_bytes": 62, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c4bf", "name": "FUN_1000c4bf", "external": false, "thunk": false, "body_bytes": 22, "direct_callees": ["0x1000c481"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c4d5", "name": "FUN_1000c4d5", "external": false, "thunk": false, "body_bytes": 45, "direct_callees": ["0x1000387e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c502", "name": "FUN_1000c502", "external": false, "thunk": false, "body_bytes": 113, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c573", "name": "FUN_1000c573", "external": false, "thunk": false, "body_bytes": 39, "direct_callees": ["0x1000c502"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c59a", "name": "FUN_1000c59a", "external": false, "thunk": false, "body_bytes": 80, "direct_callees": ["0x1000c5ea"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c5ea", "name": "FUN_1000c5ea", "external": false, "thunk": false, "body_bytes": 144, "direct_callees": ["0x10016742", "0x10016860", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c67a", "name": "FUN_1000c67a", "external": false, "thunk": false, "body_bytes": 80, "direct_callees": ["0x1000c5ea"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c6ca", "name": "FUN_1000c6ca", "external": false, "thunk": false, "body_bytes": 42, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c6f4", "name": "FUN_1000c6f4", "external": false, "thunk": false, "body_bytes": 92, "direct_callees": ["0x10016742", "0x10016866", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c750", "name": "FUN_1000c750", "external": false, "thunk": false, "body_bytes": 48, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c780", "name": "FUN_1000c780", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c79c", "name": "FUN_1000c79c", "external": false, "thunk": false, "body_bytes": 98, "direct_callees": ["EXTERNAL:0x41", "EXTERNAL:0x66"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c7fe", "name": "FUN_1000c7fe", "external": false, "thunk": false, "body_bytes": 848, "direct_callees": ["0x100037e7", "0x10003848", "0x1000387e", "0x10003b3f", "0x10006d92", "0x1000b933", "0x1000bd2a", "0x1000c79c", "0x10016742", "EXTERNAL:0x36", "EXTERNAL:0x41", "EXTERNAL:0x45", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cb4e", "name": "FUN_1000cb4e", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cb88", "name": "FUN_1000cb88", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cbc2", "name": "FUN_1000cbc2", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cbde", "name": "FUN_1000cbde", "external": false, "thunk": false, "body_bytes": 23, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cbf5", "name": "FUN_1000cbf5", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cc17", "name": "FUN_1000cc17", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cc36", "name": "FUN_1000cc36", "external": false, "thunk": false, "body_bytes": 60, "direct_callees": ["0x1000cd61", "0x1000d3f9", "0x100166ee", "EXTERNAL:0x36", "EXTERNAL:0x6c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cc72", "name": "FUN_1000cc72", "external": false, "thunk": false, "body_bytes": 118, "direct_callees": ["0x1000cb88", "0x1000d441", "0x1001670c", "EXTERNAL:0x40"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cce8", "name": "FUN_1000cce8", "external": false, "thunk": false, "body_bytes": 91, "direct_callees": ["0x1000cb4e", "0x10016712", "EXTERNAL:0x3a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cd43", "name": "FUN_1000cd43", "external": false, "thunk": false, "body_bytes": 30, "direct_callees": ["0x10003493"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cd61", "name": "FUN_1000cd61", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["0x1000cbc2", "EXTERNAL:0x6d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cd92", "name": "FUN_1000cd92", "external": false, "thunk": false, "body_bytes": 98, "direct_callees": ["0x10003481", "0x100034a7", "0x10016718"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cdf4", "name": "FUN_1000cdf4", "external": false, "thunk": false, "body_bytes": 72, "direct_callees": ["0x1001670c", "EXTERNAL:0x39"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ce3c", "name": "FUN_1000ce3c", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x10016724", "EXTERNAL:0x6a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ce68", "name": "FUN_1000ce68", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x10016700"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ce91", "name": "FUN_1000ce91", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x1000cce8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ceb5", "name": "FUN_1000ceb5", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["0x1000cce8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cee9", "name": "FUN_1000cee9", "external": false, "thunk": false, "body_bytes": 140, "direct_callees": ["0x1000cce8", "0x10016800"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cf75", "name": "FUN_1000cf75", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": ["0x1000cce8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cf89", "name": "FUN_1000cf89", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x1000cce8", "0x1000ce91", "0x10016742"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cfc1", "name": "FUN_1000cfc1", "external": false, "thunk": false, "body_bytes": 61, "direct_callees": ["0x1000cc72"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cffe", "name": "FUN_1000cffe", "external": false, "thunk": false, "body_bytes": 79, "direct_callees": ["0x1000cc72"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d04d", "name": "FUN_1000d04d", "external": false, "thunk": false, "body_bytes": 305, "direct_callees": ["0x1000cc72", "0x100167d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d17e", "name": "FUN_1000d17e", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x1000cc72"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d19a", "name": "FUN_1000d19a", "external": false, "thunk": false, "body_bytes": 122, "direct_callees": ["0x1000cc72", "0x1000cfc1", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d214", "name": "FUN_1000d214", "external": false, "thunk": false, "body_bytes": 139, "direct_callees": ["0x1000d17e", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d29f", "name": "FUN_1000d29f", "external": false, "thunk": false, "body_bytes": 67, "direct_callees": ["0x10016712"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d2e2", "name": "FUN_1000d2e2", "external": false, "thunk": false, "body_bytes": 204, "direct_callees": ["0x1000d214", "0x1000d3f9", "0x1001670c", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x38"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d3ae", "name": "FUN_1000d3ae", "external": false, "thunk": false, "body_bytes": 75, "direct_callees": ["EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d3f9", "name": "FUN_1000d3f9", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d42b", "name": "FUN_1000d42b", "external": false, "thunk": false, "body_bytes": 22, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d441", "name": "FUN_1000d441", "external": false, "thunk": false, "body_bytes": 96, "direct_callees": ["0x1001672a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d4a1", "name": "FUN_1000d4a1", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["EXTERNAL:0x4b", "EXTERNAL:0x5", "EXTERNAL:0x50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d502", "name": "FUN_1000d502", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x1000d6a9", "EXTERNAL:0x36", "EXTERNAL:0x6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d52b", "name": "FUN_1000d52b", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["0x1000d55c", "0x1000d56b", "0x1000d57a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d55c", "name": "FUN_1000d55c", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": ["EXTERNAL:0x7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d56b", "name": "FUN_1000d56b", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": ["EXTERNAL:0x8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d57a", "name": "FUN_1000d57a", "external": false, "thunk": false, "body_bytes": 38, "direct_callees": ["EXTERNAL:0x6e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d5a0", "name": "FUN_1000d5a0", "external": false, "thunk": false, "body_bytes": 108, "direct_callees": ["0x1000d55c", "0x1000d56b", "EXTERNAL:0x57"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d60c", "name": "FUN_1000d60c", "external": false, "thunk": false, "body_bytes": 86, "direct_callees": ["0x1000d55c", "0x1000d56b", "EXTERNAL:0x57"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d662", "name": "FUN_1000d662", "external": false, "thunk": false, "body_bytes": 3, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d665", "name": "FUN_1000d665", "external": false, "thunk": false, "body_bytes": 27, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d680", "name": "FUN_1000d680", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d692", "name": "FUN_1000d692", "external": false, "thunk": false, "body_bytes": 23, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d6a9", "name": "FUN_1000d6a9", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d6cc", "name": "FUN_1000d6cc", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d6d4", "name": "FUN_1000d6d4", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d6e3", "name": "FUN_1000d6e3", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d6ff", "name": "FUN_1000d6ff", "external": false, "thunk": false, "body_bytes": 7, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d706", "name": "FUN_1000d706", "external": false, "thunk": false, "body_bytes": 66, "direct_callees": ["0x100167bc", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d748", "name": "FUN_1000d748", "external": false, "thunk": false, "body_bytes": 306, "direct_callees": ["0x10016866", "EXTERNAL:0xa", "EXTERNAL:0xc", "EXTERNAL:0xd", "EXTERNAL:0xe"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d87a", "name": "FUN_1000d87a", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["EXTERNAL:0xc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d893", "name": "FUN_1000d893", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d8ac", "name": "FUN_1000d8ac", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d8d8", "name": "FUN_1000d8d8", "external": false, "thunk": false, "body_bytes": 475, "direct_callees": ["0x10002af9", "0x10002c13", "0x1000ce68", "0x1000d6d4", "0x1000d6e3", "0x1000d6ff", "0x1000d893", "0x1000d8ac", "0x1000dab3", "0x1000df4f", "0x10016742", "0x10016860", "0x10016866", "EXTERNAL:0x3d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000dab3", "name": "FUN_1000dab3", "external": false, "thunk": false, "body_bytes": 795, "direct_callees": ["0x1000d6d4", "0x1000d6e3", "0x1000d6ff", "0x1000d706", "0x1000ddce", "0x1000de3c", "0x1000df4f", "0x10016742", "0x100167b6", "0x100167bc", "0x10016866", "EXTERNAL:0x4d", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ddce", "name": "FUN_1000ddce", "external": false, "thunk": false, "body_bytes": 110, "direct_callees": ["EXTERNAL:0x11", "EXTERNAL:0x67"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000de3c", "name": "FUN_1000de3c", "external": false, "thunk": false, "body_bytes": 275, "direct_callees": ["0x1000d6ff", "0x1000d706"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000df4f", "name": "FUN_1000df4f", "external": false, "thunk": false, "body_bytes": 212, "direct_callees": ["0x1000d6ff", "0x1000d706"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e023", "name": "mrbSetProperty", "external": false, "thunk": false, "body_bytes": 84, "direct_callees": ["0x10006d7d", "0x1000e08f", "EXTERNAL:0x36", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e077", "name": "mrbGetProperty", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["0x10006d92"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e08f", "name": "mrbRemoveProperty", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": ["0x10006de3"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e0b2", "name": "mrbGetPublishedProperty", "external": false, "thunk": false, "body_bytes": 163, "direct_callees": ["0x100037e7", "0x10003848", "0x10006a1e", "0x10006d92", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e155", "name": "FUN_1000e155", "external": false, "thunk": false, "body_bytes": 113, "direct_callees": ["0x10003573", "0x10006a1e", "0x10010b46"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e1c6", "name": "mrbIsRepairNeeded", "external": false, "thunk": false, "body_bytes": 89, "direct_callees": ["0x100034eb", "0x10003573"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e21f", "name": "mrbRepair", "external": false, "thunk": false, "body_bytes": 90, "direct_callees": ["0x1000e1c6", "0x1000e279", "0x10010b46", "0x10011218"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e279", "name": "FUN_1000e279", "external": false, "thunk": false, "body_bytes": 96, "direct_callees": ["0x10003430", "0x10003475", "0x10005e4e", "0x1000cc17", "0x1000cc36", "0x10010b46"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e2d9", "name": "mrbClean", "external": false, "thunk": false, "body_bytes": 130, "direct_callees": ["0x10002549", "0x1000268e", "0x100034df", "0x10003573", "0x1000e1c6", "0x10010b46"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e35b", "name": "mrbVerify", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x1000e369"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e369", "name": "mrbVerifyEx", "external": false, "thunk": false, "body_bytes": 143, "direct_callees": ["0x10005387", "0x10005424", "0x1000e279", "0x1000e3f8", "0x1000e482"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e3f8", "name": "FUN_1000e3f8", "external": false, "thunk": false, "body_bytes": 138, "direct_callees": ["0x10003445", "0x10003475", "0x10005cd7", "0x1000cc17", "0x1000cc36", "0x10010b46"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e482", "name": "FUN_1000e482", "external": false, "thunk": false, "body_bytes": 1426, "direct_callees": ["0x100011d7", "0x10003573", "0x10003626", "0x1000364e", "0x10003676", "0x1000369e", "0x100036b0", "0x10003748", "0x1000377f", "0x100037b9", "0x1000530a", "0x10005469", "0x10005485", "0x10005756", "0x10005b89", "0x10005b99", "0x1000e482", "0x1000ea14", "0x10010912", "0x10010a82", "0x10010b46", "0x10010b75", "0x10016866", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ea14", "name": "FUN_1000ea14", "external": false, "thunk": false, "body_bytes": 563, "direct_callees": ["0x10002744", "0x100028b4", "0x100034b3", "0x10003748", "0x100052d2", "0x1000530a", "0x1000ea14", "0x1000ec47", "0x1000ec7b", "0x10010b46", "0x10010b75", "0x10016742", "0x10016860", "0x10016866", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x5e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ec47", "name": "FUN_1000ec47", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ec7b", "name": "FUN_1000ec7b", "external": false, "thunk": false, "body_bytes": 147, "direct_callees": ["0x10016742", "EXTERNAL:0x3d", "EXTERNAL:0x41"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ed0e", "name": "mrbIsUpdateAvailable", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["0x1000ed23"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ed23", "name": "mrbIsUpdateAvailableEx", "external": false, "thunk": false, "body_bytes": 76, "direct_callees": ["0x1000ed6f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ed6f", "name": "mrbUpdate", "external": false, "thunk": false, "body_bytes": 613, "direct_callees": ["0x10002549", "0x1000268e", "0x10003848", "0x10003cd9", "0x10003e0d", "0x10005424", "0x100054a0", "0x10006d92", "0x10006df3", "0x1000d6a9", "0x1000e023", "0x1000e1c6", "0x1000e21f", "0x1000e279", "0x1000efd4", "0x1000efe5", "0x1000eff6", "0x1000f047", "0x1000f0c0", "0x1000f891", "0x10010b46", "0x10016730", "0x10016736", "EXTERNAL:0x12", "EXTERNAL:0x13", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000efd4", "name": "FUN_1000efd4", "external": false, "thunk": false, "body_bytes": 17, "direct_callees": ["EXTERNAL:0x7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000efe5", "name": "FUN_1000efe5", "external": false, "thunk": false, "body_bytes": 17, "direct_callees": ["EXTERNAL:0x8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eff6", "name": "FUN_1000eff6", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["EXTERNAL:0x3f", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f047", "name": "FUN_1000f047", "external": false, "thunk": false, "body_bytes": 121, "direct_callees": ["0x100067e9", "0x1000e3f8", "0x10010b46"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f0c0", "name": "FUN_1000f0c0", "external": false, "thunk": false, "body_bytes": 1135, "direct_callees": ["0x10003e91", "0x10005129", "0x10006d7d", "0x10006d92", "0x10006daa", "0x1000d680", "0x1000e023", "0x1000e077", "0x1000f52f", "0x1000f776", "0x1000f7f4", "0x10010b46", "0x10016742", "0x10016860", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c", "EXTERNAL:0x5f", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f52f", "name": "FUN_1000f52f", "external": false, "thunk": false, "body_bytes": 583, "direct_callees": ["0x10003c10", "0x10003e91", "0x10016750", "0x10016866", "EXTERNAL:0x15", "EXTERNAL:0x16", "EXTERNAL:0x17", "EXTERNAL:0x22", "EXTERNAL:0x53", "EXTERNAL:0x68", "EXTERNAL:0x6b", "EXTERNAL:0xa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f776", "name": "FUN_1000f776", "external": false, "thunk": false, "body_bytes": 126, "direct_callees": ["0x10016742", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f7f4", "name": "FUN_1000f7f4", "external": false, "thunk": false, "body_bytes": 157, "direct_callees": ["0x10016742", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f891", "name": "mrbIsPrepareNeeded", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x10003573"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f8a4", "name": "mrbPrepare", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x1000f8b7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f8b7", "name": "mrbPrepareEx", "external": false, "thunk": false, "body_bytes": 622, "direct_callees": ["0x10002549", "0x10002554", "0x1000268e", "0x1000527f", "0x10005424", "0x10006d7d", "0x10006d92", "0x10006de3", "0x1000e023", "0x1000e3f8", "0x1000ea14", "0x1000ed6f", "0x1000eff6", "0x1000f047", "0x1000f52f", "0x10010912", "0x10010b46", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4c", "EXTERNAL:0x6a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000fb25", "name": "mrbInitUpdate", "external": false, "thunk": false, "body_bytes": 2071, "direct_callees": ["0x10002549", "0x10002554", "0x100037e7", "0x10003972", "0x10005129", "0x100063ac", "0x1000643e", "0x1000b598", "0x1000b911", "0x1000d4a1", "0x1000d52b", "0x1000e023", "0x1000e077", "0x1000e155", "0x1000f776", "0x10010355", "0x10010b46", "0x10016742", "0x10016860", "0x10016866", "0x1001686c", "EXTERNAL:0x18", "EXTERNAL:0x19", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x5", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010355", "name": "mrbTermUpdate", "external": false, "thunk": false, "body_bytes": 447, "direct_callees": ["0x10003848", "0x10003e0d", "0x10005424", "0x1000b8d9", "0x1000d502", "0x1000f047", "0x10010b46", "EXTERNAL:0x1a", "EXTERNAL:0x36", "EXTERNAL:0x6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010514", "name": "mrbPrintIndex", "external": false, "thunk": false, "body_bytes": 39, "direct_callees": ["0x10006242", "0x1000e279"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001053b", "name": "FUN_1001053b", "external": false, "thunk": false, "body_bytes": 136, "direct_callees": ["0x100055e7", "0x10010f6e", "0x10016742", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x49", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100105c3", "name": "mrbLookupHoldingAreaFile", "external": false, "thunk": false, "body_bytes": 198, "direct_callees": ["0x1001053b", "0x10010689", "0x10016742", "0x10016866", "EXTERNAL:0x38", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010689", "name": "FUN_10010689", "external": false, "thunk": false, "body_bytes": 46, "direct_callees": ["0x1000e279"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100106b7", "name": "mrbBrowseHoldingAreaDir", "external": false, "thunk": false, "body_bytes": 159, "direct_callees": ["0x10005469", "0x100055e7", "0x10010689", "0x10016866", "EXTERNAL:0x38"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010756", "name": "mrbNextHoldingAreaFile", "external": false, "thunk": false, "body_bytes": 102, "direct_callees": ["0x10005469", "0x10010689", "0x10016866"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100107bc", "name": "mrbCancelUpdate", "external": false, "thunk": false, "body_bytes": 225, "direct_callees": ["0x1000efd4", "0x1000efe5", "EXTERNAL:0x1b", "EXTERNAL:0x1f", "EXTERNAL:0x20", "EXTERNAL:0x21"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001089d", "name": "mrbAppendLog", "external": false, "thunk": false, "body_bytes": 117, "direct_callees": ["0x10003e91", "0x1000d52b", "0x10016750", "0x100167bc", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010912", "name": "mrbSetLocation", "external": false, "thunk": false, "body_bytes": 280, "direct_callees": ["0x10005469", "0x100055e7", "0x1000e023", "0x1000e08f", "0x1000e279", "0x10010a2a", "0x10013810", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010a2a", "name": "FUN_10010a2a", "external": false, "thunk": false, "body_bytes": 88, "direct_callees": ["0x10016742", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010a82", "name": "mrbGetLocation", "external": false, "thunk": false, "body_bytes": 98, "direct_callees": ["0x1000e077", "0x10010a2a", "0x10016866"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010ae4", "name": "mrbGetMessageText", "external": false, "thunk": false, "body_bytes": 98, "direct_callees": ["0x10016742", "0x10016866", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010b46", "name": "FUN_10010b46", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010b75", "name": "FUN_10010b75", "external": false, "thunk": false, "body_bytes": 164, "direct_callees": ["0x10003430", "0x10003475", "0x100034a7", "0x100064d0", "0x1000653d", "0x100065a6", "0x100066cf", "0x1000cc17"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010c19", "name": "FUN_10010c19", "external": false, "thunk": false, "body_bytes": 256, "direct_callees": ["0x10003573", "0x100055e7", "0x10016742", "0x10016860", "0x10016866", "EXTERNAL:0x45", "EXTERNAL:0x4c", "EXTERNAL:0x5a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010d19", "name": "FUN_10010d19", "external": false, "thunk": false, "body_bytes": 72, "direct_callees": ["0x100034eb", "0x10010b46", "0x10010c19", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010d61", "name": "FUN_10010d61", "external": false, "thunk": false, "body_bytes": 250, "direct_callees": ["0x10003573", "0x100035ed", "0x100055e7", "0x10010d61", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4c", "EXTERNAL:0x5a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010e5b", "name": "FUN_10010e5b", "external": false, "thunk": false, "body_bytes": 92, "direct_callees": ["0x100037b9", "0x10005b99", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010eb7", "name": "FUN_10010eb7", "external": false, "thunk": false, "body_bytes": 183, "direct_callees": ["0x10010e5b", "0x10016742", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010f6e", "name": "FUN_10010f6e", "external": false, "thunk": false, "body_bytes": 196, "direct_callees": ["0x10001203", "0x10002554", "0x10016860", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011032", "name": "FUN_10011032", "external": false, "thunk": false, "body_bytes": 168, "direct_callees": ["0x10002554", "0x10016742", "0x10016860", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100110da", "name": "FUN_100110da", "external": false, "thunk": false, "body_bytes": 318, "direct_callees": ["0x10003430", "0x10003445", "0x10003475", "0x100034a7", "0x10003573", "0x1000cc17", "0x1000cc36", "0x1000cc72", "0x1000cce8", "0x1000cdf4", "0x10010b46", "EXTERNAL:0x6a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011218", "name": "FUN_10011218", "external": false, "thunk": false, "body_bytes": 594, "direct_callees": ["0x10002549", "0x10002554", "0x1000268e", "0x100034df", "0x100034eb", "0x10003573", "0x10003848", "0x10005424", "0x10006134", "0x1000e023", "0x1000eff6", "0x1000f047", "0x10010912", "0x10010a82", "0x10010b46", "0x1001146a", "0x10012046", "EXTERNAL:0x36", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001146a", "name": "FUN_1001146a", "external": false, "thunk": false, "body_bytes": 517, "direct_callees": ["0x10003573", "0x1000377f", "0x10005469", "0x10005485", "0x10005b99", "0x100061d7", "0x10010a82", "0x10010b46", "0x10010e5b", "0x100110da", "0x1001146a", "0x1001166f", "0x10011908", "0x1001686c", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001166f", "name": "FUN_1001166f", "external": false, "thunk": false, "body_bytes": 215, "direct_callees": ["0x10003573", "0x100035ed", "0x100055e7", "0x10005b99", "0x10005c36", "0x10010912", "0x10010e5b", "0x10011746", "0x1001686c", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011746", "name": "FUN_10011746", "external": false, "thunk": false, "body_bytes": 450, "direct_callees": ["0x1000268e", "0x100034df", "0x100034eb", "0x10003573", "0x1000358f", "0x10003626", "0x1000369e", "0x10010912", "0x10010a82", "0x10010b46", "0x10011032", "0x100110da", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011908", "name": "FUN_10011908", "external": false, "thunk": false, "body_bytes": 679, "direct_callees": ["0x10002571", "0x100034eb", "0x10003573", "0x100035ed", "0x1000377f", "0x1000387e", "0x10005469", "0x10005485", "0x100055e7", "0x10005b99", "0x10005c36", "0x10010b46", "0x10010d61", "0x10010e5b", "0x10010f6e", "0x10011746", "0x10011908", "0x10011baf", "0x10011c1b", "0x10011c88", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x48", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011baf", "name": "FUN_10011baf", "external": false, "thunk": false, "body_bytes": 108, "direct_callees": ["0x10003573", "0x10010b46", "0x100110da", "0x10011746"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011c1b", "name": "FUN_10011c1b", "external": false, "thunk": false, "body_bytes": 109, "direct_callees": ["0x100034eb", "0x10003573", "0x10010b46", "0x10011746"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011c88", "name": "FUN_10011c88", "external": false, "thunk": false, "body_bytes": 368, "direct_callees": ["0x10002554", "0x100034eb", "0x10003573", "0x100035ed", "0x10003626", "0x100055e7", "0x10005b99", "0x10010b46", "0x10010d61", "0x10010e5b", "0x10010eb7", "0x10011746", "0x1001686c", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011df8", "name": "FUN_10011df8", "external": false, "thunk": false, "body_bytes": 259, "direct_callees": ["0x10016880", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011efb", "name": "FUN_10011efb", "external": false, "thunk": false, "body_bytes": 39, "direct_callees": ["EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011f22", "name": "FUN_10011f22", "external": false, "thunk": false, "body_bytes": 107, "direct_callees": ["0x10010b46", "0x10011df8", "0x10011efb"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011f8d", "name": "FUN_10011f8d", "external": false, "thunk": false, "body_bytes": 129, "direct_callees": ["0x10010b46", "0x10011df8", "0x10011efb"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001200e", "name": "FUN_1001200e", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x10010b46", "0x10011df8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012046", "name": "FUN_10012046", "external": false, "thunk": false, "body_bytes": 403, "direct_callees": ["0x1000377f", "0x10005469", "0x10005485", "0x100061d7", "0x10010b46", "0x10010e5b", "0x10012046", "0x100121d9", "0x10012507", "0x1001686c", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100121d9", "name": "FUN_100121d9", "external": false, "thunk": false, "body_bytes": 734, "direct_callees": ["0x1000268e", "0x10002744", "0x100028b4", "0x100034df", "0x100034eb", "0x10003573", "0x1000358f", "0x100035ed", "0x10003626", "0x1000369e", "0x10005469", "0x10005743", "0x10005b99", "0x10010b46", "0x10010d19", "0x10010e5b", "0x100121d9", "0x100124b7", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100124b7", "name": "FUN_100124b7", "external": false, "thunk": false, "body_bytes": 80, "direct_callees": ["EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012507", "name": "FUN_10012507", "external": false, "thunk": false, "body_bytes": 509, "direct_callees": ["0x1000268e", "0x100034df", "0x100034eb", "0x10003573", "0x10003626", "0x1000369e", "0x1000377f", "0x10005485", "0x10005b99", "0x10010b46", "0x100124b7", "0x10016866", "0x1001686c", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012704", "name": "mrbCanUndo", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["0x10002549", "0x10003573"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001272c", "name": "mrbUndo", "external": false, "thunk": false, "body_bytes": 211, "direct_callees": ["0x1000268e", "0x100034df", "0x100034eb", "0x10005424", "0x1000e279", "0x10010b46", "0x10012046", "0x10012704"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100127ff", "name": "mrbVersion", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012805", "name": "mrbIsChannelSigned", "external": false, "thunk": false, "body_bytes": 66, "direct_callees": ["0x10003573", "0x1000c3fd", "0x1000e279"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012847", "name": "mrbGetSigningScope", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x1000c6f4"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001286b", "name": "mrbGetCertFieldCount", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": ["0x1000c4bf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001288a", "name": "mrbGetCertField", "external": false, "thunk": false, "body_bytes": 33, "direct_callees": ["0x1000c4d5"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100128ab", "name": "mrbGetCertFieldByIndex", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["0x1000c573"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100128dd", "name": "mrbGetCertFingerPrint", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x1000c67a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012901", "name": "mrbGetCertSerialNo", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x1000c59a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012925", "name": "mrbGetCertDates", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x1000c6ca"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012949", "name": "mrbAcceptTestCertificates", "external": false, "thunk": false, "body_bytes": 22, "direct_callees": ["0x1000cbde"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001295f", "name": "mrbAddLocalFile", "external": false, "thunk": false, "body_bytes": 431, "direct_callees": ["0x10002571", "0x100034b3", "0x10003748", "0x1000530a", "0x10005424", "0x100055e7", "0x10005756", "0x1000e279", "0x1000ec47", "0x10010912", "0x10010b75", "0x10016866", "EXTERNAL:0x48"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012b0e", "name": "mrbSetCastanetDirSuffix", "external": false, "thunk": false, "body_bytes": 578, "direct_callees": ["0x10016860", "0x10016866", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d50", "name": "mrbSetMaxReceiveRate", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d69", "name": "mrbSetMaxTransmitRate", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d82", "name": "FUN_10012d82", "external": false, "thunk": false, "body_bytes": 387, "direct_callees": ["0x10003e91", "0x1000d52b", "0x1000d6a9", "0x1000e023", "0x10016742", "0x10016750", "0x10016860", "EXTERNAL:0x36", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f05", "name": "FUN_10012f05", "external": false, "thunk": false, "body_bytes": 495, "direct_callees": ["0x1000d52b", "0x1000d5a0", "0x1000d662", "0x1000d665", "0x1000d680", "0x1000d692", "0x1000d6cc", "0x1000e023", "0x10016742", "0x10016860", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c", "EXTERNAL:0x5f", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130f4", "name": "FUN_100130f4", "external": false, "thunk": false, "body_bytes": 416, "direct_callees": ["0x10003e91", "0x1000d60c", "0x1000d662", "0x1000d665", "0x1000d680", "0x1000d692", "0x1000d6cc", "0x1000e023", "0x100130f4", "0x10016742", "0x10016860", "EXTERNAL:0x36", "EXTERNAL:0x38", "EXTERNAL:0x45", "EXTERNAL:0x4b", "EXTERNAL:0x4c", "EXTERNAL:0x5f", "EXTERNAL:0x60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013294", "name": "mrbSetPrepareFilter", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100132a3", "name": "mrbInitPluginConnection", "external": false, "thunk": false, "body_bytes": 251, "direct_callees": ["0x10003cd9", "0x10003f4e", "0x10006d92", "0x1000e077", "0x1000f0c0", "0x10010b46", "EXTERNAL:0x4b", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001339e", "name": "mrbTermPluginConnection", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["0x10002942", "0x100030ab", "0x10004500", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100133d2", "name": "mrbOpenPC", "external": false, "thunk": false, "body_bytes": 641, "direct_callees": ["0x10001000", "0x10002a5a", "0x1000409a", "0x1000421f", "0x100045cc", "0x10004ad7", "0x1000e077", "0x1000e0b2", "0x10010b46", "0x10013653", "EXTERNAL:0x36", "EXTERNAL:0x4c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013653", "name": "FUN_10013653", "external": false, "thunk": false, "body_bytes": 120, "direct_callees": ["0x10016890", "0x10016940", "EXTERNAL:0x45"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100136cb", "name": "mrbAddPCField", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["0x100045cc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100136e3", "name": "mrbGetPCField", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x10004610"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100136f6", "name": "mrbWriteToPC", "external": false, "thunk": false, "body_bytes": 90, "direct_callees": ["0x10002911", "0x1000296a", "0x10002ac2", "0x10004ad7", "0x10004adf", "0x1000cce8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013750", "name": "mrbReadFromPC", "external": false, "thunk": false, "body_bytes": 51, "direct_callees": ["0x10002e03", "0x10002e49", "0x10004aed"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013783", "name": "mrbGetPCReply", "external": false, "thunk": false, "body_bytes": 70, "direct_callees": ["0x10002942", "0x10004698", "0x10004ad7", "0x10004adf", "0x1000cd61"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100137c9", "name": "mrbGetCertIsExpired", "external": false, "thunk": false, "body_bytes": 60, "direct_callees": ["0x1000c6ca", "EXTERNAL:0x6b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013805", "name": "mrbGetBytesReceived", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013810", "name": "FUN_10013810", "external": false, "thunk": false, "body_bytes": 198, "direct_callees": ["0x100138d6", "EXTERNAL:0x41", "EXTERNAL:0x5a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100138d6", "name": "FUN_100138d6", "external": false, "thunk": false, "body_bytes": 99, "direct_callees": ["0x10016742"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013940", "name": "FUN_10013940", "external": false, "thunk": false, "body_bytes": 152, "direct_callees": ["0x10014fb0", "0x10015ae0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100139e0", "name": "FUN_100139e0", "external": false, "thunk": false, "body_bytes": 110, "direct_callees": ["0x10013940"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013a50", "name": "FUN_10013a50", "external": false, "thunk": false, "body_bytes": 3254, "direct_callees": ["0x100147c0", "0x10014800", "0x10014fb0", "0x10015310", "0x10015850", "0x10015970", "0x10015ae0", "0x10015b20"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10014740", "name": "FUN_10014740", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["0x10013940"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10014780", "name": "FUN_10014780", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100147c0", "name": "FUN_100147c0", "external": false, "thunk": false, "body_bytes": 57, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10014800", "name": "FUN_10014800", "external": false, "thunk": false, "body_bytes": 1914, "direct_callees": ["0x10014fd0", "0x10015b20"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10014fb0", "name": "FUN_10014fb0", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10014fd0", "name": "FUN_10014fd0", "external": false, "thunk": false, "body_bytes": 818, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015310", "name": "FUN_10015310", "external": false, "thunk": false, "body_bytes": 93, "direct_callees": ["0x10015370", "0x10015ae0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015370", "name": "FUN_10015370", "external": false, "thunk": false, "body_bytes": 1238, "direct_callees": ["0x10015ae0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015850", "name": "FUN_10015850", "external": false, "thunk": false, "body_bytes": 280, "direct_callees": ["0x10015370", "0x10015ae0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015970", "name": "FUN_10015970", "external": false, "thunk": false, "body_bytes": 321, "direct_callees": ["0x10015370"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015ae0", "name": "FUN_10015ae0", "external": false, "thunk": false, "body_bytes": 62, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015b20", "name": "FUN_10015b20", "external": false, "thunk": false, "body_bytes": 306, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015c60", "name": "mrb_inflateInit", "external": false, "thunk": false, "body_bytes": 63, "direct_callees": ["0x10016000", "0x100167b0", "0x100167f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015ca0", "name": "mrb_inflateTerm", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x10015fb0", "0x100167b0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015cc0", "name": "mrb_inflate", "external": false, "thunk": false, "body_bytes": 117, "direct_callees": ["0x10016130"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015d60", "name": "mrb_inflateTotalIn", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015d70", "name": "mrb_inflateTotalOut", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015d80", "name": "mrb_inflateRemaining", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015d90", "name": "mrb_inflateNeedsInput", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015da0", "name": "mrb_inflateSetInput", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015dc0", "name": "mrb_inflateReset", "external": false, "thunk": false, "body_bytes": 32, "direct_callees": ["0x10015f60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015de0", "name": "mrb_inflateFinished", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015df0", "name": "zlibVersion", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015e00", "name": "FUN_10015e00", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x100167f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015e30", "name": "adler32", "external": false, "thunk": false, "body_bytes": 296, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015f60", "name": "inflateReset", "external": false, "thunk": false, "body_bytes": 68, "direct_callees": ["0x10013940"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10015fb0", "name": "inflateEnd", "external": false, "thunk": false, "body_bytes": 77, "direct_callees": ["0x10014740"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016000", "name": "inflateInit2_", "external": false, "thunk": false, "body_bytes": 270, "direct_callees": ["0x100139e0", "0x10015e00", "0x10015f60", "0x10015fb0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016110", "name": "inflateInit_", "external": false, "thunk": false, "body_bytes": 26, "direct_callees": ["0x10016000"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016130", "name": "inflate", "external": false, "thunk": false, "body_bytes": 1005, "direct_callees": ["0x10013940", "0x10013a50"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016560", "name": "inflateSetDictionary", "external": false, "thunk": false, "body_bytes": 130, "direct_callees": ["0x10014780", "0x10015e30"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100165f0", "name": "inflateSync", "external": false, "thunk": false, "body_bytes": 209, "direct_callees": ["0x10015f60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166d0", "name": "WSOCK32.DLL::WSACleanup", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166d6", "name": "WSOCK32.DLL::WSAStartup", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166dc", "name": "WSOCK32.DLL::inet_ntoa", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166e2", "name": "WSOCK32.DLL::gethostbyname", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166e8", "name": "WSOCK32.DLL::inet_addr", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166ee", "name": "WSOCK32.DLL::closesocket", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166f4", "name": "WSOCK32.DLL::connect", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100166fa", "name": "WSOCK32.DLL::htons", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016700", "name": "WSOCK32.DLL::WSAGetLastError", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016706", "name": "WSOCK32.DLL::socket", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001670c", "name": "WSOCK32.DLL::recv", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016712", "name": "WSOCK32.DLL::send", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016718", "name": "WSOCK32.DLL::ioctlsocket", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001671e", "name": "WSOCK32.DLL::gethostname", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016724", "name": "WSOCK32.DLL::WSASetLastError", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001672a", "name": "WSOCK32.DLL::select", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016730", "name": "WSOCK32.DLL::WSAUnhookBlockingHook", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016736", "name": "WSOCK32.DLL::WSASetBlockingHook", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001673c", "name": "WSOCK32.DLL::WSACancelBlockingCall", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016742", "name": "MSVCRT.DLL::strlen", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016750", "name": "__allmul", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016790", "name": "__aullshr", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100167b0", "name": "MSVCRT.DLL::free", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100167b6", "name": "MSVCRT.DLL::memset", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100167bc", "name": "MSVCRT.DLL::memcpy", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100167d0", "name": "__allshl", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100167f0", "name": "MSVCRT.DLL::calloc", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016800", "name": "__allshr", "external": false, "thunk": false, "body_bytes": 33, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016830", "name": "FUN_10016830", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016860", "name": "MSVCRT.DLL::strcat", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016866", "name": "MSVCRT.DLL::strcpy", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001686c", "name": "MSVCRT.DLL::strcmp", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016880", "name": "MSVCRT.DLL::ftol", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016890", "name": "__alldiv", "external": false, "thunk": false, "body_bytes": 170, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016940", "name": "__allrem", "external": false, "thunk": false, "body_bytes": 178, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016a00", "name": "FUN_10016a00", "external": false, "thunk": false, "body_bytes": 205, "direct_callees": ["0x10016b80", "EXTERNAL:0x36", "EXTERNAL:0x4b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016ad0", "name": "entry", "external": false, "thunk": false, "body_bytes": 173, "direct_callees": ["0x10016a00", "0x10016b90"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016b80", "name": "MSVCRT.DLL::initterm", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10016b90", "name": "FUN_10016b90", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": ["EXTERNAL:0x1c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "KERNEL32.DLL::GetModuleHandleA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "KERNEL32.DLL::GetFullPathNameA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "KERNEL32.DLL::GetFileAttributesA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "KERNEL32.DLL::SetFileAttributesA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "KERNEL32.DLL::InitializeCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6", "name": "KERNEL32.DLL::DeleteCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7", "name": "KERNEL32.DLL::EnterCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x8", "name": "KERNEL32.DLL::LeaveCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x9", "name": "KERNEL32.DLL::GetLocaleInfoA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xa", "name": "KERNEL32.DLL::GetVersionExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xb", "name": "KERNEL32.DLL::Sleep", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xc", "name": "KERNEL32.DLL::FreeLibrary", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xd", "name": "KERNEL32.DLL::GetProcAddress", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xe", "name": "KERNEL32.DLL::LoadLibraryA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xf", "name": "KERNEL32.DLL::FindNextFileA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x10", "name": "KERNEL32.DLL::FindFirstFileA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x11", "name": "KERNEL32.DLL::GetComputerNameA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x12", "name": "KERNEL32.DLL::SetEvent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x13", "name": "KERNEL32.DLL::TlsSetValue", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x14", "name": "KERNEL32.DLL::TlsGetValue", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x15", "name": "KERNEL32.DLL::GetSystemInfo", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x16", "name": "KERNEL32.DLL::GetCurrentDirectoryA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x17", "name": "KERNEL32.DLL::GetWindowsDirectoryA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x18", "name": "KERNEL32.DLL::TlsAlloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x19", "name": "KERNEL32.DLL::CreateEventA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1a", "name": "KERNEL32.DLL::CloseHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1b", "name": "KERNEL32.DLL::ResetEvent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1c", "name": "KERNEL32.DLL::DisableThreadLibraryCalls", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1d", "name": "KERNEL32.DLL::FindClose", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1e", "name": "KERNEL32.DLL::GetModuleFileNameA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1f", "name": "USER32.DLL::MsgWaitForMultipleObjects", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x20", "name": "USER32.DLL::PeekMessageA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x21", "name": "USER32.DLL::DispatchMessageA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x22", "name": "ADVAPI32.DLL::GetUserNameA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x23", "name": "WSOCK32.DLL::WSASetBlockingHook", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x24", "name": "WSOCK32.DLL::WSAUnhookBlockingHook", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x25", "name": "WSOCK32.DLL::select", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x26", "name": "WSOCK32.DLL::WSASetLastError", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x27", "name": "WSOCK32.DLL::gethostname", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x28", "name": "WSOCK32.DLL::WSACancelBlockingCall", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x29", "name": "WSOCK32.DLL::recv", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2a", "name": "WSOCK32.DLL::ioctlsocket", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2b", "name": "WSOCK32.DLL::send", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2c", "name": "WSOCK32.DLL::socket", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2d", "name": "WSOCK32.DLL::WSAGetLastError", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2e", "name": "WSOCK32.DLL::htons", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2f", "name": "WSOCK32.DLL::connect", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x30", "name": "WSOCK32.DLL::closesocket", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x31", "name": "WSOCK32.DLL::inet_addr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x32", "name": "WSOCK32.DLL::gethostbyname", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x33", "name": "WSOCK32.DLL::inet_ntoa", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x34", "name": "WSOCK32.DLL::WSAStartup", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x35", "name": "WSOCK32.DLL::WSACleanup", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x36", "name": "MSVCRT.DLL::free", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x37", "name": "MSVCRT.DLL::ftol", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x38", "name": "MSVCRT.DLL::strchr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x39", "name": "MSVCRT.DLL::_eof", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3a", "name": "MSVCRT.DLL::_write", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3b", "name": "MSVCRT.DLL::_ltoa", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3c", "name": "MSVCRT.DLL::_strcmpi", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3d", "name": "MSVCRT.DLL::_strnicmp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3e", "name": "MSVCRT.DLL::_strlwr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3f", "name": "MSVCRT.DLL::ftime", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x40", "name": "MSVCRT.DLL::_read", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x41", "name": "MSVCRT.DLL::_stricmp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x42", "name": "MSVCRT.DLL::_unlink", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x43", "name": "MSVCRT.DLL::_lseek", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x44", "name": "MSVCRT.DLL::_rmdir", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x45", "name": "MSVCRT.DLL::_strdup", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x47", "name": "MSVCRT.DLL::initterm", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x48", "name": "MSVCRT.DLL::strrchr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x49", "name": "MSVCRT.DLL::_access", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4a", "name": "MSVCRT.DLL::strlen", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4b", "name": "MSVCRT.DLL::malloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4c", "name": "MSVCRT.DLL::sprintf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4d", "name": "MSVCRT.DLL::printf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4e", "name": "MSVCRT.DLL::memset", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4f", "name": "MSVCRT.DLL::memcpy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x50", "name": "MSVCRT.DLL::calloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x51", "name": "MSVCRT.DLL::_mkdir", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x52", "name": "MSVCRT.DLL::strncat", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x53", "name": "MSVCRT.DLL::srand", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x54", "name": "MSVCRT.DLL::strcat", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x55", "name": "MSVCRT.DLL::strcpy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x56", "name": "MSVCRT.DLL::strcmp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x57", "name": "MSVCRT.DLL::memmove", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x58", "name": "MSVCRT.DLL::_open", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x59", "name": "MSVCRT.DLL::_filelength", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5a", "name": "MSVCRT.DLL::_splitpath", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5b", "name": "MSVCRT.DLL::rename", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5c", "name": "MSVCRT.DLL::stat", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5d", "name": "MSVCRT.DLL::_chmod", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5e", "name": "MSVCRT.DLL::qsort", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5f", "name": "MSVCRT.DLL::atol", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x60", "name": "MSVCRT.DLL::strncpy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x61", "name": "MSVCRT.DLL::atoi", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x62", "name": "MSVCRT.DLL::__p__pctype", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x63", "name": "MSVCRT.DLL::_isctype", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x64", "name": "MSVCRT.DLL::__p___mb_cur_max", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x65", "name": "MSVCRT.DLL::strtok", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x66", "name": "MSVCRT.DLL::strstr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x67", "name": "MSVCRT.DLL::strpbrk", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x68", "name": "MSVCRT.DLL::rand", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x69", "name": "MSVCRT.DLL::sscanf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6a", "name": "MSVCRT.DLL::_errno", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6b", "name": "MSVCRT.DLL::time", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6c", "name": "MSVCRT.DLL::_close", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6d", "name": "MSVCRT.DLL::_commit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6e", "name": "MSVCRT.DLL::realloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

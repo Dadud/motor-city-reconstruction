@@ -1,0 +1,285 @@
+{
+  "target_sha256": "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "b9477e35473996dddbdc48642f3d6f1528805cc8110b167d72ff9103351a4937"
+  },
+  "summary": {
+    "function_entries": 60,
+    "decompilation": {
+      "success": 34,
+      "external": 26
+    },
+    "thunks": 0,
+    "internal_entries": 34,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "KERNEL32.DLL::GetCPInfo",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "KERNEL32.DLL::GetCommandLineA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "KERNEL32.DLL::GetProcAddress",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "KERNEL32.DLL::GetModuleHandleA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "KERNEL32.DLL::GetVersion",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "KERNEL32.DLL::ExitProcess",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7",
+      "name": "KERNEL32.DLL::TerminateProcess",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x8",
+      "name": "KERNEL32.DLL::GetCurrentProcess",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x9",
+      "name": "KERNEL32.DLL::HeapCreate",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xa",
+      "name": "KERNEL32.DLL::HeapDestroy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xb",
+      "name": "KERNEL32.DLL::SetHandleCount",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xc",
+      "name": "KERNEL32.DLL::GetFileType",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xd",
+      "name": "KERNEL32.DLL::GetStdHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xe",
+      "name": "KERNEL32.DLL::GetStartupInfoA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xf",
+      "name": "KERNEL32.DLL::GetModuleFileNameA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x10",
+      "name": "KERNEL32.DLL::DisableThreadLibraryCalls",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x11",
+      "name": "KERNEL32.DLL::GetACP",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x12",
+      "name": "KERNEL32.DLL::GetOEMCP",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x13",
+      "name": "KERNEL32.DLL::FreeEnvironmentStringsA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x14",
+      "name": "KERNEL32.DLL::GetEnvironmentStrings",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x15",
+      "name": "KERNEL32.DLL::FreeEnvironmentStringsW",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x16",
+      "name": "KERNEL32.DLL::GetEnvironmentStringsW",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x17",
+      "name": "KERNEL32.DLL::WideCharToMultiByte",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x18",
+      "name": "KERNEL32.DLL::WriteFile",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x19",
+      "name": "KERNEL32.DLL::HeapAlloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1a",
+      "name": "KERNEL32.DLL::HeapFree",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1b",
+      "name": "KERNEL32.DLL::LoadLibraryA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1c",
+      "name": "USER32.DLL::LoadStringA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x4231440",
+      "name": "Ordinal_2",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x4231440",
+      "name": "CchLszOfId2",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x4231580",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x4233000",
+      "name": "Ordinal_3",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x4233000",
+      "name": "_WEP@4",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "scripts/DAO/msjint35.dll"
+  ],
+  "functions": [
+    {"address": "0x4231410", "name": "FUN_04231410", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": ["EXTERNAL:0x10"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231430", "name": "FUN_04231430", "external": false, "thunk": false, "body_bytes": 1, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231440", "name": "CchLszOfId2", "external": false, "thunk": false, "body_bytes": 30, "direct_callees": ["EXTERNAL:0x1c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231460", "name": "FUN_04231460", "external": false, "thunk": false, "body_bytes": 286, "direct_callees": ["0x4231430", "0x4231690", "0x42316e0", "0x42317c0", "0x42317e0", "0x42317f0", "0x42319d0", "0x4231a00", "0x4231f40", "0x4231f50", "0x42320f0", "EXTERNAL:0x2", "EXTERNAL:0x3", "EXTERNAL:0x4", "EXTERNAL:0x5"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231580", "name": "entry", "external": false, "thunk": false, "body_bytes": 201, "direct_callees": ["0x4231410", "0x4231460", "0x42317e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231650", "name": "__amsg_exit", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["0x42316c0", "0x4232100", "0x4232140"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231690", "name": "__cinit", "external": false, "thunk": false, "body_bytes": 48, "direct_callees": ["0x42317a0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42316c0", "name": "__exit", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["0x42316f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42316e0", "name": "FUN_042316e0", "external": false, "thunk": false, "body_bytes": 15, "direct_callees": ["0x42316f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42316f0", "name": "FUN_042316f0", "external": false, "thunk": false, "body_bytes": 163, "direct_callees": ["0x42317a0", "EXTERNAL:0x6", "EXTERNAL:0x7", "EXTERNAL:0x8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42317a0", "name": "__initterm", "external": false, "thunk": false, "body_bytes": 32, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42317c0", "name": "FUN_042317c0", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["EXTERNAL:0x9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42317e0", "name": "FUN_042317e0", "external": false, "thunk": false, "body_bytes": 13, "direct_callees": ["EXTERNAL:0xa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42317f0", "name": "FUN_042317f0", "external": false, "thunk": false, "body_bytes": 467, "direct_callees": ["0x4231650", "0x4232330", "EXTERNAL:0xb", "EXTERNAL:0xc", "EXTERNAL:0xd", "EXTERNAL:0xe"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42319d0", "name": "FUN_042319d0", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": ["0x42323b0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231a00", "name": "__setargv", "external": false, "thunk": false, "body_bytes": 155, "direct_callees": ["0x4231650", "0x4231aa0", "0x4232330", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231aa0", "name": "parse_cmdline", "external": false, "thunk": false, "body_bytes": 466, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231c80", "name": "__setmbcp", "external": false, "thunk": false, "body_bytes": 475, "direct_callees": ["0x4231e60", "0x4231eb0", "0x4231f10", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231e60", "name": "getSystemCP", "external": false, "thunk": false, "body_bytes": 77, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231eb0", "name": "_CPtoLCID", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231f10", "name": "setSBCS", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231f40", "name": "___initmbctable", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x4231c80"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4231f50", "name": "FUN_04231f50", "external": false, "thunk": false, "body_bytes": 401, "direct_callees": ["0x4232330", "0x42323b0", "EXTERNAL:0x13", "EXTERNAL:0x14", "EXTERNAL:0x15", "EXTERNAL:0x16", "EXTERNAL:0x17"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42320f0", "name": "FUN_042320f0", "external": false, "thunk": false, "body_bytes": 10, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232100", "name": "__FF_MSGBANNER", "external": false, "thunk": false, "body_bytes": 61, "direct_callees": ["0x4232140"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232140", "name": "FUN_04232140", "external": false, "thunk": false, "body_bytes": 493, "direct_callees": ["0x42323d0", "0x4232470", "EXTERNAL:0x18", "EXTERNAL:0xd", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232330", "name": "FUN_04232330", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": ["0x4232350"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232350", "name": "FUN_04232350", "external": false, "thunk": false, "body_bytes": 64, "direct_callees": ["0x4232390", "0x4232570"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232390", "name": "FUN_04232390", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["EXTERNAL:0x19"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42323b0", "name": "FUN_042323b0", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["EXTERNAL:0x1a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x42323d0", "name": "___crtMessageBoxA", "external": false, "thunk": false, "body_bytes": 146, "direct_callees": ["EXTERNAL:0x1b", "EXTERNAL:0x3"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232470", "name": "_strncpy", "external": false, "thunk": false, "body_bytes": 254, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4232570", "name": "FUN_04232570", "external": false, "thunk": false, "body_bytes": 32, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4233000", "name": "_WEP@4", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "KERNEL32.DLL::GetCPInfo", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "KERNEL32.DLL::GetCommandLineA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "KERNEL32.DLL::GetProcAddress", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "KERNEL32.DLL::GetModuleHandleA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "KERNEL32.DLL::GetVersion", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6", "name": "KERNEL32.DLL::ExitProcess", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7", "name": "KERNEL32.DLL::TerminateProcess", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x8", "name": "KERNEL32.DLL::GetCurrentProcess", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x9", "name": "KERNEL32.DLL::HeapCreate", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xa", "name": "KERNEL32.DLL::HeapDestroy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xb", "name": "KERNEL32.DLL::SetHandleCount", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xc", "name": "KERNEL32.DLL::GetFileType", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xd", "name": "KERNEL32.DLL::GetStdHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xe", "name": "KERNEL32.DLL::GetStartupInfoA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xf", "name": "KERNEL32.DLL::GetModuleFileNameA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x10", "name": "KERNEL32.DLL::DisableThreadLibraryCalls", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x13", "name": "KERNEL32.DLL::FreeEnvironmentStringsA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x14", "name": "KERNEL32.DLL::GetEnvironmentStrings", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x15", "name": "KERNEL32.DLL::FreeEnvironmentStringsW", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x16", "name": "KERNEL32.DLL::GetEnvironmentStringsW", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x17", "name": "KERNEL32.DLL::WideCharToMultiByte", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x18", "name": "KERNEL32.DLL::WriteFile", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x19", "name": "KERNEL32.DLL::HeapAlloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1a", "name": "KERNEL32.DLL::HeapFree", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1b", "name": "KERNEL32.DLL::LoadLibraryA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1c", "name": "USER32.DLL::LoadStringA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

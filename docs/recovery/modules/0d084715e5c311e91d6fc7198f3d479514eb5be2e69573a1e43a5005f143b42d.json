@@ -1,0 +1,1359 @@
+{
+  "target_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "d6ff47f1e38e660e47edc47ca6b57e47773f314e9134754f6f5a92bc38af8725"
+  },
+  "summary": {
+    "function_entries": 564,
+    "decompilation": {
+      "success": 439,
+      "external": 125
+    },
+    "thunks": 28,
+    "internal_entries": 439,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "KERNEL32.DLL::VirtualProtect",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "KERNEL32.DLL::GetModuleFileNameA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "KERNEL32.DLL::GetModuleHandleA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "KERNEL32.DLL::GetModuleHandleExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "KERNEL32.DLL::AllocConsole",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "KERNEL32.DLL::GetLocaleInfoEx",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7",
+      "name": "KERNEL32.DLL::FormatMessageA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x8",
+      "name": "KERNEL32.DLL::LocalFree",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x9",
+      "name": "KERNEL32.DLL::AreFileApisANSI",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xa",
+      "name": "KERNEL32.DLL::CloseHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xb",
+      "name": "KERNEL32.DLL::GetLastError",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xc",
+      "name": "KERNEL32.DLL::GetModuleHandleW",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xd",
+      "name": "KERNEL32.DLL::GetProcAddress",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xe",
+      "name": "KERNEL32.DLL::MultiByteToWideChar",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xf",
+      "name": "KERNEL32.DLL::WideCharToMultiByte",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x10",
+      "name": "KERNEL32.DLL::EnterCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x11",
+      "name": "KERNEL32.DLL::LeaveCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x12",
+      "name": "KERNEL32.DLL::InitializeCriticalSectionAndSpinCount",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x13",
+      "name": "KERNEL32.DLL::DeleteCriticalSection",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x14",
+      "name": "KERNEL32.DLL::SetEvent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x15",
+      "name": "KERNEL32.DLL::ResetEvent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x16",
+      "name": "KERNEL32.DLL::WaitForSingleObjectEx",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x17",
+      "name": "KERNEL32.DLL::CreateEventW",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x18",
+      "name": "KERNEL32.DLL::IsProcessorFeaturePresent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x19",
+      "name": "KERNEL32.DLL::IsDebuggerPresent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1a",
+      "name": "KERNEL32.DLL::UnhandledExceptionFilter",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1b",
+      "name": "KERNEL32.DLL::SetUnhandledExceptionFilter",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1c",
+      "name": "KERNEL32.DLL::QueryPerformanceCounter",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1d",
+      "name": "KERNEL32.DLL::GetCurrentProcessId",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1e",
+      "name": "KERNEL32.DLL::GetCurrentThreadId",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1f",
+      "name": "KERNEL32.DLL::GetSystemTimeAsFileTime",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x20",
+      "name": "KERNEL32.DLL::InitializeSListHead",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x21",
+      "name": "KERNEL32.DLL::GetCurrentProcess",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x22",
+      "name": "KERNEL32.DLL::TerminateProcess",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x23",
+      "name": "USER32.DLL::EnumDisplaySettingsA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x24",
+      "name": "USER32.DLL::SetProcessDPIAware",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x25",
+      "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::seekg",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x26",
+      "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::tellg",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x27",
+      "name": "MSVCP140.DLL::std::codecvt_base::always_noconv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x28",
+      "name": "MSVCP140.DLL::std::locale::id::operator_unsigned_int",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x29",
+      "name": "MSVCP140.DLL::std::_Xinvalid_argument",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2a",
+      "name": "MSVCP140.DLL::std::_Winerror_map",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2b",
+      "name": "MSVCP140.DLL::std::_Syserror_map",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2c",
+      "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::get",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2d",
+      "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::read",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2e",
+      "name": "MSVCP140.DLL::std::_Xlength_error",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2f",
+      "name": "MSVCP140.DLL::std::_Lockit::~_Lockit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x30",
+      "name": "MSVCP140.DLL::std::_Lockit::_Lockit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x31",
+      "name": "MSVCP140.DLL::std::locale::_Getgloballocale",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x32",
+      "name": "MSVCP140.DLL::std::uncaught_exception",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x33",
+      "name": "MSVCP140.DLL::std::_Xout_of_range",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x34",
+      "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::id",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x35",
+      "name": "MSVCP140.DLL::std::_Fiopen",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x36",
+      "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::_Getcat",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x37",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::getloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x38",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::sputc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x39",
+      "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::unshift",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3a",
+      "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::~basic_istream<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3b",
+      "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::write",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3c",
+      "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::~basic_ostream<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3d",
+      "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::~basic_ios<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3e",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::xsputn",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3f",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::basic_streambuf<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x40",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::_Init",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x41",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::xsgetn",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x42",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::showmanyc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x43",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::~basic_streambuf<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x44",
+      "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::basic_istream<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x45",
+      "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::basic_ostream<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x46",
+      "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::basic_ios<char,std::char_traits<char>_>",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x47",
+      "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::setstate",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x48",
+      "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::clear",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x49",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::_Pninc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4a",
+      "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::sputn",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4b",
+      "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::out",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4c",
+      "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::in",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4d",
+      "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::flush",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4e",
+      "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::_Osfx",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4f",
+      "name": "VCRUNTIME140.DLL::memchr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x50",
+      "name": "VCRUNTIME140.DLL::memcpy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x51",
+      "name": "VCRUNTIME140.DLL::memmove",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x52",
+      "name": "VCRUNTIME140.DLL::__CxxFrameHandler3",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x53",
+      "name": "VCRUNTIME140.DLL::__std_type_info_destroy_list",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x54",
+      "name": "VCRUNTIME140.DLL::except_handler4_common",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x55",
+      "name": "VCRUNTIME140.DLL::_CxxThrowException",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x56",
+      "name": "VCRUNTIME140.DLL::memset",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x57",
+      "name": "VCRUNTIME140.DLL::__std_terminate",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x58",
+      "name": "VCRUNTIME140.DLL::__std_exception_copy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x59",
+      "name": "VCRUNTIME140.DLL::__std_exception_destroy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5a",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::register_onexit_function",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5b",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_onexit_table",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5c",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_narrow_environment",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5d",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::configure_narrow_argv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5e",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::seh_filter_dll",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5f",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::execute_onexit_table",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x60",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::crt_atexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x61",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_cexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x62",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x63",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_errno",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x64",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm_e",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x65",
+      "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_invalid_parameter_noinfo_noreturn",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x66",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fread",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x67",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fsetpos",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x68",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::ungetc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x69",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::setvbuf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6a",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fgetpos",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6b",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fwrite",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6c",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::__stdio_common_vfprintf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6d",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fgetc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6e",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::get_stream_buffer_pointers",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6f",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fclose",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x70",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fflush",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x71",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::__acrt_iob_func",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x72",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fputc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x73",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::_fseeki64",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x74",
+      "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::freopen_s",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x75",
+      "name": "API-MS-WIN-CRT-STRING-L1-1-0.DLL::tolower",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x76",
+      "name": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL::_lock_file",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x77",
+      "name": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL::_unlock_file",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x78",
+      "name": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL::stat64i32",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x79",
+      "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::malloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7a",
+      "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7b",
+      "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::_callnewh",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7c",
+      "name": "API-MS-WIN-CRT-CONVERT-L1-1-0.DLL::strtol",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7d",
+      "name": "API-MS-WIN-CRT-LOCALE-L1-1-0.DLL::___lc_codepage_func",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7e",
+      "name": "API-MS-WIN-CRT-MATH-L1-1-0.DLL::ceil",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7f",
+      "name": "API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_atan_precise",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x1001265f",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "scripts/MCOWidescreenMod.asi"
+  ],
+  "functions": [
+    {"address": "0x10001240", "name": "FUN_10001240", "external": false, "thunk": false, "body_bytes": 346, "direct_callees": ["EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100013a0", "name": "FUN_100013a0", "external": false, "thunk": false, "body_bytes": 164, "direct_callees": ["0x10001240", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001450", "name": "FUN_10001450", "external": false, "thunk": false, "body_bytes": 46, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001480", "name": "FUN_10001480", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001490", "name": "FUN_10001490", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["0x100122ee", "EXTERNAL:0x59"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100014f0", "name": "FUN_100014f0", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001510", "name": "FUN_10001510", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x100014f0", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001530", "name": "FUN_10001530", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001570", "name": "FUN_10001570", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100015b0", "name": "FUN_100015b0", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["EXTERNAL:0x2e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100015c0", "name": "FUN_100015c0", "external": false, "thunk": false, "body_bytes": 141, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001650", "name": "FUN_10001650", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x10001680", "0x10002bf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001670", "name": "thunk_FUN_10001680", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001680", "name": "FUN_10001680", "external": false, "thunk": false, "body_bytes": 104, "direct_callees": ["0x10003340", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100016f0", "name": "FUN_100016f0", "external": false, "thunk": false, "body_bytes": 1363, "direct_callees": ["0x10011e84", "0x10011ece", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001c50", "name": "FUN_10001c50", "external": false, "thunk": false, "body_bytes": 566, "direct_callees": ["0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001e90", "name": "FUN_10001e90", "external": false, "thunk": false, "body_bytes": 559, "direct_callees": ["0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100020c0", "name": "FUN_100020c0", "external": false, "thunk": false, "body_bytes": 613, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002340", "name": "FUN_10002340", "external": false, "thunk": false, "body_bytes": 801, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100026a0", "name": "FUN_100026a0", "external": false, "thunk": false, "body_bytes": 548, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10010890", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100028d0", "name": "FUN_100028d0", "external": false, "thunk": false, "body_bytes": 764, "direct_callees": ["0x100016f0", "0x10001c50", "0x10001e90", "0x100020c0", "0x10002340", "0x100026a0", "0x10002d40", "0x1000f580", "0x1000ff40", "0x100100e0", "0x100101f0", "0x10010380", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002bf0", "name": "FUN_10002bf0", "external": false, "thunk": false, "body_bytes": 121, "direct_callees": ["0x100032c0", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002c70", "name": "FUN_10002c70", "external": false, "thunk": false, "body_bytes": 81, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002cd0", "name": "FUN_10002cd0", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["0x10003340", "0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002cf0", "name": "FUN_10002cf0", "external": false, "thunk": false, "body_bytes": 75, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002d40", "name": "FUN_10002d40", "external": false, "thunk": false, "body_bytes": 242, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x10012dff", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002e40", "name": "FUN_10002e40", "external": false, "thunk": false, "body_bytes": 293, "direct_callees": ["0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002f70", "name": "FUN_10002f70", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x10001680", "0x10002fe0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002f90", "name": "FUN_10002f90", "external": false, "thunk": false, "body_bytes": 64, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002fe0", "name": "FUN_10002fe0", "external": false, "thunk": false, "body_bytes": 128, "direct_callees": ["0x100015c0", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003070", "name": "FUN_10003070", "external": false, "thunk": false, "body_bytes": 301, "direct_callees": ["0x10001510", "0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100031a0", "name": "deallocate", "external": false, "thunk": false, "body_bytes": 61, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100031e0", "name": "FUN_100031e0", "external": false, "thunk": false, "body_bytes": 217, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x10012dff", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100032c0", "name": "FUN_100032c0", "external": false, "thunk": false, "body_bytes": 116, "direct_callees": ["0x10001680", "0x10002fe0", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003340", "name": "FUN_10003340", "external": false, "thunk": false, "body_bytes": 111, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100033b0", "name": "FUN_100033b0", "external": false, "thunk": false, "body_bytes": 33, "direct_callees": ["0x100015c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100033e0", "name": "FUN_100033e0", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100033f0", "name": "FUN_100033f0", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x100033e0", "EXTERNAL:0x6c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003420", "name": "FUN_10003420", "external": false, "thunk": false, "body_bytes": 38, "direct_callees": ["0x100033f0", "EXTERNAL:0x71"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003450", "name": "FUN_10003450", "external": false, "thunk": false, "body_bytes": 164, "direct_callees": ["0x10001240", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003500", "name": "FUN_10003500", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003520", "name": "FUN_10003520", "external": false, "thunk": false, "body_bytes": 27, "direct_callees": ["0x10003500", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003540", "name": "FUN_10003540", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003580", "name": "FUN_10003580", "external": false, "thunk": false, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003590", "name": "FUN_10003590", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100035b0", "name": "FUN_100035b0", "external": false, "thunk": false, "body_bytes": 328, "direct_callees": ["0x1000b270", "0x10012df9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003700", "name": "FUN_10003700", "external": false, "thunk": false, "body_bytes": 2199, "direct_callees": ["0x10002d40", "0x100031e0", "0x1000b270", "0x1000b3d0", "0x1000b920", "0x1000bf40", "0x1000bfe0", "0x100122ee", "0x10012df9", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10003fa0", "name": "FUN_10003fa0", "external": false, "thunk": false, "body_bytes": 805, "direct_callees": ["0x10002d40", "0x1000b190", "0x1000c0e0", "0x1000c3a0", "0x1000cca0", "0x10011fa4", "0x100122ee", "0x10012ca8", "EXTERNAL:0x25", "EXTERNAL:0x26", "EXTERNAL:0x2c", "EXTERNAL:0x2d", "EXTERNAL:0x47", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100042d0", "name": "FUN_100042d0", "external": false, "thunk": false, "body_bytes": 431, "direct_callees": ["0x1000b580", "0x10011fa4", "EXTERNAL:0x3f", "EXTERNAL:0x40", "EXTERNAL:0x44", "EXTERNAL:0x46", "EXTERNAL:0x47", "EXTERNAL:0x48"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004480", "name": "FUN_10004480", "external": false, "thunk": false, "body_bytes": 59, "direct_callees": ["0x10004700"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100044c0", "name": "FUN_100044c0", "external": false, "thunk": false, "body_bytes": 574, "direct_callees": ["0x100015c0", "0x10002d40", "0x10003700", "0x10003fa0", "0x10009f60", "0x1000a1e0", "0x1000b3d0", "0x1000c070", "0x1000cca0", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004700", "name": "FUN_10004700", "external": false, "thunk": false, "body_bytes": 162, "direct_callees": ["0x1000b190", "EXTERNAL:0x3a", "EXTERNAL:0x3d", "EXTERNAL:0x43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100047b0", "name": "thunk_FUN_100047c0", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100047c0", "name": "FUN_100047c0", "external": false, "thunk": false, "body_bytes": 162, "direct_callees": ["0x1000b190", "EXTERNAL:0x3c", "EXTERNAL:0x3d", "EXTERNAL:0x43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10004870", "name": "FUN_10004870", "external": false, "thunk": false, "body_bytes": 4971, "direct_callees": ["0x100015b0", "0x100015c0", "0x10002d40", "0x100031e0", "0x100035b0", "0x10003700", "0x10009e10", "0x10009f60", "0x1000a1e0", "0x1000b270", "0x1000b3d0", "0x1000b920", "0x1000bd00", "0x1000bf40", "0x1000bfe0", "0x1000c070", "0x1000c500", "0x1000c9e0", "0x1000cca0", "0x1000d080", "0x1000d260", "0x1000d770", "0x100122ee", "0x10012df9", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10005be0", "name": "FUN_10005be0", "external": false, "thunk": false, "body_bytes": 2451, "direct_callees": ["0x10001680", "0x10002bf0", "0x10002d40", "0x10002e40", "0x100042d0", "0x100044c0", "0x10004700", "0x100047c0", "0x10004870", "0x1000b270", "0x1000b580", "0x1000b920", "0x1000ba70", "0x1000bf40", "0x1000bfe0", "0x1000c070", "0x1000cea0", "0x100122ee", "0x10012df9", "0x10012e05", "EXTERNAL:0x3b", "EXTERNAL:0x3f", "EXTERNAL:0x40", "EXTERNAL:0x45", "EXTERNAL:0x46", "EXTERNAL:0x47", "EXTERNAL:0x48", "EXTERNAL:0x65", "EXTERNAL:0x78"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006590", "name": "FUN_10006590", "external": false, "thunk": false, "body_bytes": 1261, "direct_callees": ["0x10003450", "0x10011e84", "0x10011ece", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006a80", "name": "FUN_10006a80", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x1000f9c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006ad0", "name": "FUN_10006ad0", "external": false, "thunk": false, "body_bytes": 657, "direct_callees": ["0x10002d40", "0x10003420", "0x10005be0", "0x10009f60", "0x1000a1e0", "0x1000b930", "0x100122ee", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10006d90", "name": "FUN_10006d90", "external": false, "thunk": false, "body_bytes": 821, "direct_callees": ["0x100013a0", "0x10011e84", "0x10011ece", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10007130", "name": "FUN_10007130", "external": false, "thunk": false, "body_bytes": 543, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f790", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10007380", "name": "FUN_10007380", "external": false, "thunk": false, "body_bytes": 597, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10007740", "name": "FUN_10007740", "external": false, "thunk": false, "body_bytes": 5797, "direct_callees": ["0x100013a0", "0x10002d40", "0x10003450", "0x1000f580", "0x10011e84", "0x10011ece", "0x10012e05", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10008df0", "name": "FUN_10008df0", "external": false, "thunk": false, "body_bytes": 696, "direct_callees": ["0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10012e05", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100090b0", "name": "FUN_100090b0", "external": false, "thunk": false, "body_bytes": 607, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10009310", "name": "FUN_10009310", "external": false, "thunk": false, "body_bytes": 490, "direct_callees": ["0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10012e05", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10009510", "name": "FUN_10009510", "external": false, "thunk": false, "body_bytes": 801, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10009880", "name": "FUN_10009880", "external": false, "thunk": false, "body_bytes": 881, "direct_callees": ["0x100013a0", "0x10002d40", "0x1000f580", "0x10010890", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10009c00", "name": "FUN_10009c00", "external": false, "thunk": false, "body_bytes": 494, "direct_callees": ["0x10002d40", "0x10006590", "0x10006d90", "0x10007130", "0x10007380", "0x10007740", "0x10008df0", "0x100090b0", "0x10009310", "0x10009510", "0x10009880", "0x1000f580", "0x1000ff40", "0x100100e0", "0x100101f0", "0x10010380", "0x10011e84", "0x10011ece", "0x10011fa4", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10009e10", "name": "FUN_10009e10", "external": false, "thunk": false, "body_bytes": 327, "direct_callees": ["0x1000b920", "0x1000bdb0", "0x1000bf40", "0x1000bfe0", "0x100122ee", "0x10012e05", "EXTERNAL:0x65", "EXTERNAL:0x75"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10009f60", "name": "FUN_10009f60", "external": false, "thunk": false, "body_bytes": 635, "direct_callees": ["0x10002d40", "0x1000b6c0", "0x1000b920", "0x1000bf40", "0x1000bfe0", "0x1000d9b0", "0x1000da30", "0x100122ee", "0x10012e05", "EXTERNAL:0x65", "EXTERNAL:0x75"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a1e0", "name": "FUN_1000a1e0", "external": false, "thunk": false, "body_bytes": 550, "direct_callees": ["0x10001680", "0x10002d40", "0x10002e40", "0x10002fe0", "0x1000b6c0", "0x1000b920", "0x1000bf40", "0x1000bfe0", "0x1000d9b0", "0x1000dc30", "0x1000e200", "0x100122ee", "0x10012e05", "EXTERNAL:0x65", "EXTERNAL:0x75"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a410", "name": "FUN_1000a410", "external": false, "thunk": false, "body_bytes": 117, "direct_callees": ["0x1000c070", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a490", "name": "FUN_1000a490", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a4c0", "name": "FUN_1000a4c0", "external": false, "thunk": false, "body_bytes": 59, "direct_callees": ["0x1000be50", "EXTERNAL:0x27", "EXTERNAL:0x40"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a500", "name": "FUN_1000a500", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["EXTERNAL:0x70"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a540", "name": "FUN_1000a540", "external": false, "thunk": false, "body_bytes": 205, "direct_callees": ["EXTERNAL:0x40", "EXTERNAL:0x69", "EXTERNAL:0x6e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a610", "name": "FUN_1000a610", "external": false, "thunk": false, "body_bytes": 207, "direct_callees": ["0x1000b0f0", "EXTERNAL:0x67"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a6e0", "name": "FUN_1000a6e0", "external": false, "thunk": false, "body_bytes": 263, "direct_callees": ["0x1000b0f0", "EXTERNAL:0x6a", "EXTERNAL:0x73"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a7f0", "name": "FUN_1000a7f0", "external": false, "thunk": false, "body_bytes": 254, "direct_callees": ["0x10012dff", "EXTERNAL:0x3e", "EXTERNAL:0x6b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000a8f0", "name": "FUN_1000a8f0", "external": false, "thunk": false, "body_bytes": 282, "direct_callees": ["0x10012dff", "EXTERNAL:0x41", "EXTERNAL:0x66"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000aa10", "name": "FUN_1000aa10", "external": false, "thunk": false, "body_bytes": 638, "direct_callees": ["0x1000c0e0", "0x100122ee", "0x10012e05", "EXTERNAL:0x4c", "EXTERNAL:0x65", "EXTERNAL:0x68", "EXTERNAL:0x6d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ac90", "name": "std::basic_filebuf<char,std::char_traits<char>_>::underflow", "external": false, "thunk": false, "body_bytes": 61, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000acd0", "name": "FUN_1000acd0", "external": false, "thunk": false, "body_bytes": 171, "direct_callees": ["EXTERNAL:0x68"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ad80", "name": "FUN_1000ad80", "external": false, "thunk": false, "body_bytes": 276, "direct_callees": ["EXTERNAL:0x49", "EXTERNAL:0x4b", "EXTERNAL:0x6b", "EXTERNAL:0x72"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000aea0", "name": "FUN_1000aea0", "external": false, "thunk": false, "body_bytes": 16, "direct_callees": ["EXTERNAL:0x77"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000aeb0", "name": "FUN_1000aeb0", "external": false, "thunk": false, "body_bytes": 16, "direct_callees": ["EXTERNAL:0x76"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000aec0", "name": "FUN_1000aec0", "external": false, "thunk": false, "body_bytes": 107, "direct_callees": ["0x1000b190", "EXTERNAL:0x43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000af30", "name": "FUN_1000af30", "external": false, "thunk": false, "body_bytes": 108, "direct_callees": ["0x1000c3a0", "0x10012ca8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000afa0", "name": "std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>_>::`scalar_deleting_destructor'", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x100047c0", "0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000afd0", "name": "FUN_1000afd0", "external": false, "thunk": false, "body_bytes": 135, "direct_callees": ["0x1000b190", "0x100122ee", "EXTERNAL:0x43"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b060", "name": "FUN_1000b060", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x10004700", "0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b090", "name": "FUN_1000b090", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["EXTERNAL:0x32", "EXTERNAL:0x4e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b0f0", "name": "FUN_1000b0f0", "external": false, "thunk": false, "body_bytes": 147, "direct_callees": ["EXTERNAL:0x39", "EXTERNAL:0x6b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b190", "name": "FUN_1000b190", "external": false, "thunk": false, "body_bytes": 127, "direct_callees": ["0x1000b0f0", "EXTERNAL:0x40", "EXTERNAL:0x6f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b210", "name": "FUN_1000b210", "external": false, "thunk": false, "body_bytes": 96, "direct_callees": ["0x10003340", "0x1000b6e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b270", "name": "FUN_1000b270", "external": false, "thunk": false, "body_bytes": 351, "direct_callees": ["0x1000b920", "0x1000c220", "0x10012dff", "0x10012e05"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b3d0", "name": "FUN_1000b3d0", "external": false, "thunk": false, "body_bytes": 297, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b500", "name": "FUN_1000b500", "external": false, "thunk": false, "body_bytes": 58, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b540", "name": "deallocate", "external": false, "thunk": false, "body_bytes": 61, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b580", "name": "FUN_1000b580", "external": false, "thunk": false, "body_bytes": 305, "direct_callees": ["0x1000be50", "EXTERNAL:0x27", "EXTERNAL:0x35", "EXTERNAL:0x37", "EXTERNAL:0x40", "EXTERNAL:0x6e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b6c0", "name": "FUN_1000b6c0", "external": false, "thunk": false, "body_bytes": 32, "direct_callees": ["0x1000c660"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b6e0", "name": "FUN_1000b6e0", "external": false, "thunk": false, "body_bytes": 562, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b920", "name": "FUN_1000b920", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["EXTERNAL:0x33"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000b930", "name": "FUN_1000b930", "external": false, "thunk": false, "body_bytes": 317, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ba70", "name": "FUN_1000ba70", "external": false, "thunk": false, "body_bytes": 398, "direct_callees": ["0x1000bc1e", "EXTERNAL:0x38", "EXTERNAL:0x4a", "EXTERNAL:0x4d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bbfe", "name": "Catch_All@1000bbfe", "external": false, "thunk": false, "body_bytes": 26, "direct_callees": ["EXTERNAL:0x47"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bc1e", "name": "FUN_1000bc1e", "external": false, "thunk": false, "body_bytes": 92, "direct_callees": ["EXTERNAL:0x32", "EXTERNAL:0x47", "EXTERNAL:0x4e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bc80", "name": "FUN_1000bc80", "external": false, "thunk": false, "body_bytes": 120, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bd00", "name": "FUN_1000bd00", "external": false, "thunk": false, "body_bytes": 175, "direct_callees": ["0x1000c500", "0x10012e05"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bdb0", "name": "FUN_1000bdb0", "external": false, "thunk": false, "body_bytes": 153, "direct_callees": ["0x1000bc80"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000be50", "name": "FUN_1000be50", "external": false, "thunk": false, "body_bytes": 227, "direct_callees": ["0x10003520", "0x10011b40", "EXTERNAL:0x28", "EXTERNAL:0x2f", "EXTERNAL:0x30", "EXTERNAL:0x31", "EXTERNAL:0x36"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bf40", "name": "FUN_1000bf40", "external": false, "thunk": false, "body_bytes": 134, "direct_callees": ["0x10012ca8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000bfe0", "name": "FUN_1000bfe0", "external": false, "thunk": false, "body_bytes": 130, "direct_callees": ["0x10012ca8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c070", "name": "FUN_1000c070", "external": false, "thunk": false, "body_bytes": 96, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c0e0", "name": "FUN_1000c0e0", "external": false, "thunk": false, "body_bytes": 310, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c220", "name": "FUN_1000c220", "external": false, "thunk": false, "body_bytes": 383, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c3a0", "name": "FUN_1000c3a0", "external": false, "thunk": false, "body_bytes": 339, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012ca8", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c500", "name": "FUN_1000c500", "external": false, "thunk": false, "body_bytes": 341, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c660", "name": "FUN_1000c660", "external": false, "thunk": false, "body_bytes": 613, "direct_callees": ["0x10002d40", "0x1000bc80", "0x1000cb20", "0x10011fa4", "0x10012d90", "0x10012e11", "EXTERNAL:0x2e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c8d0", "name": "FUN_1000c8d0", "external": false, "thunk": false, "body_bytes": 104, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c940", "name": "FUN_1000c940", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c950", "name": "FUN_1000c950", "external": false, "thunk": false, "body_bytes": 120, "direct_callees": ["0x1000c070", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c9d0", "name": "FUN_1000c9d0", "external": false, "thunk": false, "body_bytes": 13, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000c9e0", "name": "FUN_1000c9e0", "external": false, "thunk": false, "body_bytes": 228, "direct_callees": ["0x10001510", "0x10011fa4", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cad0", "name": "FUN_1000cad0", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cb00", "name": "FUN_1000cb00", "external": false, "thunk": false, "body_bytes": 19, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cb20", "name": "FUN_1000cb20", "external": false, "thunk": false, "body_bytes": 376, "direct_callees": ["0x10003070", "0x1000bc80", "EXTERNAL:0x2e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cca0", "name": "FUN_1000cca0", "external": false, "thunk": false, "body_bytes": 466, "direct_callees": ["0x10001510", "0x10002d40", "0x1000c070", "0x1000ded0", "0x1000df40", "0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ce72", "name": "Catch_All@1000ce72", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": ["0x1000b540", "0x1000c070", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cea0", "name": "FUN_1000cea0", "external": false, "thunk": false, "body_bytes": 346, "direct_callees": ["0x1000d01a", "EXTERNAL:0x38", "EXTERNAL:0x4a", "EXTERNAL:0x4d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000cffa", "name": "Catch_All@1000cffa", "external": false, "thunk": false, "body_bytes": 26, "direct_callees": ["EXTERNAL:0x47"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d01a", "name": "FUN_1000d01a", "external": false, "thunk": false, "body_bytes": 92, "direct_callees": ["EXTERNAL:0x32", "EXTERNAL:0x47", "EXTERNAL:0x4e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d080", "name": "FUN_1000d080", "external": false, "thunk": false, "body_bytes": 467, "direct_callees": ["0x10001510", "0x1000c070", "0x1000ded0", "0x1000df40", "0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d260", "name": "FUN_1000d260", "external": false, "thunk": false, "body_bytes": 1112, "direct_callees": ["0x10001510", "0x10002d40", "0x1000c070", "0x1000ded0", "0x1000df40", "0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d6b3", "name": "Catch_All@1000d6b3", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": ["0x1000b540", "0x1000c070", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d736", "name": "Catch_All@1000d736", "external": false, "thunk": false, "body_bytes": 57, "direct_callees": ["0x1000c070", "0x1000df40", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d770", "name": "FUN_1000d770", "external": false, "thunk": false, "body_bytes": 434, "direct_callees": ["0x10001510", "0x1000c070", "0x1000ded0", "0x1000df40", "0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d930", "name": "FUN_1000d930", "external": false, "thunk": false, "body_bytes": 123, "direct_callees": ["0x1000bc80"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000d9b0", "name": "FUN_1000d9b0", "external": false, "thunk": false, "body_bytes": 117, "direct_callees": ["0x1000bc80"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000da30", "name": "FUN_1000da30", "external": false, "thunk": false, "body_bytes": 470, "direct_callees": ["0x100015c0", "0x10002d40", "0x1000ded0", "0x1000dee0", "0x1000e040", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000dc01", "name": "Catch_All@1000dc01", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": ["0x100031a0", "0x100033b0", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000dc30", "name": "FUN_1000dc30", "external": false, "thunk": false, "body_bytes": 623, "direct_callees": ["0x10001510", "0x10002d40", "0x100032c0", "0x1000ded0", "0x1000e0f0", "0x1000e200", "0x10011fa4", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000de9f", "name": "Catch_All@1000de9f", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": ["0x10002f90", "0x100032c0", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ded0", "name": "FUN_1000ded0", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["EXTERNAL:0x2e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000dee0", "name": "FUN_1000dee0", "external": false, "thunk": false, "body_bytes": 95, "direct_callees": ["0x10001510", "0x10011fa4", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000df40", "name": "FUN_1000df40", "external": false, "thunk": false, "body_bytes": 98, "direct_callees": ["0x1000c070"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000dfb0", "name": "FUN_1000dfb0", "external": false, "thunk": false, "body_bytes": 141, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e040", "name": "FUN_1000e040", "external": false, "thunk": false, "body_bytes": 162, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e0f0", "name": "FUN_1000e0f0", "external": false, "thunk": false, "body_bytes": 185, "direct_callees": ["0x100032c0", "0x1000e200"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e1b0", "name": "FUN_1000e1b0", "external": false, "thunk": false, "body_bytes": 13, "direct_callees": ["0x100032c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e1c0", "name": "FUN_1000e1c0", "external": false, "thunk": false, "body_bytes": 33, "direct_callees": ["0x100015c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e1f0", "name": "FUN_1000e1f0", "external": false, "thunk": false, "body_bytes": 13, "direct_callees": ["0x1000c070"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e200", "name": "FUN_1000e200", "external": false, "thunk": false, "body_bytes": 365, "direct_callees": ["0x10002d40", "0x10003070", "0x1000ded0", "0x1000dee0", "0x1000e380", "0x10011fa4"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e370", "name": "FUN_1000e370", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e380", "name": "FUN_1000e380", "external": false, "thunk": false, "body_bytes": 56, "direct_callees": ["0x1000e3c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e3c0", "name": "FUN_1000e3c0", "external": false, "thunk": false, "body_bytes": 624, "direct_callees": ["0x10002d40", "0x1000bc80", "0x1000cb20", "0x10011fa4", "0x10012d90", "0x10012e11", "EXTERNAL:0x2e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e630", "name": "FUN_1000e630", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000b060"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e638", "name": "FUN_1000e638", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000afa0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e640", "name": "FUN_1000e640", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e680", "name": "FUN_1000e680", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e6a0", "name": "std::error_category::equivalent", "external": false, "thunk": false, "body_bytes": 60, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e6e0", "name": "std::error_category::equivalent", "external": false, "thunk": false, "body_bytes": 39, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e710", "name": "FUN_1000e710", "external": false, "thunk": false, "body_bytes": 16, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e720", "name": "FUN_1000e720", "external": false, "thunk": false, "body_bytes": 515, "direct_callees": ["0x10002d40", "0x1000c500", "0x100122ee", "0x10012e05", "EXTERNAL:0x58", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e930", "name": "FUN_1000e930", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["0x100122ee", "EXTERNAL:0x59"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000e970", "name": "FUN_1000e970", "external": false, "thunk": false, "body_bytes": 178, "direct_callees": ["0x1000e720", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ea30", "name": "FUN_1000ea30", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x1000e710", "0x1000e970", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ea60", "name": "FUN_1000ea60", "external": false, "thunk": false, "body_bytes": 72, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eab0", "name": "FUN_1000eab0", "external": false, "thunk": false, "body_bytes": 66, "direct_callees": ["EXTERNAL:0x58"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eb00", "name": "FUN_1000eb00", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10011be0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eb10", "name": "FUN_1000eb10", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eb20", "name": "FUN_1000eb20", "external": false, "thunk": false, "body_bytes": 76, "direct_callees": ["0x100031e0", "EXTERNAL:0x2b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eb70", "name": "FUN_1000eb70", "external": false, "thunk": false, "body_bytes": 30, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eb90", "name": "FUN_1000eb90", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000eba0", "name": "FUN_1000eba0", "external": false, "thunk": false, "body_bytes": 131, "direct_callees": ["0x100031e0", "0x10011b96", "0x10011be0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ec30", "name": "FUN_1000ec30", "external": false, "thunk": false, "body_bytes": 112, "direct_callees": ["EXTERNAL:0x2a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ecb0", "name": "FUN_1000ecb0", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ecc0", "name": "FUN_1000ecc0", "external": false, "thunk": false, "body_bytes": 43, "direct_callees": ["0x1000e970", "0x1000ecb0", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ecf0", "name": "FUN_1000ecf0", "external": false, "thunk": false, "body_bytes": 232, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ede0", "name": "FUN_1000ede0", "external": false, "thunk": false, "body_bytes": 389, "direct_callees": ["0x1000b920", "0x1000ecf0", "0x10011480", "0x100115e0", "0x10011cf0", "0x10012e05"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ef70", "name": "FUN_1000ef70", "external": false, "thunk": false, "body_bytes": 353, "direct_callees": ["0x10001510", "0x100015b0", "0x1000ecf0", "0x10011fa4", "0x10012dff", "0x10012e05", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f0e0", "name": "FUN_1000f0e0", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f140", "name": "FUN_1000f140", "external": false, "thunk": false, "body_bytes": 1072, "direct_callees": ["0x10001510", "0x100015b0", "0x1000c500", "0x1000ede0", "0x1000ef70", "0x100111a0", "0x100118f0", "0x10011930", "0x10011fa4", "0x100122ee", "0x10012dff", "0x10012e05", "EXTERNAL:0x2", "EXTERNAL:0x4", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f580", "name": "FUN_1000f580", "external": false, "thunk": false, "body_bytes": 514, "direct_callees": ["0x10001680", "0x10002d40", "0x10002fe0", "0x10003420", "0x10010da0", "0x10010fb0", "0x100122ee", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f790", "name": "FUN_1000f790", "external": false, "thunk": false, "body_bytes": 558, "direct_callees": ["0x10001680", "0x10002d40", "0x10002fe0", "0x10003420", "0x10010da0", "0x10010fb0", "0x100122ee", "EXTERNAL:0x29", "EXTERNAL:0x33", "EXTERNAL:0x63", "EXTERNAL:0x65", "EXTERNAL:0x7c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000f9c0", "name": "FUN_1000f9c0", "external": false, "thunk": false, "body_bytes": 1408, "direct_callees": ["0x100112a0", "0x100113b0", "0x10012e0b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000ff40", "name": "FUN_1000ff40", "external": false, "thunk": false, "body_bytes": 410, "direct_callees": ["0x10002d40", "0x1000f790", "0x1000f9c0", "0x100112a0", "0x10012ca8", "0x10012e05", "EXTERNAL:0x23", "EXTERNAL:0x24"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100100e0", "name": "FUN_100100e0", "external": false, "thunk": false, "body_bytes": 269, "direct_callees": ["0x10002d40", "0x1000f580", "0x10011e84", "0x10011ece", "0x10012e05", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100101f0", "name": "FUN_100101f0", "external": false, "thunk": false, "body_bytes": 351, "direct_callees": ["0x10002d40", "0x10003420", "0x1000f790", "0x10011e84", "0x10011ece", "0x10012e05", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010350", "name": "FUN_10010350", "external": false, "thunk": false, "body_bytes": 48, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010380", "name": "FUN_10010380", "external": false, "thunk": false, "body_bytes": 177, "direct_callees": ["0x10003420", "0x10011e84", "0x10011ece", "EXTERNAL:0x1"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010440", "name": "FUN_10010440", "external": false, "thunk": false, "body_bytes": 1092, "direct_callees": ["0x100013a0", "0x100015b0", "0x10002d40", "0x1000c9e0", "0x1000f580", "0x10011e84", "0x10011ece", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x1", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010890", "name": "FUN_10010890", "external": false, "thunk": false, "body_bytes": 121, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010910", "name": "FUN_10010910", "external": false, "thunk": false, "body_bytes": 1124, "direct_callees": ["0x100013a0", "0x10002d40", "0x100032c0", "0x10003420", "0x100042d0", "0x100044c0", "0x10004700", "0x1000b210", "0x1000f580", "0x10010440", "0x10011e84", "0x10011ece", "0x10011fa4", "0x10012e05", "EXTERNAL:0x1", "EXTERNAL:0x3", "EXTERNAL:0x5", "EXTERNAL:0x71", "EXTERNAL:0x74"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010d80", "name": "FUN_10010d80", "external": false, "thunk": false, "body_bytes": 23, "direct_callees": ["0x10010910"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010da0", "name": "FUN_10010da0", "external": false, "thunk": false, "body_bytes": 518, "direct_callees": ["0x10002d40", "0x1000b920", "0x1000bf40", "0x1000bfe0", "0x1000d930", "0x100122ee", "0x10012e05", "EXTERNAL:0x65", "EXTERNAL:0x75"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10010fb0", "name": "FUN_10010fb0", "external": false, "thunk": false, "body_bytes": 491, "direct_callees": ["0x10002e40", "0x1000b920", "0x1000bf40", "0x1000bfe0", "0x1000d930", "0x1000e200", "0x100122ee", "0x10012e05", "EXTERNAL:0x65", "EXTERNAL:0x75"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100111a0", "name": "FUN_100111a0", "external": false, "thunk": false, "body_bytes": 251, "direct_callees": ["0x1000af30", "0x1000ea30", "0x1000ecc0", "0x10011be6", "0x10011c38"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100112a0", "name": "FUN_100112a0", "external": false, "thunk": false, "body_bytes": 261, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100113b0", "name": "FUN_100113b0", "external": false, "thunk": false, "body_bytes": 204, "direct_callees": ["0x10003420"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011480", "name": "FUN_10011480", "external": false, "thunk": false, "body_bytes": 349, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100115e0", "name": "FUN_100115e0", "external": false, "thunk": false, "body_bytes": 381, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011760", "name": "FUN_10011760", "external": false, "thunk": false, "body_bytes": 394, "direct_callees": ["0x10001510", "0x100015b0", "0x10011fa4", "0x100122ee", "0x10012dff", "EXTERNAL:0x65"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100118f0", "name": "FUN_100118f0", "external": false, "thunk": false, "body_bytes": 60, "direct_callees": ["0x10011970"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011930", "name": "FUN_10011930", "external": false, "thunk": false, "body_bytes": 54, "direct_callees": ["0x10011970"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011970", "name": "FUN_10011970", "external": false, "thunk": false, "body_bytes": 375, "direct_callees": ["0x1000ea30", "0x1000ecc0", "0x10011760", "0x10011be6", "0x10011c04"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011ae8", "name": "FUN_10011ae8", "external": false, "thunk": false, "body_bytes": 49, "direct_callees": ["0x10012682"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011b19", "name": "FUN_10011b19", "external": false, "thunk": false, "body_bytes": 39, "direct_callees": ["0x10011ae8", "0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011b40", "name": "std::_Facet_Register", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x10011fa4"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011b6c", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::showmanyc", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011b72", "name": "___std_get_string_size_without_trailing_whitespace@8", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011b96", "name": "FUN_10011b96", "external": false, "thunk": false, "body_bytes": 74, "direct_callees": ["0x10011b72", "EXTERNAL:0x6", "EXTERNAL:0x7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011be0", "name": "KERNEL32.DLL::LocalFree", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011be6", "name": "FUN_10011be6", "external": false, "thunk": false, "body_bytes": 30, "direct_callees": ["EXTERNAL:0x7d", "EXTERNAL:0x9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011c04", "name": "___std_fs_convert_narrow_to_wide@20", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0xb", "EXTERNAL:0xe"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011c38", "name": "___std_fs_convert_wide_to_narrow@20", "external": false, "thunk": false, "body_bytes": 179, "direct_callees": ["EXTERNAL:0xb", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011cf0", "name": "FUN_10011cf0", "external": false, "thunk": false, "body_bytes": 207, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011e84", "name": "FUN_10011e84", "external": false, "thunk": false, "body_bytes": 74, "direct_callees": ["0x10011f20", "EXTERNAL:0x10", "EXTERNAL:0x11"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011ece", "name": "FUN_10011ece", "external": false, "thunk": false, "body_bytes": 82, "direct_callees": ["0x10011f56", "EXTERNAL:0x10", "EXTERNAL:0x11"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011f20", "name": "FUN_10011f20", "external": false, "thunk": false, "body_bytes": 54, "direct_callees": ["0x10012682", "EXTERNAL:0x14", "EXTERNAL:0x15"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011f56", "name": "__Init_thread_wait", "external": false, "thunk": false, "body_bytes": 78, "direct_callees": ["0x10012682", "EXTERNAL:0x10", "EXTERNAL:0x11", "EXTERNAL:0x16"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011fa4", "name": "operator_new", "external": false, "thunk": false, "body_bytes": 48, "direct_callees": ["0x100129a2", "0x10012cc6", "0x10012ccc"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10011fd4", "name": "find_pe_section", "external": false, "thunk": false, "body_bytes": 68, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012018", "name": "___scrt_acquire_startup_lock", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["0x100129c3"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001204a", "name": "___scrt_dllmain_after_initialize_c", "external": false, "thunk": false, "body_bytes": 43, "direct_callees": ["0x10012693", "0x100129bf", "0x100129c3", "0x10012cd8", "0x10012cde"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012075", "name": "FUN_10012075", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x1001214c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012083", "name": "___scrt_dllmain_crt_thread_attach", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": ["0x10012d0e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100120a2", "name": "___scrt_dllmain_crt_thread_detach", "external": false, "thunk": false, "body_bytes": 13, "direct_callees": ["0x10012d0e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100120af", "name": "___scrt_dllmain_exception_filter", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["0x10012682", "0x100129c3", "0x10012cd2"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100120e3", "name": "FUN_100120e3", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x100129c3", "0x10012cf0", "0x10012d11"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012106", "name": "FUN_10012106", "external": false, "thunk": false, "body_bytes": 13, "direct_callees": ["0x10012d0e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012113", "name": "___scrt_initialize_crt", "external": false, "thunk": false, "body_bytes": 57, "direct_callees": ["0x10012693", "0x10012d0e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001214c", "name": "FUN_1001214c", "external": false, "thunk": false, "body_bytes": 134, "direct_callees": ["0x10012867", "0x100129c3", "0x10012ce4"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100121d3", "name": "___scrt_is_nonwritable_in_current_image", "external": false, "thunk": false, "body_bytes": 126, "direct_callees": ["0x10011fd4", "0x100129d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012267", "name": "___scrt_release_startup_lock", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": ["0x100129c3"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012284", "name": "___scrt_uninitialize_crt", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["0x10012d0e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100122ac", "name": "__onexit", "external": false, "thunk": false, "body_bytes": 45, "direct_callees": ["0x10012cea", "0x10012cf6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100122d9", "name": "_atexit", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["0x100122ac"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100122ee", "name": "FUN_100122ee", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x10012a44"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100122fc", "name": "FUN_100122fc", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001231f", "name": "dllmain_crt_dispatch", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["0x10012083", "0x100120a2", "0x10012372", "0x10012479"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012372", "name": "FUN_10012372", "external": false, "thunk": false, "body_bytes": 249, "direct_callees": ["0x10012018", "0x1001204a", "0x10012075", "0x10012113", "0x100121d3", "0x10012455", "0x10012682", "0x10012867", "0x100129d0", "0x10012ae1", "0x10012aff", "0x10012b1c", "0x10012b22", "0x10012d02", "0x10012d08"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012455", "name": "FUN_10012455", "external": false, "thunk": false, "body_bytes": 10, "direct_callees": ["0x10012267"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012479", "name": "FUN_10012479", "external": false, "thunk": false, "body_bytes": 153, "direct_callees": ["0x10012018", "0x100120e3", "0x10012284", "0x1001250e", "0x1001251b", "0x10012867", "0x100129d0", "0x10012aed", "0x10012b4e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001250e", "name": "FUN_1001250e", "external": false, "thunk": false, "body_bytes": 10, "direct_callees": ["0x10012267"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001251b", "name": "FUN_1001251b", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": ["0x10012106"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012529", "name": "dllmain_dispatch", "external": false, "thunk": false, "body_bytes": 231, "direct_callees": ["0x10010d80", "0x1001231f", "0x10012479", "0x10012634", "0x100129d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012634", "name": "dllmain_raw", "external": false, "thunk": false, "body_bytes": 43, "direct_callees": ["0x10012682"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001265f", "name": "entry", "external": false, "thunk": false, "body_bytes": 35, "direct_callees": ["0x10012529", "0x10012a96"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012682", "name": "guard_check_icall", "external": false, "thunk": false, "body_bytes": 3, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012693", "name": "FUN_10012693", "external": false, "thunk": false, "body_bytes": 468, "direct_callees": ["EXTERNAL:0x18"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012867", "name": "FUN_10012867", "external": false, "thunk": false, "body_bytes": 283, "direct_callees": ["0x10012982", "0x10012ca8", "EXTERNAL:0x18", "EXTERNAL:0x19", "EXTERNAL:0x1a", "EXTERNAL:0x1b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012982", "name": "FUN_10012982", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001298a", "name": "FUN_1001298a", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100129a2", "name": "FUN_100129a2", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x1001298a", "0x10012cae"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100129bf", "name": "FUN_100129bf", "external": false, "thunk": false, "body_bytes": 4, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100129c3", "name": "___scrt_is_ucrt_dll_in_use", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100129d0", "name": "__SEH_prolog4", "external": false, "thunk": false, "body_bytes": 69, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012a15", "name": "__except_handler4", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": ["0x10012cb4", "0x10012d14"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012a44", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012a49", "name": "___get_entropy", "external": false, "thunk": false, "body_bytes": 77, "direct_callees": ["EXTERNAL:0x1c", "EXTERNAL:0x1d", "EXTERNAL:0x1e", "EXTERNAL:0x1f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012a96", "name": "___security_init_cookie", "external": false, "thunk": false, "body_bytes": 75, "direct_callees": ["0x10012a49"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ae1", "name": "FUN_10012ae1", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["EXTERNAL:0x20"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012aed", "name": "FUN_10012aed", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["0x10012cba"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012af9", "name": "FUN_10012af9", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012aff", "name": "FUN_10012aff", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": ["0x100033e0", "0x10012af9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012b1c", "name": "FUN_10012b1c", "external": false, "thunk": false, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012b22", "name": "FUN_10012b22", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x10012682"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012b4e", "name": "FUN_10012b4e", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x10012682"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012b7a", "name": "FUN_10012b7a", "external": false, "thunk": false, "body_bytes": 40, "direct_callees": ["EXTERNAL:0x1a", "EXTERNAL:0x1b", "EXTERNAL:0x21", "EXTERNAL:0x22"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ba2", "name": "FUN_10012ba2", "external": false, "thunk": false, "body_bytes": 250, "direct_callees": ["0x10012b7a", "EXTERNAL:0x18"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012c9c", "name": "VCRUNTIME140.DLL::__CxxFrameHandler3", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ca2", "name": "Unwind@10012ca2", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ca8", "name": "VCRUNTIME140.DLL::memset", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cae", "name": "VCRUNTIME140.DLL::_CxxThrowException", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cb4", "name": "VCRUNTIME140.DLL::except_handler4_common", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cba", "name": "VCRUNTIME140.DLL::__std_type_info_destroy_list", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cc0", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cc6", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::malloc", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ccc", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::_callnewh", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cd2", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::seh_filter_dll", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cd8", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::configure_narrow_argv", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cde", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_narrow_environment", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ce4", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_onexit_table", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cea", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::register_onexit_function", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cf0", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::execute_onexit_table", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012cf6", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::crt_atexit", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d02", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d08", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm_e", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d0e", "name": "FUN_10012d0e", "external": false, "thunk": false, "body_bytes": 3, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d11", "name": "FUN_10012d11", "external": false, "thunk": false, "body_bytes": 3, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d14", "name": "__filter_x86_sse2_floating_point_exception_default", "external": false, "thunk": false, "body_bytes": 120, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012d90", "name": "FUN_10012d90", "external": false, "thunk": false, "body_bytes": 105, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012df9", "name": "VCRUNTIME140.DLL::memchr", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012dff", "name": "VCRUNTIME140.DLL::memcpy", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e05", "name": "VCRUNTIME140.DLL::memmove", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e0b", "name": "API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_atan_precise", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e11", "name": "API-MS-WIN-CRT-MATH-L1-1-0.DLL::ceil", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e20", "name": "Unwind@10012e20", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e40", "name": "Unwind@10012e40", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e48", "name": "Unwind@10012e48", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e70", "name": "Unwind@10012e70", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e90", "name": "Unwind@10012e90", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012e98", "name": "Unwind@10012e98", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ec0", "name": "Unwind@10012ec0", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cd0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ecb", "name": "Unwind@10012ecb", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002c70"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ef0", "name": "Unwind@10012ef0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ef8", "name": "Unwind@10012ef8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f00", "name": "Unwind@10012f00", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f08", "name": "Unwind@10012f08", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f10", "name": "Unwind@10012f10", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f18", "name": "Unwind@10012f18", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f20", "name": "Unwind@10012f20", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f28", "name": "Unwind@10012f28", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f33", "name": "Unwind@10012f33", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f50", "name": "Unwind@10012f50", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f58", "name": "Unwind@10012f58", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x1000a410"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f71", "name": "Unwind@10012f71", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012f90", "name": "Unwind@10012f90", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012fad", "name": "Unwind@10012fad", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012fb9", "name": "Unwind@10012fb9", "external": false, "thunk": false, "body_bytes": 9, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012fc2", "name": "Unwind@10012fc2", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10004700"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012fcd", "name": "Unwind@10012fcd", "external": false, "thunk": false, "body_bytes": 14, "direct_callees": ["0x1000a490"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ff0", "name": "Unwind@10012ff0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000a410"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10012ff8", "name": "Unwind@10012ff8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013000", "name": "Unwind@10013000", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x100015c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013030", "name": "Unwind@10013030", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x1000a410"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013049", "name": "Unwind@10013049", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x100015c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013054", "name": "Unwind@10013054", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001305f", "name": "Unwind@1001305f", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013067", "name": "Unwind@10013067", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013072", "name": "Unwind@10013072", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001307a", "name": "Unwind@1001307a", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013085", "name": "Unwind@10013085", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001308d", "name": "Unwind@1001308d", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x1000a410"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013098", "name": "Unwind@10013098", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130a3", "name": "Unwind@100130a3", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130ab", "name": "Unwind@100130ab", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130b3", "name": "Unwind@100130b3", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130be", "name": "Unwind@100130be", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130c6", "name": "Unwind@100130c6", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130ce", "name": "Unwind@100130ce", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130d6", "name": "Unwind@100130d6", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130e1", "name": "Unwind@100130e1", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130e9", "name": "Unwind@100130e9", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130f1", "name": "Unwind@100130f1", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100130f9", "name": "Unwind@100130f9", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013104", "name": "Unwind@10013104", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001310f", "name": "Unwind@1001310f", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013130", "name": "Unwind@10013130", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001314d", "name": "Unwind@1001314d", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013159", "name": "Unwind@10013159", "external": false, "thunk": false, "body_bytes": 9, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013162", "name": "Unwind@10013162", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x100047c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001316d", "name": "Unwind@1001316d", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x100047b0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013178", "name": "Unwind@10013178", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013180", "name": "Unwind@10013180", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013188", "name": "Unwind@10013188", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013193", "name": "Unwind@10013193", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001319b", "name": "Unwind@1001319b", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10001650"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131a6", "name": "Unwind@100131a6", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000a490"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131ae", "name": "Unwind@100131ae", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10004480"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131b9", "name": "Unwind@100131b9", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000a410"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131c1", "name": "Unwind@100131c1", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131de", "name": "Unwind@100131de", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131ea", "name": "Unwind@100131ea", "external": false, "thunk": false, "body_bytes": 9, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131f3", "name": "Unwind@100131f3", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x1000aec0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100131fe", "name": "Unwind@100131fe", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x100047c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013220", "name": "Unwind@10013220", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013228", "name": "Unwind@10013228", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013230", "name": "Unwind@10013230", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013250", "name": "Unwind@10013250", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013258", "name": "Unwind@10013258", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013280", "name": "Unwind@10013280", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100132a0", "name": "Unwind@100132a0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100132a8", "name": "Unwind@100132a8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100132d0", "name": "Unwind@100132d0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100132d8", "name": "Unwind@100132d8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002f70"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100132e0", "name": "Unwind@100132e0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013300", "name": "Unwind@10013300", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013330", "name": "Unwind@10013330", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10003590"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013350", "name": "Unwind@10013350", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000b500"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013358", "name": "Unwind@10013358", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000b090"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013380", "name": "Unwind@10013380", "external": false, "thunk": false, "body_bytes": 9, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013389", "name": "Unwind@10013389", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000c9d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100133b0", "name": "Unwind@100133b0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000cb00"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100133b8", "name": "Unwind@100133b8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000c8d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100133f0", "name": "Unwind@100133f0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000b500"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100133f8", "name": "Unwind@100133f8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000b090"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013420", "name": "Unwind@10013420", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e1f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013428", "name": "Unwind@10013428", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e1f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013430", "name": "Unwind@10013430", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e1f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013460", "name": "Unwind@10013460", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013468", "name": "Unwind@10013468", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e1b0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013470", "name": "Unwind@10013470", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013490", "name": "Unwind@10013490", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e1b0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013498", "name": "Unwind@10013498", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100134c0", "name": "Unwind@100134c0", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002cd0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100134cb", "name": "Unwind@100134cb", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10002c70"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100134d6", "name": "Unwind@100134d6", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10001670"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100134de", "name": "Unwind@100134de", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e370"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100134e6", "name": "Unwind@100134e6", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000e1c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100134ee", "name": "Unwind@100134ee", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013510", "name": "Unwind@10013510", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013518", "name": "Unwind@10013518", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013540", "name": "Unwind@10013540", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013560", "name": "Unwind@10013560", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000eb00"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013590", "name": "Unwind@10013590", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000f0e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013598", "name": "Unwind@10013598", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x1000f0e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135a3", "name": "Unwind@100135a3", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000f0e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135ab", "name": "Unwind@100135ab", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135b3", "name": "Unwind@100135b3", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000f0e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135bb", "name": "Unwind@100135bb", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x1000f0e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135e0", "name": "Unwind@100135e0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135e8", "name": "Unwind@100135e8", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100135f0", "name": "Unwind@100135f0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002f70"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013610", "name": "Unwind@10013610", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013618", "name": "Unwind@10013618", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013620", "name": "Unwind@10013620", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002f70"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013628", "name": "Unwind@10013628", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013650", "name": "Unwind@10013650", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013670", "name": "Unwind@10013670", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x10004480"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1001367b", "name": "Unwind@1001367b", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013683", "name": "Unwind@10013683", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100136a0", "name": "Unwind@100136a0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100136c0", "name": "Unwind@100136c0", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x10002cf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100136f0", "name": "Unwind@100136f0", "external": false, "thunk": false, "body_bytes": 25, "direct_callees": ["0x1000f0e0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013780", "name": "FUN_10013780", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100137e0", "name": "FUN_100137e0", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013840", "name": "FUN_10013840", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100138a0", "name": "FUN_100138a0", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013900", "name": "FUN_10013900", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013960", "name": "FUN_10013960", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100139c0", "name": "FUN_100139c0", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013a20", "name": "FUN_10013a20", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013a80", "name": "FUN_10013a80", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013ae0", "name": "FUN_10013ae0", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": ["0x10001680", "0x10002bf0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013b00", "name": "FUN_10013b00", "external": false, "thunk": false, "body_bytes": 87, "direct_callees": ["0x100122ee"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10013b57", "name": "FUN_10013b57", "external": false, "thunk": false, "body_bytes": 10, "direct_callees": ["0x10011b19"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "KERNEL32.DLL::VirtualProtect", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "KERNEL32.DLL::GetModuleFileNameA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "KERNEL32.DLL::GetModuleHandleA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "KERNEL32.DLL::GetModuleHandleExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "KERNEL32.DLL::AllocConsole", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6", "name": "KERNEL32.DLL::GetLocaleInfoEx", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7", "name": "KERNEL32.DLL::FormatMessageA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x8", "name": "KERNEL32.DLL::LocalFree", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x9", "name": "KERNEL32.DLL::AreFileApisANSI", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xa", "name": "KERNEL32.DLL::CloseHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xb", "name": "KERNEL32.DLL::GetLastError", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xc", "name": "KERNEL32.DLL::GetModuleHandleW", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xd", "name": "KERNEL32.DLL::GetProcAddress", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xe", "name": "KERNEL32.DLL::MultiByteToWideChar", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xf", "name": "KERNEL32.DLL::WideCharToMultiByte", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x10", "name": "KERNEL32.DLL::EnterCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x11", "name": "KERNEL32.DLL::LeaveCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x12", "name": "KERNEL32.DLL::InitializeCriticalSectionAndSpinCount", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x13", "name": "KERNEL32.DLL::DeleteCriticalSection", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x14", "name": "KERNEL32.DLL::SetEvent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x15", "name": "KERNEL32.DLL::ResetEvent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x16", "name": "KERNEL32.DLL::WaitForSingleObjectEx", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x17", "name": "KERNEL32.DLL::CreateEventW", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x18", "name": "KERNEL32.DLL::IsProcessorFeaturePresent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x19", "name": "KERNEL32.DLL::IsDebuggerPresent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1a", "name": "KERNEL32.DLL::UnhandledExceptionFilter", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1b", "name": "KERNEL32.DLL::SetUnhandledExceptionFilter", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1c", "name": "KERNEL32.DLL::QueryPerformanceCounter", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1d", "name": "KERNEL32.DLL::GetCurrentProcessId", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1e", "name": "KERNEL32.DLL::GetCurrentThreadId", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1f", "name": "KERNEL32.DLL::GetSystemTimeAsFileTime", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x20", "name": "KERNEL32.DLL::InitializeSListHead", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x21", "name": "KERNEL32.DLL::GetCurrentProcess", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x22", "name": "KERNEL32.DLL::TerminateProcess", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x23", "name": "USER32.DLL::EnumDisplaySettingsA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x24", "name": "USER32.DLL::SetProcessDPIAware", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x25", "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::seekg", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x26", "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::tellg", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x27", "name": "MSVCP140.DLL::std::codecvt_base::always_noconv", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x28", "name": "MSVCP140.DLL::std::locale::id::operator_unsigned_int", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x29", "name": "MSVCP140.DLL::std::_Xinvalid_argument", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2a", "name": "MSVCP140.DLL::std::_Winerror_map", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2b", "name": "MSVCP140.DLL::std::_Syserror_map", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2c", "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::get", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2d", "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::read", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2e", "name": "MSVCP140.DLL::std::_Xlength_error", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2f", "name": "MSVCP140.DLL::std::_Lockit::~_Lockit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x30", "name": "MSVCP140.DLL::std::_Lockit::_Lockit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x31", "name": "MSVCP140.DLL::std::locale::_Getgloballocale", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x32", "name": "MSVCP140.DLL::std::uncaught_exception", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x33", "name": "MSVCP140.DLL::std::_Xout_of_range", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x35", "name": "MSVCP140.DLL::std::_Fiopen", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x36", "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::_Getcat", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x37", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::getloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x38", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::sputc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x39", "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::unshift", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3a", "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::~basic_istream<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3b", "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::write", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3c", "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::~basic_ostream<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3d", "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::~basic_ios<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3e", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::xsputn", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3f", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::basic_streambuf<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x40", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::_Init", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x41", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::xsgetn", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x42", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::showmanyc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x43", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::~basic_streambuf<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x44", "name": "MSVCP140.DLL::std::basic_istream<char,std::char_traits<char>_>::basic_istream<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x45", "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::basic_ostream<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x46", "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::basic_ios<char,std::char_traits<char>_>", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x47", "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::setstate", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x48", "name": "MSVCP140.DLL::std::basic_ios<char,std::char_traits<char>_>::clear", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x49", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::_Pninc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4a", "name": "MSVCP140.DLL::std::basic_streambuf<char,std::char_traits<char>_>::sputn", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4b", "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::out", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4c", "name": "MSVCP140.DLL::std::codecvt<char,char,_Mbstatet>::in", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4d", "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::flush", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4e", "name": "MSVCP140.DLL::std::basic_ostream<char,std::char_traits<char>_>::_Osfx", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4f", "name": "VCRUNTIME140.DLL::memchr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x50", "name": "VCRUNTIME140.DLL::memcpy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x51", "name": "VCRUNTIME140.DLL::memmove", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x52", "name": "VCRUNTIME140.DLL::__CxxFrameHandler3", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x53", "name": "VCRUNTIME140.DLL::__std_type_info_destroy_list", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x54", "name": "VCRUNTIME140.DLL::except_handler4_common", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x55", "name": "VCRUNTIME140.DLL::_CxxThrowException", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x56", "name": "VCRUNTIME140.DLL::memset", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x57", "name": "VCRUNTIME140.DLL::__std_terminate", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x58", "name": "VCRUNTIME140.DLL::__std_exception_copy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x59", "name": "VCRUNTIME140.DLL::__std_exception_destroy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5a", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::register_onexit_function", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5b", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_onexit_table", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5c", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initialize_narrow_environment", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5d", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::configure_narrow_argv", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5e", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::seh_filter_dll", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5f", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::execute_onexit_table", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x60", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::crt_atexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x62", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x63", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_errno", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x64", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::initterm_e", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x65", "name": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL::_invalid_parameter_noinfo_noreturn", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x66", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fread", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x67", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fsetpos", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x68", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::ungetc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x69", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::setvbuf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6a", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fgetpos", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6b", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fwrite", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6c", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::__stdio_common_vfprintf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6d", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fgetc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6e", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::get_stream_buffer_pointers", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6f", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fclose", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x70", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fflush", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x71", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::__acrt_iob_func", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x72", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::fputc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x73", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::_fseeki64", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x74", "name": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL::freopen_s", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x75", "name": "API-MS-WIN-CRT-STRING-L1-1-0.DLL::tolower", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x76", "name": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL::_lock_file", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x77", "name": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL::_unlock_file", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x78", "name": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL::stat64i32", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x79", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::malloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7a", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::free", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7b", "name": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL::_callnewh", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7c", "name": "API-MS-WIN-CRT-CONVERT-L1-1-0.DLL::strtol", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7d", "name": "API-MS-WIN-CRT-LOCALE-L1-1-0.DLL::___lc_codepage_func", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7e", "name": "API-MS-WIN-CRT-MATH-L1-1-0.DLL::ceil", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7f", "name": "API-MS-WIN-CRT-MATH-L1-1-0.DLL::libm_sse2_atan_precise", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

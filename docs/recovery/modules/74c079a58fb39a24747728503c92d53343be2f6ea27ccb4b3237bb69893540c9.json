@@ -1,0 +1,1011 @@
+{
+  "target_sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "adc8ca0e8fc02919973fd1929bc4843087cc8578f0689a6377fede382d0ff8a5"
+  },
+  "summary": {
+    "function_entries": 186,
+    "decompilation": {
+      "success": 58,
+      "external": 128
+    },
+    "thunks": 33,
+    "internal_entries": 58,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "MFC42.DLL::CWinThread::Delete",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "MFC42.DLL::CWinThread::ProcessMessageFilter",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "MFC42.DLL::CWinApp::ProcessWndProcException",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "MFC42.DLL::CWinApp::ExitInstance",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "MFC42.DLL::CWinThread::IsIdleMessage",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "MFC42.DLL::CWinApp::OnIdle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7",
+      "name": "MFC42.DLL::CWinThread::PumpMessage",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x8",
+      "name": "MFC42.DLL::CWinApp::OpenDocumentFile",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x9",
+      "name": "MFC42.DLL::CWinThread::GetMainWnd",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xa",
+      "name": "MFC42.DLL::CCmdTarget::GetConnectionHook",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xb",
+      "name": "MFC42.DLL::CCmdTarget::GetExtraConnectionPoints",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xc",
+      "name": "MFC42.DLL::CCmdTarget::GetInterfaceHook",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xd",
+      "name": "MFC42.DLL::CCmdTarget::OnCreateAggregates",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xe",
+      "name": "MFC42.DLL::CCmdTarget::GetEventSinkMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xf",
+      "name": "MFC42.DLL::CCmdTarget::GetInterfaceMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x10",
+      "name": "MFC42.DLL::CCmdTarget::GetConnectionMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x11",
+      "name": "MFC42.DLL::CCmdTarget::GetDispatchMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x12",
+      "name": "MFC42.DLL::CWinThread::PreTranslateMessage",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x13",
+      "name": "MFC42.DLL::CWinApp::Run",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x14",
+      "name": "MFC42.DLL::CCmdTarget::GetCommandMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x15",
+      "name": "MFC42.DLL::CCmdTarget::GetTypeInfoCount",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x16",
+      "name": "MFC42.DLL::CCmdTarget::GetDispatchIID",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x17",
+      "name": "MFC42.DLL::CCmdTarget::IsInvokeAllowed",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x18",
+      "name": "MFC42.DLL::CCmdTarget::OnFinalRelease",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x19",
+      "name": "MFC42.DLL::CCmdTarget::OnCmdMsg",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1a",
+      "name": "MFC42.DLL::CWinApp::GetRuntimeClass",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1b",
+      "name": "MFC42.DLL::CWinApp::CWinApp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1c",
+      "name": "MFC42.DLL::operator_delete",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1d",
+      "name": "MFC42.DLL::CWinApp::~CWinApp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1e",
+      "name": "MFC42.DLL::CDialog::~CDialog",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1f",
+      "name": "MFC42.DLL::CDialog::DoModal",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x20",
+      "name": "MFC42.DLL::CWinApp::Enable3dControls",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x21",
+      "name": "MFC42.DLL::CDialog::PreInitDialog",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x22",
+      "name": "MFC42.DLL::CDialog::OnCancel",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x23",
+      "name": "MFC42.DLL::CDialog::OnOK",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x24",
+      "name": "MFC42.DLL::CDialog::OnSetFont",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x25",
+      "name": "MFC42.DLL::CDialog::OnInitDialog",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x26",
+      "name": "MFC42.DLL::CDialog::SetOccDialogInfo",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x27",
+      "name": "MFC42.DLL::CCmdTarget::GetTypeLib",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x28",
+      "name": "MFC42.DLL::CCmdTarget::GetTypeLibCache",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x29",
+      "name": "MFC42.DLL::CWnd::OnChildNotify",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2a",
+      "name": "MFC42.DLL::CWnd::PostNcDestroy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2b",
+      "name": "MFC42.DLL::CWinApp::AddToRecentFileList",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2c",
+      "name": "MFC42.DLL::CWnd::OnWndMsg",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2d",
+      "name": "MFC42.DLL::CWnd::WindowProc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2e",
+      "name": "MFC42.DLL::CWnd::OnAmbientProperty",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2f",
+      "name": "MFC42.DLL::CDialog::PreTranslateMessage",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x30",
+      "name": "MFC42.DLL::CWnd::GetSuperWndProcAddr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x31",
+      "name": "MFC42.DLL::CWnd::OnNotify",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x32",
+      "name": "MFC42.DLL::CWnd::OnCommand",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x33",
+      "name": "MFC42.DLL::CWnd::EndModalLoop",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x34",
+      "name": "MFC42.DLL::CWnd::ContinueModal",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x35",
+      "name": "MFC42.DLL::CWnd::WinHelpA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x36",
+      "name": "MFC42.DLL::CWnd::GetScrollBarCtrl",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x37",
+      "name": "MFC42.DLL::CWnd::OnToolHitTest",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x38",
+      "name": "MFC42.DLL::CWnd::CalcWindowRect",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x39",
+      "name": "MFC42.DLL::CWnd::PreCreateWindow",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3a",
+      "name": "MFC42.DLL::CWinApp::OnHelp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3b",
+      "name": "MFC42.DLL::CWnd::Create",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3c",
+      "name": "MFC42.DLL::CWnd::PreSubclassWindow",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3d",
+      "name": "MFC42.DLL::CWnd::OnFinalRelease",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3e",
+      "name": "MFC42.DLL::CDialog::OnCmdMsg",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3f",
+      "name": "MFC42.DLL::CDialog::GetRuntimeClass",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x40",
+      "name": "MFC42.DLL::CDialog::CDialog",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x41",
+      "name": "MFC42.DLL::CDialog::messageMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x42",
+      "name": "MFC42.DLL::AfxFindResourceHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x43",
+      "name": "MFC42.DLL::AfxGetModuleState",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x44",
+      "name": "MFC42.DLL::CString::~CString",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x45",
+      "name": "MFC42.DLL::CString::LoadStringA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x46",
+      "name": "MFC42.DLL::CString::CString",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x47",
+      "name": "MFC42.DLL::CMenu::FromHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x48",
+      "name": "MFC42.DLL::CWnd::Default",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x49",
+      "name": "MFC42.DLL::CPaintDC::~CPaintDC",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4a",
+      "name": "MFC42.DLL::CPaintDC::CPaintDC",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4b",
+      "name": "MFC42.DLL::CWnd::GetDlgItem",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4c",
+      "name": "MFC42.DLL::CWnd::MessageBoxA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4d",
+      "name": "MFC42.DLL::CWnd::GetWindowTextA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4e",
+      "name": "MFC42.DLL::CWnd::SetWindowTextA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4f",
+      "name": "MFC42.DLL::CWinApp::InitApplication",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x50",
+      "name": "MFC42.DLL::CWinApp::SaveAllModified",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x51",
+      "name": "MFC42.DLL::CWinApp::DoMessageBox",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x52",
+      "name": "MFC42.DLL::CWinApp::DoWaitCursor",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x53",
+      "name": "MFC42.DLL::CWinApp::OnDDECommand",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x54",
+      "name": "MFC42.DLL::CWinApp::WinHelpA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x55",
+      "name": "MFC42.DLL::CWinApp::messageMap",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x56",
+      "name": "MFC42.DLL::CWnd::DefWindowProcA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x57",
+      "name": "MFC42.DLL::CWnd::IsFrameWnd",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x58",
+      "name": "MFC42.DLL::CDialog::CheckAutoCenter",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x59",
+      "name": "MFC42.DLL::CWnd::DestroyWindow",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5a",
+      "name": "MFC42.DLL::AfxWinMain",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5b",
+      "name": "MSVCRT.DLL::_setmbcp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5c",
+      "name": "MSVCRT.DLL::_acmdln",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5d",
+      "name": "MSVCRT.DLL::__getmainargs",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5e",
+      "name": "MSVCRT.DLL::initterm",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5f",
+      "name": "MSVCRT.DLL::__setusermatherr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x60",
+      "name": "MSVCRT.DLL::_adjust_fdiv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x61",
+      "name": "MSVCRT.DLL::__p__commode",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x62",
+      "name": "MSVCRT.DLL::__p__fmode",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x63",
+      "name": "MSVCRT.DLL::__set_app_type",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x64",
+      "name": "MSVCRT.DLL::except_handler3",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x65",
+      "name": "MSVCRT.DLL::_controlfp",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x66",
+      "name": "MSVCRT.DLL::_exit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x67",
+      "name": "MSVCRT.DLL::_onexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x68",
+      "name": "MSVCRT.DLL::__dllonexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x69",
+      "name": "MSVCRT.DLL::memset",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6a",
+      "name": "MSVCRT.DLL::exit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6b",
+      "name": "MSVCRT.DLL::_XcptFilter",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6c",
+      "name": "MSVCRT.DLL::_EH_prolog",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6d",
+      "name": "MSVCRT.DLL::sprintf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6e",
+      "name": "MSVCRT.DLL::__CxxFrameHandler",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6f",
+      "name": "MSVCRT.DLL::strlen",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x70",
+      "name": "MSVCRT.DLL::strcpy",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x71",
+      "name": "MSVCRT.DLL::strchr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x72",
+      "name": "MSVCRT.DLL::isdigit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x73",
+      "name": "KERNEL32.DLL::GetModuleHandleA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x74",
+      "name": "KERNEL32.DLL::OutputDebugStringA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x75",
+      "name": "KERNEL32.DLL::GetStartupInfoA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x76",
+      "name": "USER32.DLL::GetClientRect",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x77",
+      "name": "USER32.DLL::GetSystemMenu",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x78",
+      "name": "USER32.DLL::IsIconic",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x79",
+      "name": "USER32.DLL::GetSystemMetrics",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7a",
+      "name": "USER32.DLL::DrawIcon",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7b",
+      "name": "USER32.DLL::EnableWindow",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7c",
+      "name": "USER32.DLL::AppendMenuA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7d",
+      "name": "USER32.DLL::LoadIconA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7e",
+      "name": "USER32.DLL::SendMessageA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7f",
+      "name": "ADVAPI32.DLL::RegCloseKey",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x80",
+      "name": "ADVAPI32.DLL::RegSetValueExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x81",
+      "name": "ADVAPI32.DLL::RegCreateKeyExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x82",
+      "name": "ADVAPI32.DLL::RegDeleteValueA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x83",
+      "name": "ADVAPI32.DLL::RegOpenKeyExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x84",
+      "name": "ADVAPI32.DLL::RegQueryValueExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x4019e8",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "nps/ProxyTool.exe"
+  ],
+  "functions": [
+    {"address": "0x40100c", "name": "FUN_0040100c", "external": false, "thunk": false, "body_bytes": 20, "direct_callees": ["0x40184c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401020", "name": "FUN_00401020", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x40103c", "0x401852"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40103c", "name": "MFC42.DLL::CWinApp::~CWinApp", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40104b", "name": "FUN_0040104b", "external": false, "thunk": false, "body_bytes": 10, "direct_callees": ["0x40100c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401055", "name": "FUN_00401055", "external": false, "thunk": false, "body_bytes": 12, "direct_callees": ["0x4019aa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40106b", "name": "FUN_0040106b", "external": false, "thunk": false, "body_bytes": 91, "direct_callees": ["0x401107", "0x40185e", "0x401864", "0x40186a", "0x4019d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4010c6", "name": "MFC42.DLL::CDialog::~CDialog", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4010cf", "name": "FUN_004010cf", "external": false, "thunk": false, "body_bytes": 22, "direct_callees": ["0x40192a"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4010e5", "name": "FUN_004010e5", "external": false, "thunk": false, "body_bytes": 28, "direct_callees": ["0x4010c6", "0x401852"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401107", "name": "FUN_00401107", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["0x40192a", "0x401930", "0x401936", "0x4019d0", "EXTERNAL:0x7d"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401217", "name": "FUN_00401217", "external": false, "thunk": false, "body_bytes": 79, "direct_callees": ["0x4010cf", "0x40185e", "0x401864", "0x401954", "0x4019d0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401266", "name": "FUN_00401266", "external": false, "thunk": false, "body_bytes": 152, "direct_callees": ["0x401954", "0x40195a", "0x401960", "EXTERNAL:0x76", "EXTERNAL:0x78", "EXTERNAL:0x79", "EXTERNAL:0x7a", "EXTERNAL:0x7e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401302", "name": "FUN_00401302", "external": false, "thunk": false, "body_bytes": 143, "direct_callees": ["0x401966", "EXTERNAL:0x74", "EXTERNAL:0x7e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401391", "name": "FUN_00401391", "external": false, "thunk": false, "body_bytes": 1, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4013d7", "name": "FUN_004013d7", "external": false, "thunk": false, "body_bytes": 397, "direct_callees": ["0x401966", "0x40196c", "0x401972", "0x4019d6", "EXTERNAL:0x6d", "EXTERNAL:0x72", "EXTERNAL:0x74", "EXTERNAL:0x7f", "EXTERNAL:0x80", "EXTERNAL:0x81"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401564", "name": "FUN_00401564", "external": false, "thunk": false, "body_bytes": 111, "direct_callees": ["0x40196c", "EXTERNAL:0x74", "EXTERNAL:0x7f", "EXTERNAL:0x82", "EXTERNAL:0x83"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4015d3", "name": "FUN_004015d3", "external": false, "thunk": false, "body_bytes": 393, "direct_callees": ["0x401966", "0x401978", "0x4019dc", "0x4019e2", "EXTERNAL:0x71", "EXTERNAL:0x7e", "EXTERNAL:0x7f", "EXTERNAL:0x83", "EXTERNAL:0x84"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40184c", "name": "MFC42.DLL::CWinApp::CWinApp", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401852", "name": "MFC42.DLL::operator_delete", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401858", "name": "MFC42.DLL::CWinApp::~CWinApp", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40185e", "name": "MFC42.DLL::CDialog::~CDialog", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401864", "name": "MFC42.DLL::CDialog::DoModal", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40186a", "name": "MFC42.DLL::CWinApp::Enable3dControls", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40187c", "name": "MFC42.DLL::CDialog::OnOK", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401888", "name": "MFC42.DLL::CDialog::OnInitDialog", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40192a", "name": "MFC42.DLL::CDialog::CDialog", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401930", "name": "MFC42.DLL::AfxFindResourceHandle", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401936", "name": "MFC42.DLL::AfxGetModuleState", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40193c", "name": "MFC42.DLL::CString::~CString", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401942", "name": "MFC42.DLL::CString::LoadStringA", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401948", "name": "MFC42.DLL::CString::CString", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40194e", "name": "MFC42.DLL::CMenu::FromHandle", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401954", "name": "MFC42.DLL::CWnd::Default", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40195a", "name": "MFC42.DLL::CPaintDC::~CPaintDC", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401960", "name": "MFC42.DLL::CPaintDC::CPaintDC", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401966", "name": "MFC42.DLL::CWnd::GetDlgItem", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40196c", "name": "MFC42.DLL::CWnd::MessageBoxA", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401972", "name": "MFC42.DLL::CWnd::GetWindowTextA", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401978", "name": "MFC42.DLL::CWnd::SetWindowTextA", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x40197e", "name": "FUN_0040197e", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x401b46", "EXTERNAL:0x67"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4019aa", "name": "FUN_004019aa", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["0x40197e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4019d0", "name": "MSVCRT.DLL::_EH_prolog", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4019d6", "name": "MSVCRT.DLL::strlen", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4019dc", "name": "MSVCRT.DLL::strcpy", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4019e2", "name": "MSVCRT.DLL::memset", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x4019e8", "name": "entry", "external": false, "thunk": false, "body_bytes": 338, "direct_callees": ["0x401391", "0x401b4c", "0x401b52", "0x401b58", "0x401b7a", "EXTERNAL:0x5d", "EXTERNAL:0x5f", "EXTERNAL:0x61", "EXTERNAL:0x62", "EXTERNAL:0x63", "EXTERNAL:0x6a", "EXTERNAL:0x73", "EXTERNAL:0x75"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b46", "name": "MSVCRT.DLL::__dllonexit", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b4c", "name": "MSVCRT.DLL::_XcptFilter", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b52", "name": "MSVCRT.DLL::initterm", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b58", "name": "FUN_00401b58", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["0x401b74"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b74", "name": "MSVCRT.DLL::_controlfp", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b7a", "name": "FUN_00401b7a", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["0x401bd2"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401b92", "name": "FUN_00401b92", "external": false, "thunk": false, "body_bytes": 41, "direct_callees": ["0x401936", "EXTERNAL:0x5b"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401bd2", "name": "MFC42.DLL::AfxWinMain", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401bd8", "name": "Unwind@00401bd8", "external": false, "thunk": false, "body_bytes": 11, "direct_callees": ["0x4010c6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401bf0", "name": "Unwind@00401bf0", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x40185e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401c04", "name": "Unwind@00401c04", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x40193c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x401c18", "name": "Unwind@00401c18", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": ["0x4010c6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "MFC42.DLL::CWinThread::Delete", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "MFC42.DLL::CWinThread::ProcessMessageFilter", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "MFC42.DLL::CWinApp::ProcessWndProcException", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "MFC42.DLL::CWinApp::ExitInstance", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "MFC42.DLL::CWinThread::IsIdleMessage", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6", "name": "MFC42.DLL::CWinApp::OnIdle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7", "name": "MFC42.DLL::CWinThread::PumpMessage", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x8", "name": "MFC42.DLL::CWinApp::OpenDocumentFile", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x9", "name": "MFC42.DLL::CWinThread::GetMainWnd", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xa", "name": "MFC42.DLL::CCmdTarget::GetConnectionHook", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xb", "name": "MFC42.DLL::CCmdTarget::GetExtraConnectionPoints", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xc", "name": "MFC42.DLL::CCmdTarget::GetInterfaceHook", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xd", "name": "MFC42.DLL::CCmdTarget::OnCreateAggregates", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xe", "name": "MFC42.DLL::CCmdTarget::GetEventSinkMap", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xf", "name": "MFC42.DLL::CCmdTarget::GetInterfaceMap", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x10", "name": "MFC42.DLL::CCmdTarget::GetConnectionMap", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x11", "name": "MFC42.DLL::CCmdTarget::GetDispatchMap", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x12", "name": "MFC42.DLL::CWinThread::PreTranslateMessage", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x13", "name": "MFC42.DLL::CWinApp::Run", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x14", "name": "MFC42.DLL::CCmdTarget::GetCommandMap", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x15", "name": "MFC42.DLL::CCmdTarget::GetTypeInfoCount", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x16", "name": "MFC42.DLL::CCmdTarget::GetDispatchIID", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x17", "name": "MFC42.DLL::CCmdTarget::IsInvokeAllowed", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x18", "name": "MFC42.DLL::CCmdTarget::OnFinalRelease", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x19", "name": "MFC42.DLL::CCmdTarget::OnCmdMsg", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1a", "name": "MFC42.DLL::CWinApp::GetRuntimeClass", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1b", "name": "MFC42.DLL::CWinApp::CWinApp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1c", "name": "MFC42.DLL::operator_delete", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1d", "name": "MFC42.DLL::CWinApp::~CWinApp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1e", "name": "MFC42.DLL::CDialog::~CDialog", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1f", "name": "MFC42.DLL::CDialog::DoModal", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x20", "name": "MFC42.DLL::CWinApp::Enable3dControls", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x21", "name": "MFC42.DLL::CDialog::PreInitDialog", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x22", "name": "MFC42.DLL::CDialog::OnCancel", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x23", "name": "MFC42.DLL::CDialog::OnOK", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x24", "name": "MFC42.DLL::CDialog::OnSetFont", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x25", "name": "MFC42.DLL::CDialog::OnInitDialog", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x26", "name": "MFC42.DLL::CDialog::SetOccDialogInfo", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x27", "name": "MFC42.DLL::CCmdTarget::GetTypeLib", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x28", "name": "MFC42.DLL::CCmdTarget::GetTypeLibCache", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x29", "name": "MFC42.DLL::CWnd::OnChildNotify", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2a", "name": "MFC42.DLL::CWnd::PostNcDestroy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2b", "name": "MFC42.DLL::CWinApp::AddToRecentFileList", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2c", "name": "MFC42.DLL::CWnd::OnWndMsg", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2d", "name": "MFC42.DLL::CWnd::WindowProc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2e", "name": "MFC42.DLL::CWnd::OnAmbientProperty", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2f", "name": "MFC42.DLL::CDialog::PreTranslateMessage", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x30", "name": "MFC42.DLL::CWnd::GetSuperWndProcAddr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x31", "name": "MFC42.DLL::CWnd::OnNotify", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x32", "name": "MFC42.DLL::CWnd::OnCommand", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x33", "name": "MFC42.DLL::CWnd::EndModalLoop", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x34", "name": "MFC42.DLL::CWnd::ContinueModal", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x35", "name": "MFC42.DLL::CWnd::WinHelpA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x36", "name": "MFC42.DLL::CWnd::GetScrollBarCtrl", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x37", "name": "MFC42.DLL::CWnd::OnToolHitTest", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x38", "name": "MFC42.DLL::CWnd::CalcWindowRect", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x39", "name": "MFC42.DLL::CWnd::PreCreateWindow", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3a", "name": "MFC42.DLL::CWinApp::OnHelp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3b", "name": "MFC42.DLL::CWnd::Create", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3c", "name": "MFC42.DLL::CWnd::PreSubclassWindow", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3d", "name": "MFC42.DLL::CWnd::OnFinalRelease", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3e", "name": "MFC42.DLL::CDialog::OnCmdMsg", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3f", "name": "MFC42.DLL::CDialog::GetRuntimeClass", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x40", "name": "MFC42.DLL::CDialog::CDialog", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x42", "name": "MFC42.DLL::AfxFindResourceHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x43", "name": "MFC42.DLL::AfxGetModuleState", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x44", "name": "MFC42.DLL::CString::~CString", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x45", "name": "MFC42.DLL::CString::LoadStringA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x46", "name": "MFC42.DLL::CString::CString", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x47", "name": "MFC42.DLL::CMenu::FromHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x48", "name": "MFC42.DLL::CWnd::Default", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x49", "name": "MFC42.DLL::CPaintDC::~CPaintDC", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4a", "name": "MFC42.DLL::CPaintDC::CPaintDC", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4b", "name": "MFC42.DLL::CWnd::GetDlgItem", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4c", "name": "MFC42.DLL::CWnd::MessageBoxA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4d", "name": "MFC42.DLL::CWnd::GetWindowTextA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4e", "name": "MFC42.DLL::CWnd::SetWindowTextA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4f", "name": "MFC42.DLL::CWinApp::InitApplication", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x50", "name": "MFC42.DLL::CWinApp::SaveAllModified", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x51", "name": "MFC42.DLL::CWinApp::DoMessageBox", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x52", "name": "MFC42.DLL::CWinApp::DoWaitCursor", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x53", "name": "MFC42.DLL::CWinApp::OnDDECommand", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x54", "name": "MFC42.DLL::CWinApp::WinHelpA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x56", "name": "MFC42.DLL::CWnd::DefWindowProcA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x57", "name": "MFC42.DLL::CWnd::IsFrameWnd", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x58", "name": "MFC42.DLL::CDialog::CheckAutoCenter", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x59", "name": "MFC42.DLL::CWnd::DestroyWindow", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5a", "name": "MFC42.DLL::AfxWinMain", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5b", "name": "MSVCRT.DLL::_setmbcp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5d", "name": "MSVCRT.DLL::__getmainargs", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5e", "name": "MSVCRT.DLL::initterm", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5f", "name": "MSVCRT.DLL::__setusermatherr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x61", "name": "MSVCRT.DLL::__p__commode", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x62", "name": "MSVCRT.DLL::__p__fmode", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x63", "name": "MSVCRT.DLL::__set_app_type", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x64", "name": "MSVCRT.DLL::except_handler3", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x65", "name": "MSVCRT.DLL::_controlfp", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x66", "name": "MSVCRT.DLL::_exit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x67", "name": "MSVCRT.DLL::_onexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x68", "name": "MSVCRT.DLL::__dllonexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x69", "name": "MSVCRT.DLL::memset", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6a", "name": "MSVCRT.DLL::exit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6b", "name": "MSVCRT.DLL::_XcptFilter", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6c", "name": "MSVCRT.DLL::_EH_prolog", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6d", "name": "MSVCRT.DLL::sprintf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6e", "name": "MSVCRT.DLL::__CxxFrameHandler", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6f", "name": "MSVCRT.DLL::strlen", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x70", "name": "MSVCRT.DLL::strcpy", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x71", "name": "MSVCRT.DLL::strchr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x72", "name": "MSVCRT.DLL::isdigit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x73", "name": "KERNEL32.DLL::GetModuleHandleA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x74", "name": "KERNEL32.DLL::OutputDebugStringA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x75", "name": "KERNEL32.DLL::GetStartupInfoA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x76", "name": "USER32.DLL::GetClientRect", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x77", "name": "USER32.DLL::GetSystemMenu", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x78", "name": "USER32.DLL::IsIconic", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x79", "name": "USER32.DLL::GetSystemMetrics", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7a", "name": "USER32.DLL::DrawIcon", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7b", "name": "USER32.DLL::EnableWindow", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7c", "name": "USER32.DLL::AppendMenuA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7d", "name": "USER32.DLL::LoadIconA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7e", "name": "USER32.DLL::SendMessageA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7f", "name": "ADVAPI32.DLL::RegCloseKey", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x80", "name": "ADVAPI32.DLL::RegSetValueExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x81", "name": "ADVAPI32.DLL::RegCreateKeyExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x82", "name": "ADVAPI32.DLL::RegDeleteValueA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x83", "name": "ADVAPI32.DLL::RegOpenKeyExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x84", "name": "ADVAPI32.DLL::RegQueryValueExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

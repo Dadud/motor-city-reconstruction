@@ -1,0 +1,1406 @@
+{
+  "scope": "static Ghidra external-symbol libraries; dynamic LoadLibrary targets require separate recovery",
+  "dependencies": [
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 7,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "COMCTL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "COMDLG32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "DDRAW.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "GDI32.DLL",
+      "imported_symbols": 24,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 103,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "USER32.DLL",
+      "imported_symbols": 79,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "library": "WINSPOOL.DRV",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "3DSETUP.DLL",
+      "imported_symbols": 24,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "3dSetup/3DSetup.dll",
+          "sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5"
+        }
+      ]
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 12,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "COMCTL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "COMDLG32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "GDI32.DLL",
+      "imported_symbols": 84,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 148,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "OLE32.DLL",
+      "imported_symbols": 32,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "OLEAUT32.DLL",
+      "imported_symbols": 35,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "OLEDLG.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "OLEPRO32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 5,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "USER32.DLL",
+      "imported_symbols": 170,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "library": "WINSPOOL.DRV",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22",
+      "library": "IMPLODE.DLL",
+      "imported_symbols": 2,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "IMPLODE.DLL",
+          "sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3"
+        }
+      ]
+    },
+    {
+      "source_sha256": "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "D3D9.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "DBGHELP.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "GDI32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 160,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "OLE32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "USER32.DLL",
+      "imported_symbols": 25,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "library": "WS2_32.DLL",
+      "imported_symbols": 39,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "library": "DDRAW.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "library": "GDI32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 9,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 13,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "library": "USER32.DLL",
+      "imported_symbols": 13,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "library": "D3D8.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "library": "GDI32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 10,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 17,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "library": "USER32.DLL",
+      "imported_symbols": 12,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "library": "GDI32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 65,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "library": "OLE32.DLL",
+      "imported_symbols": 7,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "library": "USER32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 15,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 22,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "COMCTL32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "COMDLG32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "GDI32.DLL",
+      "imported_symbols": 51,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 145,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "USER32.DLL",
+      "imported_symbols": 138,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "WINMM.DLL",
+      "imported_symbols": 13,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "WINSPOOL.DRV",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "library": "WSOCK32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 13,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "COMCTL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "D3D8.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "DINPUT.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "DINPUT8.DLL",
+      "imported_symbols": 1,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "dinput8.dll",
+          "sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60"
+        }
+      ]
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "DSOUND.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "GDI32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "IFC22.DLL",
+      "imported_symbols": 11,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "IFC22.dll",
+          "sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed"
+        }
+      ]
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "IMPLODE.DLL",
+      "imported_symbols": 2,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "IMPLODE.DLL",
+          "sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3"
+        }
+      ]
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 159,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "OLE32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "OLEAUT32.DLL",
+      "imported_symbols": 19,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "USER32.DLL",
+      "imported_symbols": 65,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "WININET.DLL",
+      "imported_symbols": 10,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "WINMM.DLL",
+      "imported_symbols": 12,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "library": "WSOCK32.DLL",
+      "imported_symbols": 31,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 11,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "API-MS-WIN-CORE-SYNCH-L1-2-0.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "BCRYPTPRIMITIVES.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "CRYPT32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "DWMAPI.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "GDI32.DLL",
+      "imported_symbols": 7,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "IMM32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "IPHLPAPI.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 110,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 43,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "NTDLL.DLL",
+      "imported_symbols": 5,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "OLE32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "OPENGL32.DLL",
+      "imported_symbols": 7,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "SHLWAPI.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "USER32.DLL",
+      "imported_symbols": 89,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "UXTHEME.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "library": "WINHTTP.DLL",
+      "imported_symbols": 9,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 72,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6",
+      "library": "WININET.DLL",
+      "imported_symbols": 8,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 9,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "COMCTL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "GDI32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 105,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "MRBUPD.DLL",
+      "imported_symbols": 11,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "nps/mrbupd.dll",
+          "sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c"
+        }
+      ]
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "SHLWAPI.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "USER32.DLL",
+      "imported_symbols": 34,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "WINMM.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "library": "WSOCK32.DLL",
+      "imported_symbols": 22,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 30,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 57,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "library": "USER32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "library": "WSOCK32.DLL",
+      "imported_symbols": 19,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+      "library": "ICMP.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 12,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+      "library": "WSOCK32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 19,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "library": "MSVCP60.DLL",
+      "imported_symbols": 61,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 37,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "library": "USER32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "library": "MFC42.DLL",
+      "imported_symbols": 90,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 24,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "library": "USER32.DLL",
+      "imported_symbols": 9,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 33,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "library": "MSVCRT40.DLL",
+      "imported_symbols": 18,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "library": "OLE32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "library": "OLEAUT32.DLL",
+      "imported_symbols": 30,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "library": "USER32.DLL",
+      "imported_symbols": 9,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 9,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 100,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "library": "OLE32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "library": "OLEAUT32.DLL",
+      "imported_symbols": 19,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "library": "USER32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 27,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34",
+      "library": "USER32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 31,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54",
+      "library": "MSJINT35.DLL",
+      "imported_symbols": 1,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "scripts/DAO/msjint35.dll",
+          "sha256": "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34"
+        }
+      ]
+    },
+    {
+      "source_sha256": "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 51,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3",
+      "library": "USER32.DLL",
+      "imported_symbols": 20,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3",
+      "library": "WINMM.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-CONVERT-L1-1-0.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-HEAP-L1-1-0.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-LOCALE-L1-1-0.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-MATH-L1-1-0.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL",
+      "imported_symbols": 12,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-STDIO-L1-1-0.DLL",
+      "imported_symbols": 15,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "API-MS-WIN-CRT-STRING-L1-1-0.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 34,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "MSVCP140.DLL",
+      "imported_symbols": 42,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "USER32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "library": "VCRUNTIME140.DLL",
+      "imported_symbols": 11,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c",
+      "library": "DDRAW.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 61,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c",
+      "library": "USER32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "library": "D3D8.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "library": "GDI32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 7,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 17,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "library": "USER32.DLL",
+      "imported_symbols": 5,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 11,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "COMCTL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "D3D8.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "DINPUT.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "DINPUT8.DLL",
+      "imported_symbols": 1,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "dinput8.dll",
+          "sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60"
+        }
+      ]
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "DSOUND.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "GDI32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "IFC22.DLL",
+      "imported_symbols": 11,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "IFC22.dll",
+          "sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed"
+        }
+      ]
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "IMPLODE.DLL",
+      "imported_symbols": 2,
+      "resolution": "supplied",
+      "installed_candidates": [
+        {
+          "name": "IMPLODE.DLL",
+          "sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3"
+        }
+      ]
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 160,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "OLE32.DLL",
+      "imported_symbols": 6,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "OLEAUT32.DLL",
+      "imported_symbols": 19,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "RASAPI32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "SHELL32.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "USER32.DLL",
+      "imported_symbols": 65,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "VERSION.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "WININET.DLL",
+      "imported_symbols": 10,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "WINMM.DLL",
+      "imported_symbols": 11,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "library": "WSOCK32.DLL",
+      "imported_symbols": 30,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9",
+      "library": "ADVAPI32.DLL",
+      "imported_symbols": 3,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 61,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9",
+      "library": "USER32.DLL",
+      "imported_symbols": 2,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+      "library": "DDRAW.DLL",
+      "imported_symbols": 1,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+      "library": "KERNEL32.DLL",
+      "imported_symbols": 10,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+      "library": "MSVCRT.DLL",
+      "imported_symbols": 18,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    },
+    {
+      "source_sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+      "library": "USER32.DLL",
+      "imported_symbols": 4,
+      "resolution": "system-or-missing-unreviewed",
+      "installed_candidates": []
+    }
+  ]
+}

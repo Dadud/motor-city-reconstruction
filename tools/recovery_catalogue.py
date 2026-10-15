@@ -48,6 +48,9 @@ def module_metadata(directory, expected):
     summary = dict(function_entries=len(result),
                    decompilation=dict(Counter(row['decompilation'] for row in result)),
                    thunks=sum(row['thunk'] for row in result))
+    summary['internal_entries'] = sum(not row['external'] for row in result)
+    summary['export_pass'] = ('incomplete' if any(row['decompilation'] == 'not-attempted'
+                                               for row in result) else 'all-internal-attempted')
     return dict(target_sha256=expected, provenance=dict(kind='local-ghidra-headless',
         ghidra_version=metadata['ghidra_version'], language=metadata['language'],
         analysis=metadata['analysis'],
@@ -138,15 +141,17 @@ def main():
         dependencies=dependencies), indent=2)+'\n', encoding='utf-8')
     (output/'export-status.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     lines = ['# Installation recovery export status', '',
-        f"{report['installed_files']} installed EXE/DLL paths; {len(groups)} unique binary hashes.", '',
-        '| Installed paths | Enumeration | Entries | Decompiled | Failed/timeout | Not attempted |',
-        '| --- | --- | ---: | ---: | ---: | ---: |']
+        f"{report['installed_files']} installed executable-signature/extension candidates; {len(groups)} unique hashes.", '',
+        'Header scanning includes ASI plugins and extensionless cache files. Non-executable',
+        'extension candidates and historical cache copies are labeled separately.', '',
+        '| Installed paths | Role | Enumeration | Entries | Decompiled | Failed/timeout | Not attempted |',
+        '| --- | --- | --- | ---: | ---: | ---: | ---: |']
     for row in summaries:
         counts = row.get('decompilation', {})
-        lines.append('| '+', '.join(row['installed_names'])+' | '+row['enumeration']+' | '+
+        lines.append('| '+', '.join(row['installed_names'])+' | '+row['location_role']+' | '+row['enumeration']+' | '+
             str(row.get('function_entries', '—'))+' | '+str(counts.get('success', 0))+' | '+
             str(counts.get('failed', 0)+counts.get('timeout', 0)+counts.get('output-missing', 0))+' | '+
-            str(counts.get('not-attempted', '—'))+' |')
+            str(counts.get('not-attempted', 0) if row['enumeration'] == 'ghidra-export' else '—')+' |')
     lines += ['', 'Decompiled means private pseudocode was exported, not translated or buildable source.',
         'External imports are separate from attempted internal functions. Failed and timed-out',
         'entries remain in each module inventory. Old REA records remain separately indexed in',

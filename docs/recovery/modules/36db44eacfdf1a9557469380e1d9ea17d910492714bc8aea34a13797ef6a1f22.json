@@ -1,0 +1,119 @@
+{
+  "target_sha256": "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "47f06c37bf882c332aaaa9213e506cea7116dedda86071f355846fa655d1ca28"
+  },
+  "summary": {
+    "function_entries": 14,
+    "decompilation": {
+      "success": 9,
+      "external": 5
+    },
+    "thunks": 3,
+    "internal_entries": 9,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "IMPLODE.DLL::explode",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "IMPLODE.DLL::implode",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "MSVCRT.DLL::initterm",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "MSVCRT.DLL::free",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "MSVCRT.DLL::malloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "MSVCRT.DLL::_adjust_fdiv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x100010d0",
+      "name": "Ordinal_1",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100010d0",
+      "name": "CompressIt",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100010d0",
+      "name": "?CompressIt@@YAIPAXI0I_N@Z",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001180",
+      "name": "Ordinal_2",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001180",
+      "name": "DecompressIt",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001180",
+      "name": "?DecompressIt@@YAIPAXI0I@Z",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100012fa",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "Compress.dll"
+  ],
+  "functions": [
+    {"address": "0x10001000", "name": "FUN_10001000", "external": false, "thunk": false, "body_bytes": 8, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100010d0", "name": "CompressIt", "external": false, "thunk": false, "body_bytes": 165, "direct_callees": ["0x10001210", "0x10001220"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001180", "name": "DecompressIt", "external": false, "thunk": false, "body_bytes": 129, "direct_callees": ["0x10001216", "0x10001220"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001210", "name": "IMPLODE.DLL::implode", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001216", "name": "IMPLODE.DLL::explode", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001220", "name": "FUN_10001220", "external": false, "thunk": false, "body_bytes": 47, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000124f", "name": "FUN_1000124f", "external": false, "thunk": false, "body_bytes": 171, "direct_callees": ["0x10001398", "EXTERNAL:0x4", "EXTERNAL:0x5"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100012fa", "name": "entry", "external": false, "thunk": false, "body_bytes": 157, "direct_callees": ["0x10001000", "0x1000124f"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001398", "name": "MSVCRT.DLL::initterm", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "IMPLODE.DLL::explode", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "IMPLODE.DLL::implode", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "MSVCRT.DLL::initterm", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "MSVCRT.DLL::free", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "MSVCRT.DLL::malloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

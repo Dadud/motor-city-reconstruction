@@ -1,96 +1,275 @@
 {
-  "scope": "top-level EXE/DLL files only; nested binaries and system libraries not inventoried",
+  "scope": "recursive header-discovered PE/NE/LE/LX files plus EXE/DLL filename candidates; symlinks and system libraries outside installation not inventoried",
   "binaries": [
+    {
+      "name": "3dSetup/3DSetup.dll",
+      "bytes": 262144,
+      "sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "3dSetup/3DSetup.exe",
+      "bytes": 589824,
+      "sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680.json",
+      "status": "enumerated"
+    },
     {
       "name": "Compress.dll",
       "bytes": 20480,
       "sha256": "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "Data/Text/phid.exe",
+      "bytes": 247,
+      "sha256": "9cb0069a6f6c7d92d99c96e885fc95a8d160dec31f42a0e7b6bba111858a666a",
+      "format": "unrecognized-data",
+      "location_role": "installation",
       "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "status": "not-native-executable"
     },
     {
       "name": "dinput8.dll",
       "bytes": 5413776,
       "sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60.json",
+      "status": "enumerated"
     },
     {
       "name": "dx7z.dll",
       "bytes": 110592,
       "sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c.json",
+      "status": "enumerated"
     },
     {
       "name": "dx8z.dll",
       "bytes": 135168,
       "sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209.json",
+      "status": "enumerated"
     },
     {
       "name": "dx8zDB.dll",
       "bytes": 135168,
       "sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209.json",
+      "status": "enumerated"
     },
     {
       "name": "IFC22.dll",
       "bytes": 196608,
       "sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed.json",
+      "status": "enumerated"
     },
     {
       "name": "IMPLODE.DLL",
       "bytes": 17984,
       "sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3.json",
+      "status": "enumerated"
     },
     {
       "name": "ip.exe",
       "bytes": 832000,
       "sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205.json",
+      "status": "enumerated"
     },
     {
       "name": "mcity.exe",
       "bytes": 5337147,
       "sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
-      "function_inventory": "function-enumeration.json",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164.json",
       "status": "enumerated"
     },
     {
       "name": "mco-launcher.exe",
       "bytes": 6158719,
       "sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "nps/authlogin.dll",
+      "bytes": 98304,
+      "sha256": "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "nps/mco.exe",
+      "bytes": 1495040,
+      "sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "nps/mrbupd.dll",
+      "bytes": 110080,
+      "sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "nps/NPSAnlyz.dll",
+      "bytes": 41015,
+      "sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "nps/PBA.exe",
+      "bytes": 32768,
+      "sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "nps/ProxyTool.exe",
+      "bytes": 20480,
+      "sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "scripts/DAO/dao350.dll",
+      "bytes": 570128,
+      "sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "scripts/DAO/msjet35.dll",
+      "bytes": 1050896,
+      "sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "scripts/DAO/msjint35.dll",
+      "bytes": 123664,
+      "sha256": "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "scripts/DAO/msjter35.dll",
+      "bytes": 24848,
+      "sha256": "3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "scripts/MCOExOps.asi",
+      "bytes": 61440,
+      "sha256": "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "scripts/MCOWidescreenMod.asi",
+      "bytes": 100864,
+      "sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d.json",
+      "status": "enumerated"
     },
     {
       "name": "softtriz.dll",
       "bytes": 237568,
       "sha256": "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "Stage/.castanet/undo/40/287",
+      "bytes": 135168,
+      "sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "format": "pe",
+      "location_role": "historical-cache",
+      "function_inventory": "modules/491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "Stage/.castanet/undo/40/290",
+      "bytes": 5054523,
+      "sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "format": "pe",
+      "location_role": "historical-cache",
+      "function_inventory": "modules/37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802.json",
+      "status": "enumerated"
     },
     {
       "name": "Uninst.dll",
       "bytes": 49152,
       "sha256": "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9.json",
+      "status": "enumerated"
     },
     {
       "name": "voodoo2z.dll",
       "bytes": 57344,
       "sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
-      "function_inventory": null,
-      "status": "function-enumeration-pending"
+      "format": "pe",
+      "location_role": "installation",
+      "function_inventory": "modules/30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20.json",
+      "status": "enumerated"
     }
   ]
 }

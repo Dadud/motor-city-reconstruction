@@ -19,8 +19,8 @@ retained as reference work.
 | `examples/` | Existing example mods; outside the current recovery priority |
 
 This is a partial source reconstruction, not the original game's extracted source
-or a complete rebuildable game. The last published recovery checkpoint is
-`35df8de` established complete supported stock mechanical assembly. Subsequent
+or a complete rebuildable game. Recovery checkpoint `35df8de` established complete
+supported stock mechanical assembly. Subsequent
 bounded recovery includes [wheel initialization](calculations/owner-wheel-setup.md)
 and [part bounds](calculations/model-bounds.md), with complete-original-function
 comparisons. These do not establish complete startup or integrated driving.

@@ -1,0 +1,357 @@
+{
+  "target_sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "a7dfc4e8b3aaf43a16e3ffef0fd84b5d721bf55c166aec76bd02dc8b4797c4d7"
+  },
+  "summary": {
+    "function_entries": 54,
+    "decompilation": {
+      "success": 36,
+      "external": 18
+    },
+    "thunks": 21,
+    "internal_entries": 36,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "WSOCK32.DLL::gethostbyaddr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "WSOCK32.DLL::WSAStartup",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "WSOCK32.DLL::WSACleanup",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "WSOCK32.DLL::gethostbyname",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "ICMP.DLL::IcmpCloseHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "ICMP.DLL::IcmpCreateFile",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7",
+      "name": "ICMP.DLL::IcmpSendEcho",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x8",
+      "name": "KERNEL32.DLL::OutputDebugStringA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x9",
+      "name": "KERNEL32.DLL::GetSystemTime",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xa",
+      "name": "MSVCRT.DLL::free",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xb",
+      "name": "MSVCRT.DLL::fopen",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xc",
+      "name": "MSVCRT.DLL::_pctype",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xd",
+      "name": "MSVCRT.DLL::__dllonexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xe",
+      "name": "MSVCRT.DLL::_onexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xf",
+      "name": "MSVCRT.DLL::malloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x10",
+      "name": "MSVCRT.DLL::fclose",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x11",
+      "name": "MSVCRT.DLL::fprintf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x12",
+      "name": "MSVCRT.DLL::initterm",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x13",
+      "name": "MSVCRT.DLL::__mb_cur_max",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x14",
+      "name": "MSVCRT.DLL::_isctype",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x15",
+      "name": "MSVCRT.DLL::_adjust_fdiv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x10001005",
+      "name": "Ordinal_5",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001005",
+      "name": "AnalyzeProtocolClose",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000100a",
+      "name": "Ordinal_9",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000100a",
+      "name": "AnalyzeSetProtocol",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001014",
+      "name": "Ordinal_4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001014",
+      "name": "AnalyzeLatency",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001019",
+      "name": "Ordinal_11",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001019",
+      "name": "_DllMain@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001023",
+      "name": "Ordinal_7",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001023",
+      "name": "AnalyzeProtocolPing",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001028",
+      "name": "Ordinal_3",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001028",
+      "name": "AnalyzeInit",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000102d",
+      "name": "Ordinal_2",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000102d",
+      "name": "AnalyzeHops",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001032",
+      "name": "Ordinal_1",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001032",
+      "name": "AnalyzeClose",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001037",
+      "name": "Ordinal_8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001037",
+      "name": "AnalyzeSetInternals",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000103c",
+      "name": "Ordinal_6",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x1000103c",
+      "name": "AnalyzeProtocolInit",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001041",
+      "name": "Ordinal_10",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10001041",
+      "name": "AnalyzeThroughput",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x10002491",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100ee000",
+      "name": "NumberOfProcesses",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x100ee000",
+      "name": "Ordinal_12",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "nps/NPSAnlyz.dll"
+  ],
+  "functions": [
+    {"address": "0x10001005", "name": "AnalyzeProtocolClose", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000100a", "name": "AnalyzeSetProtocol", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000100f", "name": "thunk_FUN_100021c0", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001014", "name": "AnalyzeLatency", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001019", "name": "_DllMain@12", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000101e", "name": "thunk_FUN_10002210", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001023", "name": "AnalyzeProtocolPing", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001028", "name": "AnalyzeInit", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000102d", "name": "AnalyzeHops", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001032", "name": "AnalyzeClose", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001037", "name": "AnalyzeSetInternals", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000103c", "name": "AnalyzeProtocolInit", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001041", "name": "AnalyzeThroughput", "external": false, "thunk": true, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100010a0", "name": "FUN_100010a0", "external": false, "thunk": false, "body_bytes": 323, "direct_callees": ["0x1000100f", "EXTERNAL:0x8", "EXTERNAL:0xa", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001260", "name": "FUN_10001260", "external": false, "thunk": false, "body_bytes": 172, "direct_callees": ["EXTERNAL:0x8", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001340", "name": "FUN_10001340", "external": false, "thunk": false, "body_bytes": 54, "direct_callees": ["0x1000100f", "EXTERNAL:0xa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001390", "name": "FUN_10001390", "external": false, "thunk": false, "body_bytes": 70, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001400", "name": "FUN_10001400", "external": false, "thunk": false, "body_bytes": 143, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100014c0", "name": "FUN_100014c0", "external": false, "thunk": false, "body_bytes": 64, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001510", "name": "FUN_10001510", "external": false, "thunk": false, "body_bytes": 53, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001560", "name": "FUN_10001560", "external": false, "thunk": false, "body_bytes": 372, "direct_callees": ["0x1000101e", "EXTERNAL:0x9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001740", "name": "FUN_10001740", "external": false, "thunk": false, "body_bytes": 1277, "direct_callees": ["0x1000101e", "0x1000238c", "EXTERNAL:0x10", "EXTERNAL:0x11", "EXTERNAL:0x9", "EXTERNAL:0xb"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001db0", "name": "FUN_10001db0", "external": false, "thunk": false, "body_bytes": 369, "direct_callees": ["0x1000101e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10001fc0", "name": "FUN_10001fc0", "external": false, "thunk": false, "body_bytes": 278, "direct_callees": ["0x1000101e"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100021c0", "name": "FUN_100021c0", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["0x10002398", "0x100023aa"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002210", "name": "FUN_10002210", "external": false, "thunk": false, "body_bytes": 303, "direct_callees": ["0x1000239e", "0x100023b0", "EXTERNAL:0x14"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000238c", "name": "WSOCK32.DLL::gethostbyaddr", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002392", "name": "WSOCK32.DLL::WSAStartup", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002398", "name": "WSOCK32.DLL::WSACleanup", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000239e", "name": "WSOCK32.DLL::gethostbyname", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100023a4", "name": "ICMP.DLL::IcmpCreateFile", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100023aa", "name": "ICMP.DLL::IcmpCloseHandle", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100023b0", "name": "ICMP.DLL::IcmpSendEcho", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x100023e6", "name": "FUN_100023e6", "external": false, "thunk": false, "body_bytes": 171, "direct_callees": ["0x1000252e", "EXTERNAL:0xa", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x10002491", "name": "entry", "external": false, "thunk": false, "body_bytes": 157, "direct_callees": ["0x10001019", "0x100023e6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x1000252e", "name": "MSVCRT.DLL::initterm", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "WSOCK32.DLL::gethostbyaddr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "WSOCK32.DLL::WSAStartup", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "WSOCK32.DLL::WSACleanup", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "WSOCK32.DLL::gethostbyname", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "ICMP.DLL::IcmpCloseHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6", "name": "ICMP.DLL::IcmpCreateFile", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7", "name": "ICMP.DLL::IcmpSendEcho", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x8", "name": "KERNEL32.DLL::OutputDebugStringA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x9", "name": "KERNEL32.DLL::GetSystemTime", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xa", "name": "MSVCRT.DLL::free", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xb", "name": "MSVCRT.DLL::fopen", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xd", "name": "MSVCRT.DLL::__dllonexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xe", "name": "MSVCRT.DLL::_onexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xf", "name": "MSVCRT.DLL::malloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x10", "name": "MSVCRT.DLL::fclose", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x11", "name": "MSVCRT.DLL::fprintf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x12", "name": "MSVCRT.DLL::initterm", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x14", "name": "MSVCRT.DLL::_isctype", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

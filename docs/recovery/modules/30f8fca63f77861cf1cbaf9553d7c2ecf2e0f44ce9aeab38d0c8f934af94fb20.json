@@ -1,0 +1,891 @@
+{
+  "target_sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+  "provenance": {
+    "kind": "local-ghidra-headless",
+    "ghidra_version": "12.1.4",
+    "language": "x86:LE:32:default",
+    "analysis": "Ghidra default auto-analysis; static observations only",
+    "enumeration_sha256": "e46802596f1d7bf9c28d2463fc124d817c1e8f3dcb49e11093aa93c3afeb1736"
+  },
+  "summary": {
+    "function_entries": 120,
+    "decompilation": {
+      "success": 90,
+      "external": 30
+    },
+    "thunks": 5,
+    "internal_entries": 90,
+    "export_pass": "all-internal-attempted"
+  },
+  "interfaces": [
+    {
+      "address": "EXTERNAL:0x1",
+      "name": "MSVCRT.DLL::_putenv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x2",
+      "name": "MSVCRT.DLL::printf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x3",
+      "name": "MSVCRT.DLL::malloc",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x4",
+      "name": "MSVCRT.DLL::__dllonexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x5",
+      "name": "MSVCRT.DLL::_onexit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x6",
+      "name": "MSVCRT.DLL::_CIpow",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x7",
+      "name": "MSVCRT.DLL::free",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x8",
+      "name": "MSVCRT.DLL::sprintf",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x9",
+      "name": "MSVCRT.DLL::exit",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xa",
+      "name": "MSVCRT.DLL::ftol",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xb",
+      "name": "MSVCRT.DLL::_pctype",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xc",
+      "name": "MSVCRT.DLL::_isctype",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xd",
+      "name": "MSVCRT.DLL::__mb_cur_max",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xe",
+      "name": "MSVCRT.DLL::strstr",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0xf",
+      "name": "MSVCRT.DLL::getenv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x10",
+      "name": "MSVCRT.DLL::atoi",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x11",
+      "name": "MSVCRT.DLL::initterm",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x12",
+      "name": "MSVCRT.DLL::_adjust_fdiv",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x13",
+      "name": "KERNEL32.DLL::GetVersionExA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x14",
+      "name": "KERNEL32.DLL::SetEvent",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x15",
+      "name": "KERNEL32.DLL::DisableThreadLibraryCalls",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x16",
+      "name": "KERNEL32.DLL::WaitForSingleObject",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x17",
+      "name": "KERNEL32.DLL::CloseHandle",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x18",
+      "name": "KERNEL32.DLL::GetCurrentThreadId",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x19",
+      "name": "KERNEL32.DLL::FreeLibrary",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1a",
+      "name": "KERNEL32.DLL::LoadLibraryA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1b",
+      "name": "KERNEL32.DLL::CreateEventA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1c",
+      "name": "KERNEL32.DLL::GetProcAddress",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1d",
+      "name": "DDRAW.DLL::DirectDrawCreate",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1e",
+      "name": "USER32.DLL::GetWindowThreadProcessId",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x1f",
+      "name": "USER32.DLL::SetForegroundWindow",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x20",
+      "name": "USER32.DLL::MessageBoxA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "EXTERNAL:0x21",
+      "name": "USER32.DLL::PostMessageA",
+      "external": true,
+      "entry_point": false
+    },
+    {
+      "address": "0x60001570",
+      "name": "Ordinal_1",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001570",
+      "name": "_THRASH_about@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001c40",
+      "name": "Ordinal_28",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001c40",
+      "name": "_THRASH_is@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001dc0",
+      "name": "Ordinal_33",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001dc0",
+      "name": "_THRASH_selectdisplay@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001df0",
+      "name": "Ordinal_27",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001df0",
+      "name": "_THRASH_init@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001f10",
+      "name": "Ordinal_32",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60001f10",
+      "name": "_THRASH_restore@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600022b0",
+      "name": "Ordinal_36",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600022b0",
+      "name": "_THRASH_setvideomode@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600024c0",
+      "name": "Ordinal_38",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600024c0",
+      "name": "_THRASH_talloc@20",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600026e0",
+      "name": "Ordinal_39",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600026e0",
+      "name": "_THRASH_tfree@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002740",
+      "name": "Ordinal_41",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002740",
+      "name": "_THRASH_tupdate@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600027f0",
+      "name": "Ordinal_42",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600027f0",
+      "name": "_THRASH_tupdaterect@36",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002800",
+      "name": "Ordinal_40",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002800",
+      "name": "_THRASH_treset@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002860",
+      "name": "Ordinal_35",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002860",
+      "name": "_THRASH_settexture@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002a60",
+      "name": "Ordinal_44",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002a60",
+      "name": "_THRASH_window@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002ad0",
+      "name": "Ordinal_2",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002ad0",
+      "name": "_THRASH_clearwindow@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b20",
+      "name": "Ordinal_23",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b20",
+      "name": "_THRASH_idle@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b20",
+      "name": "Ordinal_26",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b20",
+      "name": "_THRASH_flushwindow@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b30",
+      "name": "Ordinal_4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b30",
+      "name": "_THRASH_createwindow@16",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b40",
+      "name": "Ordinal_5",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b40",
+      "name": "_THRASH_getwindowtexture@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b40",
+      "name": "Ordinal_25",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b40",
+      "name": "_THRASH_destroywindow@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b50",
+      "name": "Ordinal_30",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002b50",
+      "name": "_THRASH_pageflip@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002ba0",
+      "name": "Ordinal_37",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002ba0",
+      "name": "_THRASH_sync@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002c80",
+      "name": "Ordinal_3",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002c80",
+      "name": "_THRASH_clip@16",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002d50",
+      "name": "Ordinal_34",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60002d50",
+      "name": "_THRASH_setstate@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003d00",
+      "name": "Ordinal_29",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003d00",
+      "name": "_THRASH_lockwindow@0",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003e20",
+      "name": "Ordinal_43",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003e20",
+      "name": "_THRASH_unlockwindow@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003e80",
+      "name": "Ordinal_31",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003e80",
+      "name": "_THRASH_readrect@20",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003ed0",
+      "name": "Ordinal_45",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60003ed0",
+      "name": "_THRASH_writerect@20",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004300",
+      "name": "Ordinal_13",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004300",
+      "name": "_THRASH_drawquad@16",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004570",
+      "name": "Ordinal_14",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004570",
+      "name": "_THRASH_drawquadmesh@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004870",
+      "name": "Ordinal_17",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004870",
+      "name": "_THRASH_drawtri@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004a30",
+      "name": "Ordinal_20",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004a30",
+      "name": "_THRASH_drawtrimesh@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004c60",
+      "name": "Ordinal_21",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60004c60",
+      "name": "_THRASH_drawtristrip@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600053d0",
+      "name": "Ordinal_18",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x600053d0",
+      "name": "_THRASH_drawtrifan@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005710",
+      "name": "Ordinal_6",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005710",
+      "name": "_THRASH_drawline@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005810",
+      "name": "Ordinal_7",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005810",
+      "name": "_THRASH_drawlinemesh@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005960",
+      "name": "Ordinal_8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005960",
+      "name": "_THRASH_drawlinestrip@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005b60",
+      "name": "Ordinal_10",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005b60",
+      "name": "_THRASH_drawpoint@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005bf0",
+      "name": "Ordinal_11",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005bf0",
+      "name": "_THRASH_drawpointmesh@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005cb0",
+      "name": "Ordinal_15",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005cb0",
+      "name": "_THRASH_drawsprite@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005d10",
+      "name": "Ordinal_16",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005d10",
+      "name": "_THRASH_drawspritemesh@12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005d60",
+      "name": "Ordinal_22",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005d60",
+      "name": "_THRASH_drawtristrip@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005dc0",
+      "name": "Ordinal_19",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005dc0",
+      "name": "_THRASH_drawtrifan@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005e00",
+      "name": "Ordinal_9",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005e00",
+      "name": "_THRASH_drawlinestrip@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005e30",
+      "name": "Ordinal_12",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005e30",
+      "name": "_THRASH_drawpointstrip@8",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005e50",
+      "name": "Ordinal_24",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60005e50",
+      "name": "_THRASH_getstate@4",
+      "external": false,
+      "entry_point": true
+    },
+    {
+      "address": "0x60006f0b",
+      "name": "entry",
+      "external": false,
+      "entry_point": true
+    }
+  ],
+  "installed_names": [
+    "voodoo2z.dll"
+  ],
+  "functions": [
+    {"address": "0x60001000", "name": "FUN_60001000", "external": false, "thunk": false, "body_bytes": 1108, "direct_callees": ["EXTERNAL:0x1a", "EXTERNAL:0x1c"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001460", "name": "FUN_60001460", "external": false, "thunk": false, "body_bytes": 27, "direct_callees": ["EXTERNAL:0x19"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001480", "name": "FUN_60001480", "external": false, "thunk": false, "body_bytes": 133, "direct_callees": ["0x60001510"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001510", "name": "FUN_60001510", "external": false, "thunk": false, "body_bytes": 55, "direct_callees": ["0x60006fb0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001570", "name": "_THRASH_about@0", "external": false, "thunk": false, "body_bytes": 469, "direct_callees": ["0x60001000", "0x60001460", "0x60001750", "0x600060c0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001750", "name": "FUN_60001750", "external": false, "thunk": false, "body_bytes": 1107, "direct_callees": ["0x60001bb0", "EXTERNAL:0x10", "EXTERNAL:0xc", "EXTERNAL:0xe", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001bb0", "name": "FUN_60001bb0", "external": false, "thunk": false, "body_bytes": 131, "direct_callees": ["0x60006300", "0x60006330"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001c40", "name": "_THRASH_is@0", "external": false, "thunk": false, "body_bytes": 376, "direct_callees": ["0x60001000", "0x60001460", "0x600069f0", "EXTERNAL:0x10", "EXTERNAL:0xc", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001dc0", "name": "_THRASH_selectdisplay@4", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001df0", "name": "_THRASH_init@0", "external": false, "thunk": false, "body_bytes": 262, "direct_callees": ["0x60001000", "0x60001750", "0x60001dc0", "0x60002d50", "0x60005ff0", "0x60006fe2", "EXTERNAL:0x10", "EXTERNAL:0x1b", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001f10", "name": "_THRASH_restore@0", "external": false, "thunk": false, "body_bytes": 123, "direct_callees": ["0x60001460", "0x60001dc0", "0x60001f90", "0x600022b0", "EXTERNAL:0x17"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001f90", "name": "FUN_60001f90", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60001fb0", "name": "FUN_60001fb0", "external": false, "thunk": false, "body_bytes": 561, "direct_callees": ["0x60001750", "0x600021f0", "0x60002260", "0x60002800", "0x60002d50", "0x60006640"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600021f0", "name": "FUN_600021f0", "external": false, "thunk": false, "body_bytes": 104, "direct_callees": ["0x60007026"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002260", "name": "FUN_60002260", "external": false, "thunk": false, "body_bytes": 75, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600022b0", "name": "_THRASH_setvideomode@12", "external": false, "thunk": false, "body_bytes": 446, "direct_callees": ["0x60001fb0", "0x60002a60", "0x60003d00", "0x60003e20", "0x60005f40", "0x60006360", "EXTERNAL:0x16", "EXTERNAL:0x18", "EXTERNAL:0x1e", "EXTERNAL:0x1f", "EXTERNAL:0x21"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600024c0", "name": "_THRASH_talloc@20", "external": false, "thunk": false, "body_bytes": 533, "direct_callees": ["0x60006300"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600026e0", "name": "_THRASH_tfree@4", "external": false, "thunk": false, "body_bytes": 91, "direct_callees": ["0x60006330"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002740", "name": "_THRASH_tupdate@12", "external": false, "thunk": false, "body_bytes": 176, "direct_callees": ["0x60006300"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600027f0", "name": "_THRASH_tupdaterect@36", "external": false, "thunk": false, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002800", "name": "_THRASH_treset@0", "external": false, "thunk": false, "body_bytes": 93, "direct_callees": ["0x60006330", "0x60006d40"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002860", "name": "_THRASH_settexture@4", "external": false, "thunk": false, "body_bytes": 383, "direct_callees": ["0x600029e0", "0x60002d50", "0x60005f40"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600029e0", "name": "FUN_600029e0", "external": false, "thunk": false, "body_bytes": 127, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002a60", "name": "_THRASH_window@4", "external": false, "thunk": false, "body_bytes": 99, "direct_callees": ["0x60005f40"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002ad0", "name": "_THRASH_clearwindow@0", "external": false, "thunk": false, "body_bytes": 73, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002b20", "name": "_THRASH_flushwindow@0", "external": false, "thunk": false, "body_bytes": 1, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002b30", "name": "_THRASH_createwindow@16", "external": false, "thunk": false, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002b40", "name": "_THRASH_destroywindow@4", "external": false, "thunk": false, "body_bytes": 5, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002b50", "name": "_THRASH_pageflip@0", "external": false, "thunk": false, "body_bytes": 68, "direct_callees": ["0x60002b20"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002ba0", "name": "_THRASH_sync@4", "external": false, "thunk": false, "body_bytes": 193, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002c80", "name": "_THRASH_clip@16", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002cb0", "name": "FUN_60002cb0", "external": false, "thunk": false, "body_bytes": 147, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60002d50", "name": "_THRASH_setstate@8", "external": false, "thunk": false, "body_bytes": 3195, "direct_callees": ["0x60001480", "0x60002260", "0x60002860", "0x600029e0", "0x60002cb0", "0x60002d50", "0x60003b70", "0x60003c30", "0x60004130", "0x60005e50", "0x60005f40", "0x60006360", "0x60006d60", "0x60006ff4", "EXTERNAL:0x10", "EXTERNAL:0x8", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60003b70", "name": "FUN_60003b70", "external": false, "thunk": false, "body_bytes": 187, "direct_callees": ["0x60001510"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60003c30", "name": "FUN_60003c30", "external": false, "thunk": false, "body_bytes": 199, "direct_callees": ["0x60001510"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60003d00", "name": "_THRASH_lockwindow@0", "external": false, "thunk": false, "body_bytes": 283, "direct_callees": ["0x60006300"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60003e20", "name": "_THRASH_unlockwindow@4", "external": false, "thunk": false, "body_bytes": 82, "direct_callees": ["0x60006330"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60003e80", "name": "_THRASH_readrect@20", "external": false, "thunk": false, "body_bytes": 77, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60003ed0", "name": "_THRASH_writerect@20", "external": false, "thunk": false, "body_bytes": 81, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004130", "name": "FUN_60004130", "external": false, "thunk": false, "body_bytes": 105, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600041a0", "name": "FUN_600041a0", "external": false, "thunk": false, "body_bytes": 141, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004230", "name": "FUN_60004230", "external": false, "thunk": false, "body_bytes": 141, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004300", "name": "_THRASH_drawquad@16", "external": false, "thunk": false, "body_bytes": 609, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004570", "name": "_THRASH_drawquadmesh@12", "external": false, "thunk": false, "body_bytes": 763, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004870", "name": "_THRASH_drawtri@12", "external": false, "thunk": false, "body_bytes": 434, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004a30", "name": "_THRASH_drawtrimesh@12", "external": false, "thunk": false, "body_bytes": 560, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60004c60", "name": "_THRASH_drawtristrip@12", "external": false, "thunk": false, "body_bytes": 1893, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600053d0", "name": "_THRASH_drawtrifan@12", "external": false, "thunk": false, "body_bytes": 826, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005710", "name": "_THRASH_drawline@8", "external": false, "thunk": false, "body_bytes": 253, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005810", "name": "_THRASH_drawlinemesh@12", "external": false, "thunk": false, "body_bytes": 328, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005960", "name": "_THRASH_drawlinestrip@12", "external": false, "thunk": false, "body_bytes": 502, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005b60", "name": "_THRASH_drawpoint@4", "external": false, "thunk": false, "body_bytes": 136, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005bf0", "name": "_THRASH_drawpointmesh@12", "external": false, "thunk": false, "body_bytes": 189, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005cb0", "name": "_THRASH_drawsprite@8", "external": false, "thunk": false, "body_bytes": 91, "direct_callees": ["0x60004300"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005d10", "name": "_THRASH_drawspritemesh@12", "external": false, "thunk": false, "body_bytes": 74, "direct_callees": ["0x60005cb0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005d60", "name": "_THRASH_drawtristrip@8", "external": false, "thunk": false, "body_bytes": 83, "direct_callees": ["0x60004870"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005dc0", "name": "_THRASH_drawtrifan@8", "external": false, "thunk": false, "body_bytes": 50, "direct_callees": ["0x60004870"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005e00", "name": "_THRASH_drawlinestrip@8", "external": false, "thunk": false, "body_bytes": 42, "direct_callees": ["0x60005710"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005e30", "name": "_THRASH_drawpointstrip@8", "external": false, "thunk": false, "body_bytes": 31, "direct_callees": ["0x60005b60"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005e50", "name": "_THRASH_getstate@4", "external": false, "thunk": false, "body_bytes": 155, "direct_callees": ["0x60005ef0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005ef0", "name": "FUN_60005ef0", "external": false, "thunk": false, "body_bytes": 73, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005f40", "name": "FUN_60005f40", "external": false, "thunk": false, "body_bytes": 172, "direct_callees": ["0x60005ef0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60005ff0", "name": "FUN_60005ff0", "external": false, "thunk": false, "body_bytes": 21, "direct_callees": ["0x60006da0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006010", "name": "FUN_60006010", "external": false, "thunk": false, "body_bytes": 59, "direct_callees": ["EXTERNAL:0x2", "EXTERNAL:0x20", "EXTERNAL:0x9"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006050", "name": "FUN_60006050", "external": false, "thunk": false, "body_bytes": 109, "direct_callees": ["EXTERNAL:0x10", "EXTERNAL:0x8", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600060c0", "name": "FUN_600060c0", "external": false, "thunk": false, "body_bytes": 563, "direct_callees": ["0x60006050"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006300", "name": "FUN_60006300", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": ["EXTERNAL:0x3"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006330", "name": "FUN_60006330", "external": false, "thunk": false, "body_bytes": 46, "direct_callees": ["EXTERNAL:0x7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006360", "name": "FUN_60006360", "external": false, "thunk": false, "body_bytes": 556, "direct_callees": ["0x60005f40"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006640", "name": "FUN_60006640", "external": false, "thunk": false, "body_bytes": 944, "direct_callees": ["0x60002d50", "0x60006050", "0x600069f0"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600069f0", "name": "FUN_600069f0", "external": false, "thunk": false, "body_bytes": 839, "direct_callees": ["0x60006df0", "0x60006e0d", "0x60006e2f", "EXTERNAL:0x10", "EXTERNAL:0x13", "EXTERNAL:0xf"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006d40", "name": "FUN_60006d40", "external": false, "thunk": false, "body_bytes": 24, "direct_callees": ["0x60002d50", "0x60006360"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006d60", "name": "FUN_60006d60", "external": false, "thunk": false, "body_bytes": 52, "direct_callees": ["EXTERNAL:0x1", "EXTERNAL:0x8"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006da0", "name": "FUN_60006da0", "external": false, "thunk": false, "body_bytes": 77, "direct_callees": ["0x60008000", "0x600080c0", "0x60008180"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006df0", "name": "FUN_60006df0", "external": false, "thunk": false, "body_bytes": 29, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006e0d", "name": "FUN_60006e0d", "external": false, "thunk": false, "body_bytes": 34, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006e2f", "name": "FUN_60006e2f", "external": false, "thunk": false, "body_bytes": 36, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006e60", "name": "FUN_60006e60", "external": false, "thunk": false, "body_bytes": 171, "direct_callees": ["0x60006ffa", "EXTERNAL:0x3", "EXTERNAL:0x7"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006f0b", "name": "entry", "external": false, "thunk": false, "body_bytes": 157, "direct_callees": ["0x60006e60", "0x60007000"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006fb0", "name": "MSVCRT.DLL::_CIpow", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006fb6", "name": "FUN_60006fb6", "external": false, "thunk": false, "body_bytes": 44, "direct_callees": ["0x60007020", "EXTERNAL:0x5"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006fe2", "name": "FUN_60006fe2", "external": false, "thunk": false, "body_bytes": 18, "direct_callees": ["0x60006fb6"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006ff4", "name": "MSVCRT.DLL::ftol", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60006ffa", "name": "MSVCRT.DLL::initterm", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60007000", "name": "FUN_60007000", "external": false, "thunk": false, "body_bytes": 32, "direct_callees": ["EXTERNAL:0x15"], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60007020", "name": "MSVCRT.DLL::__dllonexit", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60007026", "name": "DDRAW.DLL::DirectDrawCreate", "external": false, "thunk": true, "body_bytes": 6, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60008000", "name": "FUN_60008000", "external": false, "thunk": false, "body_bytes": 184, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x600080c0", "name": "FUN_600080c0", "external": false, "thunk": false, "body_bytes": 176, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "0x60008180", "name": "FUN_60008180", "external": false, "thunk": false, "body_bytes": 214, "direct_callees": [], "decompilation": "success", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1", "name": "MSVCRT.DLL::_putenv", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x2", "name": "MSVCRT.DLL::printf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x3", "name": "MSVCRT.DLL::malloc", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x4", "name": "MSVCRT.DLL::__dllonexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x5", "name": "MSVCRT.DLL::_onexit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x6", "name": "MSVCRT.DLL::_CIpow", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x7", "name": "MSVCRT.DLL::free", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x8", "name": "MSVCRT.DLL::sprintf", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x9", "name": "MSVCRT.DLL::exit", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xa", "name": "MSVCRT.DLL::ftol", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xc", "name": "MSVCRT.DLL::_isctype", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xe", "name": "MSVCRT.DLL::strstr", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0xf", "name": "MSVCRT.DLL::getenv", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x10", "name": "MSVCRT.DLL::atoi", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x11", "name": "MSVCRT.DLL::initterm", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x13", "name": "KERNEL32.DLL::GetVersionExA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x14", "name": "KERNEL32.DLL::SetEvent", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x15", "name": "KERNEL32.DLL::DisableThreadLibraryCalls", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x16", "name": "KERNEL32.DLL::WaitForSingleObject", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x17", "name": "KERNEL32.DLL::CloseHandle", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x18", "name": "KERNEL32.DLL::GetCurrentThreadId", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x19", "name": "KERNEL32.DLL::FreeLibrary", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1a", "name": "KERNEL32.DLL::LoadLibraryA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1b", "name": "KERNEL32.DLL::CreateEventA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1c", "name": "KERNEL32.DLL::GetProcAddress", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1d", "name": "DDRAW.DLL::DirectDrawCreate", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1e", "name": "USER32.DLL::GetWindowThreadProcessId", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x1f", "name": "USER32.DLL::SetForegroundWindow", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x20", "name": "USER32.DLL::MessageBoxA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"},
+    {"address": "EXTERNAL:0x21", "name": "USER32.DLL::PostMessageA", "external": true, "thunk": false, "body_bytes": 0, "direct_callees": [], "decompilation": "external", "translation": "unreviewed"}
+  ]
+}

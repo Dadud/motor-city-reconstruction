@@ -1,0 +1,468 @@
+{
+  "scope": "recursive header-discovered PE/NE/LE/LX files plus EXE/DLL filename candidates; symlinks and system libraries outside installation not inventoried",
+  "installed_files": 30,
+  "unique_binaries": 29,
+  "modules": [
+    {
+      "sha256": "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5",
+      "installed_names": [
+        "3dSetup/3DSetup.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 1365,
+      "decompilation": {
+        "success": 1143,
+        "external": 222
+      },
+      "thunks": 13,
+      "internal_entries": 1143,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680",
+      "installed_names": [
+        "3dSetup/3DSetup.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 2885,
+      "decompilation": {
+        "success": 2367,
+        "external": 518
+      },
+      "thunks": 26,
+      "internal_entries": 2367,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22",
+      "installed_names": [
+        "Compress.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 14,
+      "decompilation": {
+        "success": 9,
+        "external": 5
+      },
+      "thunks": 3,
+      "internal_entries": 9,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "9cb0069a6f6c7d92d99c96e885fc95a8d160dec31f42a0e7b6bba111858a666a",
+      "installed_names": [
+        "Data/Text/phid.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "not-native-executable",
+      "format": "unrecognized-data"
+    },
+    {
+      "sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "installed_names": [
+        "dinput8.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 6539,
+      "decompilation": {
+        "success": 6316,
+        "external": 223
+      },
+      "thunks": 29,
+      "internal_entries": 6316,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "installed_names": [
+        "dx7z.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 186,
+      "decompilation": {
+        "success": 148,
+        "external": 38
+      },
+      "thunks": 7,
+      "internal_entries": 148,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "installed_names": [
+        "dx8z.dll",
+        "dx8zDB.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 300,
+      "decompilation": {
+        "success": 258,
+        "external": 42
+      },
+      "thunks": 12,
+      "internal_entries": 258,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "installed_names": [
+        "IFC22.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 899,
+      "decompilation": {
+        "success": 816,
+        "external": 83
+      },
+      "thunks": 4,
+      "internal_entries": 816,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3",
+      "installed_names": [
+        "IMPLODE.DLL"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 67,
+      "decompilation": {
+        "success": 53,
+        "external": 14
+      },
+      "thunks": 0,
+      "internal_entries": 53,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "installed_names": [
+        "ip.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 2377,
+      "decompilation": {
+        "success": 1991,
+        "external": 386
+      },
+      "thunks": 22,
+      "internal_entries": 1991,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "installed_names": [
+        "mcity.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 25773,
+      "decompilation": {
+        "success": 25434,
+        "failed": 1,
+        "external": 338
+      },
+      "thunks": 109,
+      "internal_entries": 25435,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "installed_names": [
+        "mco-launcher.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 4348,
+      "decompilation": {
+        "success": 4042,
+        "failed": 1,
+        "timeout": 1,
+        "external": 304
+      },
+      "thunks": 282,
+      "internal_entries": 4044,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6",
+      "installed_names": [
+        "nps/authlogin.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 496,
+      "decompilation": {
+        "success": 416,
+        "external": 80
+      },
+      "thunks": 4,
+      "internal_entries": 416,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b",
+      "installed_names": [
+        "nps/mco.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 2985,
+      "decompilation": {
+        "success": 2795,
+        "external": 190
+      },
+      "thunks": 42,
+      "internal_entries": 2795,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c",
+      "installed_names": [
+        "nps/mrbupd.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 589,
+      "decompilation": {
+        "success": 480,
+        "external": 109
+      },
+      "thunks": 30,
+      "internal_entries": 480,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac",
+      "installed_names": [
+        "nps/NPSAnlyz.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 54,
+      "decompilation": {
+        "success": 36,
+        "external": 18
+      },
+      "thunks": 21,
+      "internal_entries": 36,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76",
+      "installed_names": [
+        "nps/PBA.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 178,
+      "decompilation": {
+        "success": 76,
+        "external": 102
+      },
+      "thunks": 11,
+      "internal_entries": 76,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9",
+      "installed_names": [
+        "nps/ProxyTool.exe"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 186,
+      "decompilation": {
+        "success": 58,
+        "external": 128
+      },
+      "thunks": 33,
+      "internal_entries": 58,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d",
+      "installed_names": [
+        "scripts/DAO/dao350.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 1571,
+      "decompilation": {
+        "success": 1472,
+        "external": 99
+      },
+      "thunks": 17,
+      "internal_entries": 1472,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc",
+      "installed_names": [
+        "scripts/DAO/msjet35.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 3693,
+      "decompilation": {
+        "success": 3560,
+        "external": 133
+      },
+      "thunks": 3,
+      "internal_entries": 3560,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34",
+      "installed_names": [
+        "scripts/DAO/msjint35.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 60,
+      "decompilation": {
+        "success": 34,
+        "external": 26
+      },
+      "thunks": 0,
+      "internal_entries": 34,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54",
+      "installed_names": [
+        "scripts/DAO/msjter35.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 84,
+      "decompilation": {
+        "success": 54,
+        "external": 30
+      },
+      "thunks": 2,
+      "internal_entries": 54,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3",
+      "installed_names": [
+        "scripts/MCOExOps.asi"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 223,
+      "decompilation": {
+        "success": 147,
+        "external": 76
+      },
+      "thunks": 4,
+      "internal_entries": 147,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d",
+      "installed_names": [
+        "scripts/MCOWidescreenMod.asi"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 564,
+      "decompilation": {
+        "success": 439,
+        "external": 125
+      },
+      "thunks": 28,
+      "internal_entries": 439,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c",
+      "installed_names": [
+        "softtriz.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 374,
+      "decompilation": {
+        "success": 307,
+        "external": 67
+      },
+      "thunks": 5,
+      "internal_entries": 307,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e",
+      "installed_names": [
+        "Stage/.castanet/undo/40/287"
+      ],
+      "location_role": "historical-cache",
+      "enumeration": "ghidra-export",
+      "function_entries": 290,
+      "decompilation": {
+        "success": 260,
+        "external": 30
+      },
+      "thunks": 12,
+      "internal_entries": 260,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802",
+      "installed_names": [
+        "Stage/.castanet/undo/40/290"
+      ],
+      "location_role": "historical-cache",
+      "enumeration": "ghidra-export",
+      "function_entries": 23092,
+      "decompilation": {
+        "success": 22755,
+        "external": 337
+      },
+      "thunks": 102,
+      "internal_entries": 22755,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9",
+      "installed_names": [
+        "Uninst.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 205,
+      "decompilation": {
+        "success": 141,
+        "external": 64
+      },
+      "thunks": 1,
+      "internal_entries": 141,
+      "export_pass": "all-internal-attempted"
+    },
+    {
+      "sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+      "installed_names": [
+        "voodoo2z.dll"
+      ],
+      "location_role": "installation",
+      "enumeration": "ghidra-export",
+      "function_entries": 120,
+      "decompilation": {
+        "success": 90,
+        "external": 30
+      },
+      "thunks": 5,
+      "internal_entries": 90,
+      "export_pass": "all-internal-attempted"
+    }
+  ]
+}

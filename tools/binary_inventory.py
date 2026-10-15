@@ -1,4 +1,4 @@
-"""Record identities of installed EXE/DLL files without copying them."""
+"""Record installed executable signatures and EXE/DLL candidates without copying them."""
 import argparse
 import hashlib
 import json
@@ -38,12 +38,19 @@ def main():
             continue
         with path.open('rb') as stream:
             digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+        module_path = root/'docs/recovery/modules'/(digest+'.json')
+        inventory = 'function-enumeration.json' if digest == TARGET else None
+        if module_path.is_file():
+            module = json.loads(module_path.read_text(encoding='utf-8'))
+            if module['target_sha256'] != digest:
+                raise ValueError('published module inventory digest mismatch')
+            inventory = 'modules/'+digest+'.json'
         entries.append(dict(name=path.relative_to(args.game_root).as_posix(), bytes=path.stat().st_size, sha256=digest,
             format=format_name,
             location_role=('historical-cache' if '.castanet/undo/' in path.as_posix().lower() else 'installation'),
-            function_inventory='function-enumeration.json' if digest == TARGET else None,
+            function_inventory=inventory,
             status=('not-native-executable' if format_name == 'unrecognized-data' else
-                    'enumerated' if digest == TARGET else 'function-enumeration-pending')))
+                    'enumerated' if inventory else 'function-enumeration-pending')))
     if not any(entry['sha256'] == TARGET for entry in entries):
         parser.error('the verified mcity.exe was not found in this folder')
     payload = dict(scope=('top-level' if args.top_level else 'recursive') +
