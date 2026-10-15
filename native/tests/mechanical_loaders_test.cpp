@@ -3,7 +3,8 @@
 int main() {
     const std::array<std::byte,0x820> config{};
     const std::array<std::byte,0x984> part{};
-    for(auto kind:{160001U,130001U,140001U,100001U,12001U,11001U,10001U}) {
+    for(auto kind:{160001U,130001U,140001U,100001U,12001U,11001U,10001U,
+            1000001U,1100001U,1200001U,180001U,190001U,200001U}) {
         const auto out=mco::load_mechanical_component(kind,config,part);
         if(out.status!=1 || out.configuration!=config || out.component!=part)
             throw std::runtime_error("mechanical count rejection must preserve images");

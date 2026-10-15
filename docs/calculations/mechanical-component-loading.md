@@ -1,10 +1,11 @@
 # Mechanical component loading
 
-The reconstructed startup now has seven complete component loaders in Python and
-C++: engine block, transmission, rear end, wheel rims, springs, shocks and brakes.
+The reconstructed startup now has fourteen complete component loaders in Python
+and C++: engine block, head, camshaft, crankshaft, rods, pistons, valve train,
+transmission, rear end, wheel rims, springs, shocks, brakes and tires.
 They retain original validation, rounding, mass accumulation, configuration writes
 and component quality. They do not complete vehicle assembly or start the driving
-model. Tire templates, remaining engine/auxiliary/cosmetic components, grouping
+model. Remaining engine/auxiliary/cosmetic components, grouping
 quality updates, geometry/display preparation and full assembly orchestration
 remain required.
 
@@ -24,11 +25,36 @@ Separately supplied `mcity.exe`, SHA-256
 | Spring | `0x54a840` | `ev_5619b92e176cb3295c7b474fd8e47f0ba251c555318071f8774b01d0712e7c35` |
 | Shock | `0x54a9a0` | `ev_8c1155d96a8dfed3f7fc1dc411516a170bad0c51925aef917f767deec035330f` |
 | Brake | `0x54ab30` | `ev_9f44843fa16f915df930af065abc955bfeff43f8f905bb770a0ee24ae99e588c` |
+| Cylinder head | `0x54bd70` | `ev_41f23b89a8113651a08e4d8bbc5cb58b42e494f89d0f6037e7e577ef5e5faf44` |
+| Camshaft | `0x54bef0` | `ev_5c80889067ad3a42a1322bef2479d699795e37215e7d5edc31781aceac5a01b5` |
+| Crankshaft | `0x54bac0` | `ev_f6a2b1d75e22cf1f89071cc05887b695719b57525e5964a74bb2aae3522c9be8` |
+| Connecting rods | `0x54bc10` | `ev_2056044b1d883c0dcb83c352d57411a3f3cf57c001e5f437ebfd2cfe2471eaea` |
+| Pistons | `0x54b940` | `ev_7331be288fa5f553e48495b0a720d46df91cfb9e118e1b609e8e5ffd74cf656b` |
+| Valve train | `0x54c090` | `ev_c97ef21e7605be640a9b7668af508d7c16a4d6c06f48b0c0f70a7b37944bcafa` |
+| Tire loader | `0x54e170` | `ev_bdcf6c3a6cfa5cdd074e761081ac6bd2687a460b7744c804bc5af0b10489280e` |
+| Tire validation | `0x545030` | `ev_48548f9764fb633c725aaedf17d7f4f9348a247bc5a0b4c091c4694d3fe69e35` |
+| Tire post-validation | `0x545110` | `ev_15e833e423670d5e2d7581403e7cdc14b160d350251de577bf581f90a0c4dbc4` |
+| Tire auxiliary producer | `0x67e520` | `ev_8431a9a933d00fdf6263e3d4c0b39f08a1f46000afa5ba79bc9e39dc8d19da9c` |
 
 These are authored reconstructions from shipped instructions, not recovered
 original source. Original bytes, decompiler output and private captures are not
 distributed. The raw intermediate/configuration adapters are internal research
 interfaces, not mod interfaces or network packets.
+
+Engine validation dossiers: piston `0x543790`
+(`ev_ec58dca9a272bfd7a1899521ec70dc653cf283b44a40dae03e231c04b2fe448f`),
+crank `0x543870`
+(`ev_c8009e7c03ae127c859ffc7c8639ddd32b61f9db3252b099c78e7010d0ccb90d`),
+rods `0x543930`
+(`ev_19b8abdbd63e68c2f38b99e5b4bff05b4f5f394b76b92b22a48f734914723e71`),
+head `0x543a10`
+(`ev_d95f279cd71d29b35803290a09204748be666f4e8dba7aa2a67ff5e6a75f6e74`),
+cam `0x544710`
+(`ev_f9de6ab64cd5b84e1b03a4f3a39d63c550181e0e06d554cf5594d9f8835a1eb5`),
+valve train `0x544310`
+(`ev_7659c8703964a4a7700e047af403f73a23fabf8edda3d31c2478315defed0d35`).
+The family helpers compare the block and part IDs and reject zero. The original
+execution comparisons include those real helper calls.
 
 ## From catalogue or owned inventory to individual components
 
@@ -62,7 +88,7 @@ middle of `0x52c2e0` are explicitly excluded from the physics-copy implementatio
 
 ## Original mass and response rules
 
-All seven loaders preserve float32 mass accumulator stores. Their component mass
+All fourteen loaders preserve float32 mass accumulator stores. Their component mass
 uses the original mechanical mass unit, documented as kg by the catalogue
 component interpretation. Several rules distinguish total mass from axle-group
 slots used by the [weight finalizer](assembly-finalization.md):
@@ -107,10 +133,59 @@ for example, rounded cylinder validation can accept a fractional observation
 whose subsequent stored integer is truncated. The ports preserve this behavior.
 
 Each loader returns original status zero for success, one for wrong value count,
-or two for rejected semantics. For these seven functions, such rejections precede
-mutation and preserve both images. This is not a universal rule for unrecovered
-loaders. Finite-value, buffer-size and text-termination safeguards are authored
-boundaries; arbitrary NaN behavior is not claimed recovered.
+or two for rejected semantics. Crankshaft and rod loading modify configuration
+before semantic validation; a rejected record retains those changes while leaving
+component quality untouched. Tire post-validation also retains changes. Count
+rejections preserve images, except that missing tire tables take precedence and
+return status four. Finite-value, buffer-size, template-index and text-termination
+safeguards are authored boundaries; arbitrary NaN behavior is not claimed recovered.
+
+## Engine parts and compression
+
+All six additional engine loaders require a nonzero family equal to the loaded
+block family. Head loading also restricts that family to 1–26. Material validation
+can truncate while quality selection rounds to nearest even. For example, an
+authored piston material value 7.9 passes the truncating exclusion of 8/9, then
+rounds to quality entry eight (0.93). Replacing both operations with one cast
+would change accepted configurations.
+
+Pistons and rods add `cylinder_count * individual_mass` to total mass. The original
+stores a rounded float32 copy in the component aggregate slot but retains the
+unrounded product for the total addition. An eight-cylinder fixture with 0.6 kg
+pistons adds approximately 4.8 kg, rather than 0.6 kg.
+
+Head loading sets the base compression value. Piston loading later adds its
+compression contribution. An authored head value 8.0 and piston contribution
+0.25 therefore yield 8.25. Their original relative dispatch order is preserved;
+the full engine curve still requires the remaining intake/exhaust/auxiliary
+loaders and finalization.
+
+## Tire tables and axle configuration
+
+The saved Jet query `GetTireAuxData` selects `Pacejka_TireModel.*`, ordered by
+`TireTypeID`. The installed external database contains eighteen records. Column
+IDs establish query order; the parser's dictionary order instead moves the
+variable text field to the end and must not be used as Jet ordinal order.
+
+The original allocates twenty 376-byte records plus a handle and count. It packs
+identity, tire type and rain flag first, followed by 36 numeric values, 25 lateral
+force samples, 25 aligning moment samples and five parameters. The text field is
+bound separately and excluded from this packed block. Authored code reads these
+values from the separately supplied database; no original tables are bundled.
+
+Tire value four truncates to an ordinal into that allocation. The loader writes
+front configuration for attachments 1/2 and rear configuration otherwise. Each
+axle receives two 26-entry curves: zero at entry zero and the 25 database samples
+at entries 1–25. Growth is multiplied by the float32 constant 0.01. Widths above
+215 mm add `clamp(float32((width-215)*float32(0.00004)), 0, float32(0.005))`
+to configuration field zero; the physical meaning of that accumulator remains
+unresolved. A 225 mm fixture adds approximately 0.0004 on each load.
+
+Peak friction must lie in [0.7, 2] and template section width in [127, 508]. These
+checks occur after mass, curves and quality are written. A selector exactly 4.0
+sets quality to 0.96; a fractional selector truncating to four still uses quality
+one. Out-of-allocation indices are safely rejected by the authored API; the
+original unchecked memory behavior is not reproduced.
 
 ## Verification and remaining gaps
 
@@ -125,10 +200,18 @@ The current checks establish:
 - Complete engine loader: 1,201 original cases, including the installed Ford block.
 - Other six complete loaders: 1,002 original cases, including eighteen installed
   Ford wheel/driveline parts. All configuration/component bytes and statuses match.
-- Nineteen selected Ford loader calls in their original relative dispatch order:
+- Six additional engine loaders: 1,700 original cases, including six actual Ford
+  components, with actual family validators and rejection side effects.
+- Tire loader: 631 original cases, including four actual Ford tires and all
+  statuses, comparing both complete output images.
+- Auxiliary packing: six original runs for 0/1/2/6/20 authored records and all
+  eighteen installed records. Allocator and typed database services are replaced;
+  packing/clearing/control flow runs original instructions. Every table byte
+  except the process-specific allocation handle matches. Jet execution is untested.
+- Twenty-nine selected Ford loader calls in their original relative dispatch order:
   every resulting configuration/component image matches original execution.
   Other loaders are skipped, so this is a partial assembly comparison.
-- C++ ports: 2,184 authored original-comparison cases match Python exactly.
+- C++ ports: 4,505 authored original-comparison cases match Python exactly.
 
 The Ford comparison uses actual catalogue rows with explicitly authored zero
 damage/zero wear and temporary fixture IDs. It does not claim those IDs identify
@@ -143,6 +226,9 @@ python -m tools.mechanical_parts_oracle '<game>/mcity.exe'
 python -m tools.mechanical_pairing_oracle '<game>/mcity.exe'
 python -m tools.mechanical_engine_block_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.mechanical_loaders_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
+python -m tools.engine_component_loaders_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
+python -m tools.tire_loader_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
+python -m tools.tire_templates_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.stock_mechanical_oracle '<game>/mcity.exe' '<game>/data/db/Online.mdb'
 python -m tools.inspect_stock_mechanical '<game>/data/db/Online.mdb' --damage 0 --wear 0
 python -m tools.native_mechanical_loaders_compare build/native-check/mco_mechanical_loaders_compare.exe

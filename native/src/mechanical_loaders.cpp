@@ -108,6 +108,124 @@ ComponentLoadResult engine(Image& m) {
     m.quality_value(material>=0 && material<=7 ? quality[material] : 1.f);
     return m.out;
 }
+bool same_engine_family(const Image& m) {
+    const auto family=word(m.out.component,0x53b);
+    return family!=0 && family==word(m.out.configuration,0x440);
+}
+void material_quality(Image& m,std::size_t offset,bool head=false) {
+    constexpr std::array<float,9> standard{1.f,1.04f,.95f,.96f,1.2f,1.5f,1.65f,3.f,.93f};
+    constexpr std::array<float,8> heads{1.f,1.05f,.96f,.97f,1.1f,1.4f,1.75f,2.f};
+    const auto i=nearest(m.number(offset));
+    m.quality_value(head ? (i>=0 && i<8 ? heads[i] : 1.f) : (i>=0 && i<9 ? standard[i] : 1.f));
+}
+void cylinder_mass(Image& m,std::size_t individual,std::size_t total) {
+    const auto count=std::bit_cast<std::int32_t>(word(m.out.configuration,0x43c));
+    const double product=count*m.number(0x30);
+    m.copy(individual,0x30);m.put(total,product);
+    // Original FST does not pop: addition uses the unrounded product.
+    m.put(0x20,m.existing(0x20)+product);
+}
+ComponentLoadResult cylinder_head(Image& m) {
+    if(m.count()!=7) return m.fail(1);
+    const auto material=truncated(m.number(0x40));
+    if(!(same_engine_family(m) && m.bounded(0x30,10.f,80.f) &&
+        m.rounded_between(0x3c,0,2) && m.rounded_between(0x40,0,9) &&
+        material!=8 && material!=9 && m.rounded_between(0x44,0,5) &&
+        m.bounded(0x48,.97f,1.03f) && m.bounded(0x4c,6.f,20.f) &&
+        m.bounded(0x50,25.4f,63.5f) && m.bounded(0x54,25.4f,50.8f) &&
+        word(m.out.component,0x53b)<=26)) return m.fail(2);
+    m.add_mass();
+    for(auto p:std::array<std::array<std::size_t,2>,7>{{{0x504,0x30},{0x518,0x48},
+        {0x51c,0x4c},{0x54,0x4c},{0x520,0x53b},{0x524,0x50},{0x528,0x54}}}) m.copy(p[0],p[1]);
+    for(auto p:std::array<std::array<std::size_t,2>,4>{{{0x508,0x34},{0x50c,0x3c},
+        {0x510,0x44},{0x514,0x40}}}) m.integer(p[0],nearest(m.number(p[1])));
+    material_quality(m,0x40,true);return m.out;
+}
+ComponentLoadResult camshaft(Image& m) {
+    if(m.count()!=9) return m.fail(1);
+    const auto material=truncated(m.number(0x40));
+    if(!(same_engine_family(m) && m.bounded(0x30,5.f,25.f) &&
+        m.bounded(0x48,5.f,20.f) && m.bounded(0x4c,5.f,20.f) &&
+        m.rounded_between(0x3c,0,2) && m.rounded_between(0x40,0,9) &&
+        material!=8 && material!=9 && m.bounded(0x44,.9f,1.1f))) return m.fail(2);
+    m.add_mass();m.copy(0x52c,0x30);m.copy(0x53c,0x44);m.copy(0x540,0x53b);
+    m.integer(0x530,nearest(m.number(0x34)));m.integer(0x534,nearest(m.number(0x3c)));
+    m.integer(0x538,nearest(m.number(0x40)));m.copy(0x544,0x48,24);
+    material_quality(m,0x40);return m.out;
+}
+ComponentLoadResult valve_train(Image& m) {
+    if(m.count()!=3) return m.fail(1);
+    if(!(same_engine_family(m) && m.bounded(0x30,5.f,30.f) &&
+        m.rounded_between(0x3c,0,2) && m.bounded(0x40,.9f,1.1f))) return m.fail(2);
+    m.add_mass();m.copy(0x55c,0x30);m.copy(0x568,0x40);m.copy(0x56c,0x53b);
+    m.integer(0x560,nearest(m.number(0x34)));m.integer(0x564,nearest(m.number(0x3c)));
+    m.integer(0x570,truncated(m.number(0x44)));m.quality();return m.out;
+}
+ComponentLoadResult crankshaft(Image& m) {
+    if(m.count()!=2) return m.fail(1);
+    m.add_mass();m.copy(0x490,0x30);m.copy(0x49c,0x53b);m.copy(0x4a0,0x40);
+    m.integer(0x494,nearest(m.number(0x34)));m.integer(0x498,nearest(m.number(0x3c)));
+    const auto material=nearest(m.number(0x3c));
+    if(!(same_engine_family(m) && m.bounded(0x30,15.f,50.f) &&
+        m.rounded_between(0x34,0,3) && m.rounded_between(0x3c,0,9) &&
+        material!=2 && material!=3 && material!=9)) {m.out.status=2;return m.out;}
+    material_quality(m,0x3c);return m.out;
+}
+ComponentLoadResult connecting_rods(Image& m) {
+    if(m.count()!=3) return m.fail(1);
+    cylinder_mass(m,0x4a4,0x4ac);
+    m.integer(0x4a8,nearest(m.number(0x34)));m.integer(0x4b0,nearest(m.number(0x3c)));
+    m.copy(0x4b4,0x53b);m.copy(0x4b8,0x40);m.copy(0x4bc,0x44);
+    const auto material=truncated(m.number(0x3c));
+    if(!(same_engine_family(m) && m.bounded(0x30,.1f,2.f) &&
+        m.rounded_between(0x34,0,3) && m.rounded_between(0x3c,0,9) &&
+        material!=8 && material!=9 && m.bounded(0x40,30.f,250.f))) {m.out.status=2;return m.out;}
+    material_quality(m,0x3c);return m.out;
+}
+ComponentLoadResult pistons(Image& m) {
+    if(m.count()!=4) return m.fail(1);
+    const auto material=truncated(m.number(0x40));
+    if(!(same_engine_family(m) && m.bounded(0x30,.1f,2.f) &&
+        m.rounded_between(0x3c,0,3) && m.rounded_between(0x40,0,9) &&
+        m.bounded(0x44,-1.f,4.f) && material!=8 && material!=9)) return m.fail(2);
+    cylinder_mass(m,0x470,0x478);
+    m.integer(0x474,nearest(m.number(0x34)));m.integer(0x47c,nearest(m.number(0x3c)));
+    m.integer(0x480,nearest(m.number(0x40)));
+    m.copy(0x484,0x44);m.copy(0x488,0x53b);m.copy(0x48c,0x48);
+    m.put(0x54,m.existing(0x54)+m.number(0x44));material_quality(m,0x40);return m.out;
+}
+ComponentLoadResult tire(Image& m,std::span<const std::byte> templates) {
+    if(templates.empty()) return m.fail(4);
+    if(templates.size()!=0x1d68) throw std::invalid_argument("expected tire auxiliary image");
+    if(m.count()!=4) return m.fail(1);
+    if(!(m.bounded(0x3c,100.f,500.f) && m.bounded(0x40,25.f,95.f) &&
+        m.bounded(0x44,12.f,25.f) && m.bounded(0x30,8.f,30.f) &&
+        m.rounded_between(0x34,0,3))) return m.fail(2);
+    const auto index=truncated(m.number(0x48));
+    if(index<0 || index>=20) throw std::invalid_argument("tire template index outside original allocation");
+    const auto base=index*0x178;
+    auto parameter=[&](std::size_t offset) {return finite(std::bit_cast<float>(word(templates,base+offset)));};
+    m.add_mass(1.);
+    const double width=m.number(0x3c);
+    if(width>215.) {
+        const auto increment=std::clamp(static_cast<float>((width-215.)*.00004f),0.f,.005f);
+        m.put(0,m.existing(0)+increment);
+    }
+    const auto shift=m.front() ? 0 : 0x104;
+    m.copy(0x220+shift,0x30);m.integer(0x224+shift,truncated(m.number(0x34)));
+    for(auto p:std::array<std::array<std::size_t,2>,3>{{{0x124,0x3c},{0x128,0x40},{0x12c,0x44}}}) m.copy(p[0]+shift,p[1]);
+    m.put(0x138+shift,0.);
+    std::fill(m.out.configuration.begin()+0x150+shift,m.out.configuration.begin()+0x220+shift,std::byte{0});
+    for(auto p:std::array<std::array<std::size_t,2>,6>{{{0x134,8},{0x130,12},
+        {0x140,0x170},{0x13c,0x168},{0x144,0x178},{0x148,0x174}}}) m.put(p[0]+shift,parameter(p[1]));
+    m.put(0x14c+shift,parameter(0x16c)*.01f);
+    std::copy_n(templates.begin()+base+0xa0,100,m.out.configuration.begin()+0x154+shift);
+    std::copy_n(templates.begin()+base+0x104,100,m.out.configuration.begin()+0x1bc+shift);
+    m.quality_value(m.number(0x48)==4. ? .96f : 1.f);
+    if(!(m.existing(0x140+shift)>=.7f && m.existing(0x140+shift)<=2. &&
+        m.existing(0x144+shift)>=127. && m.existing(0x144+shift)<=508.)) m.out.status=2;
+    return m.out;
+}
 ComponentLoadResult transmission(Image& m) {
     if(m.count()!=19) return m.fail(1);
     bool valid=m.bounded(0x30,20.f,100.f) && m.rounded_between(0x3c,0,1) &&
@@ -181,10 +299,18 @@ ComponentLoadResult brake(Image& m) {
 }
 }
 ComponentLoadResult load_mechanical_component(std::uint32_t kind,
-    std::span<const std::byte> config,std::span<const std::byte> component) {
+    std::span<const std::byte> config,std::span<const std::byte> component,
+    std::span<const std::byte> tire_templates) {
     Image image(config,component);
     switch(kind) {
         case 160001:return engine(image);
+        case 1000001:return cylinder_head(image);
+        case 1100001:return camshaft(image);
+        case 1200001:return valve_train(image);
+        case 180001:return crankshaft(image);
+        case 190001:return connecting_rods(image);
+        case 200001:return pistons(image);
+        case 110001:return tire(image,tire_templates);
         case 130001:return transmission(image);
         case 140001:return rear_end(image);
         case 100001:return rim(image);

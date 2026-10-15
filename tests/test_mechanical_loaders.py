@@ -5,9 +5,50 @@ from client.mechanical_loaders import (load_brake,load_engine_block,load_shock,
     load_spring,load_transmission,load_wheel_rim,load_rear_end)
 from tools.mechanical_loaders_oracle import base_component,initial_configuration
 from tools.mechanical_engine_block_oracle import cases_base
+from client.mechanical_loaders import (load_crankshaft,load_connecting_rods,
+    load_cylinder_head,load_pistons,load_valve_train,load_camshaft)
+from tools.engine_component_loaders_oracle import base_component as engine_part,configuration
 
 
 class MechanicalLoaderTests(unittest.TestCase):
+    def test_engine_family_rejection_keeps_original_mutation_order(self):
+        image=configuration(family=4)
+        for kind,loader,mutates in ((180001,load_crankshaft,True),
+                (190001,load_connecting_rods,True),(1000001,load_cylinder_head,False),
+                (200001,load_pistons,False),(1100001,load_camshaft,False),
+                (1200001,load_valve_train,False)):
+            part=engine_part(kind);out=loader(image,part)
+            self.assertEqual(out.status,2)
+            self.assertEqual(out.component,bytes(part))
+            self.assertEqual(out.configuration!=image,mutates)
+            if mutates:
+                self.assertGreater(struct.unpack_from('<f',out.configuration,0x20)[0],575.125)
+            struct.pack_into('<I',part,0x14,99)
+            out=loader(image,part)
+            self.assertEqual((out.status,out.configuration),(1,image))
+
+    def test_head_then_pistons_build_compression_and_per_cylinder_mass(self):
+        head=load_cylinder_head(configuration(),engine_part(1000001))
+        piston=load_pistons(head.configuration,engine_part(200001))
+        self.assertEqual((head.status,piston.status),(0,0))
+        self.assertEqual(struct.unpack_from('<f',piston.configuration,0x54)[0],8.25)
+        self.assertAlmostEqual(struct.unpack_from('<f',piston.configuration,0x478)[0],4.8,places=5)
+        self.assertAlmostEqual(struct.unpack_from('<f',piston.configuration,0x20)[0],619.925,places=4)
+
+    def test_material_validation_truncates_but_quality_rounds(self):
+        part=engine_part(200001);struct.pack_into('<f',part,0x40,7.9)
+        accepted=load_pistons(configuration(),part)
+        self.assertEqual(accepted.status,0)
+        self.assertAlmostEqual(struct.unpack_from('<f',accepted.component,0x1c)[0],.93)
+        struct.pack_into('<f',part,0x40,8.)
+        self.assertEqual(load_pistons(configuration(),part).status,2)
+
+    def test_valve_final_value_truncates_without_rounding(self):
+        part=engine_part(1200001);struct.pack_into('<f',part,0x44,15.9)
+        result=load_valve_train(configuration(),part)
+        self.assertEqual(result.status,0)
+        self.assertEqual(struct.unpack_from('<i',result.configuration,0x570)[0],15)
+
     def test_original_transmission_producer_supplies_gear_calculation(self):
         result=load_transmission(initial_configuration(),base_component(130001))
         self.assertEqual(result.status,0)

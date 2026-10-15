@@ -52,15 +52,18 @@ outside the published repository.
 
 ## Ordered gates
 
-Seven [mechanical component loaders](calculations/mechanical-component-loading.md)
-now recover engine-block, transmission, rear-end, rim, spring, shock and brake
-validation, numeric writes and quality. Their complete bodies match 2,203 original
-cases, including nineteen actual stock Ford components. Another nineteen-call
-partial stock sequence matches all original images. Native ports match 2,184
+Fourteen [mechanical component loaders](calculations/mechanical-component-loading.md)
+now recover engine-block, head, camshaft, crankshaft, rods, pistons, valve-train,
+transmission, rear-end, rim, spring, shock, brake and tire validation, writes and
+quality. Their complete bodies match 4,534 original cases, including twenty-nine
+actual stock Ford components. Another twenty-nine-call partial stock sequence
+matches all original images. Native ports match 4,505
 authored cases; the mechanical numeric copy and paired expansion have separate
 bounded comparisons. The stock inspector expands 45 catalogue entries to 57
-components and reports unsupported handling explicitly. Remaining loaders, tire
-templates, full dispatch/quality, geometry and owner startup still block driving.
+components and reports unsupported handling explicitly. Tire auxiliary packing
+matches six original runs including eighteen actual database rows, with substituted
+typed DB/allocator services. Remaining loaders, full dispatch/quality, engine
+curves, geometry and owner startup still block driving.
 
 The [assembly numeric finalizer](calculations/assembly-finalization.md) now
 recalculates component-based weight distribution and the original postload

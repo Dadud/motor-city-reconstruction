@@ -31,8 +31,12 @@ int main() {
     while(std::getline(std::cin,line)) {
         std::istringstream input(line);std::uint32_t kind;std::string config,component;
         if(!(input>>kind>>config>>component)) throw std::runtime_error("invalid mechanical fixture row");
+        std::string table;
+        input>>std::ws;
+        std::vector<std::byte> templates;
+        if(!input.eof()) {input>>table;templates=decode(table,0x1d68);}
         input>>std::ws;if(!input.eof()) throw std::runtime_error("trailing mechanical fixture fields");
-        const auto result=mco::load_mechanical_component(kind,decode(config,0x820),decode(component,0x984));
+        const auto result=mco::load_mechanical_component(kind,decode(config,0x820),decode(component,0x984),templates);
         std::cout<<result.status<<' '<<encode(result.configuration)<<' '<<encode(result.component)<<'\n';
     }
 }

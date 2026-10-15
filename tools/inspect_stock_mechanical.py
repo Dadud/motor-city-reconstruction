@@ -17,9 +17,11 @@ from client.owned_parts import OwnedPart
 
 # Original dispatcher order restricted to recovered bodies. All omitted loaders
 # remain explicitly unsupported; this list is not a replacement assembly rule.
-RECOVERED_ORDER=((160001,0),(140001,0),(130001,0),
+RECOVERED_ORDER=((160001,0),(1000001,0),(1100001,0),(180001,0),(190001,0),
+    (140001,0),(130001,0),
     *((10001,i) for i in (1,2,3,4)),*((12001,i) for i in (1,2,3,4)),
-    *((11001,i) for i in (1,2,3,4)),*((100001,i) for i in (1,2,4,3)))
+    *((11001,i) for i in (1,2,3,4)),(200001,0),(1200001,0),
+    *((100001,i) for i in (1,2,4,3)),*((110001,i) for i in (1,2,4,3)))
 
 
 def stock_slots(catalogue,vehicle_id,*,percent_damage,item_wear):
@@ -43,13 +45,14 @@ def selected_parts(parts):
                 break
 
 
-def inspect(catalogue,vehicle_id,*,percent_damage,item_wear):
+def inspect(catalogue,vehicle_id,*,percent_damage,item_wear,tire_templates=None):
     source=stock_slots(catalogue,vehicle_id,percent_damage=percent_damage,item_wear=item_wear)
     parts=expand_mechanical_parts(source)
     configuration=stock_body_configuration(catalogue,vehicle_id).image
     loaded=[]
     for kind,part in selected_parts(parts):
-        result=MECHANICAL_LOADERS[kind](configuration,part.image)
+        result=(MECHANICAL_LOADERS[kind](configuration,part.image,tire_templates)
+            if kind==110001 else MECHANICAL_LOADERS[kind](configuration,part.image))
         configuration=result.configuration
         loaded.append(dict(abstract_type_id=kind,source_index=part.source_index,
             attachment=part.attachment,status=result.status,
@@ -64,6 +67,11 @@ def inspect(catalogue,vehicle_id,*,percent_damage,item_wear):
         recovered_loader_results=loaded,unrecovered_component_counts=dict(sorted(unknown.items())),
         partial_mass_accumulator=struct.unpack_from('<f',configuration,0x20)[0],
         mass_is_complete=False,
+        tire_templates_supplied=tire_templates is not None,
+        assembled_axles={name:dict(width_mm=struct.unpack_from('<f',configuration,0x124+shift)[0],
+            lateral_curve=struct.unpack_from('<26f',configuration,0x150+shift),
+            aligning_curve=struct.unpack_from('<26f',configuration,0x1b8+shift))
+            for name,shift in (('front',0),('rear',0x104))} if tire_templates is not None else None,
         transmission=dict(gear_count=struct.unpack_from('<i',configuration,0x32c)[0],
             ratios=struct.unpack_from('<8f',configuration,0x334),
             losses=struct.unpack_from('<8f',configuration,0x354),
@@ -76,5 +84,7 @@ if __name__=='__main__':
     parser.add_argument('--vehicle',type=int,default=101)
     parser.add_argument('--damage',type=int,required=True);parser.add_argument('--wear',type=int,required=True)
     args=parser.parse_args()
+    from client.tire_templates import load_tire_templates
     print(json.dumps(inspect(Catalogue.load(args.database),args.vehicle,
-        percent_damage=args.damage,item_wear=args.wear),indent=2))
+        percent_damage=args.damage,item_wear=args.wear,
+        tire_templates=load_tire_templates(args.database)),indent=2))

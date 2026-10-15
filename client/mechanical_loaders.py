@@ -221,6 +221,162 @@ def load_brake(configuration,component):
     return m.result(0)
 
 
+def _same_engine_family(m):
+    family=struct.unpack_from('<I',m.part,0x53b)[0]
+    return family!=0 and family==struct.unpack_from('<I',m.out,0x440)[0]
+
+
+def _material_quality(m,offset,head=False):
+    table=(1.,1.05,.96,.97,1.1,1.4,1.75,2.) if head else (1.,1.04,.95,.96,1.2,1.5,1.65,3.,.93)
+    index=m.nearest(offset)
+    struct.pack_into('<f',m.part,0x1c,table[index] if 0<=index<len(table) else 1.)
+
+
+def _cylinder_mass(m,individual,total):
+    # FST records the rounded product but leaves the extended product on the
+    # x87 stack for addition to the total. Do not add the rounded field back.
+    count=struct.unpack_from('<i',m.out,0x43c)[0]
+    product=count*m.number(0x30)
+    m.copy(individual,0x30);m.put(total,product)
+    m.put(0x20,m.existing(0x20)+product)
+
+
+def load_cylinder_head(configuration,component):
+    """Complete 0x54bd70, including family validation and compression base."""
+    m=_Image(configuration,component)
+    if m.count()!=7:return m.fail(1)
+    if not (_same_engine_family(m) and m.bounded(0x30,10,80) and
+            m.rounded_between(0x3c,0,2) and m.rounded_between(0x40,0,9) and
+            m.trunc(0x40) not in (8,9) and m.rounded_between(0x44,0,5) and
+            m.bounded(0x48,.97,1.03) and m.bounded(0x4c,6,20) and
+            m.bounded(0x50,25.4,63.5) and m.bounded(0x54,25.4,50.8) and
+            struct.unpack_from('<I',m.part,0x53b)[0]<=26):return m.fail(2)
+    m.add_mass()
+    for destination,source in ((0x504,0x30),(0x518,0x48),(0x51c,0x4c),
+            (0x54,0x4c),(0x520,0x53b),(0x524,0x50),(0x528,0x54)):
+        m.copy(destination,source)
+    for destination,source in ((0x508,0x34),(0x50c,0x3c),(0x510,0x44),(0x514,0x40)):
+        m.integer(destination,m.nearest(source))
+    _material_quality(m,0x40,head=True)
+    return m.result(0)
+
+
+def load_camshaft(configuration,component):
+    """Complete 0x54bef0 / 0x544710 with the original material selectors."""
+    m=_Image(configuration,component)
+    if m.count()!=9:return m.fail(1)
+    if not (_same_engine_family(m) and m.bounded(0x30,5,25) and
+            m.bounded(0x48,5,20) and m.bounded(0x4c,5,20) and
+            m.rounded_between(0x3c,0,2) and m.rounded_between(0x40,0,9) and
+            m.trunc(0x40) not in (8,9) and m.bounded(0x44,.9,1.1)):return m.fail(2)
+    m.add_mass();m.copy(0x52c,0x30);m.copy(0x53c,0x44);m.copy(0x540,0x53b)
+    for destination,source in ((0x530,0x34),(0x534,0x3c),(0x538,0x40)):
+        m.integer(destination,m.nearest(source))
+    m.copy(0x544,0x48,24);_material_quality(m,0x40)
+    return m.result(0)
+
+
+def load_valve_train(configuration,component):
+    """Complete 0x54c090; final value uses CRT truncation, not rounding."""
+    m=_Image(configuration,component)
+    if m.count()!=3:return m.fail(1)
+    if not (_same_engine_family(m) and m.bounded(0x30,5,30) and
+            m.rounded_between(0x3c,0,2) and m.bounded(0x40,.9,1.1)):return m.fail(2)
+    m.add_mass();m.copy(0x55c,0x30);m.copy(0x568,0x40);m.copy(0x56c,0x53b)
+    m.integer(0x560,m.nearest(0x34));m.integer(0x564,m.nearest(0x3c))
+    m.integer(0x570,m.trunc(0x44));m.quality()
+    return m.result(0)
+
+
+def load_crankshaft(configuration,component):
+    """Complete 0x54bac0; semantic rejection retains configuration writes."""
+    m=_Image(configuration,component)
+    if m.count()!=2:return m.fail(1)
+    m.add_mass();m.copy(0x490,0x30);m.copy(0x49c,0x53b);m.copy(0x4a0,0x40)
+    m.integer(0x494,m.nearest(0x34));m.integer(0x498,m.nearest(0x3c))
+    if not (_same_engine_family(m) and m.bounded(0x30,15,50) and
+            m.rounded_between(0x34,0,3) and m.rounded_between(0x3c,0,9) and
+            m.nearest(0x3c) not in (2,3,9)):return m.result(2)
+    _material_quality(m,0x3c)
+    return m.result(0)
+
+
+def load_connecting_rods(configuration,component):
+    """Complete 0x54bc10; one mass per cylinder, writes precede validation."""
+    m=_Image(configuration,component)
+    if m.count()!=3:return m.fail(1)
+    _cylinder_mass(m,0x4a4,0x4ac)
+    m.integer(0x4a8,m.nearest(0x34));m.integer(0x4b0,m.nearest(0x3c))
+    for destination,source in ((0x4b4,0x53b),(0x4b8,0x40),(0x4bc,0x44)):
+        m.copy(destination,source)
+    if not (_same_engine_family(m) and m.bounded(0x30,.1,2) and
+            m.rounded_between(0x34,0,3) and m.rounded_between(0x3c,0,9) and
+            m.trunc(0x3c) not in (8,9) and m.bounded(0x40,30,250)):return m.result(2)
+    _material_quality(m,0x3c)
+    return m.result(0)
+
+
+def load_pistons(configuration,component):
+    """Complete 0x54b940; piston contribution adds to head compression base."""
+    m=_Image(configuration,component)
+    if m.count()!=4:return m.fail(1)
+    if not (_same_engine_family(m) and m.bounded(0x30,.1,2) and
+            m.rounded_between(0x3c,0,3) and m.rounded_between(0x40,0,9) and
+            m.bounded(0x44,-1,4) and m.trunc(0x40) not in (8,9)):return m.fail(2)
+    _cylinder_mass(m,0x470,0x478)
+    for destination,source in ((0x474,0x34),(0x47c,0x3c),(0x480,0x40)):
+        m.integer(destination,m.nearest(source))
+    for destination,source in ((0x484,0x44),(0x488,0x53b),(0x48c,0x48)):
+        m.copy(destination,source)
+    m.put(0x54,m.existing(0x54)+m.number(0x44));_material_quality(m,0x40)
+    return m.result(0)
+
+
+def load_tire(configuration,component,templates=None):
+    """Complete 0x54e170 with external auxiliary table; rejection can mutate.
+
+    Missing templates reproduce service-unavailable status 4. The original has
+    no safe index check; the authored adapter bounds indices to allocated slots.
+    """
+    m=_Image(configuration,component)
+    if templates is None:return m.fail(4)
+    if len(templates)!=0x1d68:raise ValueError('expected tire auxiliary image')
+    if m.count()!=4:return m.fail(1)
+    if not (m.bounded(0x3c,100,500) and m.bounded(0x40,25,95) and
+            m.bounded(0x44,12,25) and m.bounded(0x30,8,30) and
+            m.rounded_between(0x34,0,3)):return m.fail(2)
+    index=m.trunc(0x48)
+    if not 0<=index<20:raise ValueError('tire template index outside original allocation')
+    base=index*0x178
+    def template(offset):
+        value=struct.unpack_from('<f',templates,base+offset)[0]
+        if not math.isfinite(value):raise ValueError('finite tire template observation required')
+        return value
+    m.add_mass(1.)
+    width=m.number(0x3c)
+    if width>215:
+        increment=min(f32(.005),max(0.,f32((width-215)*f32(.00004))))
+        m.put(0,m.existing(0)+increment)
+    shift=0 if m.front() else 0x104
+    m.copy(0x220+shift,0x30);m.integer(0x224+shift,m.trunc(0x34))
+    for destination,source in ((0x124,0x3c),(0x128,0x40),(0x12c,0x44)):
+        m.copy(destination+shift,source)
+    m.put(0x138+shift,0.)
+    m.out[0x150+shift:0x220+shift]=bytes(0xd0)
+    for destination,source in ((0x134,8),(0x130,12),(0x140,0x170),
+            (0x13c,0x168),(0x144,0x178),(0x148,0x174)):
+        m.put(destination+shift,template(source))
+    m.put(0x14c+shift,template(0x16c)*f32(.01))
+    m.out[0x154+shift:0x1b8+shift]=templates[base+0xa0:base+0x104]
+    m.out[0x1bc+shift:0x220+shift]=templates[base+0x104:base+0x168]
+    struct.pack_into('<f',m.part,0x1c,.96 if m.number(0x48)==4. else 1.)
+    valid=(f32(.7)<=m.existing(0x140+shift)<=2 and
+        127<=m.existing(0x144+shift)<=508)
+    return m.result(0 if valid else 2)
+
+
 MECHANICAL_LOADERS={160001:load_engine_block,130001:load_transmission,
     140001:load_rear_end,100001:load_wheel_rim,12001:load_spring,
-    11001:load_shock,10001:load_brake}
+    11001:load_shock,10001:load_brake,1000001:load_cylinder_head,
+    1100001:load_camshaft,1200001:load_valve_train,180001:load_crankshaft,
+    190001:load_connecting_rods,200001:load_pistons,110001:load_tire}

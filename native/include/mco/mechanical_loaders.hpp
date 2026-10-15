@@ -11,5 +11,6 @@ struct ComponentLoadResult {
 };
 // Internal image adapter for recovered loaders; unsupported kinds fail explicitly.
 ComponentLoadResult load_mechanical_component(std::uint32_t abstract_type,
-    std::span<const std::byte> configuration,std::span<const std::byte> component);
+    std::span<const std::byte> configuration,std::span<const std::byte> component,
+    std::span<const std::byte> tire_templates={});
 }

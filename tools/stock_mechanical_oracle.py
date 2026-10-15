@@ -1,4 +1,4 @@
-"""Compare nineteen selected stock loader calls in sequence, not full assembly."""
+"""Compare selected stock loader calls in sequence, not full assembly."""
 import argparse
 import json
 import struct
@@ -6,8 +6,10 @@ from client.body_configuration import stock_body_configuration
 from client.catalogue import Catalogue
 from client.mechanical_loaders import MECHANICAL_LOADERS
 from client.mechanical_parts import expand_mechanical_parts
+from client.tire_templates import load_tire_templates
 from tools.inspect_stock_mechanical import stock_slots,selected_parts
 from tools.mechanical_loaders_oracle import ENTRIES
+from tools.engine_component_loaders_oracle import ENTRIES as ENGINE_ENTRIES
 from tools.native_oracle import DynoOracle
 
 
@@ -16,15 +18,20 @@ def verify(executable,database,vehicle=101):
     parts=expand_mechanical_parts(stock_slots(catalogue,vehicle,percent_damage=0,item_wear=0))
     image=stock_body_configuration(catalogue,vehicle).image
     o=DynoOracle(executable);cpu=o.cpu;target=o.inputs;source=o.inputs+0x1000
+    templates=load_tire_templates(database);table=o.inputs+0x2000
+    cpu.mem_write(table,templates);cpu.mem_write(0xb299e8,struct.pack('<I',table))
     cpu.mem_write(target,image);count=0
-    entries=dict(ENTRIES) # Engine loader joins the other six original bodies.
+    entries=dict(ENTRIES)
+    entries.update(ENGINE_ENTRIES)
     entries[160001]=0x54a5a0
+    entries[110001]=0x54e170
     for kind,part in selected_parts(parts):
         o._reset();cpu.mem_write(source,part.image)
         stack=cpu.reg_read(o.reg.UC_X86_REG_ESP)
         cpu.mem_write(stack,struct.pack('<III',o.stop,target,source))
         o._run(entries[kind],o.stop,count=20000)
-        expected=MECHANICAL_LOADERS[kind](image,part.image)
+        expected=(MECHANICAL_LOADERS[kind](image,part.image,templates)
+            if kind==110001 else MECHANICAL_LOADERS[kind](image,part.image))
         status=cpu.reg_read(o.reg.UC_X86_REG_EAX)
         if status!=expected.status or status!=0:
             raise AssertionError(('stock component rejected',kind,part.attachment,status,expected.status))
