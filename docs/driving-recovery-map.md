@@ -159,13 +159,36 @@ Parallel recovery now also supplies [driving RPM and a coupling tail](calculatio
 [body moments and force orientation](calculations/body-moments.md), and
 [collision calculation helpers](calculations/collision-helpers.md).
 Complete child-stage integration, authentic producers, contact creation, brake wear and
-event delivery, aero and integrated velocity/collision traces remain open. The
+event delivery and integrated velocity/collision traces remain open. The
 native runtime includes these verified consumers without replacing the playable
 prototype with an incomplete mixture of recovered and guessed forces.
 The [shared-state force sequence](driving-force-sequence.md) now checks tire,
 spin correction, spin integration, combined-slip limiting, orientation and
 body-moment handoff across repeated calls.
 Its excluded caller branches remain visible; it is not a recovered full tick.
+
+The [connected environment](calculations/wind-drafting.md) now runs actual
+density, weather, wind and drafting producers inside original body resistance.
+Its shared-owner comparison checks peer wake writes as well as body forces.
+[Control smoothing](calculations/control-update.md) and [engine condition/thermal
+links](calculations/drivetrain-links.md) have complete numeric bodies, with their
+remaining remote/gear and damage/effect interfaces explicitly supplied.
+
+## Immediate playable milestone
+
+Prioritize one stock car on the original Drag track through the recovered
+simulation. Passing more isolated routines alone does not close this milestone.
+Connect authentic catalogue/geometry inputs to one shared car state, then the
+controller's support, control, environment, engine, brake, tire and motion stages
+in observed order. Preserve scheduler counters and repeated state carryover.
+Recover missing child behavior along this path; do not fill it with the bicycle
+model's handling constants or silently accept default subsystem records.
+
+The headless integrated run must expose its remaining supplied observations and
+match original acceleration/coast/braking/cornering state before the rendered
+client selects it. Reuse the existing decoded-track view and controls for the
+testable milestone. Complete collisions, other car configurations, race rules,
+both-platform gameplay and online racing remain later completion requirements.
 
 First compare isolated routines against bounded original execution, recording
 every replaced call, original input/output image, rounding mode, and tolerance.

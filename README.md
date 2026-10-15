@@ -77,6 +77,11 @@ mode dispatcher](docs/calculations/engine-update.md), [body resistance](docs/cal
 [axle-load adjustment](docs/calculations/body-vertical-load.md) and
 [orientation/support preparation](docs/calculations/vehicle-preparation.md).
 Each documents original-function comparisons and remaining input dependencies.
+The connected [environment/body calculation](docs/calculations/wind-drafting.md)
+now includes original wind and cross-car drafting. [Control smoothing](docs/calculations/control-update.md)
+and [engine condition/heat calculations](docs/calculations/drivetrain-links.md)
+are also recovered. The next playable milestone is one stock car on one original
+track using the connected recovered simulation; it is still unfinished.
 
 Requires Python 3.11+ and an OpenGL 3.3 driver. The stock catalogue uses the optional portable Access database reader.
 

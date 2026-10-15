@@ -102,6 +102,8 @@ the enclosing drivetrain, brake, body integrator or collision tick:
 | --- | --- | --- |
 | [Driving RPM and torque coupling](calculations/driving-engine-rpm.md) | 2,592 complete RPM cases and 868 coupling-tail cases, exact | Earlier torque/boost/health calculation, gears and engagement producers |
 | [Engine dispatcher and curve lookup](calculations/engine-update.md) | 1,159 complete dispatcher cases, exact, with actual RPM/lookup and 12 supplied child-write scenarios | Other engine child bodies and interface observations, authentic inputs and integrated engine/drivetrain execution |
+| [Engine condition and thermal links](calculations/drivetrain-links.md) | 1,136 complete original cases, exact; damage/effect consumers supplied with mutation checks | Actual effect consumers, component units/input assembly and engine dispatcher integration |
+| [Control smoothing and dispatch](calculations/control-update.md) | 844 complete original cases, exact, including full owner snapshots at child boundaries | Remote input, complete gear state machines, external queries and actual controls-to-driving integration |
 | [Wheel-force/spin correction](calculations/wheel-force-correction.md) | 2,880 complete cases, exact | Authentic brake-force and coefficient producers; integrated driving |
 | [Brake initialization and thermal prefix](calculations/brake-thermal.md) | 432 cases, exact; world query supplied | Authentic component inputs; enclosing numeric forces now recovered separately below |
 | [Complete numeric brake update](calculations/brake-forces.md) | 376 complete cases; maximum error `0.0001220703125`; actual fade/quality/world/controller helpers | Component wear-event consumer, authentic input producers and integrated braking traces |
@@ -111,13 +113,14 @@ the enclosing drivetrain, brake, body integrator or collision tick:
 | [Scheduler](scheduler.md) | 648 insertion, 365 executor, 1,440 selector/interleaving and 81 catch-up comparisons | Wall-clock timing, mode/input producers, full outer state machine and actual callback integration |
 | [Body moments and force orientation](calculations/body-moments.md) | 1,440 complete moment cases, maximum error `1.1920928955078125e-7`; 243 orientation cases exact | Aero, body transforms, authentic input producers and complete velocity integration |
 | [Axle vertical-load adjustment](calculations/body-vertical-load.md) | 486 complete cases, exact, including original helper | Authentic body/component inputs and connected load sequence |
-| [Body resistance](calculations/body-resistance.md) | 432 complete arithmetic-stage cases plus 432 connected original density/weather cases, exact; wind/drafting supplied | Wind and drafting producers, real input units and integrated body forces |
+| [Body resistance and connected environment](calculations/wind-drafting.md) | 432 arithmetic-stage cases, 432 connected density/weather cases, and 432 full density/wind/drafting/body cases, exact; only virtual mode supplied in full chain | Authentic environment/component inputs and complete vehicle force integration |
+| [Wind and drafting](calculations/wind-drafting.md) | 5,760 wind and 865 drafting complete original cases, exact, including ordered selection and cross-car writes | Track/counter/mode and authentic vehicle geometry producers, complete vehicle force integration |
 | [Air density](calculations/air-density.md) | 260 complete original cases, exact, including weather/floor helpers | Authentic altitude/environment producers and track settings |
 | [Vehicle preparation and support disturbance](calculations/vehicle-preparation.md) | 251 preparation and 384 support cases, exact, with original numeric helpers and a retained-precision regression | Authentic transforms/support fields and surface lookup/table producers; connected driving |
 | [Collision helpers](calculations/collision-helpers.md) | 1,731 response, 1,920 impulse and 48 height cases, exact | Contact detection/creation, impulse selection, persistent contacts, damage, recovery and full tick |
 
 All new native ports match their Python corpora exactly. Local Windows checks:
-56 native tests pass; 741 Python tests run, with 734 passing and seven skipped.
+61 native tests pass; 766 Python tests run, with 759 passing and seven skipped.
 `python -m tools.native_driving_compare build/native-check` runs these new
 differential corpora together; Windows/Linux CI includes the same command.
 The [shared-state force sequence](driving-force-sequence.md) adds 96 twice-repeated

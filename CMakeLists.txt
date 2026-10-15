@@ -39,6 +39,8 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/engine_update.cpp
   native/src/body_vertical_load.cpp native/src/body_resistance.cpp
   native/src/air_density.cpp native/src/vehicle_preparation.cpp
+  native/src/wind.cpp native/src/drafting.cpp native/src/body_environment.cpp
+  native/src/control_update.cpp native/src/drivetrain_links.cpp
   native/src/scheduler.cpp
   native/src/body_moments.cpp native/src/wheel_force_orientation.cpp
   native/src/collision_response.cpp native/src/collision_impulse.cpp
@@ -92,6 +94,7 @@ if(BUILD_TESTING)
   foreach(recovered driving_engine_rpm drivetrain_coupling wheel_force_correction
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update
       body_vertical_load body_resistance air_density vehicle_preparation
+      wind drafting body_environment control_update drivetrain_links
       scheduler body_moments collision_response collision_impulse)
     add_executable(mco_${recovered}_test native/tests/${recovered}_test.cpp)
     target_link_libraries(mco_${recovered}_test PRIVATE mco_core)

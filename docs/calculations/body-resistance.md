@@ -3,8 +3,8 @@
 The authored Python/C++ stage reproduces the arithmetic of `0x536480`.
 It consumes explicit air density, body-space wind and drafting values.
 Their original producers are identified. [Air density](air-density.md) is
-independently recovered and also runs in a connected comparison; wind and
-drafting remain explicit supplied boundaries.
+independently recovered. [Wind and drafting](wind-drafting.md) now also run in
+a complete connected environment comparison.
 
 Evidence: `ev_7b505cd5ecf57d905f56a857dcc2b33e116558ea1eed4974c140cdc42c219159`.
 Producer evidence: air density
@@ -87,3 +87,9 @@ and integrated force/pose execution with real cars and tracks.
 The C++/Python corpus includes both sets, 864 cases total, with zero observed
 error. The public calculation inputs retain explicit density so callers can
 use the recovered atmosphere without tying body forces to platform globals.
+
+With `--actual-environment`, 432 further cases execute the complete original
+density/weather/wind/drafting/body chain. Only the wind mode query is supplied;
+the producer bodies and cross-car wake writes execute and are checked. The
+authored Python/C++ connected environment API matches these handoffs. Authentic
+track/counter/mode/component inputs and the enclosing vehicle tick remain required.
