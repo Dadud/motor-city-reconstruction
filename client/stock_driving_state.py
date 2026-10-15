@@ -19,11 +19,13 @@ def state_types():
     from client.brake_forces import BrakeForceState, BrakeForceWheel
     from client.brake_thermal import BrakeThermalState, BrakeThermalAxle, BrakeWorkWheel
     from client.tire_update import TireUpdateState, TireWheel, TireCurves
+    from client.drivetrain_stages import DriveState,DriveWheel,DriveConfig
     return dict(controller=VehicleUpdateState, controller_wheel=UpdateWheel,
         engine=EngineUpdateState, engine_rpm=DrivingEngineRPM, normal_load=NormalLoadInput,
         load_transfer=LoadTransferInput, brakes=BrakeForceState, brake_wheel=BrakeForceWheel,
         brake_thermal=BrakeThermalState, brake_axle=BrakeThermalAxle, brake_work_wheel=BrakeWorkWheel,
-        tires=TireUpdateState, tire_wheel=TireWheel, tire_curves=TireCurves)
+        tires=TireUpdateState, tire_wheel=TireWheel, tire_curves=TireCurves,
+        drivetrain=DriveState,drivetrain_wheel=DriveWheel,drivetrain_config=DriveConfig)
 
 
 class MissingDrivingInputs(ValueError):
@@ -61,6 +63,7 @@ def construct_observed_state(subsystem, observations):
                           'wheels': ('brake_work_wheel', 4)},
         'tires': {'wheels': ('tire_wheel', 4), 'front_curves': ('tire_curves', None),
                   'rear_curves': ('tire_curves', None)},
+        'drivetrain': {'wheels': ('drivetrain_wheel', 4)},
     }
     for name, (kind, count) in nested.get(subsystem, {}).items():
         value = observations[name]
@@ -154,7 +157,7 @@ def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=N
         mass_inertia='Whole-car mass, gravity parameter, centre of mass, inverse mass and rotational inertia are not engine-block mass or mesh bounds.',
         geometry='Body configuration supplies catalogue wheelbase/tracks; verify final owner binding, front/rear levers, area/height and transforms.',
         contacts='Recover original spawn/settling and contact flags, wheel scales, support corrections and surface coefficient lookup; clearance gaps are not suspension compression.',
-        engine='Supply final assembled torque knots, idle/max/limiter RPM, inertia, gear factors and initialized dispatcher fields; core dyno output alone is incomplete.',
+        engine='Supply final assembled torque knots, idle/max/limiter RPM and initialized dispatcher fields. Recovered gear-table binding requires finalized ratios, losses, final drive and rear-tire configuration; component loading remains incomplete.',
         drivetrain='Supply original clutch/gear/differential state, assembled ratios and effect consumers; do not substitute prototype gearing.',
         brakes='Bind original brake material, thermal/cooling/capacity parameters, distribution, quality, component codes and initial temperatures/countdowns.',
         tires='Bind two complete 26-knot axle response curves, angle coefficients, grip/quality/wear, steering limits and native spin scales.',

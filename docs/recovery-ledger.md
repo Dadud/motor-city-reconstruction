@@ -58,7 +58,11 @@ Python research harness. The five newly recovered numeric bodies pass 3,360
 whole-owner/configuration comparisons. Two integrated corpora pass 576 original
 controller ticks, including 480 engine/brake ticks and 960 drivetrain service or
 effect observations. Rolling resistance and wheel projection rounding fixes also
-land in C++. The five new drivetrain bodies still need their native port.
+land in C++. The five new drivetrain bodies now have a native port matching
+3,377 Python cases exactly. The [gear-table producer](calculations/gear-binding.md)
+matches 225 original executions and its native port exactly, and supplies the
+shared tables in another 576 integrated controller ticks. Complete native
+shared-state driving orchestration remains required.
 Stock initialization, terrain projection, remaining preparation, gear services,
 actual component implementations, collisions and driven runtime captures remain
 open. The following earlier results describe narrower stages of this work.

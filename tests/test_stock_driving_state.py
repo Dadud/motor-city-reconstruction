@@ -50,5 +50,16 @@ class StockDrivingBindingTests(unittest.TestCase):
             construct_observed_state('controller', dict(supplied, invented=True))
 
 
+    def test_drivetrain_requires_complete_explicit_nested_observations(self):
+        from client.drivetrain_stages import DriveState
+        with self.assertRaises(MissingDrivingInputs):
+            construct_observed_state('drivetrain',{})
+        state = DriveState()
+        observed = {item.name:getattr(state,item.name) for item in fields(state)}
+        self.assertEqual(construct_observed_state('drivetrain',observed),state)
+        with self.assertRaisesRegex(ValueError,'constructed drivetrain_wheel'):
+            construct_observed_state('drivetrain',dict(observed,wheels=[{}]*4))
+
+
 if __name__ == '__main__':
     unittest.main()

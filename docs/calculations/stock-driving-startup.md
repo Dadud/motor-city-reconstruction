@@ -38,6 +38,12 @@ outside the bounded comparison.
 | Tires and brakes | Recovered update calculations | Assembled axle curves and coefficients; brake material, capacity, cooling, distribution and initialized state |
 | Session and controller | Recovered scheduler/controller order and selected connected stages | Real service/input observations and remaining child implementations on shared state |
 
+The [gear-table binder](gear-binding.md) now recovers speed-per-RPM, wheel
+inertia factors and final-drive inertia from finalized rear-tire/gearing inputs.
+It matches 225 original cases exactly and supplies two integrated controller
+comparisons. Authentic component loaders must still produce the finalized
+configuration; these equations do not supply missing stock ratios or mass.
+
 `client.stock_driving_state` exposes these facts and a machine-readable missing
 input report. `construct_observed_state` requires **every** field of a selected
 recovered record, including fields with research defaults. Nested wheel, engine

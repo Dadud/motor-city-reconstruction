@@ -21,6 +21,11 @@ class BodyMomentTests(unittest.TestCase):
         wheels[0]=replace(wheels[0],lateral_force=-100)
         self.assertLess(accumulate_body_moments(replace(s,wheels=tuple(wheels)))[1],0)
 
+    def test_yaw_contributions_remain_unrounded_until_accumulation(self):
+        # First original-function corpus record: early float32 stores in the
+        # lateral/extra contributions change this yaw by one representable step.
+        self.assertEqual(accumulate_body_moments(next(cases()))[1],0.13281476497650146)
+
     def test_low_speed_clears_pitch_roll_but_not_yaw(self):
         s=self.state(); wheels=tuple(replace(w,lateral_force=100,support_correction=.2) for w in s.wheels)
         out=accumulate_body_moments(replace(s,wheels=wheels,speed=.49999))

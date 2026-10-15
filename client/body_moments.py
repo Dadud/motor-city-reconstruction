@@ -48,9 +48,10 @@ def accumulate_body_moments(s: BodyMomentState):
     k=f32(.15915494)
     ft,rt=f32(ft*.5),f32(rt*.5)
     height=f32(height*f32(.9090909))
-    lateral=f32(((wheels[0].lateral_force+wheels[1].lateral_force)*front
-                 -(wheels[3].lateral_force+wheels[2].lateral_force)*rear)*k)
-    extra=f32(front*.25*yc*k)
+    # Both contributions remain on the x87 stack through yaw accumulation.
+    lateral=((wheels[0].lateral_force+wheels[1].lateral_force)*front
+                 -(wheels[3].lateral_force+wheels[2].lateral_force)*rear)*k
+    extra=front*.25*yc*k
     torque=0.0 if s.alternate_mode else ((wheels[0].longitudinal_force-wheels[1].longitudinal_force)*ft
         +(wheels[3].longitudinal_force-wheels[2].longitudinal_force)*rt)*k
     yaw=f32((torque+extra+lateral)*iy)

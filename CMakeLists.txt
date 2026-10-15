@@ -31,6 +31,8 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/steering_response.cpp
   native/src/tire_update.cpp
   native/src/driving_engine_rpm.cpp native/src/drivetrain_coupling.cpp
+  native/src/drivetrain_stages.cpp
+  native/src/gear_binding.cpp
   native/src/wheel_force_correction.cpp native/src/brake_thermal.cpp
   native/src/brake_forces.cpp
   native/src/wheel_spin.cpp
@@ -93,7 +95,7 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
-  foreach(recovered driving_engine_rpm drivetrain_coupling wheel_force_correction
+  foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding wheel_force_correction
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update engine_torque_update engine_pipeline
       body_vertical_load body_resistance air_density vehicle_preparation
       wind drafting body_environment control_update drivetrain_links

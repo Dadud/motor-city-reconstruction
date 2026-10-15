@@ -91,6 +91,11 @@ The orientation passes 243 original cases exactly, using actual trigonometric
 helpers. Both native ports match their Python corpora exactly. Full owner and
 configuration images are checked for unexpected writes.
 
+The [gear-bound driving comparison](gear-binding.md) additionally exposed two
+premature float32 stores in lateral/extra yaw contributions. Both remain on the
+original x87 stack through primary yaw accumulation. Python and C++ now retain
+those intermediates, preventing carried yaw drift in that integrated corpus.
+
 Tolerance is `max(0.00025, abs(original) × 3e-7)`. These comparisons use supplied
 state; they do not establish authentic-car parameter production, aerodynamic
 forces, local/world transforms, tick scheduling or integrated linear/angular

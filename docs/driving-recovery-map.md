@@ -16,7 +16,10 @@ controller ticks across supplied-contact and recovered-support corpora. This
 remains separate from the prototype viewer: authentic stock initialization,
 terrain projection, remaining preparation/services, component implementation and
 collision integration are still required. The five new drivetrain bodies also
-need C++ ports.
+have C++ ports matching 3,377 Python cases exactly. The independently verified
+[startup gear-table producer](calculations/gear-binding.md) now also supplies
+speed and inertia tables in two more integrated 288-tick comparisons. Full
+native shared-state orchestration and original stock startup remain open.
 
 The existing [motion calculations](calculations/vehicle-motion.md) cover bounded
 active velocity, pose and wheel-point arithmetic. [Tire and suspension

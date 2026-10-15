@@ -4,7 +4,8 @@ The Python research runtime now executes all eight children of the original
 engine driving dispatcher together with recovered loads, environment, brakes and
 tire forces. This closes the five previously supplied numeric drivetrain bodies;
 it does not close the stock-car initialization, terrain, collision or playable
-driving gates. The five new bodies have not yet been ported to C++.
+driving gates. The five bodies now also have a C++20 port in
+`native/src/drivetrain_stages.cpp`.
 
 Authored implementation: `client/drivetrain_stages.py`. Shared-state adapter:
 `client/driving_drivetrain.py`. Defaults in the research records are synthetic
@@ -103,6 +104,18 @@ corpora each compare exactly: 1,344 resistance cases and 1,296 projection cases.
 
 ## Verification and limits
 
+The native port matches every state field and ordered call on 3,377 Python
+cases with zero error: the original-function corpus plus sixteen damage-mutation
+and mode-policy scenarios and one signed hold-counter wrap boundary. It is built
+into `mco_core`; Windows/Linux CI includes its comparison runner. This local run
+was Windows. A complete native shared-owner driving adapter remains required.
+
+The [recovered gear-table producer](gear-binding.md) now supplies the speed and
+inertia arrays in an additional integrated corpus. This exposed two more
+intermediate-store errors in force application and yaw accumulation, now fixed
+in Python and C++. Earlier measurements below describe the initial supplied-table
+corpus; the gear-binding writeup records current producer-bound results.
+
 Source: original `mcity.exe`, SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
 REA evidence, in the table order above:
@@ -125,7 +138,8 @@ python -m tools.driving_drivetrain_oracle '<original-install>/mcity.exe' --actua
 
 On Windows, the five-body whole-owner/configuration comparison passes 3,360
 cases: 1,920 clutch, 144 preparation, 288 request, 864 distribution and 144 force
-application. Maximum absolute error is `0.000003814697265625`, with the unchanged
+application. After the denominator-store correction, maximum absolute error is
+`0.00000095367431640625`, with the unchanged
 comparison tolerance `max(0.0001, abs(original) * 4e-7)`.
 
 The integrated supplied-contact run passes 144 scenarios / 288 repeated ticks,

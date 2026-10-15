@@ -20,9 +20,9 @@ std::array<double,3> accumulate_body_moments(BodyMomentState s) {
     const double ft=stored(s.front_track*.5),rt=stored(s.rear_track*.5);
     const double height=stored(s.height_parameter*stored(.9090909));
     const auto& w=s.wheels;
-    const double lateral=stored(((w[0].lateral_force+w[1].lateral_force)*front
-        -(w[3].lateral_force+w[2].lateral_force)*rear)*k);
-    const double extra=stored(front*.25*s.yaw_contribution*k);
+    const double lateral=((w[0].lateral_force+w[1].lateral_force)*front
+        -(w[3].lateral_force+w[2].lateral_force)*rear)*k;
+    const double extra=front*.25*s.yaw_contribution*k;
     const double torque=s.alternate_mode ? 0 : ((w[0].longitudinal_force-w[1].longitudinal_force)*ft
         +(w[3].longitudinal_force-w[2].longitudinal_force)*rt)*k;
     double yaw=stored((torque+extra+lateral)*s.inverse_yaw);

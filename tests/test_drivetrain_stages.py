@@ -83,5 +83,11 @@ class DrivetrainStagesTests(unittest.TestCase):
         self.assertEqual(vehicle_control_mode(4,False,3),0)
         with self.assertRaises(ValueError):vehicle_control_mode(4,1,3)
 
+    def test_configuration_integer_width_matches_native_api(self):
+        s,c=base()
+        for changes in ({'clutch_steps':0x80000000},{'maximum_rpm':True},
+                        {'option_kind':.5},{'secondary_kind':0x80000000}):
+            with self.assertRaises(ValueError):update_clutch(s,replace(c,**changes))
+
 
 if __name__=='__main__':unittest.main()

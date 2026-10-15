@@ -119,8 +119,11 @@ def normalize(state):
 
 def configuration(c,s):
     if type(c.third_enabled) is not bool:raise ValueError('boolean shared configuration required')
-    if type(c.clutch_steps) is not int or c.clutch_steps<=0:raise ValueError('positive clutch step count required')
-    if type(c.maximum_rpm) is not int:raise ValueError('integer maximum RPM required')
+    if type(c.clutch_steps) is not int or not 0<c.clutch_steps<=0x7fffffff:raise ValueError('positive int32 clutch step count required')
+    for name in ('maximum_rpm','option_kind','secondary_kind'):
+        value=getattr(c,name)
+        if type(value) is not int or not -0x80000000<=value<=0x7fffffff:
+            raise ValueError('int32 drive configuration required')
     for values in (c.gear_ratios,c.gear_losses,c.inertia_factors,c.speed_factors):
         if not 0<=s.gear<len(values):raise ValueError('explicit table entry required for RPM gear index')
     if c.final_drive==0 or c.torque_capacity==0:raise ValueError('nonzero drive denominators required')
@@ -262,7 +265,9 @@ def apply_drive_forces(state,c,execute):
             elif s.gear>1 and s.rpm*factor*f32(1.05)<s.longitudinal_speed:force=0.
             if c.maximum_rpm*factor<abs(s.longitudinal_speed):force=0.
             w.longitudinal_force=f32(w.longitudinal_force+force)
-        denominator=f32(f32(c.gear_ratios[s.gear])*f32(c.final_drive))
+        # This ratio/final-drive product remains on the x87 stack through the
+        # division; no float32 memory store occurs before spin adjustment.
+        denominator=c.gear_ratios[s.gear]*c.final_drive
         if denominator==0:denominator=1.
         w.adjustment=f32(w.conversion*w.longitudinal_force*w.radius/denominator)
     return normalize(s)

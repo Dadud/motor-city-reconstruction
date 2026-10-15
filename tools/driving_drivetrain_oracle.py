@@ -7,6 +7,7 @@ import struct
 from client.driving_drivetrain import DrivingDrivetrain
 from client.engine_pipeline import PipelineCall
 from client.drivetrain_stages import DriveCall
+from client.gear_binding import bind_gear_tables
 from tools.drivetrain_stages_oracle import base,encode,FLOATS,CONFIG_FLOATS,CONFIG_INTS
 from tools.driving_brakes_pipeline_oracle import BrakeExtension
 from tools.driving_pipeline_oracle import verify as verify_pipeline
@@ -17,6 +18,10 @@ DRIVE_STAGES=DrivingDrivetrain.methods
 
 
 class DrivetrainExtension(BrakeExtension):
+    def __init__(self,*,bound_gears=False):
+        super().__init__()
+        self.bound_gears=bound_gears
+
     def cases(self):
         for index,(s,f,obs) in enumerate(super().cases()):
             obs['engine_mutation']=False;obs['drive_mask']=(0,5,12,15)[index%4]
@@ -38,6 +43,15 @@ class DrivetrainExtension(BrakeExtension):
             speed_factors=(.002,.003,.004,f.spin.gear_multiplier),
             option_one=1.,option_two=1.,option_kind=2,increment_gain=3.,secondary_gain=.2,secondary_kind=1)
         d.local_player=False;d.mode_setting=3
+        if self.bound_gears:
+            # Finalized tire/configuration observations are synthetic here;
+            # produce the shared arrays with the independently verified binder.
+            binding=bind_gear_tables(c.maximum_rpm,205,75,15,c.gear_ratios,
+                c.gear_losses,c.final_drive)
+            count=len(c.gear_ratios)
+            c=replace(c,inertia_factors=binding.wheel_inertia_factors[:count],
+                speed_factors=binding.speed_per_rpm[:count])
+            d.inertia_sum=binding.final_drive_inertia
         d.wheels=[replace(w,distribution=self.brake_state.wheels[i].inertia_multiplier) for i,w in enumerate(d.wheels)]
         self.drive_state,self.drive_config=d,c
         drive_image,drive_data=encode(d,c,config,owner)
@@ -129,14 +143,15 @@ class DrivetrainExtension(BrakeExtension):
         self.drive_calls.clear();self.expected_drive_calls.clear();self.drivetrain.calls=()
 
 
-def verify(executable,actual_support=False):
-    extension=DrivetrainExtension();result=verify_pipeline(executable,actual_support=actual_support,extension=extension)
+def verify(executable,actual_support=False,*,bound_gears=False):
+    extension=DrivetrainExtension(bound_gears=bound_gears);result=verify_pipeline(executable,actual_support=actual_support,extension=extension)
     result.update(engine_ticks=extension.engine_ticks,brake_ticks=extension.brake_ticks,
-        drivetrain_child_observations=extension.drive_calls_total,
+        drivetrain_child_observations=extension.drive_calls_total,producer_bound_gears=bound_gears,
         scope='original controller and all eight engine driving children including clutch, coupling, request, wheel torque distribution and force application; brakes/loads/environment/tires connected; terrain, remaining preparation, gear services, queries and component effects supplied')
     return result
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('executable');p.add_argument('--actual-support',action='store_true')
-    a=p.parse_args();print(json.dumps(verify(a.executable,a.actual_support)))
+    p.add_argument('--bound-gears',action='store_true',help='derive shared gear tables with recovered startup producer')
+    a=p.parse_args();print(json.dumps(verify(a.executable,a.actual_support,bound_gears=a.bound_gears)))
