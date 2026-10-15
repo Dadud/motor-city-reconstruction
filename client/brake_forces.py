@@ -36,12 +36,20 @@ class BrakeForceState:
 
 
 @dataclass(frozen=True)
+class BrakeEvent:
+    kind: str
+    slot: int
+    value: float
+
+
+@dataclass(frozen=True)
 class BrakeForceOutput:
     state: BrakeForceState
     # Ordered original effect calls. Component-event delivery and controller
     # hardware behavior are external, rather than discarded or invented.
     wear_events: tuple[tuple[int,float],...]
     controller_events: tuple[int,...]
+    events: tuple[BrakeEvent,...]
 
 
 def update_brake_forces(state):
@@ -66,7 +74,7 @@ def update_brake_forces(state):
     service,speed=thermal.service_control,abs(thermal.speed)
     forces=[0.0]*4
     enabled=[True]*4
-    wear,controller=[],[]
+    wear,controller,events=[],[],[]
     ramp=state.parking_ramp
     if service!=0 or thermal.parking_control or state.auxiliary_flag:
         for i,w in enumerate(wheels):
@@ -76,6 +84,7 @@ def update_brake_forces(state):
                 cold=f32(.8) if axle.material_code==3 and axle.temperature<160 else 1.0
                 if axle.temperature>axle.temperature_limit:
                     wear.append((i,f32((axle.temperature-axle.temperature_limit)*f32(2.6041666e-6))))
+                    events.append(BrakeEvent('wear',i,wear[-1][1]))
                 fade=brake_fade(axle.temperature,axle.temperature_limit)
                 quality=min(front_quality if i<2 else rear_quality,.5)
                 strength=f32((1-quality)*fade*cold*service)
@@ -123,6 +132,7 @@ def update_brake_forces(state):
                     adjustment=f32(torque/inertia)
                     if axle.material_code in (2,3):
                         controller.append(round(f32(strength*(64 if i>=2 and axle.material_code==2 else 127))))
+                        events.append(BrakeEvent('controller',i,controller[-1]))
                 else:
                     enabled[i]=False
                     adjustment=0.0
@@ -145,4 +155,4 @@ def update_brake_forces(state):
     thermal=replace(thermal,wheels=tuple(replace(w,brake_force=forces[i]) for i,w in enumerate(thermal.wheels)))
     result=replace(state,thermal=thermal,wheels=tuple(wheels),front_quality=front_quality,rear_quality=rear_quality,
         front_gate=front_gate,rear_distribution=rear_distribution,drive_factor=drive,pitch_angle=pitch,parking_ramp=ramp)
-    return BrakeForceOutput(result,tuple(wear),tuple(controller))
+    return BrakeForceOutput(result,tuple(wear),tuple(controller),tuple(events))

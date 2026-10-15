@@ -234,7 +234,7 @@ def verify(executable, actual_support=False, extension=None):
         cpu.reg_write(reg.UC_X86_REG_EIP, target)
     for address in (0x591500, 0x591180): cpu.hook_add(UC_HOOK_CODE, effect, begin=address, end=address)
     count, ticks, maximum, event_maximum, stage_total, mutation_ticks = 0, 0, 0., 0., 0, 0
-    branches = {}; projection_count = 0; radius_error = 0.
+    branches = {}; projection_count = 0; radius_error = 0.; conditioned_effect_error = 0.
     corpus = cases() if extension is None else extension.cases()
     for state, inputs, observations in corpus:
         image, data = initialize(state, inputs, owner, config, surfaces)
@@ -264,17 +264,19 @@ def verify(executable, actual_support=False, extension=None):
         cpu.mem_write(0xa65bce, bytes([int(state.grip_boost)]))
         for i, w in enumerate(state.wheels): cpu.mem_write(surfaces+i*16+4, bytes([w.surface_record or 0]))
         for i, coefficient in enumerate(state.surface_coefficients): cpu.mem_write(0x89bf70+i*8, struct.pack('<f', coefficient))
-        expected_effects = []
+        expected_effects = []; expected_effect_slots = []
         py_driver = None
         def external(call, s, supplied): return py_driver(call, s)
         def effects(kind, events, s, supplied):
             if kind == 'wheel_spin':
                 expected_effects.extend((kind, 0, 1 if slot < 2 else 2, amount, 0., 1., .25) for slot, amount in events)
+                expected_effect_slots.extend(slot for slot, amount in events)
                 if events and observations['component_mutation']:
                     s.wheels[0].force = (.125, 333., -.375)
             else:
                 expected_effects.extend((kind, e.operation, 1 if e.slot < 2 else 2, e.amount,
                                         e.parameter_a, e.parameter_b, e.parameter_c) for e in events)
+                expected_effect_slots.extend(e.slot for e in events)
         support = None
         python_projection_queries = []
         def py_project(query_value):
@@ -286,7 +288,7 @@ def verify(executable, actual_support=False, extension=None):
         if extension is not None:
             pipeline.external = extension.wrap(pipeline.external)
         for tick in range(2):
-            o._reset(); actual_calls.clear(); actual_effects.clear(); query_calls.clear(); expected_effects.clear()
+            o._reset(); actual_calls.clear(); actual_effects.clear(); query_calls.clear(); expected_effects.clear();expected_effect_slots.clear()
             projection_queries.clear(); python_projection_queries.clear()
             effect_mutated = False
             driver = SuppliedStages(observations); py_driver = SuppliedStages(observations)
@@ -298,13 +300,19 @@ def verify(executable, actual_support=False, extension=None):
                 raise AssertionError((count, tick, 'controller calls', actual_calls, expected_calls))
             if len(actual_effects) != len(expected_effects):
                 raise AssertionError((count, tick, 'ordered component effects', actual_effects, expected_effects))
-            for event, expected_event in zip(actual_effects, expected_effects):
+            for event, expected_event, slot in zip(actual_effects, expected_effects, expected_effect_slots):
                 if event[:3] != expected_event[:3]:
                     raise AssertionError((count, tick, 'component delivery order', event, expected_event))
-                for a, b in zip(event[3:], expected_event[3:]):
+                for argument, (a, b) in enumerate(zip(event[3:], expected_event[3:])):
                     error = abs(a-b)
+                    if (event[:2]==('combined_slip',1) and argument==0 and math.isfinite(a)
+                            and error>max(3e-10,abs(a)*4e-7)
+                            and getattr(extension,'conditioned_secondary',lambda *args:False)(slot,a,b)):
+                        conditioned_effect_error=max(conditioned_effect_error,error)
+                        continue
                     if not math.isfinite(a) or error > max(3e-10, abs(a)*4e-7):
-                        raise AssertionError((count, tick, 'component argument', event, expected_event))
+                        raise AssertionError((count, tick, 'component argument', event, expected_event,
+                            getattr(extension,'failure_detail',lambda:None)()))
                     event_maximum = max(event_maximum, error)
             if len(query_calls) != (4 if result.branch == 'supported' else 0):
                 raise AssertionError(('tire mode observation count differs', count, tick,
@@ -370,6 +378,7 @@ def verify(executable, actual_support=False, extension=None):
         branches=branches, support_projection_queries=projection_count,
         maximum_absolute_error=maximum, maximum_effect_argument_error=event_maximum,
         maximum_conditioned_radius_error=radius_error,
+        maximum_conditioned_component_argument_error=conditioned_effect_error,
         scope=('complete original 53c140 controller, actual support predictor/scalar transforms, six actual force stages and actual 540c30; terrain projection, other stages and service/component delivery supplied; ordered queries/calls/effects and full owner bytes checked'
                if actual_support else 'complete original 53c140 controller with six actual force stages and actual 540c30; other stages and service/component delivery supplied; ordered calls/effects and full owner bytes checked'))
 

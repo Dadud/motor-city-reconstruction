@@ -18,10 +18,16 @@ struct BrakeForceState {
     bool auxiliary_flag;
     std::int32_t parking_ramp;
 };
+struct BrakeEvent {
+    int kind; // 0: wear, 1: controller
+    int slot;
+    double value;
+};
 struct BrakeForceOutput {
     BrakeForceState state;
     std::vector<std::pair<int,double>> wear_events;
     std::vector<int> controller_events;
+    std::vector<BrakeEvent> events;
 };
 BrakeForceOutput update_brake_forces(BrakeForceState state);
 }

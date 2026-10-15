@@ -197,3 +197,60 @@ The original dispatcher, torque, RPM, curve, condition and thermal bodies run.
 Engine setup/control, engagement/clutch, wheel-drive distribution, finalization,
 brakes, terrain projection and remaining preparation are still supplied. These
 results establish the connections, not a stock car's acceleration or handling.
+
+## Brakes bound into the vehicle tick
+
+`client/driving_brakes.py` executes the recovered brake/thermal routine in the
+original engine → brakes → tires → correction → spin order. It retains
+temperatures, countdowns, previous brake forces and parking ramp across ticks.
+Shared inputs come from controls, engine flags, controller wheels, configuration
+mass, pitch and environment. Wheel `+0xc` aliases spin slip ratio; `+0x94`
+aliases its kinetic/inertia parameter. Brake quality (`+0xd10/+0xd14`) remains
+distinct from spin quality (`+0xd18/+0xd1c`). The selected-gear inertia table
+is required, as documented in [brake calculations](calculations/brake-forces.md#connection-to-the-vehicle-tick).
+
+Brake longitudinal forces and spin adjustments reach subsequent force consumers.
+The mandatory effect consumer receives wear/controller observations in original
+interleaved order after the numeric stage. Mutation of later wheel observations
+inside original component callbacks remains unverified. Authentic brake
+configuration and inertia-table production remain required inputs.
+
+```powershell
+python -m tools.driving_brakes_pipeline_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --actual-support
+```
+
+With original support prediction this passes 144 scenarios/288 retained ticks:
+192 supported engine/brake ticks, 96 low-support ticks, 1,152 terrain queries,
+864 tire-force calls and 1,152 ordered brake observations. Original thermal,
+fade, quality, weather-selector and brake bodies execute. Enabled and disabled
+weather gates are exercised. Brake outputs are checked at the stage boundary
+and final complete owner/configuration images. Maximum ordinary owner error is
+`0.00048828125`; ordinary component argument and conditioned radius/component
+errors are zero.
+
+The authored-contact corpus completes 288 engine/brake ticks, 1,296 force calls,
+24 component-mutation ticks and 1,728 brake observations. A derived secondary
+wear observation differs by `2.9802322387695312e-8` on scenario 78's second tick.
+Original spin is `10.56680679321289`, authored spin `10.566805839538574`
+(one float32 step). Both projected speeds are `2.4678502082824707` and scale is
+`0.2800000011920929`. Subtracting projected rotation from spin amplifies that
+already checked input difference:
+
+```text
+observation = F32(min(F32(13.4109), abs(F32(spin - projected_speed/scale))) / 32)
+original: 0.05478300154209137
+authored: 0.05478297173976898
+```
+
+This exceeds the ordinary per-observation relative tolerance. The oracle reports
+it separately as `maximum_conditioned_component_argument_error` and requires
+each observation to match the formula exactly for its own source fields.
+Other fields retain their existing tolerances. This does not prove bit-identical
+trajectories or identical future wear accumulation. Maximum ordinary component
+argument error is `5.4569682106375694e-12`.
+
+These remain Python research connections. Stock-car initialization, remaining
+preparation, terrain projection, gearbox services, engine setup/control,
+engagement/clutch, wheel-drive distribution/finalization and component delivery
+still block faithful driving. Native integration, original-client driving traces,
+collision scenarios and live racing remain open.

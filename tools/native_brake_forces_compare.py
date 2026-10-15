@@ -33,6 +33,8 @@ def verify(runner):
         expected.append(len(r.wear_events))
         for slot,amount in r.wear_events:expected.extend((slot,amount))
         expected.append(len(r.controller_events));expected.extend(r.controller_events)
+        expected.append(len(r.events))
+        for event in r.events:expected.extend((0 if event.kind=='wear' else 1,event.slot,event.value))
         actual=list(map(float,line.split()))
         if len(actual)!=len(expected):raise AssertionError('brake output shape differs')
         for field,(a,b) in enumerate(zip(actual,expected)):

@@ -27,6 +27,8 @@ int main() {
         for(const auto& [slot,amount]:r.wear_events) std::cout<<' '<<slot<<' '<<amount;
         std::cout<<' '<<r.controller_events.size();
         for(int event:r.controller_events) std::cout<<' '<<event;
+        std::cout<<' '<<r.events.size();
+        for(const auto& event:r.events) std::cout<<' '<<event.kind<<' '<<event.slot<<' '<<event.value;
         std::cout<<'\n';
     }
     return 2;

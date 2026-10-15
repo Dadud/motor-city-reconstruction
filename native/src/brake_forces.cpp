@@ -32,8 +32,10 @@ BrakeForceOutput update_brake_forces(BrakeForceState s) {
             double strength=0;
             if(service!=0) {
                 const double cold=axle.material_code==3 && axle.temperature<160 ? stored(.8) : 1;
-                if(axle.temperature>axle.temperature_limit)
+                if(axle.temperature>axle.temperature_limit) {
                     out.wear_events.emplace_back(i,stored((axle.temperature-axle.temperature_limit)*stored(2.6041666e-6)));
+                    out.events.push_back({0,i,out.wear_events.back().second});
+                }
                 const double fade=brake_fade(axle.temperature,axle.temperature_limit);
                 const double quality=std::min(i<2 ? s.front_quality : s.rear_quality,.5);
                 strength=stored((1-quality)*fade*cold*service);
@@ -75,8 +77,10 @@ BrakeForceOutput update_brake_forces(BrakeForceState s) {
                 const bool gate=i<2 ? s.front_gate!=0 : s.rear_gate!=0;
                 if(!gate || w.control_angle>stored(-.4)) {
                     forces[i]=stored(torque/w.spin_scale);adjustment=stored(torque/inertia);
-                    if(axle.material_code==2 || axle.material_code==3)
+                    if(axle.material_code==2 || axle.material_code==3) {
                         out.controller_events.push_back(static_cast<int>(std::nearbyint(stored(strength*(i>=2 && axle.material_code==2 ? 64 : 127)))));
+                        out.events.push_back({1,i,static_cast<double>(out.controller_events.back())});
+                    }
                 } else {enabled[i]=false;adjustment=0;}
                 if(i>=2) s.parking_ramp=0;
             }

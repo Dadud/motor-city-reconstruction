@@ -117,3 +117,20 @@ the authored API, without claiming original malformed-input handling.
 Authentic component/input production, component wear/event delivery, downstream
 wheel-spin/force integration and original-client braking traces remain required
 before the complete game can claim faithful braking acceptance.
+
+## Connection to the vehicle tick
+
+[`DrivingBrakes`](../driving-pipeline.md#brakes-bound-into-the-vehicle-tick)
+now connects these calculations to controls, engine flags, current wheel loads,
+spin adjustment and subsequent tire/spin stages. The numeric API's `drive_factor`
+is the selected table value: the original reads owner
+`+0x1870 + selected_gear_byte*4`. Earlier isolated fixtures used gear 2 and
+populated `+0x1878`. The integrated adapter requires the table and selects it
+using current `+0xa69`. Authentic vehicle/gear preparation must produce it.
+
+Python and C++ results now also retain one interleaved sequence of wear and
+controller observations. The existing separate event arrays remain available.
+All 376 original comparisons check the combined order; 376 native/Python
+comparisons include kind, slot and value. Integration delivers this sequence
+after the numeric stage; component mutations inside the original wheel loop
+remain unverified.

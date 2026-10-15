@@ -211,13 +211,14 @@ Prioritize one stock car on the original Drag track through the recovered
 simulation. Passing more isolated routines alone does not close this milestone.
 The Python engine bridge now connects recovered torque, condition and RPM bodies
 to the integrated controls/load/environment/force controller; 288 original ticks
-check shared publication, carryover and nested ordering. Engine setup/control,
-clutch/engagement and wheel-drive distribution remain supplied, as do brakes,
-terrain projection and remaining preparation. The next integration must replace
-those supplied bodies before treating this as a driving implementation.
-Connect authentic catalogue/geometry inputs to one shared car state, then the
-controller's support, control, environment, engine, brake, tire and motion stages
-in observed order. Preserve scheduler counters and repeated state carryover.
+check shared publication, carryover and nested ordering. Brakes now join the Python controller
+comparison with original thermal/force bodies, selected-gear inertia and ordered
+effects; see [integration scope and numeric differences](driving-pipeline.md#brakes-bound-into-the-vehicle-tick).
+Engine setup/control, clutch/engagement, wheel-drive distribution, terrain
+projection and remaining preparation are still supplied. Replace those bodies
+and connect authentic catalogue/geometry inputs to the shared car state before
+treating this as a driving implementation. Preserve observed stage order,
+scheduler counters and repeated state carryover.
 Recover missing child behavior along this path; do not fill it with the bicycle
 model's handling constants or silently accept default subsystem records.
 

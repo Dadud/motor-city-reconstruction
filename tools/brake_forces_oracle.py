@@ -38,7 +38,7 @@ def verify(executable):
     from unicorn import UC_HOOK_CODE
     o=DynoOracle(executable);cpu,reg=o.cpu,o.reg
     owner,config=o.inputs,o.inputs+0x3000
-    observed={'wear':[],'controller':[]}
+    observed={'wear':[],'controller':[],'events':[]}
     # Component update is thiscall with five stack arguments, returning x87.
     component_return=o.stub+0x400;cpu.mem_write(component_return,b'\xd9\xee\xc2\x14\x00')
     def effects(cpu,address,size,user):
@@ -47,17 +47,20 @@ def verify(executable):
             ret,operation,amount,zero,one,quarter=struct.unpack('<IIfIff',cpu.mem_read(stack,24))
             if cpu.reg_read(reg.UC_X86_REG_ECX)!=owner+0xcc8 or operation not in (5,6) or zero!=0 or one!=1 or quarter!=.25:
                 raise AssertionError('unexpected component effect boundary')
-            observed['wear'].append((operation,amount));cpu.reg_write(reg.UC_X86_REG_EIP,component_return)
+            observed['wear'].append((operation,amount));observed['events'].append(('wear',operation,amount))
+            cpu.reg_write(reg.UC_X86_REG_EIP,component_return)
         elif address==0x41bd30:
             ret,argument,intensity=struct.unpack('<IIi',cpu.mem_read(stack,12))
             if argument!=owner:raise AssertionError('unexpected controller owner')
             observed['controller'].append(intensity)
+            observed['events'].append(('controller',intensity))
             # The actual original controller entry is a no-op RET; execute it.
     cpu.hook_add(UC_HOOK_CODE,effects,begin=0x591500,end=0x591500)
     cpu.hook_add(UC_HOOK_CODE,effects,begin=0x41bd30,end=0x41bd30)
     count,maximum=0,0.0
     for s in cases():
-        o._reset();observed['wear'].clear();observed['controller'].clear()
+        o._reset()
+        for events in observed.values():events.clear()
         t=s.thermal;image=bytearray([0xa5])*0x1d00;data=bytearray([0x5a])*0x700
         struct.pack_into('<I',image,0x1c94,config)
         for off,val in ((0xa90,t.service_control),(0xa2c,t.speed),(0x34c,t.elevation_parameter),
@@ -110,6 +113,8 @@ def verify(executable):
         wear=tuple((5 if i<2 else 6,amount) for i,amount in expected.wear_events)
         if tuple(observed['wear'])!=wear or tuple(observed['controller'])!=expected.controller_events:
             raise AssertionError((count,'effect calls',observed,wear,expected.controller_events))
+        sequence=[('wear',5 if e.slot<2 else 6,e.value) if e.kind=='wear' else ('controller',e.value) for e in expected.events]
+        if observed['events']!=sequence:raise AssertionError((count,'interleaved effect order',observed['events'],sequence))
         count+=1
     return {'cases':count,'maximum_absolute_error':maximum,
         'scope':'complete0x538960 with real thermal/fade/quality/world/controller helpers; component effect delivery substituted and recorded'}

@@ -279,7 +279,7 @@ matches 208 bounded original-function scenarios and 63 C++/Python action traces.
 The start-request wire layout, live worker/cache driver and session integration
 remain unresolved; this does not complete race entry.
 
-Current batch verification on Windows: 830 Python tests (823 pass, seven skipped)
+Current batch verification on Windows: 837 Python tests (830 pass, seven skipped)
 and 63 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
@@ -290,6 +290,16 @@ support prediction, 192 supported ticks execute the engine and 96 low-support
 ticks skip it. Terrain projection, remaining preparation, engine setup/control,
 engagement/clutch, wheel-drive distribution, finalization and brakes remain
 supplied. Original stock-car startup and faithful driving acceptance remain open.
+
+The [brake-to-controller bridge](driving-pipeline.md#brakes-bound-into-the-vehicle-tick)
+extends that comparison with original brake thermal/force bodies and selected-gear
+inertia lookup. The support-prediction corpus checks 192 brake ticks and 1,152
+interleaved wear/controller observations; authored contacts check 288 brake
+ticks and 1,728 observations. Longitudinal forces and spin adjustments are checked
+before tire/spin consumers. The documented derived wear-observation difference
+remains visible, with exact checks against each trajectory's own source fields;
+physical tolerances are unchanged. Authentic brake initialization, inside-loop
+component effects and integrated original-client braking remain unproved.
 
 The dependency-linking pass is now implemented in isolation and documented in
 [owned component dependencies](owned-component-dependencies.md). Its 64 bounded
