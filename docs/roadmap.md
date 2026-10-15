@@ -1,5 +1,8 @@
 # Roadmap
 
+**Current priority:** [source recovery, organization and build scripts](source-recovery.md).
+The full game and mod milestones below are retained for later work.
+
 The intended result is a playable, open-source Windows/Linux game client with modern OS compatibility. A renderer alone does not meet that goal.
 
 Behavioral fidelity to Motor City Online is the target. Recover original systems

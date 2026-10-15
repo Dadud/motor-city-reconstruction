@@ -1,5 +1,12 @@
 # Motor City Reconstruction
 
+**Current focus:** source recovery, organization and a repeatable build.
+See [source recovery status and directory guide](docs/source-recovery.md).
+Build the recovered C++ library and checks with `python build.py --test`
+(Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet
+rebuild the complete original game. The application and mod work below are
+existing prototypes and longer-term work, deferred during source recovery.
+
 An open-source reconstruction of the Motor City Online client for modern Windows and Linux. It reads game assets from your own local installation.
 
 **Current status:** Windows supports garage previews and offline driving/time trials on decoded tracks. The Linux OpenGL renderer passes a generated-geometry smoke check under Xvfb/Mesa; original-asset driving on Linux remains unverified. Driving uses an authored prototype bicycle model; recovered engine and force simulation, object collisions, sound, online services and multiplayer remain unfinished.
