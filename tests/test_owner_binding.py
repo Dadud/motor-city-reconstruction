@@ -11,6 +11,9 @@ class OwnerBindingTests(unittest.TestCase):
         self.assertEqual(body_inertia_scales(99),(1.,1.,1.))
         self.assertNotEqual(body_inertia_scales(6),body_inertia_scales(5))
 
+    def test_unknown_shape_preserves_supplied_scales(self):
+        self.assertEqual(body_inertia_scales(99,(2.,3.,4.)),(2.,3.,4.))
+
     def test_mass_zero_fallback_is_original(self):
         r=bind_owner_inertia(0.,(1.,1.,1.),2)
         self.assertEqual(r.mass,1000.)

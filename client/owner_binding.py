@@ -14,13 +14,17 @@ from client.tire_response import f32
 def _bits(word): return struct.unpack('<f',struct.pack('<I',word))[0]
 
 
-def body_inertia_scales(shape):
-    """Original 0x53a150, including identity for an unrecognized selector."""
+def body_inertia_scales(shape, initial=(1.,1.,1.)):
+    """Original 0x53a150; unknown selectors preserve supplied prior values."""
     if shape == 6: words=(0x3f266666,0x3f2e147b,0x3f4ccccd)
     elif shape in (4,5): words=(0x3f266666,0x3f3ae148,0x3f59999a)
     elif shape in (1,7,3): words=(0x3f19999a,0x3f4ccccd,0x3f333333)
     elif shape in (0,2): words=(0x3f6147ae,0x3f70a3d7,0x3f547ae1)
-    else: words=(0x3f800000,)*3
+    else:
+        values=tuple(map(f32,initial))
+        if len(values)!=3 or not all(math.isfinite(v) for v in values):
+            raise ValueError('three finite initial inertia scales required')
+        return values
     return tuple(map(_bits,words))
 
 

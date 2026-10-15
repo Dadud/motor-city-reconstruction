@@ -70,13 +70,15 @@ The retained `0x43a990` startup analysis establishes this sequence:
 7. `0x53a1f0`: main owner initializer.
 8. `0x53b8a0`: final wheel setup, including stance adjustment again.
 
-The base constructor clears only the first `0x418` owner bytes. Producers and
+The [base constructor and connected body phase](../calculations/body-construction.md)
+now have Python/C++ translations and byte-exact original comparisons. The base
+constructor clears only the first `0x418` owner bytes. Producers and
 lifetimes of all prior high-offset geometry observations are not yet established.
 Do not reorder this sequence or replace prior state with newly computed values
 without an original-execution comparison. Complete startup remains partial even
 though individual assembly, bounds and wheel functions have bounded verification.
 
 Next shared-definition work: complete model selection/scaling/centering, owner
-initialization, indirect dispatch targets, class boundaries and lifetime contracts.
+main owner initialization, indirect dispatch targets, class boundaries and lifetime contracts.
 Raw Ghidra type identities and function signatures are in the private export
 browser; they require review before becoming authored headers.

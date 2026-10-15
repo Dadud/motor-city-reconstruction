@@ -2,18 +2,18 @@
 
 Main executable: **25,773 analyzed entries**, including **338 external imports**.
 
-- Retained decompilation records indexed: **419 functions**.
+- Retained decompilation records indexed: **422 functions**.
 - Bulk private pseudocode exports: **25,434 functions**.
-- Functions with address mentions in tracked Python/native source: **195** (review candidates).
-- Explicitly reviewed entries: **31**.
+- Functions with address mentions in tracked Python/native source: **199** (review candidates).
+- Explicitly reviewed entries: **36**.
 
 | Reviewed translation label | Entries |
 | --- | ---: |
 | missing | 2 |
-| partial | 1 |
-| python-and-native-bounded | 27 |
+| partial | 2 |
+| python-and-native-bounded | 31 |
 | python-complete-supported-domain;native-partial | 1 |
-| unreviewed | 25,742 |
+| unreviewed | 25,737 |
 
 These counts do not measure whole-game completion. Most entries await review.
 See [label definitions and refresh instructions](README.md) and the sortable

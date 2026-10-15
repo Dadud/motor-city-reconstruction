@@ -25,6 +25,12 @@ outside the published repository.
 
 ## Feature map
 
+The latest source translation adds [complete base body construction and catalogue
+sample customization](calculations/body-construction.md), native owner-binding
+producers, and a connected startup-body phase matching 320 original scenarios.
+The main owner initializer and upstream model assembly remain partial; this does
+not close the original driving acceptance gate.
+
 | Feature | Current status and evidence | Remaining recovery path | Acceptance scenario |
 | --- | --- | --- | --- |
 | Startup and asset discovery | Partial: explicit read-only asset root, bounded VIV reads and case-insensitive lookup; `assets.py`, `tools/viv.py` | Recover required startup resources and original loading/failure sequence; migrate platform startup | Start from a fresh installation on Windows and Linux; missing/corrupt required assets produce an actionable error without modifying originals |

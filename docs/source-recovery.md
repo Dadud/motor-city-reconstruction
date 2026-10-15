@@ -24,6 +24,9 @@ supported stock mechanical assembly. Subsequent
 bounded recovery includes [wheel initialization](calculations/owner-wheel-setup.md)
 and [part bounds](calculations/model-bounds.md), with complete-original-function
 comparisons. These do not establish complete startup or integrated driving.
+The [body constructor and startup-body phase](calculations/body-construction.md)
+now also have verified Python/C++ implementations, including catalogue sample
+customization and native owner inertia/COM producers.
 
 The repository already has native ports for portions of assembly, engine updates,
 tires, suspension, brakes, drivetrain, body forces, collisions and networking.

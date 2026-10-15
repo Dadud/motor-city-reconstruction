@@ -1,6 +1,6 @@
 # Owner mass, inertia, axle levers and startup COM
 
-`client/owner_binding.py` reconstructs numeric producers used by startup, rather
+`client/owner_binding.py` and `native/src/owner_binding.cpp` reconstruct numeric producers used by startup, rather
 than assigning force-consumer defaults. The complete `0x53a1f0` initializer is
 larger: it also constructs gearing arrays, wheel radius and clearance angles,
 spring-related values, projected area and shift thresholds. Those remaining
@@ -68,7 +68,7 @@ The bounded executable oracle passes 120 mass/inertia cases, 18 axle-lever
 cases and 16 startup COM cases with zero byte differences. It executes the
 original shape helper, not a replacement. Cases cover every known shape and
 unknown-selector identity behavior, multiple masses/extents, zero-mass fallback,
-and asymmetric distribution. Seven unit tests verify the public producer API
+and asymmetric distribution. Unit tests verify the public producer API
 and the refusal to bind an incomplete assembly. No original stock initialized
 owner or complete assembled vehicle has yet been claimed by these comparisons.
 
@@ -76,5 +76,10 @@ Private retained evidence: wheel/owner dossier 026 (also retained as 087),
 startup dossier 125, body assembly dossier 196, and verified original numeric
 ranges `0x51f4dd..0x51f518`, `0x53a3f5..0x53a4be`,
 `0x53a7b6..0x53a7df`, `0x43ac8e..0x43acb1`.
-The source executable remains external and unchanged. No new REA lifecycle
-session was necessary for this recovery.
+The source executable remains external and unchanged. The complete inertia-scale
+helper additionally passes 26 original calls, preserving supplied prior values
+for unknown selectors. Its default identity is a caller initialization, not a
+write performed by the original helper. Native/Python comparisons pass 180
+mass/inertia, lever, COM and scale cases with exact output bits on MSVC and
+Zig/Clang. See [complete body construction](body-construction.md) for the connected
+startup phase and new REA evidence.

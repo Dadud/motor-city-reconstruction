@@ -1,4 +1,34 @@
 {
+  "0x51ed40": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete 22-sample primitive geometry helper, five shapes, negative and signed-zero inputs. Thirty independent original calls plus 1080 complete constructor comparisons; native/Python all float bits exact. Bounded finite geometry domain; not complete vehicle model assembly.",
+    "sources": ["client/body_geometry.py", "native/src/body_constructor.cpp", "tools/body_constructor_oracle.py", "docs/calculations/body-construction.md"]
+  },
+  "0x51f440": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete base owner constructor in the supported finite domain: 1080 original calls, five shapes and nine material values, all 0x2000 observation bytes exact. MSVC/Zig native/Python comparisons exact. Preserves all bytes above original 0x418 clear range; prior derived geometry remains supplied.",
+    "sources": ["client/body_constructor.py", "native/src/body_constructor.cpp", "tools/body_constructor_oracle.py", "docs/calculations/body-construction.md"]
+  },
+  "0x43a240": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete catalogue body sampling customization: all eight supported selectors, 80 standalone original calls, plus 320 connected startup-body cases. Invalid selectors are rejected by the authored adapter rather than invoking the original diagnostic service.",
+    "sources": ["client/body_geometry.py", "native/src/body_constructor.cpp", "tools/body_startup_oracle.py", "docs/calculations/body-construction.md"]
+  },
+  "0x53a150": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete inertia multiplier selection for supported int selectors and finite prior values. Twenty-six original calls cover known/unknown selectors and preserve prior nonidentity and signed-zero values. Native/Python helper and dependent owner-binding comparisons exact.",
+    "sources": ["client/owner_binding.py", "native/src/owner_binding.cpp", "tools/body_startup_oracle.py", "docs/calculations/owner-binding.md"]
+  },
+  "0x43a990": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "Connected body phase 0x43ab88..0x43acb1 matches 320 original cases, all owner bytes exact; Python/C++ ports include base construction, catalogue sampling, stance, response and COM stores. Model loading, surrounding errors, main owner initializer and complete startup integration remain missing.",
+    "sources": ["client/body_startup.py", "native/src/body_constructor.cpp", "tools/body_startup_oracle.py", "docs/calculations/body-construction.md"]
+  },
   "0x54e720": {
     "translation": "python-complete-supported-domain;native-partial",
     "verification": "original-comparison-bounded",
@@ -12,9 +42,10 @@
   "0x53a1f0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "Owner initializer: gear tables and mass/inertia/levers recovered in bounded regions. Complete initializer, projected area and required geometry inputs remain missing. See docs/calculations/owner-binding.md.",
+    "scope": "Owner initializer: native/Python gear tables and mass/inertia/levers recovered in bounded regions. Complete initializer, projected area and required geometry inputs remain missing. See docs/calculations/owner-binding.md.",
     "sources": [
       "client/owner_binding.py",
+      "native/src/owner_binding.cpp",
       "client/gear_binding.py",
       "docs/calculations/owner-binding.md"
     ]
