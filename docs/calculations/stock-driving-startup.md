@@ -44,6 +44,14 @@ It matches 225 original cases exactly and supplies two integrated controller
 comparisons. Authentic component loaders must still produce the finalized
 configuration; these equations do not supply missing stock ratios or mass.
 
+The [mechanical component loaders](mechanical-component-loading.md) now produce
+the actual Ford's transmission ratios/losses and final drive, plus engine block,
+rim, spring, shock and brake configuration. Nineteen selected stock loads match
+original execution in sequence. The matching C++ loaders are also available.
+`tools.inspect_stock_mechanical` reports this partial loading with explicit
+damage/wear fixture inputs and remaining unsupported component handling. Its mass
+accumulator remains incomplete and cannot initialize the owner as a complete car.
+
 `client.stock_driving_state` exposes these facts and a machine-readable missing
 input report. The [assembly numeric finalizer](assembly-finalization.md) now
 provides the original component-based weight fraction and numeric postload tail,

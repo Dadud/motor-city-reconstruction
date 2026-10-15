@@ -1,5 +1,11 @@
 # Driving recovery map
 
+The [mechanical startup loaders](calculations/mechanical-component-loading.md)
+now cover seven component kinds in Python and C++, with original validation and
+quality. Nineteen selected actual Ford component calls match original execution
+in sequence. Complete assembly and startup are still required before these
+producers can initialize the recovered driving model.
+
 This map identifies the original routines needed to replace the current driving
 prototype. It records static observations and comparison targets; it does not
 claim that the force model or a complete original driving tick has been recovered.
