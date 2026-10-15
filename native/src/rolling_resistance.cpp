@@ -38,22 +38,24 @@ ResistanceResult rolling_resistance(std::array<ResistanceWheel, 4> wheels,
         auto& wheel = wheels[i];
         double coefficient;
         if (wheel.surface_id == 2)
-            coefficient = stored(std::abs(speed) * static_cast<double>(stored(0.000096)) +
-                                 static_cast<double>(stored(0.012)));
+            coefficient = std::abs(speed) * static_cast<double>(stored(0.000096)) +
+                                 static_cast<double>(stored(0.012));
         else if (wheel.surface_id == 3 || wheel.surface_id == 5)
-            coefficient = stored(std::abs(speed) * static_cast<double>(stored(0.000072)) +
-                                 static_cast<double>(stored(0.013)));
+            coefficient = std::abs(speed) * static_cast<double>(stored(0.000072)) +
+                                 static_cast<double>(stored(0.013));
         else
-            coefficient = stored(std::abs(speed) * static_cast<double>(stored(0.000048)) +
-                                 static_cast<double>(stored(0.01)));
-        const double axle = stored(((i < 2 ? fa : ra) + 1.0) * (i < 2 ? front : rear));
+            coefficient = std::abs(speed) * static_cast<double>(stored(0.000048)) +
+                                 static_cast<double>(stored(0.01));
+        const double axle = ((i < 2 ? fa : ra) + 1.0) * (i < 2 ? front : rear);
+        // The x87 routine stores the combined product, not either input.
+        const double scaled_resistance = stored(axle * (coefficient * 0.5));
         const double degrees = stored(std::abs(wheel.slip_angle * 180.0));
         const double amplification = std::clamp(static_cast<double>(stored(
             (degrees * static_cast<double>(stored(0.0831)) +
              degrees * degrees * static_cast<double>(stored(0.0988))) * 0.5 + 1.0)), 1.0, 8.0);
         const double projection = cosine * (alternate ? amplification : 1.0);
         last = stored(-(projection * wheel.normal_load *
-                        static_cast<double>(stored(axle * coefficient * 0.5))));
+                        scaled_resistance));
         if (wheel.rolling_speed < 0) last = -last;
         if (wheel.contact && 1.0 / wheel.speed_scale < std::abs(wheel.rolling_speed) &&
             wheel.normal_load != 0)

@@ -36,6 +36,15 @@ class WheelSpeedTests(unittest.TestCase):
         for speed in project_wheel_speeds(reversed_state):
             self.assertAlmostEqual(speed, -7, places=5)
 
+    def test_original_yaw_intermediate_store_order(self):
+        wheels=tuple(WheelSpeedInput(.2 if i%2==0 else -.2,True,(i-1)*3.75,.25+i*.1)
+                     for i in range(4))
+        s=WheelSpeedState(wheels,7,20,.3,1.2,1.5,1.6,1.7)
+        # Exact outputs from the bounded original-function corpus. Rounding yaw
+        # before the lever products changes the carried wheel-spin state.
+        self.assertEqual(project_wheel_speeds(s),
+            (22.844345092773438,9.516334533691406,17.336694717407227,15.0239839553833))
+
     def test_validation_precedes_airborne_branch(self):
         state = self.state()
         for invalid in (replace(state, wheels=state.wheels[:3]), replace(state, rear_track=0),

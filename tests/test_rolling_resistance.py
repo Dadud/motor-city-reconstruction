@@ -47,6 +47,13 @@ class RollingResistanceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.run_model(self.wheels[:3])
 
+    def test_original_combined_product_store_order(self):
+        wheels=tuple(ResistanceWheel((i-1)*.01,surface,0 if i==3 else 1500+i*500,
+            -2,2,True,100+i) for i,surface in enumerate((2,3,5,0)))
+        result=rolling_resistance(wheels,20,1.2,.8,.3,-.1,.1)
+        self.assertEqual(tuple(w.longitudinal_force for w in result.wheels),
+            (113.17597198486328,119.2242431640625,112.51398468017578,103.0))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -18,7 +18,7 @@ class DrivingControlTests(unittest.TestCase):
             target_steering=-127,steering=40,reverse_control=1)
         published=[]
         driver=DrivingControls(control,self.child,external,
-            lambda c,s,f: published.append((c.flags,c.throttle_output,f.tire.raw_control)))
+            lambda c,s,f: published.append((c.flags,c.throttle_output,f.tire.raw_control)),lambda s,f:bool(s.flags&0x212))
         first=update_vehicle(state(),DrivingForces(p,driver,lambda *args:None))
         self.assertEqual(p.tire.raw_control,32)
         self.assertEqual(p.spin.direction_mode,3)
@@ -36,18 +36,26 @@ class DrivingControlTests(unittest.TestCase):
             if call.stage=='remote_controls': seen.append(True); current.target_throttle=0
             return self.child(call,current)
         driver=DrivingControls(ControlState(throttle=255,throttle_output=1),child,external,
-            lambda c,s,f: seen.append(c.flags))
+            lambda c,s,f: seen.append(c.flags),lambda s,f:bool(s.flags&0x212))
         driver(UpdateCall('control_update'),s,p)
         self.assertEqual(seen,[True,4])
         self.assertTrue(driver.controls.remote_controls)
 
     def test_unknown_stages_and_missing_publication_are_not_dropped(self):
         def unknown(call,*args): raise NotImplementedError(call.stage)
-        driver=DrivingControls(ControlState(),self.child,unknown,lambda *args:None)
+        driver=DrivingControls(ControlState(),self.child,unknown,lambda *args:None,lambda s,f:0)
         with self.assertRaisesRegex(NotImplementedError,'engine'):
             driver(UpdateCall('engine'),state(),inputs())
         with self.assertRaises(ValueError):
-            DrivingControls(ControlState(),self.child,external,None)
+            DrivingControls(ControlState(),self.child,external,None,lambda s,f:0)
+
+    def test_local_mode_policy_can_select_remote_controls_without_vehicle_flags(self):
+        driver=DrivingControls(ControlState(),self.child,external,lambda *args:None,lambda s,f:3)
+        driver(UpdateCall('control_update'),state(),inputs())
+        self.assertTrue(driver.controls.remote_controls)
+        driver.remote_mode=lambda s,f:-1
+        with self.assertRaisesRegex(ValueError,'uint32'):
+            driver(UpdateCall('control_update'),state(),inputs())
 
 
 if __name__=='__main__': unittest.main()

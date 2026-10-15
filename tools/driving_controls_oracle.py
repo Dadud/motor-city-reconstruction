@@ -70,7 +70,7 @@ class ControlExtension(EnvironmentExtension):
         # Engine/brake producers remain supplied in this corpus. The retained
         # control view owns their shared output/flag observations for byte checks.
         self.control_driver = DrivingControls(self.control, Executor(self.queries),
-            super().wrap(external), lambda *args: None)
+            super().wrap(external), lambda *args: None, lambda s,f: bool(s.flags&0x212))
         return self.control_driver
 
     def nested(self, cpu, reg, stage, ret):

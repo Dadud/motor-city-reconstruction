@@ -40,11 +40,13 @@ def project_wheel_speeds(state: WheelSpeedState):
         raise ValueError('positive axle tracks required')
     wheels = tuple((f32(w.angle), w.contact, f32(w.spin_value), f32(w.spin_scale))
                    for w in state.wheels)
-    yaw = f32(yaw * f32(6.2831855))
-    front_delta, rear_delta = f32(yaw * 0.5 * ft), f32(yaw * 0.5 * rt)
+    yaw = yaw * f32(6.2831855)
+    half_yaw = f32(yaw * 0.5)
+    front_yaw, rear_yaw = f32(yaw * front), f32(yaw * rear)
+    front_delta, rear_delta = f32(half_yaw * ft), f32(half_yaw * rt)
     result = []
     for index, (angle, contact, spin, scale) in enumerate(wheels):
-        local_lateral = f32(lateral + yaw * front) if index < 2 else f32(lateral - yaw * rear)
+        local_lateral = f32(lateral + front_yaw) if index < 2 else f32(lateral - rear_yaw)
         delta = front_delta if index < 2 else rear_delta
         local_longitudinal = f32(longitudinal + (delta if index in (0, 3) else -delta))
         if not contact:

@@ -21,12 +21,14 @@ std::array<float, 4> project_wheel_speeds(const WheelSpeedState& state) {
         w.angle = stored(w.angle); w.spin_value = stored(w.spin_value); w.spin_scale = stored(w.spin_scale);
     }
     const double turn = stored(6.2831855);
-    yaw = stored(yaw * turn);
-    const double front_delta = stored(yaw * 0.5 * ft), rear_delta = stored(yaw * 0.5 * rt);
+    yaw = yaw * turn;
+    const double half_yaw = stored(yaw * 0.5);
+    const double front_yaw = stored(yaw * front), rear_yaw = stored(yaw * rear);
+    const double front_delta = stored(half_yaw * ft), rear_delta = stored(half_yaw * rt);
     std::array<float, 4> output{};
     for (std::size_t i = 0; i < 4; ++i) {
         const auto& w = wheels[i];
-        const double local_lateral = i < 2 ? stored(lateral + yaw * front) : stored(lateral - yaw * rear);
+        const double local_lateral = i < 2 ? stored(lateral + front_yaw) : stored(lateral - rear_yaw);
         const double delta = i < 2 ? front_delta : rear_delta;
         const double local_longitudinal = stored(longitudinal + ((i == 0 || i == 3) ? delta : -delta));
         if (!w.contact) { output[i] = stored(w.spin_scale * w.spin_value); continue; }

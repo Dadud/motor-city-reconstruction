@@ -9,6 +9,15 @@ Original disassembly, decompiler output and captures remain private.
 
 ## State of the implementation
 
+The [connected drivetrain comparison](calculations/drivetrain-stages.md) now
+executes all eight original engine driving children alongside recovered brakes,
+loads, environment and tire forces in the Python harness. It passes 576 bounded
+controller ticks across supplied-contact and recovered-support corpora. This
+remains separate from the prototype viewer: authentic stock initialization,
+terrain projection, remaining preparation/services, component implementation and
+collision integration are still required. The five new drivetrain bodies also
+need C++ ports.
+
 The existing [motion calculations](calculations/vehicle-motion.md) cover bounded
 active velocity, pose and wheel-point arithmetic. [Tire and suspension
 parameters](calculations/tire-suspension.md) cover dimensions and component

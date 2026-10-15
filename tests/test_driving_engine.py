@@ -13,7 +13,7 @@ class DrivingEngineTests(unittest.TestCase):
     def fixture(self, execute=None):
         s,f,loads=fixture();s.flags=4
         e,c=base();c=replace(c,links=replace(c.links,mode_coefficients=(.8,1.,.7,.9)))
-        controls=DrivingControls(ControlState(flags=1),self.control,lambda *a:None,lambda *a:None)
+        controls=DrivingControls(ControlState(flags=1),self.control,lambda *a:None,lambda *a:None,lambda s,f:0)
         env=environment_inputs()
         supplied=SuppliedPipelineStages({'rpm_limit':7000})
         driver=DrivingEngine(e,c,controls,loads,env,execute or (lambda a,e,s,f:supplied(a,e)),lambda *a:None)

@@ -65,10 +65,14 @@ python -m tools.native_wheel_speed_compare build/native-check/mco_wheel_speed_co
 The oracle executes the complete original routine and original sine/cosine
 helpers with no substituted calls. All 1,296 scenarios pass, covering every
 contact mask and positive, zero and negative body motion, yaw and wheel angle.
-Maximum absolute error is `1.9073486328125e-06`, below the recorded tolerance
+Maximum absolute error is `0` after correcting the intermediate store order:
+the unrounded yaw conversion supplies separately stored half-yaw and axle-lever
+products. This prevents carried wheel-spin drift in the
+[connected drivetrain](drivetrain-stages.md). The recorded tolerance remains
 `max(0.00025, abs(original) × 3e-7)`. Only four output fields may change; the full
-owner image and configuration image are checked. Four authored unit tests cover
-slot signs, contact masks, angle projection and malformed input rejection.
+owner image and configuration image are checked. Authored unit tests cover
+slot signs, contact masks, angle projection, exact intermediate-store regression
+and malformed input rejection.
 The C++ port matches all 1,296 Python corpus cases exactly. Native tests and
 comparison are included in Windows/Linux CI; local verification was on Windows.
 

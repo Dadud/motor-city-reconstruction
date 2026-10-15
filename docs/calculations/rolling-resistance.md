@@ -77,7 +77,10 @@ python -m tools.native_rolling_resistance_compare build/native-check/mco_rolling
 The Windows oracle executes the complete original helper and original cosine
 with isolated synthetic owner/component state. Only the mode predicate is
 substituted. All 1,344 cases pass, with maximum stored-force error
-`0.00000762939453125`, under tolerance `max(0.00025, abs(original)×3e-7)`.
+`0`, under tolerance `max(0.00025, abs(original)×3e-7)`, after correcting the
+intermediate store order: axle and coefficient remain unrounded until their
+combined product is stored. This also removes upstream drift in the
+[connected drivetrain](drivetrain-stages.md).
 It compares each force accumulator, checks every other owner byte unchanged,
 checks the return value and verifies the predicate call gate. Cases include both
 speed signs and the exact speed-2 gate, all surface branches, zero load, three

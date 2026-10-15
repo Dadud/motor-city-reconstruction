@@ -54,17 +54,20 @@ def rolling_resistance(wheels, speed, front_coefficient, rear_coefficient,
     cosine = math.cos(abs(angle) * f32(6.2831855))
     for index, wheel in enumerate(validated):
         if wheel.surface_id == 2:
-            coefficient = f32(abs(speed) * f32(0.000096) + f32(0.012))
+            coefficient = abs(speed) * f32(0.000096) + f32(0.012)
         elif wheel.surface_id in (3, 5):
-            coefficient = f32(abs(speed) * f32(0.000072) + f32(0.013))
+            coefficient = abs(speed) * f32(0.000072) + f32(0.013)
         else:
-            coefficient = f32(abs(speed) * f32(0.000048) + f32(0.01))
-        axle = f32(((fa if index < 2 else ra) + 1.0) * (front if index < 2 else rear))
+            coefficient = abs(speed) * f32(0.000048) + f32(0.01)
+        axle = ((fa if index < 2 else ra) + 1.0) * (front if index < 2 else rear)
+        # The original retains coefficient and axle intermediates on the x87
+        # stack, storing only their combined product before the cosine call.
+        scaled_resistance = f32(axle * (coefficient * 0.5))
         degrees = f32(abs(wheel.slip_angle * 180.0))
         amplification = max(1.0, min(8.0, f32((degrees * f32(0.0831) +
             degrees * degrees * f32(0.0988)) * 0.5 + 1.0)))
         projection = cosine * (amplification if alternate else 1.0)
-        last = f32(-(projection * wheel.normal_load * f32(axle * coefficient * 0.5)))
+        last = f32(-(projection * wheel.normal_load * scaled_resistance))
         if wheel.rolling_speed < 0:
             last = -last
         force = wheel.longitudinal_force

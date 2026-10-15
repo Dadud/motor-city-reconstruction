@@ -52,6 +52,17 @@ outside the published repository.
 
 ## Ordered gates
 
+The [connected drivetrain](calculations/drivetrain-stages.md) now executes all
+eight engine driving children with brakes, loads, environment and tires in the
+Python research harness. The five newly recovered numeric bodies pass 3,360
+whole-owner/configuration comparisons. Two integrated corpora pass 576 original
+controller ticks, including 480 engine/brake ticks and 960 drivetrain service or
+effect observations. Rolling resistance and wheel projection rounding fixes also
+land in C++. The five new drivetrain bodies still need their native port.
+Stock initialization, terrain projection, remaining preparation, gear services,
+actual component implementations, collisions and driven runtime captures remain
+open. The following earlier results describe narrower stages of this work.
+
 The larger [driving pipeline](driving-pipeline.md) now compares 288 original
 controller ticks with actual support prediction, input smoothing, load producers,
 body environment and tire-force stages. Terrain selection/projection, remaining

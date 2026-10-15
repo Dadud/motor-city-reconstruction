@@ -20,6 +20,12 @@ int main() {
         for (std::size_t i = 0; i < 4; ++i)
             check(r[i] == (t.wheels[i].contact ? yaw[i] : -0.9375f), "contact/spin selection failed");
     }
+    s.lateral_velocity = 7;
+    for (std::size_t i = 0; i < 4; ++i)
+        s.wheels[i] = {i % 2 == 0 ? .2 : -.2, true, (static_cast<double>(i)-1)*3.75, .25+i*.1};
+    check(mco::project_wheel_speeds(s) == std::array<float,4>{
+        22.844345092773438f,9.516334533691406f,17.336694717407227f,15.0239839553833f},
+        "original yaw intermediate store order changed");
     s.wheels[2].contact = false; s.wheels[2].angle = std::numeric_limits<double>::infinity();
     bool rejected = false;
     try { mco::project_wheel_speeds(s); } catch (const std::invalid_argument&) { rejected = true; }
