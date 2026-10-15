@@ -3,7 +3,7 @@
 This module never instantiates a driving state using its research defaults.
 Catalogue component facts, model geometry and authored placement are separate.
 """
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, dataclass, fields, field
 import math
 
 from client.simulation_inputs import build_stock_simulation_inputs
@@ -86,6 +86,7 @@ class StockDrivingBindings:
     decoded_geometry: dict
     authored_placement: dict
     unresolved: dict
+    assembled_mechanics: dict=field(default_factory=dict)
 
     @property
     def ready_for_recovered_driving(self):
@@ -104,7 +105,7 @@ class StockDrivingBindings:
         return output
 
 
-def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=None):
+def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=None,mechanical_assembly=None):
     """Bind verified stock component fields without inventing assembled config.
 
     Wheel marker dimensions can be measured, but their equivalence to initialized
@@ -153,7 +154,7 @@ def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=N
                                 (c.surface.block, c.surface.descriptor)) for c in world.contacts),
         original_spawn_verified=False, support_flags_verified=False)
     unresolved = dict(
-        configuration='Body initialization, twenty-three component loaders including tire templates, and numeric postload are available; finish remaining loaders, full dispatch/quality and initialized owner binding.',
+        configuration='Thirty-two component loaders and supported mechanical assembly are available; supply the complete assembly result before initialized owner binding.',
         mass_inertia='Whole-car mass, gravity parameter, centre of mass, inverse mass and rotational inertia are not engine-block mass or mesh bounds.',
         geometry='Body configuration supplies catalogue wheelbase/tracks; verify final owner binding, front/rear levers, area/height and transforms.',
         contacts='Recover original spawn/settling and contact flags, wheel scales, support corrections and surface coefficient lookup; clearance gaps are not suspension compression.',
@@ -163,7 +164,16 @@ def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=N
         tires='Bind two complete 26-knot axle response curves, angle coefficients, grip/quality/wear, steering limits and native spin scales.',
         observations='Supply original input/service gates, counters/flags, track weather/mode queries and ordered nearby vehicle records.',
         controller='Connect recovered children on shared owner state and recover remaining stages; every callback must execute real recovered behavior.')
-    return StockDrivingBindings(vehicle.branded_id, vehicle.name, components, body, geometry, placement, unresolved)
+    assembled={}
+    if mechanical_assembly is not None:
+        from client.mechanical_assembly import assembly_report
+        assembled=assembly_report(mechanical_assembly)
+        if mechanical_assembly.status==1:
+            unresolved.pop('configuration')
+            unresolved['mass_inertia']='Assembled mass and axle levers are recovered; supply original model half extents, centre of mass and owner inertia initialization.'
+            unresolved['engine']='Assembled ordinary unboosted curve and RPM limits are available; bind dispatcher, clutch and limiter state. Special carburetor and boost remain open.'
+            unresolved['drivetrain']='Final gear tables are available; bind original clutch/gear/differential state and effect consumers.'
+    return StockDrivingBindings(vehicle.branded_id, vehicle.name, components, body, geometry, placement, unresolved,assembled)
 
 
 def load_stock_driving_bindings(game, vehicle_id=101, track='drag'):
@@ -172,6 +182,9 @@ def load_stock_driving_bindings(game, vehicle_id=101, track='drag'):
     from client.catalogue import Catalogue
     from client.world import load_world_vehicle
     from client.body_configuration import stock_body_configuration
+    from client.dyno import load_flow_templates
+    from client.tire_templates import load_tire_templates
+    from client.mechanical_assembly import assemble_stock_vehicle
     if not isinstance(track, str) or not track or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789_-' for c in track):
         raise ValueError('lowercase track directory identifier required')
     assets = Assets(game)
@@ -179,5 +192,7 @@ def load_stock_driving_bindings(game, vehicle_id=101, track='drag'):
     vehicle = catalogue.vehicle(vehicle_id)
     track_bytes = assets.paths[f'data/tracks/{track}/tr.frd'].read_bytes()
     world = load_world_vehicle(assets, catalogue, vehicle, track_bytes)
+    assembly=assemble_stock_vehicle(catalogue,vehicle_id,load_flow_templates(assets.paths['mcity.exe']),
+        tire_templates=load_tire_templates(assets.paths['data/db/online.mdb']),percent_damage=0,item_wear=0)
     return build_stock_driving_bindings(catalogue, vehicle, world,
-                                       stock_body_configuration(catalogue, vehicle_id))
+                                       stock_body_configuration(catalogue, vehicle_id),assembly)

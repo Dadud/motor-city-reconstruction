@@ -1,7 +1,7 @@
 """Catalogue body configuration initialization, before assembly aggregation.
 
-The numeric stores in original 0x54a390 are recovered. Original semantic
-validation (0x542a00) and body quality (0x54a2b0) are separate boundaries.
+The numeric stores in original 0x54a390 are recovered. The complete validator
+and quality wrapper are implemented separately in mechanical_loaders.load_body.
 """
 from dataclasses import dataclass
 import math

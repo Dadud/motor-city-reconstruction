@@ -375,6 +375,78 @@ ComponentLoadResult shock(Image& m) {
     m.copy(base,0x30);m.integer(base+4,truncated(m.number(0x34)));m.copy(base+8,0x3c);m.copy(base+12,0x40);
     m.quality();return m.out;
 }
+ComponentLoadResult body(Image& m) {
+    if(m.count()!=39) return m.fail(1);
+    const std::array<std::array<double,3>,23> bounds{{
+        {0x30,400,4000},{0x5c,400,6000},{0x78,.25,1},{0x7c,-5,5},{0x80,-5,5},
+        {0x88,-5,5},{0x40,2,8},{0x44,1,2},{0x48,1,2},{0x50,.15,.75},{0x60,0,1},
+        {0x94,4,10},{0x98,2,64},{0x9c,2,64},{0xa0,200,2500},{0xa4,200,2500},
+        {0xa8,0,1},{0xac,0,1},{0xb0,.2,.4},{0xb4,.1,.5},{0xb8,.1,.5},{0xc4,1,60},{0xc8,5,120}}};
+    for(auto b:bounds) if(!m.bounded(static_cast<std::size_t>(b[0]),static_cast<float>(b[1]),static_cast<float>(b[2]))) return m.fail(2);
+    const bool special=truncated(m.number(0x54))==6;
+    if(m.number(0x5c)<=m.number(0x30) || !m.bounded(0x4c,special?.254f:.3048f,special?1.5239999f:1.27f)) return m.fail(2);
+    for(auto b:std::array<std::array<int,3>,5>{{{0x84,0,1},{0xbc,0,9},{0x54,0,7},{0x58,0,127},{0x8c,0,1}}})
+        if(!m.rounded_between(b[0],b[1],b[2])) return m.fail(2);
+    for(unsigned k=0;k<39;++k) m.number(0x3c+k*4);
+    for(auto p:std::array<std::array<unsigned,2>,27>{{
+        {0,16},{4,17},{8,18},{0x10,20},{0x24,9},{0x2c,2},{0x30,3},{0x34,4},
+        {0x38,5},{0x3c,6},{0x40,34},{0x58,10},{0xec,23},{0xf0,24},{0xf4,25},
+        {0xf8,26},{0xfc,26},{0x100,27},{0x104,27},{0x108,28},{0x10c,29},
+        {0x110,30},{0x114,30},{0x118,30},{0x11c,31},{0x120,32},{0x64,35}}}) m.copy(p[0],0x38+p[1]*4);
+    m.copy(0x68,0x3c+35*4);
+    for(auto p:std::array<std::array<unsigned,2>,3>{{{0xc,19},{0x14,38},{0x18,39}}}) m.integer(p[0],nearest(m.number(0x38+p[1]*4)));
+    for(auto p:std::array<std::array<unsigned,2>,4>{{{0x44,33},{0x48,7},{0x4c,8},{0xe8,22}}}) m.integer(p[0],truncated(m.number(0x38+p[1]*4)));
+    for(auto p:std::array<std::array<unsigned,2>,5>{{{0x60,12},{0x61,13},{0x62,14},{0x63,15},{0xe4,21}}})
+        m.out.configuration[p[0]]=static_cast<std::byte>(static_cast<std::uint32_t>(truncated(m.number(0x38+p[1]*4)))&255);
+    m.copy(0x1c,0x30);m.copy(0x20,0x30);m.put(0x28,0);m.put(0x50,9);m.put(0x54,9);m.put(0x5c,0);
+    const auto material=static_cast<std::int32_t>(word(m.out.configuration,0x44));
+    const std::array<float,10> quality{.98f,.99f,.97f,.98f,1.f,1.2f,1.5f,2.f,.95f,1.03f};
+    m.quality_value(material>=0 && material<10 ? quality[material] : 1.f);return m.out;
+}
+ComponentLoadResult body_accessory(Image& m,std::uint32_t kind) {
+    unsigned count=1,base=0;
+    switch(kind) {
+        case 22001:count=0;base=0x7e0;break;
+        case 23001:base=0x774;break;
+        case 31001:count=2;base=0x718;break;
+        case 34001:base=0x7d4;break;
+        case 35001:base=0x7c8;break;
+        case 40001:count=2;base=0x80c;break;
+    }
+    if(m.count()!=count) return m.fail(1);
+    m.copy(base,0x30);m.add_mass();m.integer(base+4,nearest(m.number(0x34)));
+    if(kind==22001) {
+        auto first=m.out.component.begin()+0x120,last=first+32;
+        const auto end=std::find(first,last,std::byte{0});
+        if(end==last) throw std::invalid_argument("accessory text requires a bounded terminator");
+        if(first!=end) {std::copy(first,end+1,m.out.configuration.begin()+0x7ec);m.integer(0x7e8,1);}
+        return m.out;
+    }
+    if(kind==40001) {
+        const auto mode=nearest(m.number(0x3c));m.integer(0x81c,mode);
+        if(mode==2) m.put(0x818,m.number(0x40)*.1f);
+        else {m.put(0x818,0);m.put(0x814,0);}
+        m.put(0,m.existing(0)+m.existing(0x814));
+    } else {
+        m.copy(base+8,0x3c);m.put(0,m.existing(0)+m.number(0x3c));
+        if(kind==31001) m.integer(base+12,nearest(m.number(0x40)));
+    }
+    m.quality();return m.out;
+}
+ComponentLoadResult axle_bar(Image& m,std::uint32_t kind) {
+    if(m.count()!=(kind==13001 ? 1U : 0U)) return m.fail(1);
+    if(!m.bounded(0x30,kind==13001 ? 3.f : 5.f,kind==13001 ? 50.f : 25.f) ||
+        !m.rounded_between(0x34,0,3) || (kind==13001 && !m.bounded(0x3c,40,500))) return m.fail(2);
+    const auto attachment=word(m.out.component,0x18);
+    if(attachment!=10 && attachment!=11) return m.out;
+    m.add_mass();m.put(0x28,m.existing(0x28)+m.number(0x30));
+    unsigned base,value,target;
+    if(kind==13001) {base=attachment==10 ? 0x648 : 0x654;value=base+8;target=attachment==10 ? 0xfc : 0x104;m.copy(value,0x3c);}
+    else {base=attachment==10 ? 0x660 : 0x670;value=attachment==10 ? 0x668 : 0x67c;target=attachment==10 ? 0x108 : 0x10c;m.put(value,(nearest(m.number(0x34))+1)*static_cast<double>(.1f));}
+    m.copy(base,0x30);m.integer(base+4,nearest(m.number(0x34)));
+    if(disabled_by_installation(m)) m.put(value,0);
+    m.put(target,m.existing(target)+m.existing(value));m.quality();return m.out;
+}
 ComponentLoadResult brake(Image& m) {
     if(m.count()!=5) return m.fail(1);
     if(!(m.bounded(0x30,2.f,20.f) && m.rounded_between(0x3c,0,1) && m.rounded_between(0x40,0,3) &&
@@ -396,6 +468,9 @@ ComponentLoadResult load_mechanical_component(std::uint32_t kind,
     std::span<const std::byte> tire_templates) {
     Image image(config,component);
     switch(kind) {
+        case 20001:return body(image);
+        case 22001:case 23001:case 31001:case 34001:case 35001:case 40001:return body_accessory(image,kind);
+        case 13001:case 14001:return axle_bar(image,kind);
         case 160001:return engine(image);
         case 1000001:return cylinder_head(image);
         case 1100001:return camshaft(image);

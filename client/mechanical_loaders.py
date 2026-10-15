@@ -503,7 +503,81 @@ def load_lubrication(configuration,component):
     m.quality();return m.result(0)
 
 
-MECHANICAL_LOADERS={160001:load_engine_block,130001:load_transmission,
+def load_body(configuration,component):
+    """Complete 0x54a2b0/0x54a390 with finite-domain 0x542a00 validation."""
+    from client.body_configuration import initialize_body_configuration
+    from client.physics_data import PhysicsRecord
+    m=_Image(configuration,component)
+    if m.count()!=39:return m.fail(1)
+    bounds=((0x30,400,4000),(0x5c,400,6000),(0x78,.25,1),
+        (0x7c,-5,5),(0x80,-5,5),(0x88,-5,5),(0x40,2,8),
+        (0x44,1,2),(0x48,1,2),(0x50,.15,.75),(0x60,0,1),
+        (0x94,4,10),(0x98,2,64),(0x9c,2,64),(0xa0,200,2500),
+        (0xa4,200,2500),(0xa8,0,1),(0xac,0,1),(0xb0,.2,.4),
+        (0xb4,.1,.5),(0xb8,.1,.5),(0xc4,1,60),(0xc8,5,120))
+    special=m.trunc(0x54)==6
+    if not (all(m.bounded(*bound) for bound in bounds) and
+            m.number(0x5c)>m.number(0x30) and
+            m.bounded(0x4c,.254 if special else .3048,1.5239999 if special else 1.27) and
+            all(m.rounded_between(*bound) for bound in
+                ((0x84,0,1),(0xbc,0,9),(0x54,0,7),(0x58,0,127),(0x8c,0,1)))):
+        return m.fail(2)
+    record=PhysicsRecord(0,1,m.number(0x30),tuple(m.number(0x3c+4*k) for k in range(39)))
+    m.out=bytearray(initialize_body_configuration(record,initial_image=m.out).image)
+    material=struct.unpack_from('<i',m.out,0x44)[0]
+    quality={0:.98,1:.99,2:.97,3:.98,5:1.2,6:1.5,7:2.,8:.95,9:1.03}.get(material,1.)
+    struct.pack_into('<f',m.part,0x1c,quality)
+    return m.result(0)
+
+
+def load_axle_bar(configuration,component,kind):
+    """Complete anti-roll 0x54cce0 and traction-bar 0x54cea0 loaders."""
+    m=_Image(configuration,component)
+    if m.count()!=(1 if kind==13001 else 0):return m.fail(1)
+    if not (m.bounded(0x30,3 if kind==13001 else 5,50 if kind==13001 else 25) and
+            m.rounded_between(0x34,0,3) and (kind!=13001 or m.bounded(0x3c,40,500))):return m.fail(2)
+    attachment=struct.unpack_from('<I',m.part,0x18)[0]
+    if attachment not in (10,11):return m.result(0)
+    m.add_mass();m.put(0x28,m.existing(0x28)+m.number(0x30))
+    if kind==13001:
+        base=0x648 if attachment==10 else 0x654;value_offset=base+8
+        m.copy(value_offset,0x3c);target=0xfc if attachment==10 else 0x104
+    else:
+        base=0x660 if attachment==10 else 0x670;value_offset=0x668 if attachment==10 else 0x67c
+        m.put(value_offset,(m.nearest(0x34)+1)*f32(.1));target=0x108 if attachment==10 else 0x10c
+    m.copy(base,0x30);m.integer(base+4,m.nearest(0x34))
+    if _disabled_by_installation(m):m.put(value_offset,0.)
+    m.put(target,m.existing(target)+m.existing(value_offset));m.quality()
+    return m.result(0)
+
+
+def load_body_accessory(configuration,component,kind):
+    """Original stock body/accessory numeric loaders, including repeated parts."""
+    m=_Image(configuration,component)
+    slots={23001:(1,0x774),31001:(2,0x718),34001:(1,0x7d4),
+        35001:(1,0x7c8),40001:(2,0x80c),22001:(0,0x7e0)}
+    count,destination=slots[kind]
+    if m.count()!=count:return m.fail(1)
+    m.copy(destination,0x30);m.add_mass();m.integer(destination+4,m.nearest(0x34))
+    if kind==22001:
+        text=m.part[0x120:0x140]
+        if b'\0' not in text:raise ValueError('accessory text requires a bounded terminator')
+        if text[0]:
+            value=text.split(b'\0',1)[0]+b'\0'
+            m.out[0x7ec:0x7ec+len(value)]=value;m.integer(0x7e8,1)
+        return m.result(0)
+    if kind==40001:
+        mode=m.nearest(0x3c);m.integer(0x81c,mode)
+        if mode==2:m.put(0x818,m.number(0x40)*f32(.1))
+        else:m.put(0x818,0.);m.put(0x814,0.)
+        m.put(0,m.existing(0)+m.existing(0x814))
+    else:
+        m.copy(destination+8,0x3c);m.put(0,m.existing(0)+m.number(0x3c))
+        if kind==31001:m.integer(destination+12,m.nearest(0x40))
+    m.quality();return m.result(0)
+
+
+MECHANICAL_LOADERS={20001:load_body,160001:load_engine_block,130001:load_transmission,
     140001:load_rear_end,100001:load_wheel_rim,12001:load_spring,
     11001:load_shock,10001:load_brake,1000001:load_cylinder_head,
     1100001:load_camshaft,1200001:load_valve_train,180001:load_crankshaft,
@@ -511,3 +585,8 @@ MECHANICAL_LOADERS={160001:load_engine_block,130001:load_transmission,
     320001:load_intake_manifold,330001:load_carburetor,340001:load_air_cleaner,
     280001:load_exhaust_manifold,290001:load_exhaust_pipe,300001:load_muffler,
     230001:load_cooling,240001:load_electrical,250001:load_lubrication}
+
+for _kind in (22001,23001,31001,34001,35001,40001):
+    MECHANICAL_LOADERS[_kind]=lambda configuration,component,kind=_kind:load_body_accessory(configuration,component,kind)
+for _kind in (13001,14001):
+    MECHANICAL_LOADERS[_kind]=lambda configuration,component,kind=_kind:load_axle_bar(configuration,component,kind)

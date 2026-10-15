@@ -52,21 +52,27 @@ outside the published repository.
 
 ## Ordered gates
 
-Twenty-three [mechanical component loaders](calculations/mechanical-component-loading.md)
+Thirty-two [mechanical component loaders](calculations/mechanical-component-loading.md)
 now recover engine-block, head, camshaft, crankshaft, rods, pistons, valve-train,
 transmission, rear-end, rim, spring, shock, brake and tire validation, writes and
-quality, plus nine intake/exhaust/auxiliary engine loaders. Their complete bodies
-match 6,627 original cases, including thirty-eight actual stock Ford components.
+quality, plus intake/exhaust/auxiliary engine, body/accessory and axle-bar loaders.
+Their complete bodies match 8,031 original cases, including forty-seven actual
+stock Ford components (the standalone corpus also tests unused duplicate parts).
 Another thirty-eight-call partial stock sequence matches all original images.
-Native ports match 6,589
+Native ports match 7,984
 authored cases; the mechanical numeric copy and paired expansion have separate
 bounded comparisons. The stock inspector expands 45 catalogue entries to 57
 components and reports unsupported handling explicitly. Tire auxiliary packing
 matches six original runs including eighteen actual database rows, with substituted
 typed DB/allocator services. The [ordinary unboosted engine finalizer](calculations/engine-curve-finalization.md)
 matches eight complete stock configurations and 35 isolated branch cases in Python.
-Remaining loaders, full dispatch/quality, special engine modes, native engine-curve
-port, geometry and owner startup still block driving.
+The [complete supported mechanical assembly](calculations/mechanical-assembly.md)
+now matches eight stock configurations and eleven missing-part/rejection/duplicate
+scenarios against whole original calls, without substituted callees. It includes
+dispatch, quality, total mass, weight and final engine curves. The stock driving
+report carries finalized mass, axle levers and gear tables. Other component
+families, special engine modes, native assembly/engine-curve port, geometry and
+owner startup still block driving.
 
 The [assembly numeric finalizer](calculations/assembly-finalization.md) now
 recalculates component-based weight distribution and the original postload

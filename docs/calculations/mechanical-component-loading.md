@@ -1,14 +1,14 @@
 # Mechanical component loading
 
-The reconstructed startup now has twenty-three complete component loaders in Python
+The reconstructed startup now has thirty-two complete component loaders in Python
 and C++: engine block, head, camshaft, crankshaft, rods, pistons, valve train,
 transmission, rear end, wheel rims, springs, shocks, brakes, tires, intake manifold,
-carburetor, air cleaner, exhaust manifold, pipe, muffler, cooling, electrical and lubrication.
+carburetor, air cleaner, exhaust manifold, pipe, muffler, cooling, electrical and lubrication,
+plus the body, six accessory kinds and two axle-bar kinds.
 They retain original validation, rounding, mass accumulation, configuration writes
-and component quality. They do not complete vehicle assembly or start the driving
-model. Remaining engine/auxiliary/cosmetic components, grouping
-quality updates, geometry/display preparation and full assembly orchestration
-remain required.
+and component quality. The Python [complete assembly](mechanical-assembly.md)
+matches eight stock configurations. Other engine/auxiliary/cosmetic families,
+geometry/display preparation, native orchestration and driving remain open.
 
 ## Source and scope
 
@@ -107,7 +107,7 @@ dispatch order observable. Electrical RPM metadata truncates; cooling capacity
 uses the original float32 `1.07` multiplier. These fields feed the
 [engine curve finalizer](engine-curve-finalization.md).
 
-All twenty-three loaders preserve float32 mass accumulator stores. Their component mass
+All thirty-two loaders preserve float32 mass accumulator stores. Their component mass
 uses the original mechanical mass unit, documented as kg by the catalogue
 component interpretation. Several rules distinguish total mass from axle-group
 slots used by the [weight finalizer](assembly-finalization.md):
@@ -233,7 +233,8 @@ The current checks establish:
 - Thirty-eight selected Ford loader calls in their original relative dispatch order:
   every resulting configuration/component image matches original execution.
   Other loaders are skipped, so this is a partial assembly comparison.
-- C++ ports: 6,589 authored original-comparison cases match Python exactly.
+- Body/accessories/axle bars: 1,404 original cases including nine Ford components.
+- C++ ports: 7,984 authored original-comparison cases match Python exactly.
 
 The Ford comparison uses actual catalogue rows with explicitly authored zero
 damage/zero wear and temporary fixture IDs. It does not claim those IDs identify
@@ -250,6 +251,7 @@ python -m tools.mechanical_engine_block_oracle '<game>/mcity.exe' --database '<g
 python -m tools.mechanical_loaders_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.engine_component_loaders_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.engine_auxiliary_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
+python -m tools.body_accessory_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.tire_loader_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.tire_templates_oracle '<game>/mcity.exe' --database '<game>/data/db/Online.mdb'
 python -m tools.stock_mechanical_oracle '<game>/mcity.exe' '<game>/data/db/Online.mdb'

@@ -8,6 +8,7 @@ from tools.mechanical_loaders_oracle import cases,initial_configuration
 from tools.engine_component_loaders_oracle import cases as engine_component_cases
 from tools.tire_loader_oracle import cases as tire_cases
 from tools.engine_auxiliary_oracle import cases as auxiliary_cases
+from tools.body_accessory_oracle import cases as body_accessory_cases
 
 
 def verify(runner):
@@ -16,7 +17,8 @@ def verify(runner):
         *((160001,image,p,None) for p in engine_cases()),
         *((k,c,p,None) for k,c,p in engine_component_cases()),
         *((110001,c,p,t) for c,p,t in tire_cases()),
-        *((k,c,p,None) for k,c,p in auxiliary_cases())]
+        *((k,c,p,None) for k,c,p in auxiliary_cases()),
+        *((k,c,p,None) for k,c,p in body_accessory_cases())]
     lines=[];wanted=[]
     for kind,image,part,templates in records:
         lines.append(f'{kind} {image.hex()} {part.hex()}'+(' '+templates.hex() if templates is not None else ''))
@@ -35,7 +37,7 @@ def verify(runner):
                     raise AssertionError((index,records[index][0],field,offset,a[offset:offset+16],b[offset:offset+16]))
             raise AssertionError((index,'native mechanical field count'))
     return dict(cases=len(rows),maximum_absolute_error=0,
-        scope='twenty-three native/Python loaders; status and all configuration/component bytes exact; original-function authored corpora')
+        scope='thirty-two native/Python loaders; status and all configuration/component bytes exact; original-function authored corpora')
 
 
 if __name__=='__main__':

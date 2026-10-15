@@ -9,8 +9,10 @@ Run it from the source repository:
 .venv/Scripts/python.exe -m tools.inspect_stock_driving "C:/Program Files (x86)/EA Games/Motor City Online" --output build/stock-driving-inputs.json
 ```
 
-The report remains outside the original installation. It distinguishes recovered
-component facts from measured model geometry and the current authored placement.
+The report remains outside the original installation. Its `assembled_mechanics`
+section now includes complete supported mechanical assembly, total mass, engine
+curves, axle levers and gear tables. It distinguishes these recovered values
+from measured model geometry and the current authored placement.
 The latter raises the car until every tire clears terrain; it does not reproduce
 original spawn, suspension compression or the original wheel-support flags.
 
@@ -47,15 +49,15 @@ configuration; these equations do not supply missing stock ratios or mass.
 The [mechanical component loaders](mechanical-component-loading.md) now produce
 the actual Ford's transmission ratios/losses and final drive, plus engine block,
 head, camshaft, crankshaft, rods, pistons, valve-train, rim, spring, shock, brake
-and tire configuration, plus nine intake/exhaust/auxiliary engine components.
-Thirty-eight selected stock loads match original execution
-in sequence. The matching C++ loaders are also available. Tire curves now come
-from the original external auxiliary table. The Python
-[ordinary unboosted engine finalizer](engine-curve-finalization.md) now matches
-eight stock engines; special carburetor/boost modes and its native port remain open.
+and tire configuration, plus intake/exhaust/auxiliary engine, body/accessory and
+axle-bar components. Thirty-two loader kinds have matching C++ ports. Tire curves
+come from the external auxiliary table. The [complete Python assembly](mechanical-assembly.md)
+matches eight stock cars including total mass, quality and engine finalization;
+special carburetor/boost modes and native orchestration remain open.
 `tools.inspect_stock_mechanical` reports this partial loading with explicit
 damage/wear fixture inputs and remaining unsupported component handling. Its mass
-accumulator remains incomplete and cannot initialize the owner as a complete car.
+accumulator remains incomplete. Use `tools.inspect_stock_assembly` or the
+`assembled_mechanics` section of the driving report for finalized mechanical data.
 
 `client.stock_driving_state` exposes these facts and a machine-readable missing
 input report. The [assembly numeric finalizer](assembly-finalization.md) now
