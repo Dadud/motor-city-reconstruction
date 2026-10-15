@@ -28,8 +28,10 @@ The repository already has native ports for portions of assembly, engine updates
 tires, suspension, brakes, drivetrain, body forces, collisions and networking.
 Their bounded verification does not establish full subsystem recovery. Complete
 startup, interconnected driving, rendering/audio and service behavior remain
-incomplete. There is no defensible whole-executable extraction percentage yet:
-the repository lacks a complete function inventory with per-function coverage.
+incomplete. The [function inventory](recovery/README.md) separates analyzed
+functions, retained decompilation records, source references and explicitly
+reviewed completion claims. Unreviewed entries are not counted as complete;
+a whole-game extraction percentage remains unestablished.
 
 ## Build the recovered code
 

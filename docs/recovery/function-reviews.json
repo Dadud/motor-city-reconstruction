@@ -1,0 +1,306 @@
+{
+  "0x54e720": {
+    "translation": "python-complete-supported-domain;native-partial",
+    "verification": "original-comparison-bounded",
+    "scope": "Mechanical assembly: eight stock vehicles and eleven failure/duplicate scenarios; complete compared configuration images. Native component loaders exist; complete native dispatcher/finalizer remains missing. See docs/calculations/mechanical-assembly.md.",
+    "sources": [
+      "client/mechanical_assembly.py",
+      "tools/mechanical_assembly_oracle.py",
+      "docs/calculations/mechanical-assembly.md"
+    ]
+  },
+  "0x53a1f0": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "Owner initializer: gear tables and mass/inertia/levers recovered in bounded regions. Complete initializer, projected area and required geometry inputs remain missing. See docs/calculations/owner-binding.md.",
+    "sources": [
+      "client/owner_binding.py",
+      "client/gear_binding.py",
+      "docs/calculations/owner-binding.md"
+    ]
+  },
+  "0x539fe0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Gear helper and surrounding numeric table producer; supplied finalized configuration. See client/gear_binding.py, native/src/gear_binding.cpp and tools/gear_binding_oracle.py. Does not establish complete owner startup.",
+    "sources": [
+      "client/gear_binding.py",
+      "native/src/gear_binding.cpp",
+      "tools/gear_binding_oracle.py",
+      "docs/calculations/gear-binding.md"
+    ]
+  },
+  "0x4c3e50": {
+    "translation": "unpublished-draft",
+    "verification": "incomplete",
+    "scope": "Part bounds draft exists locally; signed-zero tie behavior needs correction. No published complete translation."
+  },
+  "0x53b8a0": {
+    "translation": "unpublished-draft",
+    "verification": "original-comparison-bounded-local",
+    "scope": "Wheel initialization draft compared in 56 cases with explicit prior geometry. Native draft exists; full startup geometry remains unresolved."
+  },
+  "0x52be40": {
+    "translation": "missing",
+    "verification": "static-analysis-only",
+    "scope": "Assembled model extents, centering and dependent attachment placement: retained analysis, no complete published translation."
+  },
+  "0x483450": {
+    "translation": "missing",
+    "verification": "static-analysis-only",
+    "scope": "Geometry rasterization for projected area; bounding-box substitutes are not recovered original behavior."
+  },
+  "0x54a5a0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete engine block loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54d080": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete transmission loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54d2f0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete rear end loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54d420": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete wheel rim loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54a840": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete spring loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54a9a0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete shock loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54ab30": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete brake loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54bd70": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete cylinder head loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54bef0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete camshaft loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54bac0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete crankshaft loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54bc10": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete connecting rods loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54b940": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete pistons loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54c090": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete valve train loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54e170": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete tire loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54af40": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete intake manifold loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54b0a0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete carburetor loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54b360": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete air cleaner loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54c710": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete exhaust manifold loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54c860": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete exhaust pipe loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54ca90": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete muffler loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54c440": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete cooling loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54c550": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete electrical loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x54c340": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete lubrication loader in the finite supported input domain. See client/mechanical_loaders.py, native/src/mechanical_loaders.cpp and docs/calculations/mechanical-component-loading.md. Part of the documented 8,031 original comparisons; not complete subsystem integration. Tire auxiliary data, where required, is supplied explicitly.",
+    "sources": [
+      "client/mechanical_loaders.py",
+      "native/src/mechanical_loaders.cpp",
+      "tools/mechanical_loaders_oracle.py",
+      "docs/calculations/mechanical-component-loading.md"
+    ]
+  }
+}

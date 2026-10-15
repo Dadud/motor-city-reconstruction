@@ -1,0 +1,96 @@
+{
+  "scope": "top-level EXE/DLL files only; nested binaries and system libraries not inventoried",
+  "binaries": [
+    {
+      "name": "Compress.dll",
+      "bytes": 20480,
+      "sha256": "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "dinput8.dll",
+      "bytes": 5413776,
+      "sha256": "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "dx7z.dll",
+      "bytes": 110592,
+      "sha256": "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "dx8z.dll",
+      "bytes": 135168,
+      "sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "dx8zDB.dll",
+      "bytes": 135168,
+      "sha256": "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "IFC22.dll",
+      "bytes": 196608,
+      "sha256": "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "IMPLODE.DLL",
+      "bytes": 17984,
+      "sha256": "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "ip.exe",
+      "bytes": 832000,
+      "sha256": "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "mcity.exe",
+      "bytes": 5337147,
+      "sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "function_inventory": "function-enumeration.json",
+      "status": "enumerated"
+    },
+    {
+      "name": "mco-launcher.exe",
+      "bytes": 6158719,
+      "sha256": "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "softtriz.dll",
+      "bytes": 237568,
+      "sha256": "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "Uninst.dll",
+      "bytes": 49152,
+      "sha256": "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    },
+    {
+      "name": "voodoo2z.dll",
+      "bytes": 57344,
+      "sha256": "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20",
+      "function_inventory": null,
+      "status": "function-enumeration-pending"
+    }
+  ]
+}

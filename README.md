@@ -2,6 +2,8 @@
 
 **Current focus:** source recovery, organization and a repeatable build.
 See [source recovery status and directory guide](docs/source-recovery.md).
+The [function inventory](docs/recovery/README.md) tracks per-function evidence,
+source references and reviewed recovery gaps.
 Build the recovered C++ library and checks with `python build.py --test`
 (Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet
 rebuild the complete original game. The application and mod work below are
