@@ -164,6 +164,14 @@ jobs:
         run: python -m tools.native_mechanical_loaders_compare build/native/mco_mechanical_loaders_compare
       - if: runner.os == 'Windows'
         run: python -m tools.native_mechanical_loaders_compare build/native/Release/mco_mechanical_loaders_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_owner_wheel_setup_compare build/native/mco_owner_wheel_setup_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_owner_wheel_setup_compare build/native/Release/mco_owner_wheel_setup_compare.exe
+      - if: runner.os == 'Linux'
+        run: python -m tools.native_model_bounds_compare build/native/mco_model_bounds_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.native_model_bounds_compare build/native/Release/mco_model_bounds_compare.exe
   linux-platform:
     runs-on: ubuntu-latest
     steps:

@@ -52,6 +52,12 @@ outside the published repository.
 
 ## Ordered gates
 
+Current work follows the [approved source recovery plan](recovery/plan.md).
+The [installation export catalogue](recovery/export-status.md) distinguishes raw
+decompilation from translation. [Wheel initialization](calculations/owner-wheel-setup.md)
+and [part bounds](calculations/model-bounds.md) now have complete bounded original
+comparisons; assembled model geometry and full owner initialization remain open.
+
 Thirty-two [mechanical component loaders](calculations/mechanical-component-loading.md)
 now recover engine-block, head, camshaft, crankshaft, rods, pistons, valve-train,
 transmission, rear-end, rim, spring, shock, brake and tire validation, writes and

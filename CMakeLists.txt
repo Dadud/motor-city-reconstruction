@@ -36,6 +36,8 @@ add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
   native/src/assembly_weight.cpp
   native/src/assembly_finalization.cpp
   native/src/mechanical_loaders.cpp
+  native/src/owner_wheel_setup.cpp
+  native/src/model_bounds.cpp
   native/src/wheel_force_correction.cpp native/src/brake_thermal.cpp
   native/src/brake_forces.cpp
   native/src/wheel_spin.cpp
@@ -100,7 +102,7 @@ endif()
 if(BUILD_TESTING)
   add_executable(mco_assembly_finalization_compare native/tests/assembly_finalization_compare.cpp)
   target_link_libraries(mco_assembly_finalization_compare PRIVATE mco_core)
-  foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding assembly_weight mechanical_loaders wheel_force_correction
+  foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding assembly_weight mechanical_loaders owner_wheel_setup model_bounds wheel_force_correction
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update engine_torque_update engine_pipeline
       body_vertical_load body_resistance air_density vehicle_preparation
       wind drafting body_environment control_update drivetrain_links

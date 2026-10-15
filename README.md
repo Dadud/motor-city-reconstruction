@@ -4,6 +4,9 @@
 See [source recovery status and directory guide](docs/source-recovery.md).
 The [function inventory](docs/recovery/README.md) tracks per-function evidence,
 source references and reviewed recovery gaps.
+The [installation export report](docs/recovery/export-status.md) covers all
+discovered program binaries; the [approved recovery plan](docs/recovery/plan.md)
+and [export instructions](docs/recovery/exporting.md) describe the current workflow.
 Build the recovered C++ library and checks with `python build.py --test`
 (Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet
 rebuild the complete original game. The application and mod work below are

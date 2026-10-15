@@ -20,9 +20,10 @@ retained as reference work.
 
 This is a partial source reconstruction, not the original game's extracted source
 or a complete rebuildable game. The last published recovery checkpoint is
-`35df8de` (complete supported stock mechanical assembly). At this status check,
-wheel initialization and model bounds have additional uncommitted research work;
-they must not be treated as a published, completed subsystem.
+`35df8de` established complete supported stock mechanical assembly. Subsequent
+bounded recovery includes [wheel initialization](calculations/owner-wheel-setup.md)
+and [part bounds](calculations/model-bounds.md), with complete-original-function
+comparisons. These do not establish complete startup or integrated driving.
 
 The repository already has native ports for portions of assembly, engine updates,
 tires, suspension, brakes, drivetrain, body forces, collisions and networking.

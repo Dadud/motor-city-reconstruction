@@ -31,14 +31,27 @@
     ]
   },
   "0x4c3e50": {
-    "translation": "unpublished-draft",
-    "verification": "incomplete",
-    "scope": "Part bounds draft exists locally; signed-zero tie behavior needs correction. No published complete translation."
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete translated/mirrored part bounds: 860 original executions including 414 original body parts, exact status and output bytes. Caller part selection/scaling/centering remains unresolved. Thirty-two native/Python status and signed-output-bit comparisons pass.",
+    "sources": [
+      "client/model_bounds.py",
+      "tools/model_bounds_oracle.py",
+      "docs/calculations/model-bounds.md",
+      "native/src/model_bounds.cpp",
+      "tools/native_model_bounds_compare.py"
+    ]
   },
   "0x53b8a0": {
-    "translation": "unpublished-draft",
-    "verification": "original-comparison-bounded-local",
-    "scope": "Wheel initialization draft compared in 56 cases with explicit prior geometry. Native draft exists; full startup geometry remains unresolved."
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete wheel setup or standalone stance: 56 original cases each, all owner bytes exact; 16 finalized stock configurations use authored prior geometry. Forty native/Python image comparisons. Complete model/owner startup remains unresolved.",
+    "sources": [
+      "client/owner_wheel_setup.py",
+      "native/src/owner_wheel_setup.cpp",
+      "tools/owner_wheel_setup_oracle.py",
+      "docs/calculations/owner-wheel-setup.md"
+    ]
   },
   "0x52be40": {
     "translation": "missing",
@@ -301,6 +314,17 @@
       "native/src/mechanical_loaders.cpp",
       "tools/mechanical_loaders_oracle.py",
       "docs/calculations/mechanical-component-loading.md"
+    ]
+  },
+  "0x53b3c0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete wheel setup or standalone stance: 56 original cases each, all owner bytes exact; 16 finalized stock configurations use authored prior geometry. Forty native/Python image comparisons. Complete model/owner startup remains unresolved.",
+    "sources": [
+      "client/owner_wheel_setup.py",
+      "native/src/owner_wheel_setup.cpp",
+      "tools/owner_wheel_setup_oracle.py",
+      "docs/calculations/owner-wheel-setup.md"
     ]
   }
 }

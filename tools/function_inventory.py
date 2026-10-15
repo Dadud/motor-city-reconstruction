@@ -136,8 +136,20 @@ def main():
             prior = existing.get(row['address'], {})
             row['evidence_ids'] = prior.get('evidence_ids', [])
             row['decompilation'] = 'retained' if row['evidence_ids'] else 'not-indexed'
+    bulk_path = output/'modules'/(TARGET+'.json')
+    bulk = {}
+    if bulk_path.exists():
+        document = json.loads(bulk_path.read_text(encoding='utf-8'))
+        if document['target_sha256'] != TARGET:
+            raise ValueError('bulk metadata target mismatch')
+        bulk = {r['address']: r for r in document['functions']}
+        if set(bulk) != {r['address'] for r in rows}:
+            raise ValueError('bulk and REA enumerations disagree; review profiles before merging')
+    for row in rows:
+        row['bulk_decompilation'] = bulk.get(row['address'], {}).get('decompilation', 'not-indexed')
     summary = dict(total=len(rows), address_spaces=dict(Counter(r['address_space'] for r in rows)),
         retained_decompilation=sum(bool(r['evidence_ids']) for r in rows),
+        bulk_decompilation=dict(Counter(r['bulk_decompilation'] for r in rows)),
         source_reference_candidates=sum(bool(r['python_refs'] or r['native_refs']) for r in rows),
         translation=dict(Counter(r['translation'] for r in rows)),
         verification=dict(Counter(r['verification'] for r in rows)))
@@ -147,6 +159,7 @@ def main():
         f"Main executable: **{summary['total']:,} analyzed entries**, including "
         f"**{summary['address_spaces'].get('EXTERNAL', 0):,} external imports**.", '',
         f"- Retained decompilation records indexed: **{summary['retained_decompilation']:,} functions**.",
+        f"- Bulk private pseudocode exports: **{summary['bulk_decompilation'].get('success', 0):,} functions**.",
         f"- Functions with address mentions in tracked Python/native source: **{summary['source_reference_candidates']:,}** (review candidates).",
         f"- Explicitly reviewed entries: **{sum(bool(r['scope']) for r in rows):,}**.", '',
         '| Reviewed translation label | Entries |', '| --- | ---: |']
