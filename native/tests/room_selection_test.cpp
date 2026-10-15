@@ -1,6 +1,7 @@
 #include "mco/room_selection.hpp"
 
 #include <algorithm>
+#include <array>
 #include <stdexcept>
 
 namespace {
