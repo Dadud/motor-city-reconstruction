@@ -33,6 +33,9 @@ not close the original driving acceptance gate.
 The main initializer's [load, balance and brake producers](calculations/startup-balance.md)
 are now also translated in Python/C++; their complete original calls match on
 authored configurations and all eight supported stock configurations.
+Its [135-entry resistance table and surface helper](calculations/startup-resistance.md)
+also match complete original calls; the projected-area producer and integrated
+shift-curve publication remain unresolved.
 
 | Feature | Current status and evidence | Remaining recovery path | Acceptance scenario |
 | --- | --- | --- | --- |

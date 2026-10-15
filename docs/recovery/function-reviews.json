@@ -3,61 +3,111 @@
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete startup load coefficient in finite supported domain. Compared as part of 372 coefficient calls on 54 authored and eight stock configurations; all output bits exact. Units remain unresolved. See startup-balance writeup.",
-    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+    "sources": [
+      "client/startup_balance.py",
+      "native/src/startup_balance.cpp",
+      "tools/startup_balance_oracle.py",
+      "docs/calculations/startup-balance.md"
+    ]
   },
   "0x53acc0": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete startup balance coefficient in supported configuration domain, with actual tire response children and both alternate-load modes. Compared as part of 372 coefficient calls including eight stock configurations; output bits exact. Not integrated suspension/handling acceptance.",
-    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+    "sources": [
+      "client/startup_balance.py",
+      "native/src/startup_balance.cpp",
+      "tools/startup_balance_oracle.py",
+      "docs/calculations/startup-balance.md"
+    ]
   },
   "0x53b040": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete startup brake balance in finite nonzero-denominator domain, with actual brake children. Compared as part of 372 coefficient calls including eight supported stock configurations; all float32 output bits exact. Original stored versus retained precision preserved.",
-    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+    "sources": [
+      "client/startup_balance.py",
+      "native/src/startup_balance.cpp",
+      "tools/startup_balance_oracle.py",
+      "docs/calculations/startup-balance.md"
+    ]
   },
   "0x538820": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete brake diameter selection, original stored float constants and default behavior. Twenty-four direct original calls, plus dependent startup brake comparisons. Native/Python output bits exact.",
-    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+    "sources": [
+      "client/startup_balance.py",
+      "native/src/startup_balance.cpp",
+      "tools/startup_balance_oracle.py",
+      "docs/calculations/startup-balance.md"
+    ]
   },
   "0x5399d0": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete brake capacity numeric helper in finite supported domain. 144 direct original comparisons across diameter, material/construction defaults, pressure and auxiliary modes; double output bits exact. Also verified through stock brake-balance callers.",
-    "sources": ["client/startup_balance.py", "native/src/startup_balance.cpp", "tools/startup_balance_oracle.py", "docs/calculations/startup-balance.md"]
+    "sources": [
+      "client/startup_balance.py",
+      "native/src/startup_balance.cpp",
+      "tools/startup_balance_oracle.py",
+      "docs/calculations/startup-balance.md"
+    ]
   },
   "0x51ed40": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete 22-sample primitive geometry helper, five shapes, negative and signed-zero inputs. Thirty independent original calls plus 1080 complete constructor comparisons; native/Python all float bits exact. Bounded finite geometry domain; not complete vehicle model assembly.",
-    "sources": ["client/body_geometry.py", "native/src/body_constructor.cpp", "tools/body_constructor_oracle.py", "docs/calculations/body-construction.md"]
+    "sources": [
+      "client/body_geometry.py",
+      "native/src/body_constructor.cpp",
+      "tools/body_constructor_oracle.py",
+      "docs/calculations/body-construction.md"
+    ]
   },
   "0x51f440": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete base owner constructor in the supported finite domain: 1080 original calls, five shapes and nine material values, all 0x2000 observation bytes exact. MSVC/Zig native/Python comparisons exact. Preserves all bytes above original 0x418 clear range; prior derived geometry remains supplied.",
-    "sources": ["client/body_constructor.py", "native/src/body_constructor.cpp", "tools/body_constructor_oracle.py", "docs/calculations/body-construction.md"]
+    "sources": [
+      "client/body_constructor.py",
+      "native/src/body_constructor.cpp",
+      "tools/body_constructor_oracle.py",
+      "docs/calculations/body-construction.md"
+    ]
   },
   "0x43a240": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete catalogue body sampling customization: all eight supported selectors, 80 standalone original calls, plus 320 connected startup-body cases. Invalid selectors are rejected by the authored adapter rather than invoking the original diagnostic service.",
-    "sources": ["client/body_geometry.py", "native/src/body_constructor.cpp", "tools/body_startup_oracle.py", "docs/calculations/body-construction.md"]
+    "sources": [
+      "client/body_geometry.py",
+      "native/src/body_constructor.cpp",
+      "tools/body_startup_oracle.py",
+      "docs/calculations/body-construction.md"
+    ]
   },
   "0x53a150": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Complete inertia multiplier selection for supported int selectors and finite prior values. Twenty-six original calls cover known/unknown selectors and preserve prior nonidentity and signed-zero values. Native/Python helper and dependent owner-binding comparisons exact.",
-    "sources": ["client/owner_binding.py", "native/src/owner_binding.cpp", "tools/body_startup_oracle.py", "docs/calculations/owner-binding.md"]
+    "sources": [
+      "client/owner_binding.py",
+      "native/src/owner_binding.cpp",
+      "tools/body_startup_oracle.py",
+      "docs/calculations/owner-binding.md"
+    ]
   },
   "0x43a990": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
     "scope": "Connected body phase 0x43ab88..0x43acb1 matches 320 original cases, all owner bytes exact; Python/C++ ports include base construction, catalogue sampling, stance, response and COM stores. Model loading, surrounding errors, main owner initializer and complete startup integration remain missing.",
-    "sources": ["client/body_startup.py", "native/src/body_constructor.cpp", "tools/body_startup_oracle.py", "docs/calculations/body-construction.md"]
+    "sources": [
+      "client/body_startup.py",
+      "native/src/body_constructor.cpp",
+      "tools/body_startup_oracle.py",
+      "docs/calculations/body-construction.md"
+    ]
   },
   "0x54e720": {
     "translation": "python-complete-supported-domain;native-partial",
@@ -386,6 +436,28 @@
       "native/src/owner_wheel_setup.cpp",
       "tools/owner_wheel_setup_oracle.py",
       "docs/calculations/owner-wheel-setup.md"
+    ]
+  },
+  "0x53e620": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete surface selector helper, finite supported inputs. 72 original calls match double output bits, including threshold and default branches. Native/Python comparisons under MSVC and Zig/Clang. Not integrated road load.",
+    "sources": [
+      "client/startup_resistance.py",
+      "native/src/startup_resistance.cpp",
+      "tools/startup_resistance_oracle.py",
+      "docs/calculations/startup-resistance.md"
+    ]
+  },
+  "0x550ed0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete 135-entry startup resistance producer with real original surface helper. 180 original calls match 24,300 float32 entries and sentinel write extent exactly. Native/Python matches under MSVC and Zig/Clang. Projected-area producer and full owner initializer remain unresolved.",
+    "sources": [
+      "client/startup_resistance.py",
+      "native/src/startup_resistance.cpp",
+      "tools/startup_resistance_oracle.py",
+      "docs/calculations/startup-resistance.md"
     ]
   }
 }
