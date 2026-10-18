@@ -5,18 +5,18 @@ Main executable: **25,774 inventoried entries**, including **338 external import
 - Boundary inventory: **25,773 retained enumeration entries + 1 explicit supplements**.
 - Retained decompilation records indexed: **426 functions**.
 - Bulk private pseudocode exports: **25,434 functions**.
-- Functions with address mentions in tracked Python/native source: **368** (review candidates).
-- Explicitly reviewed entries: **177**.
+- Functions with address mentions in tracked Python/native source: **369** (review candidates).
+- Explicitly reviewed entries: **179**.
 - Structural triage: game candidates **16,071**, classified non-game **9,703**. **Required after dispositions: 11,760**. An entry is required when its module is in recovery scope and no published disposition removes it; see [triage](triage.md) and [dispositions](dispositions.json).
 
 | Reviewed translation label | Entries |
 | --- | ---: |
 | missing | 2 |
-| native-bounded | 115 |
+| native-bounded | 117 |
 | partial | 3 |
 | python-and-native-bounded | 56 |
 | python-complete-supported-domain;native-partial | 1 |
-| unreviewed | 25,597 |
+| unreviewed | 25,595 |
 
 These counts do not measure whole-game completion. Most entries await review.
 See [label definitions and refresh instructions](README.md) and the sortable

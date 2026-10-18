@@ -1,0 +1,51 @@
+{
+  "id": "input_toggle_key",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bfc90"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bfc80"
+    }
+  ],
+  "brief": "Preserve Caps/Num/Scroll Lock query and paired event behavior with cached event target.",
+  "decl": "void input_toggle_key(std::uint32_t selector, std::uint32_t desired, const InputToggleKeyPlatform &platform);",
+  "header_includes": [
+    "mco/input_toggle_key_platform.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_toggle_key_cases.hpp"
+    ],
+    "body": "        input_toggle_key_cases::compare(input);"
+  },
+  "shared_sources": [
+    "tools/input_toggle_key_cases.py",
+    "native/tests/input_toggle_key_cases.hpp",
+    "docs/recovery/toggle-key-progress.md",
+    "native/include/mco/input_toggle_key_platform.hpp"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-startup",
+    "owner": "input-recovery",
+    "scope": "Complete toggle setter and startup Num Lock wrapper with explicit Windows query/event bridges.",
+    "supported_domain": "Returning query/event bridges; uint32 selectors and desired values. BYTE key/scan arguments compared only in their defined low eight bits. Host Windows state, faults, concurrency and callback register side effects excluded.",
+    "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests.",
+    "comparison_cases": 984,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Actual Windows adapters and full startup input linkage."
+    ],
+    "evidence_ids": [
+      "ev_2a83c75f72b24ced24f1b8fc67f065efe2f4669b6424b09a0a7551d6267efdf3",
+      "ev_a70577ea306a84a7816cca212dc0ecd56e0be483e85c2443045a769cb9c28f40"
+    ]
+  }
+}

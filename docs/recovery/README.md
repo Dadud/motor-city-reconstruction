@@ -33,6 +33,7 @@ No executable bytes, disassembly, pseudocode or account information are included
 Names and addresses identify functions in the exact recorded binary.
 
 See the [REA workflow audit and operating contract](rea-workflow.md) for current tool alignment, Evidence rules and limitations.
+The [startup toggle-key recovery](toggle-key-progress.md) records the recovered Num Lock boundary and its platform limitations.
 
 ## Read the labels
 

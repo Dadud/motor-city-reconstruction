@@ -8,7 +8,7 @@ The initial CLI and connected MCP server were 6.4.0 with skill revision 37 and 1
 
 The installed skill is revision 42 with generated tool count 207. Its text matches the inspected upstream skill after removing the generated count and pinning upstream `@latest` examples to `@6.7.0`, as the release installer does. Node is 24.21.0; the functioning native provider is Ghidra 12.1.4 with the existing JDK 21 installation.
 
-The active Codex MCP connection still reports 6.4.0. An explicit `binary_session(expected_package_version="6.7.0")` check returned `mcp_server_restart_required` / `package_version_mismatch`. Reconnect REA or restart Codex, then verify actual server identity before treating MCP as 6.7. Until that happens, native work uses the verified 6.7 CLI with the existing registered provider environment. Updating files on disk alone does not establish live-server alignment.
+After restarting Codex, the live MCP identity reports package/server 6.7.0, alignment `aligned`, skill revision 42 and 207 MCP tools. The former stale 6.4.0 connection is resolved. Native investigation now uses the aligned MCP connection with the existing Ghidra environment.
 
 ## Executed native verification
 
@@ -37,4 +37,4 @@ This static check supplements the existing bounded original-instruction/native c
 5. Use summary/paged views instead of repeating producers or printing full catalogs. The first session-status response was unnecessarily large; subsequent inspection selects stored fields. Complete private records remain available.
 6. Keep a question/Evidence/unknown ledger. Use supported REA unknown tracking and finite reconstruction-verification contracts when the current connection supports them. A passing local test suite does not close unrelated inventory or gameplay requirements.
 
-The remaining setup action is MCP reconnection and identity verification. Broader reconstruction remains unfinished; this audit does not certify every historical inference or all REA capabilities on Windows.
+MCP reconnection and identity verification are complete. Broader reconstruction remains unfinished; this audit does not certify every historical inference or all REA capabilities on Windows.

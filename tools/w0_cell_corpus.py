@@ -82,6 +82,9 @@ def build(executable):
         if name == 'startup_initialize':
             from tools.startup_initialize_cases import capture
             cases = capture(oracle)
+        elif name == 'input_toggle_key':
+            from tools.input_toggle_key_cases import capture
+            cases = capture(oracle)
         elif name == 'input_keyboard_layout':
             from tools.input_keyboard_layout_cases import capture
             cases = capture(oracle)
