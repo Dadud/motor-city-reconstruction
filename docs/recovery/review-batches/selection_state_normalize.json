@@ -10,7 +10,7 @@
       "verification": "original-comparison-bounded",
       "status": "implemented",
       "acceptance": "Met: 536 complete-function original comparisons exact on MSVC and Zig/Clang; all six words and EAX checked. Native suites 138/140 pass. See docs/recovery/selection-state.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 536,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [

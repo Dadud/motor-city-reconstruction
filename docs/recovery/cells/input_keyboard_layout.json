@@ -40,7 +40,7 @@
     "supported_domain": "Mapped queue and 620-byte translation image; returning type-query bridge; other active remap identities require explicit mapped views. Host OS keyboard detection and invalid-pointer faults unmodeled.",
     "acceptance": "560 original setup cases and four persistent 22-operation input traces match MSVC and Zig; independent range, cached-query, unchanged-on-rejection and shared-view tests pass.",
     "comparison_cases": 560,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Actual keyboard-type adapter, live message pump/input, full startup linkage and actual game actions."

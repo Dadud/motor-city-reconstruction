@@ -26,7 +26,7 @@
   "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
   "supported_domain": "Byte spans covering the reads/writes reached before newline or the inclusive signed limit, including tested overlap. NUL bytes do not stop copying; the return is a numeric offset, not a host pointer.",
   "acceptance": "Met: 338 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
-  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_corpus": "docs/recovery/corpora/wave0",
   "comparison_cases": 338,
   "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
  }

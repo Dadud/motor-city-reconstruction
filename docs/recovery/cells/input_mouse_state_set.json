@@ -41,7 +41,7 @@
     "supported_domain": "Distinct referenced globals and returning bridges with valid opaque COM handles and table tokens; live Windows faults and invalid pointers excluded.",
     "acceptance": "3168 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
     "comparison_cases": 3168,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Actual DirectInput adapter and invalid handle behavior; position helper connected separately by runtime binding."

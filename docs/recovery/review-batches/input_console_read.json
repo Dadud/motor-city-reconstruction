@@ -11,7 +11,7 @@
       "supported_domain": "Mapped console window and records; normal scans 0..255, any enhanced scan; finite event streams and successful bounded dynamic allocations; APIs populate fields subsequently read, including saved mode. Invalid original accesses and uninitialized out-parameters unmodeled.",
       "acceptance": "1932 original cases across six complete routines and four persistent console/fallback ten-call traces match MSVC and Zig exactly; independent buffer, mode, filter, alias, error and forwarding tests pass.",
       "comparison_cases": 1932,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Actual console API and lock adapters, uninitialized API out-parameters and allocation-fault behavior, live input and process cleanup."
@@ -55,7 +55,7 @@
       "supported_domain": "Mapped console window and records; normal scans 0..255, any enhanced scan; finite event streams and successful bounded dynamic allocations; APIs populate fields subsequently read, including saved mode. Invalid original accesses and uninitialized out-parameters unmodeled.",
       "acceptance": "1932 original cases across six complete routines and four persistent console/fallback ten-call traces match MSVC and Zig exactly; independent buffer, mode, filter, alias, error and forwarding tests pass.",
       "comparison_cases": 1932,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Actual console API and lock adapters, uninitialized API out-parameters and allocation-fault behavior, live input and process cleanup."
@@ -99,7 +99,7 @@
       "supported_domain": "Mapped console window and records; normal scans 0..255, any enhanced scan; finite event streams and successful bounded dynamic allocations; APIs populate fields subsequently read, including saved mode. Invalid original accesses and uninitialized out-parameters unmodeled.",
       "acceptance": "1932 original cases across six complete routines and four persistent console/fallback ten-call traces match MSVC and Zig exactly; independent buffer, mode, filter, alias, error and forwarding tests pass.",
       "comparison_cases": 1932,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Actual console API and lock adapters, uninitialized API out-parameters and allocation-fault behavior, live input and process cleanup."
@@ -143,7 +143,7 @@
       "supported_domain": "Mapped console window and records; normal scans 0..255, any enhanced scan; finite event streams and successful bounded dynamic allocations; APIs populate fields subsequently read, including saved mode. Invalid original accesses and uninitialized out-parameters unmodeled.",
       "acceptance": "1932 original cases across six complete routines and four persistent console/fallback ten-call traces match MSVC and Zig exactly; independent buffer, mode, filter, alias, error and forwarding tests pass.",
       "comparison_cases": 1932,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Actual console API and lock adapters, uninitialized API out-parameters and allocation-fault behavior, live input and process cleanup."
@@ -187,7 +187,7 @@
       "supported_domain": "Mapped console window and records; normal scans 0..255, any enhanced scan; finite event streams and successful bounded dynamic allocations; APIs populate fields subsequently read, including saved mode. Invalid original accesses and uninitialized out-parameters unmodeled.",
       "acceptance": "1932 original cases across six complete routines and four persistent console/fallback ten-call traces match MSVC and Zig exactly; independent buffer, mode, filter, alias, error and forwarding tests pass.",
       "comparison_cases": 1932,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Actual console API and lock adapters, uninitialized API out-parameters and allocation-fault behavior, live input and process cleanup."
@@ -231,7 +231,7 @@
       "supported_domain": "Mapped console window and records; normal scans 0..255, any enhanced scan; finite event streams and successful bounded dynamic allocations; APIs populate fields subsequently read, including saved mode. Invalid original accesses and uninitialized out-parameters unmodeled.",
       "acceptance": "1932 original cases across six complete routines and four persistent console/fallback ten-call traces match MSVC and Zig exactly; independent buffer, mode, filter, alias, error and forwarding tests pass.",
       "comparison_cases": 1932,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Actual console API and lock adapters, uninitialized API out-parameters and allocation-fault behavior, live input and process cleanup."

@@ -11,7 +11,7 @@
       "supported_domain": "Finite path/query positions of magnitude <=1e20 and mapped point ranges; invalid original access faults unmodeled.",
       "acceptance": "1512 complete original-body cases match MSVC and Zig exactly; focused group/tie/wrap/bounds native tests pass on both compilers.",
       "comparison_cases": 1512,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [
         "native/cmds/nearest_path_point.cmake",

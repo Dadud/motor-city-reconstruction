@@ -45,7 +45,7 @@
     "supported_domain": "Shared bounded queue/global image with <=128 table entries at search; returning callback bridges; original invalid function-pointer and memory faults unmodeled.",
     "acceptance": "1653 complete original dispatcher calls match MSVC and Zig exactly with declared lock/handler scripts; focused native ordering/reload/bounds tests pass.",
     "comparison_cases": 1653,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."

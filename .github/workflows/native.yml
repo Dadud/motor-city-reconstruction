@@ -10,8 +10,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true
       - run: cmake -S . -B build/native -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build/native --config Release --parallel
       - run: ctest --test-dir build/native -C Release --output-on-failure

@@ -10,7 +10,7 @@
       "verification": "original-comparison-bounded",
       "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
       "translation": "native-bounded",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 30,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

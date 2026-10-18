@@ -5,17 +5,89 @@ never executable bytes or original assets. A fresh oracle export and the
 committed regression corpus use exactly the same transport and comparator.
 """
 import argparse
+import gzip
 import hashlib
 import json
 from pathlib import Path
 import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT = ROOT / 'docs/recovery/corpora/wave0.json'
+DEFAULT = ROOT / 'docs/recovery/corpora/wave0'
+
+
+def _json_bytes(document):
+    return json.dumps(document, sort_keys=True, separators=(',', ':')).encode('utf-8')
+
+
+def _atomic_write(path, payload):
+    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=path.name + '.',
+                                     suffix='.tmp', delete=False) as stream:
+        temporary = Path(stream.name)
+        stream.write(payload)
+    try:
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def _read_shard(directory, index, kind, identifier):
+    entry = index[kind][identifier]
+    digest = entry['sha256']
+    if not isinstance(digest, str) or len(digest) != 64 or any(
+            c not in '0123456789abcdef' for c in digest):
+        raise ValueError('invalid corpus shard digest')
+    compressed = index['shard_schema'] == 2
+    payload = (directory / (digest + ('.json.gz' if compressed else '.json'))).read_bytes()
+    if compressed:
+        payload = gzip.decompress(payload)
+    if hashlib.sha256(payload).hexdigest() != digest:
+        raise ValueError('corpus shard digest mismatch')
+    document = json.loads(payload)
+    if document.get('target_sha256') != index.get('target_sha256'):
+        raise ValueError('corpus shard index target mismatch')
+    if document.get('schema') != 1 or set(document.get(kind, {})) != {identifier}:
+        raise ValueError('corpus shard identity mismatch')
+    return document[kind][identifier]
+
+
+def load_corpus(path=DEFAULT, *, cell=None, probe=None):
+    """Read legacy JSON/gzip or a checked, versioned shard snapshot.
+
+    Selection reads just one record; full-suite callers read the same snapshot
+    once. Missing/corrupt shards fail explicitly, with no stale-cache fallback.
+    """
+    path = Path(path)
+    if not path.is_dir():
+        payload = path.read_bytes()
+        return json.loads(gzip.decompress(payload) if path.suffix == '.gz' else payload)
+    index = json.loads((path / 'index.json').read_bytes())
+    if index.get('shard_schema') not in (1, 2):
+        raise ValueError('unsupported cell shard schema')
+    if index['shard_schema'] == 2:
+        document = dict(index['metadata'])
+        if document.get('schema') != 1 or document.get('target_sha256') != index['target_sha256']:
+            raise ValueError('corpus index metadata identity mismatch')
+    else:
+        document = dict(schema=1, target_sha256=index['target_sha256'])
+    for kind, selected in (('cells', cell), ('probes', probe)):
+        if (cell is not None or probe is not None) and selected is None:
+            continue
+        identifiers = [selected] if selected is not None else index.get(kind, {})
+        document[kind] = {identifier: _read_shard(path, index, kind, identifier)
+                          for identifier in identifiers}
+    return document
 
 
 def write_corpus(path, corpus):
-    """Keep byte arrays inline and cases on separate lines for useful diffs."""
+    """Write shards by default, or an explicitly selected legacy JSON/gzip file."""
+    path = Path(path)
+    if path.is_dir() or not path.suffix:
+        return write_shards(path, corpus)
+    if path.suffix == '.gz':
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(gzip.compress(_json_bytes(corpus), compresslevel=6, mtime=0))
+        return
     metadata = {key: value for key, value in corpus.items() if key != 'cells'}
     chunks = [json.dumps(metadata)[:-1] + ', "cells": {\n']
     cells = []
@@ -38,52 +110,42 @@ def words(values):
 
 
 def load_cases(identifier, path=DEFAULT):
-    path = Path(path)
-    if path.is_dir():
-        index = json.loads((path / 'index.json').read_text(encoding='utf-8'))
-        if index.get('shard_schema') != 1:
-            raise ValueError('unsupported cell shard schema')
-        entry = index['cells'][identifier]
-        # Derive the filename from the digest, never from an index-provided path.
-        digest = entry['sha256']
-        if len(digest) != 64 or any(c not in '0123456789abcdef' for c in digest):
-            raise ValueError('invalid cell shard digest')
-        payload = (path / (digest + '.json')).read_bytes()
-        if hashlib.sha256(payload).hexdigest() != digest:
-            raise ValueError('cell shard digest mismatch')
-        document = json.loads(payload)
-        if document.get('target_sha256') != index.get('target_sha256'):
-            raise ValueError('cell shard index target mismatch')
-    else:
-        document = json.loads(path.read_text(encoding='utf-8'))
-    return cases_for(identifier, document)
+    return cases_for(identifier, load_corpus(path, cell=identifier))
 
 
 def shard_corpus(source, destination):
-    """Export an explicit immutable snapshot for fast individual comparisons.
+    """Migrate JSON, gzip or a shard snapshot to the current shard format."""
+    return write_shards(destination, load_corpus(source))
 
-    The source corpus remains authoritative for full-suite/lifecycle runs.
-    Re-export after changing it; no implicit cache or fallback hides stale data.
+
+def write_shards(destination, document):
+    """Write immutable gzip records, publishing their index atomically last.
+
+    Old unreferenced records are deliberately retained: concurrent readers of
+    the previous manifest must remain valid. Garbage collection is explicit.
     """
-    source, destination = Path(source), Path(destination)
-    payload = source.read_bytes()
-    document = json.loads(payload)
+    destination = Path(destination)
     if document.get('schema') != 1:
         raise ValueError('unsupported cell corpus schema')
     destination.mkdir(parents=True, exist_ok=True)
-    index = dict(shard_schema=1, source_sha256=hashlib.sha256(payload).hexdigest(),
-                 target_sha256=document['target_sha256'], cells={})
-    for identifier, cell in document['cells'].items():
-        cases_for(identifier, document)
-        shard = dict(schema=1, target_sha256=document['target_sha256'],
-                     cells={identifier: cell})
-        encoded = json.dumps(shard, separators=(',', ':')).encode('utf-8')
-        digest = hashlib.sha256(encoded).hexdigest()
-        (destination / (digest + '.json')).write_bytes(encoded)
-        index['cells'][identifier] = dict(sha256=digest, cases=len(cell['cases']))
-    temporary = destination / 'index.json.tmp'
-    temporary.write_text(json.dumps(index, indent=2)+'\n', encoding='utf-8')
-    temporary.replace(destination / 'index.json')
+    index = dict(shard_schema=2, target_sha256=document['target_sha256'],
+                 metadata={key: value for key, value in document.items()
+                           if key not in ('cells', 'probes')}, cells={}, probes={})
+    for kind in ('cells', 'probes'):
+        for identifier, record in document.get(kind, {}).items():
+            if kind == 'cells':
+                cases_for(identifier, document)
+            encoded = _json_bytes(dict(schema=1, target_sha256=document['target_sha256'],
+                                       **{kind: {identifier: record}}))
+            digest = hashlib.sha256(encoded).hexdigest()
+            target = destination / (digest + '.json.gz')
+            if target.exists():
+                if gzip.decompress(target.read_bytes()) != encoded:
+                    raise ValueError('existing corpus shard digest mismatch')
+            else:
+                _atomic_write(target, gzip.compress(encoded, compresslevel=6, mtime=0))
+            index[kind][identifier] = dict(sha256=digest)
+    _atomic_write(destination / 'index.json', (json.dumps(index, indent=2)+'\n').encode('utf-8'))
     return index
 
 
@@ -147,4 +209,5 @@ if __name__ == '__main__':
     parser.add_argument('--shard-to', type=Path, required=True)
     args = parser.parse_args()
     index = shard_corpus(args.corpus, args.shard_to)
-    print(json.dumps(dict(cells=len(index['cells']), source_sha256=index['source_sha256'])))
+    print(json.dumps(dict(cells=len(index['cells']), probes=len(index['probes']),
+                         output=str(args.shard_to))))

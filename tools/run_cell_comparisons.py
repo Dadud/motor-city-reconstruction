@@ -17,7 +17,7 @@ CELLS = ROOT / 'docs' / 'recovery' / 'cells'
 sys.path.insert(0, str(ROOT))
 
 from tools.function_cell import load_manifest, manifests  # noqa: E402
-from tools.cell_corpus import DEFAULT, cases_for, verify as compare  # noqa: E402
+from tools.cell_corpus import DEFAULT, load_corpus, cases_for, verify as compare  # noqa: E402
 
 
 def locate(directory, identifier, platform):
@@ -31,7 +31,7 @@ def locate(directory, identifier, platform):
 
 def verify(directory, platform, corpus=None):
     results = []
-    document = json.loads(Path(corpus or DEFAULT).read_text(encoding='utf-8'))
+    document = load_corpus(corpus or DEFAULT)
     for path in manifests():
         manifest = load_manifest(path)
         if manifest.get('status', 'scaffolded') != 'implemented':

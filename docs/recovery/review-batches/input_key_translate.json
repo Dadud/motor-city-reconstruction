@@ -10,7 +10,7 @@
       "verification": "original-comparison-bounded",
       "status": "implemented",
       "acceptance": "MSVC and Zig native outputs exactly match captured original observations; standalone native behavior tests pass on both compilers. Live dispatch and Windows synchronization integration remain unresolved.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 1548,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [

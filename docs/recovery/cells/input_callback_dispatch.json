@@ -51,7 +51,7 @@
     "supported_domain": "Mapped callback and enable word; returning cdecl no-argument callbacks/helpers. Invalid original pointers and platform internals unmodeled.",
     "acceptance": "2496 original cases across dispatcher and fallback plus four persistent ten-call setter/dispatch traces match MSVC and Zig exactly; independent full-result, mask, gate and mutation tests pass.",
     "comparison_cases": 2496,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Action configuration/lifetime and actual actions; platform/lock API adapters, uninitialized-output/allocation-fault paths, live input and process cleanup."

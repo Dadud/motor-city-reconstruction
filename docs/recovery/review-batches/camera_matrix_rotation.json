@@ -10,7 +10,7 @@
       "scope": "Three complete matrix rotation bodies with actual original trig children in oracle; host trig equivalent checked on retained finite inputs.",
       "supported_domain": "Finite turns +/-1024, finite matrix magnitudes <=1e20, identical or disjoint source/destination. Partial overlap, exception flags, nonfinite values and x87 return-register precision unmodeled.",
       "acceptance": "4356 synthetic complete-body cases match MSVC and Zig exactly; focused native tests cover axis invariants, aliases and rejected inputs.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 4356,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
@@ -45,7 +45,7 @@
       "scope": "Three complete matrix rotation bodies with actual original trig children in oracle; host trig equivalent checked on retained finite inputs.",
       "supported_domain": "Finite turns +/-1024, finite matrix magnitudes <=1e20, identical or disjoint source/destination. Partial overlap, exception flags, nonfinite values and x87 return-register precision unmodeled.",
       "acceptance": "4356 synthetic complete-body cases match MSVC and Zig exactly; focused native tests cover axis invariants, aliases and rejected inputs.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 4356,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
@@ -80,7 +80,7 @@
       "scope": "Three complete matrix rotation bodies with actual original trig children in oracle; host trig equivalent checked on retained finite inputs.",
       "supported_domain": "Finite turns +/-1024, finite matrix magnitudes <=1e20, identical or disjoint source/destination. Partial overlap, exception flags, nonfinite values and x87 return-register precision unmodeled.",
       "acceptance": "4356 synthetic complete-body cases match MSVC and Zig exactly; focused native tests cover axis invariants, aliases and rejected inputs.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 4356,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [

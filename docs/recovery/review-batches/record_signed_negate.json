@@ -10,7 +10,7 @@
       "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
       "supported_domain": "Valid supplied images; nonwrapping address windows for stack scans; clear direction flag for the original MOVSD copy. Invalid pointers and original fault behavior remain outside scope.",
       "acceptance": "Met: 16 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 16,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

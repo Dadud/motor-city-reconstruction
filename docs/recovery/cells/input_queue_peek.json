@@ -58,7 +58,7 @@
     "supported_domain": "Mapped, terminating queue states; positive capacity when division executes; byte scan and valid translation views. Original faults/process cleanup unmodeled.",
     "acceptance": "138 original cases match MSVC and Zig exactly; native consumption, sign extension, zero-prefix, provider mutation and terminal exit tests pass.",
     "comparison_cases": 138,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."

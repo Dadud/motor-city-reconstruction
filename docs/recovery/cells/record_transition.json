@@ -42,7 +42,7 @@
   "scope": "Complete controller body on supplied valid byte images and scalar state. Callback bodies are explicitly substituted by controlled observation/mutation hooks.",
   "supported_domain": "Stable caller-owned record arena before the external scalar globals; valid mapped current records and returning cdecl callback bridges. Transition requires a valid nonnull entry current record; activation separately supports null current and null optional handlers. DF is clear for original word copies. Pair-table storage represents the separate original 0x88acdc image and must not alias the machine arena.",
   "acceptance": "Met: 96 controller cases exact under declared callback substitutions on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
-  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_corpus": "docs/recovery/corpora/wave0",
   "comparison_cases": 96,
   "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
   "callback_substitutions": "Eight original callback entrypoints are replaced by RET plus explicit scripted observation/mutation hooks. Full controller body, full arena and every callback-entry snapshot are compared; actual handlers remain external.",

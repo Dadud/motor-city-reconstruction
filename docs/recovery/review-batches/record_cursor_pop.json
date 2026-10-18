@@ -10,7 +10,7 @@
       "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
       "supported_domain": "All 32-bit cursor and base bit patterns. This body does not dereference either address identity; subtraction wraps and the clamp is unsigned.",
       "acceptance": "Met: 64 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 64,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

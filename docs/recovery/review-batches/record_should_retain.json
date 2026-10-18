@@ -10,7 +10,7 @@
       "scope": "Complete current-record retention predicate, including inline handler classification, override matching, parameter equality and signed retention gate. True retains the current record at caller 0x434f90.",
       "supported_domain": "Valid record/request images and raw uint32 clock bits; no callback is invoked or substituted in this predicate.",
       "acceptance": "Met: 2040 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 2040,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

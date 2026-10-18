@@ -11,7 +11,7 @@
       "supported_domain": "Mapped 64-word registry, returning callbacks resolving every nonzero selected identity, finite nested registration. No nonreturning callback or OS process-exit claim.",
       "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass.",
       "comparison_cases": 288,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Other registered callback implementations; process-exit adapter, full startup/teardown, callback faults/nonreturning behavior and live resources."
@@ -51,7 +51,7 @@
       "supported_domain": "Mapped 64-word registry, returning callbacks resolving every nonzero selected identity, finite nested registration. No nonreturning callback or OS process-exit claim.",
       "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass.",
       "comparison_cases": 288,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Other registered callback implementations; process-exit adapter, full startup/teardown, callback faults/nonreturning behavior and live resources."

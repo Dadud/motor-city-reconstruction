@@ -3,12 +3,12 @@ import argparse
 import json
 from pathlib import Path
 from client.dyno import _SOURCE_SHA256
-from tools.cell_corpus import DEFAULT, verify
+from tools.cell_corpus import load_corpus, DEFAULT, verify
 
 
 def compare(runner, corpus=DEFAULT, document=None):
     if document is None:
-        document=json.loads(Path(corpus).read_bytes())
+        document=load_corpus(corpus, probe='input_action_session')
     if document.get('schema')!=1 or document.get('target_sha256')!=_SOURCE_SHA256:
         raise ValueError('action session corpus target/schema mismatch')
     return verify(runner,document['probes']['input_action_session']['cases'],'input action session')

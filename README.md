@@ -7,10 +7,14 @@ source references and reviewed recovery gaps.
 The [installation export report](docs/recovery/export-status.md) covers all
 discovered program binaries; the [approved recovery plan](docs/recovery/plan.md)
 and [export instructions](docs/recovery/exporting.md) describe the current workflow.
-The synthetic original/native comparison corpus uses Git LFS. Install Git LFS,
-then run `git lfs install` and `git lfs pull` after cloning before running the
-full regression checks. Original binaries, assets and private decompilation are
+The synthetic original/native comparison corpus uses checksum-verified gzip
+shards in `docs/recovery/corpora/wave0`; a normal clone includes the current
+regression evidence. See [corpus storage](docs/recovery/corpora/README.md). Original binaries, assets and private decompilation are
 not included.
+
+The [throughput implementation report](docs/recovery/throughput-implementation.md)
+records the corpus migration, reusable Function ID/BSim pilot and verified Windows
+x86 Frida canary.
 
 Build the recovered C++ library and checks with `python build.py --test`
 (Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet
@@ -28,7 +32,7 @@ For a fan-server connection test on Windows, double-click
 **Test connection**. On a fresh checkout, run `setup-fan-server-test.cmd` first.
 The tester checks login, personas, lobby, primary connection and garage data
 using your installed configuration. It does not join or drive a race yet.
-Use **Save test report…** to export a report without credentials. See
+Use **Save test reportâ€¦** to export a report without credentials. See
 [fan-server testing](docs/fan-server-testing.md) for instructions and limits.
 
 The C++20 migration is underway. See the [recovery ledger](docs/recovery-ledger.md)
@@ -115,7 +119,7 @@ If your installed client already points at the fan shard, you can verify the rec
 4. **Live connection test**: double-click `test-fan-server.cmd` for the GUI, or `test-fan-server-live.cmd` for command-line login and garage-data access.
 
 Enter your fan-server account when prompted. Passwords are not saved or logged.
-The window reports the stage of any failure. Use **Save test report…** to export
+The window reports the stage of any failure. Use **Save test reportâ€¦** to export
 a report without credentials or persona names. Racing is not yet implemented in
 this tester; a successful connection test does not establish race compatibility.
 

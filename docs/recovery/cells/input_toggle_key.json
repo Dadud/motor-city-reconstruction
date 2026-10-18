@@ -38,7 +38,7 @@
     "supported_domain": "Returning query/event bridges; uint32 selectors and desired values. BYTE key/scan arguments compared only in their defined low eight bits. Host Windows state, faults, concurrency and callback register side effects excluded.",
     "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests.",
     "comparison_cases": 984,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Actual Windows adapters and full startup input linkage."

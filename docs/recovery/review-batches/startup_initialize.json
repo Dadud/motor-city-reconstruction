@@ -11,7 +11,7 @@
       "supported_domain": "Mapped globals/names; returning subsystem bridges; valid device/platform outputs; default nearest-even float conversion. Unrecovered subsystem bodies and live startup are not claimed.",
       "acceptance": "2028 complete original startup/policy cases and four persistent twelve-operation startup/input/cleanup traces match MSVC and Zig; independent branch/order/policy/viewport tests pass.",
       "comparison_cases": 2028,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Renderer, mouse initialization, runtime and other startup helper bodies; actual OS adapters and resource ownership; full linked client/gameplay acceptance."
@@ -54,7 +54,7 @@
       "supported_domain": "Mapped globals/names; returning subsystem bridges; valid device/platform outputs; default nearest-even float conversion. Unrecovered subsystem bodies and live startup are not claimed.",
       "acceptance": "2028 complete original startup/policy cases and four persistent twelve-operation startup/input/cleanup traces match MSVC and Zig; independent branch/order/policy/viewport tests pass.",
       "comparison_cases": 2028,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Renderer, mouse initialization, runtime and other startup helper bodies; actual OS adapters and resource ownership; full linked client/gameplay acceptance."

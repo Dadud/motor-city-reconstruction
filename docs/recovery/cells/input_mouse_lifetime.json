@@ -42,7 +42,7 @@
     "supported_domain": "Mapped opaque nonzero interface/device/temporary handles; returning bridges; cursor query writes both point words even when returning failure. Invalid handles, unwritten point bytes, host APIs and full startup linkage excluded.",
     "acceptance": "1400 original-instruction cases match native replay; independent initialization, cleanup reload, descriptor, temporary release and conversion-failure checks.",
     "comparison_cases": 1400,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "evidence_ids": [
       "ev_166fbd665212c9f5878eae71fa53c8f2fda09d61223542775a15aa3d2bb64585",

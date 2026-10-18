@@ -30,7 +30,7 @@
   "scope": "Complete callback-identity selector. This returns original 32-bit identities and never invokes or reconstructs the handlers.",
   "supported_domain": "All uint32 record identifiers; original jump-table groups and out-of-range defaults are compared.",
   "acceptance": "Met: 38 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
-  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_corpus": "docs/recovery/corpora/wave0",
   "comparison_cases": 38,
   "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
  }

@@ -10,7 +10,7 @@
       "verification": "original-comparison-bounded",
       "status": "implemented",
       "acceptance": "Met: 238 complete-body cases exact against original execution on MSVC and Zig/Clang. See docs/recovery/camera-selection.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 238,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

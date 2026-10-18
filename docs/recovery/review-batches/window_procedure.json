@@ -11,7 +11,7 @@
       "supported_domain": "Bounded shared state and <=128 table entries; returning bridges; original invalid-pointer and platform faults unmodeled.",
       "acceptance": "2381 complete original Windows-procedure cases match MSVC and Zig exactly with declared lock/handler/default scripts; native handled/result/default/order tests pass.",
       "comparison_cases": 2381,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."

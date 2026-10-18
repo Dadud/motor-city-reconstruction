@@ -11,7 +11,7 @@
       "supported_domain": "Mapped queue event/global images, nonnegative initial capacity and positive capacity at division; returning synchronization bridge; original invalid faults unmodeled.",
       "acceptance": "822 original complete-body cases match MSVC and Zig exactly with declared lock scripts; native character invariants and extended dispatch-to-camera traces pass.",
       "comparison_cases": 822,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Live synchronization and Windows message pumping remain unverified.",

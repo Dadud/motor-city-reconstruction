@@ -10,7 +10,7 @@
       "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
       "supported_domain": "Readable identifier words in a supplied nonwrapping address window. The base record is always examined, including a null cursor. No original fault or wrapped-address traversal claim.",
       "acceptance": "Met: 200 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 200,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

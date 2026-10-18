@@ -11,7 +11,7 @@
       "supported_domain": "Bounded table <=128 entries; returning bridge implementations; original allocation/import/pointer faults unmodeled.",
       "acceptance": "813 complete original registration calls match MSVC and Zig exactly, including full table ordering and declared lock-creation scripts; native registration-to-dispatch tests pass.",
       "comparison_cases": 813,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."

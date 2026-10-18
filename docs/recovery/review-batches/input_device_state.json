@@ -11,7 +11,7 @@
       "supported_domain": "Mapped enabled device and buffers; valid resolver, returning platform/info/diagnostic methods. Invalid dereferences and info enumeration internals unmodeled.",
       "acceptance": "360 original cases match MSVC and Zig; four persistent producer/consumer traces run actual accessor/poll/read/retry/clear/translation code and match both compilers.",
       "comparison_cases": 360,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."

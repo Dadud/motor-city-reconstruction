@@ -25,7 +25,7 @@
   "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
   "supported_domain": "All 32-bit first, second, count and mode values; arithmetic wraps as x86 does. The zero-mode path adjusts by count once, not repeated modulo reduction.",
   "acceptance": "Met: 1344 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
-  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_corpus": "docs/recovery/corpora/wave0",
   "comparison_cases": 1344,
   "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
  }

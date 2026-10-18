@@ -11,7 +11,7 @@
       "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
       "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
       "comparison_cases": 2376,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Action configuration/lifetime and actual action callbacks; other platform helper internals, live input and full process cleanup. Device registration and shutdown connect to recovered registry through InputDeviceCleanupBinding."
@@ -68,7 +68,7 @@
       "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
       "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
       "comparison_cases": 2376,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Action configuration/lifetime and actual action callbacks; other platform helper internals, live input and full process cleanup. Device registration and shutdown connect to recovered registry through InputDeviceCleanupBinding."
@@ -125,7 +125,7 @@
       "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
       "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
       "comparison_cases": 2376,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Action configuration/lifetime and actual action callbacks; other platform helper internals, live input and full process cleanup. Device registration and shutdown connect to recovered registry through InputDeviceCleanupBinding."
@@ -182,7 +182,7 @@
       "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
       "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
       "comparison_cases": 2376,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Action configuration/lifetime and actual action callbacks; other platform helper internals, live input and full process cleanup. Device registration and shutdown connect to recovered registry through InputDeviceCleanupBinding."
@@ -239,7 +239,7 @@
       "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
       "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
       "comparison_cases": 2376,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Action configuration/lifetime and actual action callbacks; other platform helper internals, live input and full process cleanup. Device registration and shutdown connect to recovered registry through InputDeviceCleanupBinding."

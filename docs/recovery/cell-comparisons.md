@@ -57,7 +57,7 @@ To retain fresh observations for inspection or regression updates:
 python -m tools.run_cell_comparisons build/native-zig --corpus build/recovery/wave0-fresh.json
 ```
 
-`corpora/wave0.json` contains synthetic inputs and observed outputs, with the
+`corpora/wave0` contains checksum-verified compressed shards of synthetic inputs and observed outputs, with the
 executable SHA-256 and original function addresses. Outputs come from original
 registers and memory, never from translated implementations. Original table
 addresses are seeded with synthetic bytes before execution. No executable bytes

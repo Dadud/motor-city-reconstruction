@@ -10,7 +10,7 @@
       "scope": "Complete symmetric pair scan; a first-word 0xffffffff sentinel ends scanning before the second word is accessed.",
       "supported_domain": "Readable pair rows through a sentinel or earlier match; unterminated/truncated host spans are rejected, not original-fault equivalents.",
       "acceptance": "Met: 216 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 216,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

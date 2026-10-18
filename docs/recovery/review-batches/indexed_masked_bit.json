@@ -10,7 +10,7 @@
       "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
       "supported_domain": "Any signed 32-bit bit index and a valid record inside the supplied span. Invalid original pointers and indices are outside the domain.",
       "acceptance": "Met: 165 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 165,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

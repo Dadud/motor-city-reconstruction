@@ -10,7 +10,7 @@
       "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
       "acceptance": "Met: 2 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
       "translation": "native-bounded",
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 2,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [

@@ -3,9 +3,9 @@ import argparse
 import json
 from pathlib import Path
 from client.dyno import _SOURCE_SHA256
-from tools.cell_corpus import DEFAULT,verify
+from tools.cell_corpus import load_corpus, DEFAULT,verify
 def compare(runner,corpus=DEFAULT,document=None):
-    if document is None:document=json.loads(Path(corpus).read_bytes())
+    if document is None:document=load_corpus(corpus, probe='input_mouse_runtime_lifecycle')
     if document.get('schema')!=1 or document.get('target_sha256')!=_SOURCE_SHA256:
         raise ValueError('mouse runtime corpus identity mismatch')
     return verify(runner,document['probes']['input_mouse_runtime_lifecycle']['cases'],'mouse runtime lifecycle')

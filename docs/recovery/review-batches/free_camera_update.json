@@ -11,7 +11,7 @@
       "supported_domain": "Distinct mapped image/key/latch/subject/world views; finite child-supported matrix/spatial inputs. Caller resolver supplies the subject surface for the post-reset opaque identity.",
       "acceptance": "202 complete original calls match MSVC and Zig exactly without substitutions; native repeated-frame and reset-latch tests pass.",
       "comparison_cases": 202,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Live window dispatch and critical-section behavior; floating-point exception state and original invalid faults."

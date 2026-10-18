@@ -53,7 +53,7 @@
     "supported_domain": "Mapped 1024-byte action image; signed low indices within that image, nonnegative extended and signed-positive passthrough inputs; valid returning bridges and queue/translation states. Invalid original accesses unmodeled.",
     "acceptance": "1920 original cases (1746 router and 174 default callback) and four persistent ten-call producer/dispatch/default/action traces match MSVC and Zig exactly; independent alias, signed-index, consumption, truncation and forwarding tests pass.",
     "comparison_cases": 1920,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Action configuration/lifetime and actual actions; platform/lock API adapters, uninitialized-output/allocation-fault paths, live input and process cleanup."

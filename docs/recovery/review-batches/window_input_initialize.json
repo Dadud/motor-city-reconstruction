@@ -11,7 +11,7 @@
       "supported_domain": "Mapped shared state and <=128 message entries at search, returning bridges; registered handler identities are stored without executing unrecovered handlers.",
       "acceptance": "75 complete original initialization calls match MSVC and Zig exactly with actual registration/search/sort children and explicit synchronizer bridges; native one-shot/full-table tests pass.",
       "comparison_cases": 75,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
         "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."

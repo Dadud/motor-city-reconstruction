@@ -43,7 +43,7 @@
     "supported_domain": "Mapped records/output; returning virtual methods populate all subsequently read fields; temporary record views valid during enumeration only. Original invalid memory accesses unmodeled.",
     "acceptance": "806 original cases and four persistent information/keyboard state-access traces match MSVC and Zig exactly; independent bounds, name-copy, flag, callback-mutation and failure tests pass.",
     "comparison_cases": 806,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Actual platform virtual methods, device initialization/lifetime, live input and process cleanup."

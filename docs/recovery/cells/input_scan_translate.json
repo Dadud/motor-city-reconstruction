@@ -52,7 +52,7 @@
     "supported_domain": "Byte scan values and mapped modifier/table views; returning state acquisition and nonreturning exit request when selected. Invalid original dereferences/process cleanup unmodeled.",
     "acceptance": "3152 original cases match MSVC and Zig exactly, including eight observed nonreturning exit requests, with declared state/exit bridges; native priority/encoding/caps/exit tests pass.",
     "comparison_cases": 3152,
-    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
       "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."

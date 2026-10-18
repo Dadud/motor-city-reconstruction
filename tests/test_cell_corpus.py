@@ -1,4 +1,6 @@
 import copy
+import gzip
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -6,11 +8,85 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from tools.cell_corpus import DEFAULT, cases_for, load_cases, shard_corpus, verify
+from tools.cell_corpus import DEFAULT, load_corpus, write_corpus, cases_for, load_cases, shard_corpus, verify
 from tools.function_cell import ROOT, artifacts, load_manifest, manifests
 
 
 class CellCorpusTests(unittest.TestCase):
+    def sample(self):
+        manifest = load_manifest(ROOT / 'docs/recovery/cells/counter_mod4.json')
+        return dict(schema=1, target_sha256=manifest['roots'][0]['target_sha256'],
+                    provenance='synthetic test', cells={'counter_mod4': dict(
+                        address=manifest['roots'][0]['address'],
+                        cases=[dict(input=[0xffffffff], output=[3])])},
+                    probes={'example': dict(cases=[dict(input=[1], output=[2])])})
+
+    def test_roundtrip_metadata_probes_and_incremental_writes(self):
+        document = self.sample()
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            snapshot = directory / 'shards'
+            index = write_corpus(snapshot, document)
+            self.assertEqual(load_corpus(snapshot), document)
+            before = {p.name: (p.read_bytes(), p.stat().st_mtime_ns)
+                      for p in snapshot.glob('*.gz')}
+            self.assertEqual(write_corpus(snapshot, document), index)
+            self.assertEqual(before, {p.name: (p.read_bytes(), p.stat().st_mtime_ns)
+                                     for p in snapshot.glob('*.gz')})
+            document['probes']['example']['cases'][0]['output'] = [4]
+            changed = write_corpus(snapshot, document)
+            self.assertEqual(changed['cells'], index['cells'])
+            self.assertNotEqual(changed['probes'], index['probes'])
+            self.assertEqual(len(list(snapshot.glob('*.gz'))), len(before) + 1)
+            self.assertEqual(load_corpus(snapshot), document)
+            for suffix in ('.json', '.json.gz'):
+                path = directory / ('legacy' + suffix)
+                write_corpus(path, document)
+                self.assertEqual(load_corpus(path), document)
+
+    def test_selected_reads_do_not_load_unrelated_records(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            index = write_corpus(path, self.sample())
+            (path / (index['cells']['counter_mod4']['sha256'] + '.json.gz')).unlink()
+            self.assertEqual(load_corpus(path, probe='example')['probes'],
+                             self.sample()['probes'])
+            with self.assertRaises(FileNotFoundError):
+                load_corpus(path)
+
+    def test_legacy_uncompressed_shard_reader(self):
+        document = self.sample()
+        document.pop('probes')
+        document.pop('provenance')
+        payload = json.dumps(document).encode()
+        digest = hashlib.sha256(payload).hexdigest()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            (path / (digest + '.json')).write_bytes(payload)
+            (path / 'index.json').write_text(json.dumps(dict(
+                shard_schema=1, target_sha256=document['target_sha256'],
+                cells={'counter_mod4': dict(sha256=digest)})))
+            self.assertEqual(load_cases('counter_mod4', path),
+                             document['cells']['counter_mod4']['cases'])
+
+    def test_bad_manifest_and_probe_digest_are_rejected(self):
+        for damage in ('schema', 'path', 'target', 'probe'):
+            with self.subTest(damage=damage), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory)
+                index = write_corpus(path, self.sample())
+                if damage == 'schema':
+                    index['shard_schema'] = 99
+                elif damage == 'path':
+                    index['probes']['example']['sha256'] = '../outside'
+                elif damage == 'target':
+                    index['metadata']['target_sha256'] = '0' * 64
+                else:
+                    shard = path / (index['probes']['example']['sha256'] + '.json.gz')
+                    shard.write_bytes(gzip.compress(b'{}', mtime=0))
+                (path / 'index.json').write_text(json.dumps(index))
+                with self.assertRaises(ValueError):
+                    load_corpus(path, probe='example')
+
     def test_shards_preserve_cases_and_reject_tampering(self):
         manifest = load_manifest(ROOT / 'docs/recovery/cells/counter_mod4.json')
         document = dict(schema=1, target_sha256=manifest['roots'][0]['target_sha256'],
@@ -25,13 +101,13 @@ class CellCorpusTests(unittest.TestCase):
             source.unlink()
             self.assertEqual(load_cases('counter_mod4', shards),
                              document['cells']['counter_mod4']['cases'])
-            shard = shards / (index['cells']['counter_mod4']['sha256'] + '.json')
-            shard.write_bytes(shard.read_bytes() + b' ')
+            shard = shards / (index['cells']['counter_mod4']['sha256'] + '.json.gz')
+            shard.write_bytes(gzip.compress(gzip.decompress(shard.read_bytes()) + b' ', mtime=0))
             with self.assertRaisesRegex(ValueError, 'digest mismatch'):
                 load_cases('counter_mod4', shards)
 
     def test_every_implemented_cell_has_cases_and_generated_runners(self):
-        corpus = json.loads(DEFAULT.read_text(encoding='utf-8'))
+        corpus = load_corpus(DEFAULT)
         for path in manifests():
             manifest = load_manifest(path)
             if manifest.get('status') != 'implemented':
@@ -77,7 +153,7 @@ class CellCorpusTests(unittest.TestCase):
                 verify('unused', [case], 'sample')
 
     def test_corpus_is_bound_to_target_and_routine(self):
-        document = json.loads(DEFAULT.read_text(encoding='utf-8'))
+        document = load_corpus(DEFAULT)
         # This path reads one cell only. Keep its real observations without
         # repeatedly copying unrelated images and connected lifecycle traces.
         corpus = dict(schema=document['schema'], target_sha256=document['target_sha256'],

@@ -2,13 +2,13 @@
 import argparse
 import json
 from pathlib import Path
-from tools.cell_corpus import DEFAULT, verify
+from tools.cell_corpus import load_corpus, DEFAULT, verify
 from client.dyno import _SOURCE_SHA256
 
 
 def compare(runner, corpus=DEFAULT, document=None):
     if document is None:
-        document = json.loads(Path(corpus).read_text(encoding='utf-8'))
+        document = load_corpus(corpus, probe='input_key_lifecycle')
     if document.get('target_sha256') != _SOURCE_SHA256 or document.get('schema') != 1:
         raise ValueError('lifecycle corpus target/schema mismatch')
     cases = document.get('probes', {}).get('input_key_lifecycle', {}).get('cases', [])

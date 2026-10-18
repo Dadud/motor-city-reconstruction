@@ -14,7 +14,7 @@
         "Live track ownership and diagnostic implementation."
       ],
       "comparison_cases": 1826,
-      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "sources": [
         "native/cmds/spatial_grid_lookup.cmake",
