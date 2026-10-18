@@ -45,11 +45,24 @@ for (const wide of [false,true]) {
     }});
     guardHooks.push(name);
 }
+for (const wide of [false,true]) {
+    const name=wide?'SetCurrentDirectoryW':'SetCurrentDirectoryA';
+    const stage=wide?Memory.allocUtf16String(MCO_STAGE_ROOT):Memory.allocUtf8String(MCO_STAGE_ROOT);
+    retained.push(stage);
+    Interceptor.attach(kernel.getExportByName(name),{onEnter(args) {
+        try {
+            const path=(wide?args[0].readUtf16String():args[0].readCString()).toLowerCase().replaceAll('/',String.fromCharCode(92)).replace(/[\\]+$/, '');
+            if(path===blockedRoot.replace(/[\\]+$/, '')) {args[0]=stage;report({kind:'redirect_original_cwd',name});}
+        }catch(_){}
+    }});
+}
 const registry=Module.load('advapi32.dll');
 for (const wide of [false,true]) {
     const name=wide?'RegOpenKeyExW':'RegOpenKeyExA';
     Interceptor.attach(registry.getExportByName(name),{onEnter(args) {
-        try {this.key=wide?args[1].readUtf16String():args[1].readCString();this.access=args[3].toUInt32();this.caller=this.returnAddress.toString();}catch(_){}
+        try {this.key=wide?args[1].readUtf16String():args[1].readCString();this.access=args[3].toUInt32();
+            if(MCO_REGISTRY_READONLY && ['software\\microsoft\\windows\\currentversion\\app paths\\mcity.exe','software\\electronic arts\\motor city\\1.0'].includes(this.key.toLowerCase())) {args[3]=ptr(0x20019);report({kind:'registry_readonly_substitution',requested:this.access});}
+            this.caller=this.returnAddress.toString();}catch(_){}
     },onLeave(result) {
         if(this.key)report({kind:'registry_open',name,key:this.key,access:this.access,result:result.toUInt32(),caller:this.caller});
     }});

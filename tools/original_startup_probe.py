@@ -16,6 +16,7 @@ def main():
     parser.add_argument('--original-root',type=Path,required=True)
     parser.add_argument('--rea-root',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--registry-readonly',action='store_true',help='Controlled substitution: request read-only access to the two exact MCO install keys')
     parser.add_argument('--seconds',type=int,default=8,choices=range(1,31),metavar='1..30')
     args=parser.parse_args()
     stage=private_output(args.stage);output=private_output(args.output)
@@ -26,7 +27,7 @@ def main():
     if stage==args.original_root.resolve():parser.error('original installation cannot be the stage')
     output.mkdir(parents=True)
     script=ROOT/'tools/fixtures/mco_offline_startup.js'
-    source='const MCO_BLOCKED_ROOT = '+json.dumps(str(args.original_root.resolve()))+';\n'+script.read_text()
+    source='const MCO_BLOCKED_ROOT = '+json.dumps(str(args.original_root.resolve()))+';\nconst MCO_STAGE_ROOT = '+json.dumps(str(stage))+';\nconst MCO_REGISTRY_READONLY = '+json.dumps(args.registry_readonly)+';\n'+script.read_text()
     (output/'probe-source.js').write_text(source,encoding='utf-8')
     session=ReaSession(args.rea_root,output,stage)
     session_id=None;pid=None;resumed=False;ready=False;status={};cleanup=None;target_stop=None
@@ -58,6 +59,11 @@ def main():
         messages=[m.get('payload',{}) for m in status.get('messages',[]) if m.get('type')=='send']
         summary=dict(target_sha256=digest,rea_version=session.package['version'],
             guard_ready=ready,resumed=resumed,duration_seconds=args.seconds,
+            registry_readonly_substitution=args.registry_readonly,
+            final_frida_state=status.get('state','unknown'),
+            registry_opens=[m for m in messages if m.get('kind')=='registry_open'],
+            file_open_failures=[m for m in messages if m.get('kind')=='file_open_failed'],
+            target_exits=[m for m in messages if m.get('kind')=='target_exit'],
             routines=[m['name'] for m in messages if m.get('kind')=='routine_enter'],
             dialogs=[m.get('text') for m in messages if m.get('kind')=='target_dialog'],
             blocked_api_calls=[m.get('name') for m in messages if m.get('kind')=='blocked_api'],
