@@ -82,6 +82,9 @@ def build(executable):
         if name == 'startup_initialize':
             from tools.startup_initialize_cases import capture
             cases = capture(oracle)
+        elif name in ('input_mouse_geometry','input_mouse_state_set','input_mouse_callbacks'):
+            from importlib import import_module
+            cases=import_module('tools.'+name+'_cases').capture(oracle)
         elif name == 'input_mouse_lifetime':
             from tools.input_mouse_lifetime_cases import capture
             cases = capture(oracle)
@@ -526,6 +529,7 @@ def build(executable):
     from tools.input_default_key_cases import lifecycle_cases as default_key_lifecycle_cases
     from tools.input_action_session_cases import lifecycle_cases as action_session_cases
     from tools.startup_initialize_cases import lifecycle_cases as startup_lifecycle_cases
+    from tools.input_mouse_runtime_cases import lifecycle_cases as mouse_runtime_lifecycle_cases
     from tools.input_keyboard_layout_cases import lifecycle_cases as keyboard_layout_lifecycle_cases
     from tools.cleanup_registry_cases import lifecycle_cases as cleanup_registry_lifecycle_cases
     from tools.input_console_cases import lifecycle_cases as console_lifecycle_cases
@@ -554,6 +558,7 @@ def build(executable):
                         'cleanup_registry_lifecycle': cleanup_registry_lifecycle_cases(oracle),
                         'input_keyboard_layout_lifecycle': keyboard_layout_lifecycle_cases(oracle),
                         'startup_lifecycle': startup_lifecycle_cases(oracle),
+                        'input_mouse_runtime_lifecycle': mouse_runtime_lifecycle_cases(oracle),
                         'free_camera_lifecycle': camera_lifecycle_cases(oracle),
                         'window_camera_lifecycle': camera_lifecycle_cases(oracle, True),
                         'window_mouse_lifecycle': mouse_lifecycle_cases(oracle)},

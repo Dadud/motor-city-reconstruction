@@ -1,0 +1,11 @@
+# Connected mouse recovery batch
+
+This batch adds nine recovered callable bodies in three cells: the complete [state setter](mouse-state-progress.md), two [geometry helpers](mouse-geometry-progress.md), and setup plus five [callbacks](mouse-callbacks-progress.md). It adds 5,424 routine cases and eight persistent 18-operation traces. Five callbacks are explicit hash-scoped supplements to the retained enumeration, with exact instruction-walk provenance.
+
+`InputMouseRuntimeBinding` connects the existing full mouse initializer and bounds setter to actual driver setup, state setting, geometry/update/warp, message registration, window lookup, cleanup registration and shutdown. References share the original observation words. The runtime fixture executes the corresponding original routines, not substituted versions of the recovered children. Its sequences compare the complete selected shared observations, window/handler image, registry, virtual-table state and ordered external events after every operation.
+
+The eight sequences cover ordinary initialization, setup failure stages, returning COM mutations, cooperative retry, access-mode changes, position changes, bounds updates, signed wheel dispatch, reporting/counters, reverse cleanup, reinitialization with a persistent registration flag, explicit re-registration and repeated shutdown. COM methods, cursor/import calls and context helpers remain synthetic returning boundaries. The cursor query defines both point words even on its failure profile. The context bridge does not establish the 96-byte object's layout or host behavior.
+
+The previous full startup-controller fixture still substitutes its mouse entry. This batch establishes a connected mouse subsystem and does not establish live Windows/DirectInput, full renderer/platform linkage, whole-client startup or gameplay acceptance. The broader recovery goal remains unfinished.
+
+Verified checkpoint: both MSVC and Zig pass all 103 implemented cells against the fresh original-execution corpus: 67,800 routine cases and 96 connected traces. The new native self-tests pass on both compilers. Thirty targeted inventory, triage, corpus, layout and supplement tests pass. The main inventory has 25,773 base entries plus six explicit supplements, with 191 reviewed entries. These totals describe bounded recovery coverage, not whole-game completion.

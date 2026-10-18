@@ -1,0 +1,329 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6f06c0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete driver setup and five explicitly supplemented callback bodies, with actual recovered resource cleanup.",
+      "supported_domain": "Distinct mapped observations and returning valid-handle COM cleanup bridge; unsigned counter/wheel wrap retained; callback incidental registers excluded except documented reporting/wheel results.",
+      "acceptance": "576 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 576,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Host callbacks and DirectInput adapters; callback instruction walks establish callable entries, not Ghidra FunctionManager ownership."
+      ],
+      "evidence_ids": [
+        "ev_56f5f64355be7be4e18a42f1ff5989f4b65643f0f36a21b27dd0a6c61aba4f27",
+        "ev_e150faf729d98e3e3e3a8a1d12f8d879df038b38cd8a9d31ea94cfddbd28b59e",
+        "ev_0d2b2bbe73297bb35ae689f599bc25dc997982e660bae66f1597d195ae2360da",
+        "ev_f6e4cfaa38a61b058a864780f030d954fed117276966deee998da8d9f964a24a",
+        "ev_231f3cf22d16c995cc7e36ade0954e3e453ec68ce3fbb38979714aab94447ac8",
+        "ev_5080f72fbf7eb464510cbd0108fe1651171bf9bbcf0eb770dd0c95017dd42a39"
+      ],
+      "sources": [
+        "docs/recovery/function-supplements.json",
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-callbacks-progress.md",
+        "native/cmds/input_mouse_callbacks.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_callbacks.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_callbacks.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_callbacks_cases.hpp",
+        "native/tests/input_mouse_callbacks_compare.cpp",
+        "native/tests/input_mouse_callbacks_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_callbacks_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_callbacks_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6efa60",
+        "0x6efa90",
+        "0x6efad0",
+        "0x6f0670",
+        "0x6f06a0",
+        "0x6f06b0"
+      ]
+    },
+    "0x6efa60": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete driver setup and five explicitly supplemented callback bodies, with actual recovered resource cleanup.",
+      "supported_domain": "Distinct mapped observations and returning valid-handle COM cleanup bridge; unsigned counter/wheel wrap retained; callback incidental registers excluded except documented reporting/wheel results.",
+      "acceptance": "576 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 576,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Host callbacks and DirectInput adapters; callback instruction walks establish callable entries, not Ghidra FunctionManager ownership."
+      ],
+      "evidence_ids": [
+        "ev_56f5f64355be7be4e18a42f1ff5989f4b65643f0f36a21b27dd0a6c61aba4f27",
+        "ev_e150faf729d98e3e3e3a8a1d12f8d879df038b38cd8a9d31ea94cfddbd28b59e",
+        "ev_0d2b2bbe73297bb35ae689f599bc25dc997982e660bae66f1597d195ae2360da",
+        "ev_f6e4cfaa38a61b058a864780f030d954fed117276966deee998da8d9f964a24a",
+        "ev_231f3cf22d16c995cc7e36ade0954e3e453ec68ce3fbb38979714aab94447ac8",
+        "ev_5080f72fbf7eb464510cbd0108fe1651171bf9bbcf0eb770dd0c95017dd42a39"
+      ],
+      "sources": [
+        "docs/recovery/function-supplements.json",
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-callbacks-progress.md",
+        "native/cmds/input_mouse_callbacks.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_callbacks.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_callbacks.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_callbacks_cases.hpp",
+        "native/tests/input_mouse_callbacks_compare.cpp",
+        "native/tests/input_mouse_callbacks_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_callbacks_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_callbacks_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6efa60",
+        "0x6efa90",
+        "0x6efad0",
+        "0x6f0670",
+        "0x6f06a0",
+        "0x6f06b0"
+      ]
+    },
+    "0x6efad0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete driver setup and five explicitly supplemented callback bodies, with actual recovered resource cleanup.",
+      "supported_domain": "Distinct mapped observations and returning valid-handle COM cleanup bridge; unsigned counter/wheel wrap retained; callback incidental registers excluded except documented reporting/wheel results.",
+      "acceptance": "576 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 576,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Host callbacks and DirectInput adapters; callback instruction walks establish callable entries, not Ghidra FunctionManager ownership."
+      ],
+      "evidence_ids": [
+        "ev_56f5f64355be7be4e18a42f1ff5989f4b65643f0f36a21b27dd0a6c61aba4f27",
+        "ev_e150faf729d98e3e3e3a8a1d12f8d879df038b38cd8a9d31ea94cfddbd28b59e",
+        "ev_0d2b2bbe73297bb35ae689f599bc25dc997982e660bae66f1597d195ae2360da",
+        "ev_f6e4cfaa38a61b058a864780f030d954fed117276966deee998da8d9f964a24a",
+        "ev_231f3cf22d16c995cc7e36ade0954e3e453ec68ce3fbb38979714aab94447ac8",
+        "ev_5080f72fbf7eb464510cbd0108fe1651171bf9bbcf0eb770dd0c95017dd42a39"
+      ],
+      "sources": [
+        "docs/recovery/function-supplements.json",
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-callbacks-progress.md",
+        "native/cmds/input_mouse_callbacks.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_callbacks.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_callbacks.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_callbacks_cases.hpp",
+        "native/tests/input_mouse_callbacks_compare.cpp",
+        "native/tests/input_mouse_callbacks_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_callbacks_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_callbacks_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6efa60",
+        "0x6efa90",
+        "0x6efad0",
+        "0x6f0670",
+        "0x6f06a0",
+        "0x6f06b0"
+      ]
+    },
+    "0x6f0670": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete driver setup and five explicitly supplemented callback bodies, with actual recovered resource cleanup.",
+      "supported_domain": "Distinct mapped observations and returning valid-handle COM cleanup bridge; unsigned counter/wheel wrap retained; callback incidental registers excluded except documented reporting/wheel results.",
+      "acceptance": "576 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 576,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Host callbacks and DirectInput adapters; callback instruction walks establish callable entries, not Ghidra FunctionManager ownership."
+      ],
+      "evidence_ids": [
+        "ev_56f5f64355be7be4e18a42f1ff5989f4b65643f0f36a21b27dd0a6c61aba4f27",
+        "ev_e150faf729d98e3e3e3a8a1d12f8d879df038b38cd8a9d31ea94cfddbd28b59e",
+        "ev_0d2b2bbe73297bb35ae689f599bc25dc997982e660bae66f1597d195ae2360da",
+        "ev_f6e4cfaa38a61b058a864780f030d954fed117276966deee998da8d9f964a24a",
+        "ev_231f3cf22d16c995cc7e36ade0954e3e453ec68ce3fbb38979714aab94447ac8",
+        "ev_5080f72fbf7eb464510cbd0108fe1651171bf9bbcf0eb770dd0c95017dd42a39"
+      ],
+      "sources": [
+        "docs/recovery/function-supplements.json",
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-callbacks-progress.md",
+        "native/cmds/input_mouse_callbacks.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_callbacks.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_callbacks.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_callbacks_cases.hpp",
+        "native/tests/input_mouse_callbacks_compare.cpp",
+        "native/tests/input_mouse_callbacks_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_callbacks_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_callbacks_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6efa60",
+        "0x6efa90",
+        "0x6efad0",
+        "0x6f0670",
+        "0x6f06a0",
+        "0x6f06b0"
+      ]
+    },
+    "0x6f06a0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete driver setup and five explicitly supplemented callback bodies, with actual recovered resource cleanup.",
+      "supported_domain": "Distinct mapped observations and returning valid-handle COM cleanup bridge; unsigned counter/wheel wrap retained; callback incidental registers excluded except documented reporting/wheel results.",
+      "acceptance": "576 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 576,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Host callbacks and DirectInput adapters; callback instruction walks establish callable entries, not Ghidra FunctionManager ownership."
+      ],
+      "evidence_ids": [
+        "ev_56f5f64355be7be4e18a42f1ff5989f4b65643f0f36a21b27dd0a6c61aba4f27",
+        "ev_e150faf729d98e3e3e3a8a1d12f8d879df038b38cd8a9d31ea94cfddbd28b59e",
+        "ev_0d2b2bbe73297bb35ae689f599bc25dc997982e660bae66f1597d195ae2360da",
+        "ev_f6e4cfaa38a61b058a864780f030d954fed117276966deee998da8d9f964a24a",
+        "ev_231f3cf22d16c995cc7e36ade0954e3e453ec68ce3fbb38979714aab94447ac8",
+        "ev_5080f72fbf7eb464510cbd0108fe1651171bf9bbcf0eb770dd0c95017dd42a39"
+      ],
+      "sources": [
+        "docs/recovery/function-supplements.json",
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-callbacks-progress.md",
+        "native/cmds/input_mouse_callbacks.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_callbacks.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_callbacks.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_callbacks_cases.hpp",
+        "native/tests/input_mouse_callbacks_compare.cpp",
+        "native/tests/input_mouse_callbacks_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_callbacks_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_callbacks_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6efa60",
+        "0x6efa90",
+        "0x6efad0",
+        "0x6f0670",
+        "0x6f06a0",
+        "0x6f06b0"
+      ]
+    },
+    "0x6f06b0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete driver setup and five explicitly supplemented callback bodies, with actual recovered resource cleanup.",
+      "supported_domain": "Distinct mapped observations and returning valid-handle COM cleanup bridge; unsigned counter/wheel wrap retained; callback incidental registers excluded except documented reporting/wheel results.",
+      "acceptance": "576 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 576,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Host callbacks and DirectInput adapters; callback instruction walks establish callable entries, not Ghidra FunctionManager ownership."
+      ],
+      "evidence_ids": [
+        "ev_56f5f64355be7be4e18a42f1ff5989f4b65643f0f36a21b27dd0a6c61aba4f27",
+        "ev_e150faf729d98e3e3e3a8a1d12f8d879df038b38cd8a9d31ea94cfddbd28b59e",
+        "ev_0d2b2bbe73297bb35ae689f599bc25dc997982e660bae66f1597d195ae2360da",
+        "ev_f6e4cfaa38a61b058a864780f030d954fed117276966deee998da8d9f964a24a",
+        "ev_231f3cf22d16c995cc7e36ade0954e3e453ec68ce3fbb38979714aab94447ac8",
+        "ev_5080f72fbf7eb464510cbd0108fe1651171bf9bbcf0eb770dd0c95017dd42a39"
+      ],
+      "sources": [
+        "docs/recovery/function-supplements.json",
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-callbacks-progress.md",
+        "native/cmds/input_mouse_callbacks.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_callbacks.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_callbacks.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_callbacks_cases.hpp",
+        "native/tests/input_mouse_callbacks_compare.cpp",
+        "native/tests/input_mouse_callbacks_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_callbacks_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_callbacks_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6efa60",
+        "0x6efa90",
+        "0x6efad0",
+        "0x6f0670",
+        "0x6f06a0",
+        "0x6f06b0"
+      ]
+    }
+  }
+}

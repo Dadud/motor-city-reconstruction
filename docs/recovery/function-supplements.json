@@ -14,6 +14,68 @@
         "direct_callees": [
           "0x6f0310"
         ]
+      },
+      {
+        "address": "0x6efa60",
+        "end_exclusive": "0x6efa90",
+        "name": "input_mouse_wheel",
+        "evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+        "sources": [
+          "native/src/input_mouse_callbacks.cpp",
+          "tools/input_mouse_callbacks_cases.py",
+          "docs/recovery/mouse-callbacks-progress.md"
+        ],
+        "direct_callees": []
+      },
+      {
+        "address": "0x6efad0",
+        "end_exclusive": "0x6efae2",
+        "name": "input_mouse_shutdown",
+        "evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+        "sources": [
+          "native/src/input_mouse_callbacks.cpp",
+          "tools/input_mouse_callbacks_cases.py",
+          "docs/recovery/mouse-callbacks-progress.md"
+        ],
+        "direct_callees": [
+          "0x6efa90"
+        ]
+      },
+      {
+        "address": "0x6f0670",
+        "end_exclusive": "0x6f0698",
+        "name": "input_mouse_report",
+        "evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+        "sources": [
+          "native/src/input_mouse_callbacks.cpp",
+          "tools/input_mouse_callbacks_cases.py",
+          "docs/recovery/mouse-callbacks-progress.md"
+        ],
+        "direct_callees": []
+      },
+      {
+        "address": "0x6f06a0",
+        "end_exclusive": "0x6f06a7",
+        "name": "input_mouse_counter_increment",
+        "evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+        "sources": [
+          "native/src/input_mouse_callbacks.cpp",
+          "tools/input_mouse_callbacks_cases.py",
+          "docs/recovery/mouse-callbacks-progress.md"
+        ],
+        "direct_callees": []
+      },
+      {
+        "address": "0x6f06b0",
+        "end_exclusive": "0x6f06b7",
+        "name": "input_mouse_counter_decrement",
+        "evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+        "sources": [
+          "native/src/input_mouse_callbacks.cpp",
+          "tools/input_mouse_callbacks_cases.py",
+          "docs/recovery/mouse-callbacks-progress.md"
+        ],
+        "direct_callees": []
       }
     ]
   }

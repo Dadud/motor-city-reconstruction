@@ -116,9 +116,14 @@ def verify(directory, platform, corpus=None):
     startup = locate(directory, 'startup_lifecycle', platform)
     if startup is None:
         raise SystemExit('startup_lifecycle: built comparison harness not found')
+    from tools.native_input_mouse_runtime_lifecycle_compare import compare as compare_mouse_runtime
+    mouse_runtime=locate(directory,'input_mouse_runtime_lifecycle',platform)
+    if mouse_runtime is None:
+        raise SystemExit('input_mouse_runtime_lifecycle: built comparison harness not found')
     return dict(cells=len(results),
                 compared=sum('output' in r for r in results), results=results,
                 startup_lifecycle=compare_startup(startup, corpus or DEFAULT, document),
+                input_mouse_runtime_lifecycle=compare_mouse_runtime(mouse_runtime,corpus or DEFAULT,document),
                 input_keyboard_layout_lifecycle=compare_keyboard_layout(keyboard_layout, corpus or DEFAULT, document),
                 cleanup_registry_lifecycle=compare_cleanup_registry(cleanup_registry, corpus or DEFAULT, document),
                 input_console_lifecycle=compare_console(console, corpus or DEFAULT, document),

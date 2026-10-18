@@ -1,0 +1,46 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6efaf0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete setter with opaque captured virtual-table identity, reloaded device handle and explicit position/window/diagnostic bridges.",
+      "supported_domain": "Distinct referenced globals and returning bridges with valid opaque COM handles and table tokens; live Windows faults and invalid pointers excluded.",
+      "acceptance": "3168 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 3168,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual DirectInput adapter and invalid handle behavior; position helper connected separately by runtime binding."
+      ],
+      "evidence_ids": [
+        "ev_22ef938bbe58d31fcf48eb8ddfc827dd7dec8cff92c6c4082419d8189b9aa633"
+      ],
+      "sources": [
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-state-progress.md",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/cmds/input_mouse_state_set.cmake",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/include/mco/input_mouse_state_set.hpp",
+        "native/src/input_mouse_state_set.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "native/tests/input_mouse_state_set_cases.hpp",
+        "native/tests/input_mouse_state_set_compare.cpp",
+        "native/tests/input_mouse_state_set_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/input_mouse_state_set_cases.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/native_input_mouse_state_set_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

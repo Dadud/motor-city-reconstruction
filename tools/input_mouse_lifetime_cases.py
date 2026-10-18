@@ -1,5 +1,6 @@
 """Mouse lifetime original instructions with explicit synthetic helper/COM boundaries."""
 import struct
+from contextlib import contextmanager
 BASE=0xb361fc
 GLOBALS=tuple(BASE+i*4 for i in range(15))+(0x8c4618,0x8c461c)
 OBJECT,TABLE,STUB=0x71001000,0x71006000,0x70009000
@@ -69,16 +70,25 @@ class MouseLifetimeOracle:
             if script&64:self.put(GLOBALS[13],7)
         if table!=0xffffffff and script&1:self.put(identity,TABLE+index*512+(1-table)*256)
         cpu.reg_write(self.oracle.reg.UC_X86_REG_EAX,status)
-    def capture(self):
+    @contextmanager
+    def substituted(self,real_helpers=()):
         from unicorn import UC_HOOK_CODE
-        cpu=self.oracle.cpu;addresses=list(DIRECT);saved={a:bytes(cpu.mem_read(a,3)) for a in addresses if a not in (MODULE,CURSOR,CLIENT)}
+        cpu=self.oracle.cpu;addresses=[a for a in DIRECT if a not in real_helpers];saved={a:bytes(cpu.mem_read(a,3)) for a in addresses if a not in (MODULE,CURSOR,CLIENT)}
         iats=(0x83b264,0x83b3d8,0x83b3dc);saved_iats=[self.word(a) for a in iats]
         for a in addresses:cpu.mem_write(a,b'\xc2'+struct.pack('<H',DIRECT[a]*4) if a in (MODULE,CURSOR,CLIENT,0x748ba0,0x582e40) else b'\xc3')
         for a,v in zip(iats,(MODULE,CURSOR,CLIENT)):self.put(a,v)
         hooks=[cpu.hook_add(UC_HOOK_CODE,self.observe,begin=a,end=a) for a in addresses]
         hooks.append(cpu.hook_add(UC_HOOK_CODE,self.observe,begin=STUB,end=STUB+0x1800-1))
-        cases=[]
         try:
+            yield
+        finally:
+            for h in hooks:cpu.hook_del(h)
+            for a,data in saved.items():cpu.mem_write(a,data)
+            for a,v in zip(iats,saved_iats):self.put(a,v)
+            if hasattr(cpu,'ctl_flush_tb'):cpu.ctl_flush_tb()
+    def capture(self):
+        cpu=self.oracle.cpu;cases=[]
+        with self.substituted():
             seed=0
             for mode in (0,1,2):
                 for flags in (range(16) if mode==0 else range(4) if mode==1 else range(8)):
@@ -93,10 +103,5 @@ class MouseLifetimeOracle:
                             result=self.oracle.cpu.reg_read(self.oracle.reg.UC_X86_REG_EAX) if mode==0 else 0
                             tables=[(self.word(OBJECT+i*256)-TABLE-i*512)//256 for i in range(6)]
                             cases.append(dict(input=[*config,*v,*args],output=[result,*self.values(),*tables,len(self.logs),*(x for row in self.logs for x in row)]));seed+=1
-        finally:
-            for h in hooks:cpu.hook_del(h)
-            for a,data in saved.items():cpu.mem_write(a,data)
-            for a,v in zip(iats,saved_iats):self.put(a,v)
-            if hasattr(cpu,'ctl_flush_tb'):cpu.ctl_flush_tb()
         return cases
 def capture(oracle):return MouseLifetimeOracle(oracle).capture()

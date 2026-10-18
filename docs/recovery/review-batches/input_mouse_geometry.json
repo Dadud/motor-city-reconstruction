@@ -1,0 +1,97 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6f0720": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete bounds and position bodies with recovered mouse-update/cursor-warp children; explicit context, lock, cursor and notification bridges.",
+      "supported_domain": "Distinct mapped state words/window/mouse image, returning context and cursor bridges. Context bridge models helper order/branch result only; local96-byte object's contents and real lifetime behavior, callback register side effects, faults, Windows and hardware excluded.",
+      "acceptance": "1680 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 1680,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Real context/gate helper behavior and local context object layout; actual Windows cursor/input adapters."
+      ],
+      "evidence_ids": [
+        "ev_f836faf843f4a392a9d49d15f6f83ebdecb35f32332b1345dc3dae1254ed19a3",
+        "ev_1fab85b15f32fbfbc4b18df11ea35d16dea3198f223f2a08921cee342ef33432"
+      ],
+      "sources": [
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-geometry-progress.md",
+        "native/cmds/input_mouse_geometry.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_geometry.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_geometry.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_geometry_cases.hpp",
+        "native/tests/input_mouse_geometry_compare.cpp",
+        "native/tests/input_mouse_geometry_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_geometry_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_geometry_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x582fe0",
+        "0x6f07f0",
+        "0x6f08d0"
+      ]
+    },
+    "0x6f07f0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-startup",
+      "owner": "input-recovery",
+      "scope": "Complete bounds and position bodies with recovered mouse-update/cursor-warp children; explicit context, lock, cursor and notification bridges.",
+      "supported_domain": "Distinct mapped state words/window/mouse image, returning context and cursor bridges. Context bridge models helper order/branch result only; local96-byte object's contents and real lifetime behavior, callback register side effects, faults, Windows and hardware excluded.",
+      "acceptance": "1680 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+      "comparison_cases": 1680,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Real context/gate helper behavior and local context object layout; actual Windows cursor/input adapters."
+      ],
+      "evidence_ids": [
+        "ev_f836faf843f4a392a9d49d15f6f83ebdecb35f32332b1345dc3dae1254ed19a3",
+        "ev_1fab85b15f32fbfbc4b18df11ea35d16dea3198f223f2a08921cee342ef33432"
+      ],
+      "sources": [
+        "docs/recovery/mouse-batch-progress.md",
+        "docs/recovery/mouse-geometry-progress.md",
+        "native/cmds/input_mouse_geometry.cmake",
+        "native/cmds/input_mouse_runtime_lifecycle.cmake",
+        "native/include/mco/input_mouse_geometry.hpp",
+        "native/include/mco/input_mouse_runtime_binding.hpp",
+        "native/src/input_mouse_geometry.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_mouse_geometry_cases.hpp",
+        "native/tests/input_mouse_geometry_compare.cpp",
+        "native/tests/input_mouse_geometry_test.cpp",
+        "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_mouse_geometry_cases.py",
+        "tools/input_mouse_runtime_cases.py",
+        "tools/native_input_mouse_geometry_compare.py",
+        "tools/native_input_mouse_runtime_lifecycle_compare.py",
+        "tools/run_cell_comparisons.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x582fe0",
+        "0x6f07f0",
+        "0x6f08d0"
+      ]
+    }
+  }
+}

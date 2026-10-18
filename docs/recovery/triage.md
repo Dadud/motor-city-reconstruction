@@ -6,7 +6,7 @@ is a review signal rather than a deadness finding.
 
 | Binary | Role | Entries | Required | Distinct shapes |
 | --- | --- | ---: | ---: | ---: |
-| mcity.exe | game-client | 25,774 | 11,760 | 6,569 |
+| mcity.exe | game-client | 25,779 | 11,760 | 6,569 |
 | nps/mco.exe | online-support-investigation | 2,985 | 2,708 | 0 |
 | ip.exe | online-support-investigation | 2,377 | 1,711 | 0 |
 | IFC22.dll | input-library-investigation | 899 | 792 | 0 |
@@ -37,7 +37,7 @@ is a review signal rather than a deadness finding.
 
 | Class | Entries |
 | --- | ---: |
-| game-candidate | 64,583 |
+| game-candidate | 64,588 |
 | linker-artifact | 9,092 |
 | import | 3,817 |
 | crt-runtime | 848 |

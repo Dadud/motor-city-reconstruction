@@ -1,0 +1,61 @@
+{
+  "id": "input_mouse_geometry",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0720"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f07f0"
+    }
+  ],
+  "brief": "Preserve low-level mouse bounds and explicit cursor position paths with recovered update/warp children.",
+  "decl": "void input_mouse_set_position(InputMouseGeometryState &state, const MousePlatformBridge &cursor, const InputMouseGeometryPlatform &platform, std::uint32_t x, std::uint32_t y);",
+  "header_includes": [
+    "mco/input_mouse_geometry_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_mouse_geometry_cases.hpp"
+    ],
+    "body": "        input_mouse_geometry_cases::compare(input);"
+  },
+  "shared_sources": [
+    "docs/recovery/mouse-batch-progress.md",
+    "docs/recovery/mouse-geometry-progress.md",
+    "native/cmds/input_mouse_runtime_lifecycle.cmake",
+    "native/include/mco/input_mouse_runtime_binding.hpp",
+    "native/tests/input_mouse_geometry_cases.hpp",
+    "native/tests/input_mouse_runtime_lifecycle_compare.cpp",
+    "tools/input_mouse_geometry_cases.py",
+    "tools/input_mouse_runtime_cases.py",
+    "tools/native_input_mouse_runtime_lifecycle_compare.py",
+    "tools/run_cell_comparisons.py"
+  ],
+  "depends_on": [
+    "0x6f08d0",
+    "0x582fe0"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "mouse-startup",
+    "owner": "input-recovery",
+    "scope": "Complete bounds and position bodies with recovered mouse-update/cursor-warp children; explicit context, lock, cursor and notification bridges.",
+    "supported_domain": "Distinct mapped state words/window/mouse image, returning context and cursor bridges. Context bridge models helper order/branch result only; local96-byte object's contents and real lifetime behavior, callback register side effects, faults, Windows and hardware excluded.",
+    "acceptance": "1680 complete original-instruction cases with compiler comparisons and independent native checks; eight persistent18-operation original mouse runtime traces connect shared state, registration/dispatch, geometry and cleanup.",
+    "comparison_cases": 1680,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Real context/gate helper behavior and local context object layout; actual Windows cursor/input adapters."
+    ],
+    "evidence_ids": [
+      "ev_f836faf843f4a392a9d49d15f6f83ebdecb35f32332b1345dc3dae1254ed19a3",
+      "ev_1fab85b15f32fbfbc4b18df11ea35d16dea3198f223f2a08921cee342ef33432"
+    ]
+  }
+}

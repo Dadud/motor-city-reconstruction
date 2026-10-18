@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "totals": {
-  "game-candidate": 64583,
+  "game-candidate": 64588,
   "thunk": 827,
   "crt-runtime": 848,
   "import": 3817,
@@ -86,7 +86,7 @@
     "mcity.exe"
    ],
    "totals": {
-    "game-candidate": 16071,
+    "game-candidate": 16076,
     "linker-artifact": 9092,
     "thunk": 109,
     "eh-artifact": 115,
@@ -110810,7 +110810,7 @@
     "name": "FUN_006efa90",
     "class": "game-candidate",
     "rule": "residual",
-    "direct_callers": 1,
+    "direct_callers": 2,
     "required": false,
     "disposition": "library-region",
     "skeleton": "3fb1f307e859",
@@ -284023,6 +284023,32 @@
     "clone_count": 0
    },
    {
+    "address": "0x6efa60",
+    "name": "input_mouse_wheel",
+    "class": "game-candidate",
+    "rule": "residual",
+    "direct_callers": 0,
+    "required": false,
+    "disposition": "library-region",
+    "boundary_origin": "supplement",
+    "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+    "skeleton": "463d91e54564",
+    "clone_count": 0
+   },
+   {
+    "address": "0x6efad0",
+    "name": "input_mouse_shutdown",
+    "class": "game-candidate",
+    "rule": "residual",
+    "direct_callers": 0,
+    "required": false,
+    "disposition": "library-region",
+    "boundary_origin": "supplement",
+    "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+    "skeleton": "1689ec590454",
+    "clone_count": 0
+   },
+   {
     "address": "0x6f0350",
     "name": "input_device_shutdown",
     "class": "game-candidate",
@@ -284033,6 +284059,45 @@
     "boundary_origin": "supplement",
     "boundary_evidence": "Initialization registers 0x6f0350 at 0x6f02e7; instructions call 0x6f0310, clear initialized global, and RET at 0x6f035f. Complete original entry is executed in lifetime comparison mode 1.",
     "skeleton": "eb6a77324d89",
+    "clone_count": 0
+   },
+   {
+    "address": "0x6f0670",
+    "name": "input_mouse_report",
+    "class": "game-candidate",
+    "rule": "residual",
+    "direct_callers": 0,
+    "required": false,
+    "disposition": "library-region",
+    "boundary_origin": "supplement",
+    "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+    "skeleton": "09a27542d2ea",
+    "clone_count": 0
+   },
+   {
+    "address": "0x6f06a0",
+    "name": "input_mouse_counter_increment",
+    "class": "game-candidate",
+    "rule": "residual",
+    "direct_callers": 0,
+    "required": false,
+    "disposition": "library-region",
+    "boundary_origin": "supplement",
+    "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+    "skeleton": "50e64c14ccbd",
+    "clone_count": 0
+   },
+   {
+    "address": "0x6f06b0",
+    "name": "input_mouse_counter_decrement",
+    "class": "game-candidate",
+    "rule": "residual",
+    "direct_callers": 0,
+    "required": false,
+    "disposition": "library-region",
+    "boundary_origin": "supplement",
+    "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
+    "skeleton": "68245915f54b",
     "clone_count": 0
    }
   ]

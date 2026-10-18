@@ -1,0 +1,11 @@
+# Mouse bounds and position
+
+REA Evidence `ev_f836faf843f4a392a9d49d15f6f83ebdecb35f32332b1345dc3dae1254ed19a3` identifies the complete one-range bounds helper `0x6f0720..0x6f076f` (80 bytes). Evidence `ev_1fab85b15f32fbfbc4b18df11ea35d16dea3198f223f2a08921cee342ef33432` identifies position `0x6f07f0..0x6f08cc` (221 bytes). They use Ghidra 12.1.4, the same MCO SHA/profile pinned in [the state setter](mouse-state-progress.md), and are retained in the private final batch bundle.
+
+Bounds writes minimum X/Y and maximum X/Y into the established mouse image, then tail-jumps to recovered mouse update with cached X, cached Y, current buttons and notify zero. Original assembly rewrites the caller's argument words before that jump. The C++ implementation passes those same values to the recovered child.
+
+Position independently queries helper `0x6be930(0)` before and after the operation. A zero first result invokes the current callback at `0x8c4938` with one; a nonzero result invokes local-context construction `0x7b54a0` and helper `0x6cf1b0`. It clamps coordinates with signed comparisons, including reversed bounds, stores global positions `0x8c4600/04` and mouse cached coordinates, and executes the recovered cursor warp. The second query independently selects context destruction `0x7b54d0` or callback argument zero. The position body has no mouse-enabled guard.
+
+1,680 original-instruction cases execute these complete bodies with actual update/warp children. They include four bound shapes, signed extremes, mouse-enable and synchronizer gates, all four first/second context-result combinations, returning cursor failures, and mutations during lock/conversion/position/cursor callbacks. Independent native checks enforce clamp results and context ordering.
+
+The context bridge represents helper call order and branch results. It does not recover the local 96-byte object's bytes, pointer identity, constructor/destructor effects or host rendering/context behavior. Windows cursor APIs, locks and notifications remain declared synthetic returning boundaries. The runtime binding connects these routines to mouse startup/state setting without duplicating their observed words; see [the batch checkpoint](mouse-batch-progress.md).
