@@ -530,6 +530,7 @@ def build(executable):
     from tools.input_action_session_cases import lifecycle_cases as action_session_cases
     from tools.startup_initialize_cases import lifecycle_cases as startup_lifecycle_cases
     from tools.startup_toggle_cases import lifecycle_cases as startup_toggle_lifecycle_cases
+    from tools.startup_mouse_cases import lifecycle_cases as startup_mouse_lifecycle_cases
     from tools.input_mouse_runtime_cases import lifecycle_cases as mouse_runtime_lifecycle_cases
     from tools.input_keyboard_layout_cases import lifecycle_cases as keyboard_layout_lifecycle_cases
     from tools.cleanup_registry_cases import lifecycle_cases as cleanup_registry_lifecycle_cases
@@ -560,6 +561,7 @@ def build(executable):
                         'input_keyboard_layout_lifecycle': keyboard_layout_lifecycle_cases(oracle),
                         'startup_lifecycle': startup_lifecycle_cases(oracle),
                         'startup_toggle_lifecycle': startup_toggle_lifecycle_cases(oracle),
+                        'startup_mouse_lifecycle': startup_mouse_lifecycle_cases(oracle),
                         'input_mouse_runtime_lifecycle': mouse_runtime_lifecycle_cases(oracle),
                         'free_camera_lifecycle': camera_lifecycle_cases(oracle),
                         'window_camera_lifecycle': camera_lifecycle_cases(oracle, True),

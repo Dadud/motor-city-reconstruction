@@ -384,6 +384,9 @@
     "startup_toggle_lifecycle": {
       "sha256": "b05489c25ca72b56f5b1da2dece641e04e37a2d63bf454d4eaf1239e687df5a0"
     },
+    "startup_mouse_lifecycle": {
+      "sha256": "af1b6f9b4edfe4dbaf1585d06b8acc6055de1712e852e39d508d3b147c2548ae"
+    },
     "input_mouse_runtime_lifecycle": {
       "sha256": "ec82b2a5afe3cfc08d799fd76c487ad4875d6aff2b267631fad0bc242f1bb37d"
     },

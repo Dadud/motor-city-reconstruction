@@ -32,7 +32,14 @@
     "native/cmds/startup_toggle_lifecycle.cmake",
     "tools/startup_toggle_cases.py",
     "tools/native_startup_toggle_lifecycle_compare.py",
-    "docs/recovery/startup-toggle-progress.md"
+    "docs/recovery/startup-toggle-progress.md",
+    "native/include/mco/startup_mouse_binding.hpp",
+    "native/tests/input_mouse_runtime_cases.hpp",
+    "native/tests/startup_mouse_lifecycle_compare.cpp",
+    "native/cmds/startup_mouse_lifecycle.cmake",
+    "tools/startup_mouse_cases.py",
+    "tools/native_startup_mouse_lifecycle_compare.py",
+    "docs/recovery/startup-mouse-progress.md"
   ],
   "bookkeeping": {
     "status": "implemented",
@@ -42,7 +49,7 @@
     "owner": "input-recovery",
     "scope": "Complete toggle setter and startup Num Lock wrapper with explicit Windows query/event bridges.",
     "supported_domain": "Returning query/event bridges; uint32 selectors and desired values. BYTE key/scan arguments compared only in their defined low eight bits. Host Windows state, faults, concurrency and callback register side effects excluded.",
-    "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer.",
+    "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer. Thirty-two persistent 21-operation full-startup/mouse/Num Lock traces compare shared dimensions, diagnostics, window/registry state and ordered platform events.",
     "comparison_cases": 984,
     "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",

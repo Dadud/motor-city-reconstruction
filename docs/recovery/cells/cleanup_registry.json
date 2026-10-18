@@ -32,7 +32,14 @@
     "tools/native_cleanup_registry_lifecycle_compare.py",
     "tools/input_device_lifetime_cases.py",
     "native/tests/input_device_lifetime_cases.hpp",
-    "docs/recovery/cleanup-registry-progress.md"
+    "docs/recovery/cleanup-registry-progress.md",
+    "native/include/mco/startup_mouse_binding.hpp",
+    "native/tests/input_mouse_runtime_cases.hpp",
+    "native/tests/startup_mouse_lifecycle_compare.cpp",
+    "native/cmds/startup_mouse_lifecycle.cmake",
+    "tools/startup_mouse_cases.py",
+    "tools/native_startup_mouse_lifecycle_compare.py",
+    "docs/recovery/startup-mouse-progress.md"
   ],
   "bookkeeping": {
     "status": "implemented",
@@ -42,7 +49,7 @@
     "owner": "input-recovery",
     "scope": "Complete 64-slot duplicate-suppressing registration and reverse mutable cleanup run; actual device registration/shutdown connected.",
     "supported_domain": "Mapped 64-word registry, returning callbacks resolving every nonzero selected identity, finite nested registration. No nonreturning callback or OS process-exit claim.",
-    "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass.",
+    "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass. Thirty-two persistent 21-operation full-startup/mouse/Num Lock traces compare shared dimensions, diagnostics, window/registry state and ordered platform events.",
     "comparison_cases": 288,
     "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",

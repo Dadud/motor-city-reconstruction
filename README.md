@@ -17,6 +17,8 @@ records the corpus migration, reusable Function ID/BSim pilot and verified Windo
 x86 Frida canary.
 The [connected startup batch](docs/recovery/startup-toggle-progress.md) adds actual
 Num Lock handling to startup/device/cleanup verification.
+The [startup/mouse batch](docs/recovery/startup-mouse-progress.md) connects the
+recovered mouse runtime and Num Lock bodies to the startup controller.
 
 Build the recovered C++ library and checks with `python build.py --test`
 (Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet

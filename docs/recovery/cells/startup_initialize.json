@@ -41,7 +41,14 @@
     "native/cmds/startup_toggle_lifecycle.cmake",
     "tools/startup_toggle_cases.py",
     "tools/native_startup_toggle_lifecycle_compare.py",
-    "docs/recovery/startup-toggle-progress.md"
+    "docs/recovery/startup-toggle-progress.md",
+    "native/include/mco/startup_mouse_binding.hpp",
+    "native/tests/input_mouse_runtime_cases.hpp",
+    "native/tests/startup_mouse_lifecycle_compare.cpp",
+    "native/cmds/startup_mouse_lifecycle.cmake",
+    "tools/startup_mouse_cases.py",
+    "tools/native_startup_mouse_lifecycle_compare.py",
+    "docs/recovery/startup-mouse-progress.md"
   ],
   "bookkeeping": {
     "status": "implemented",
@@ -51,7 +58,7 @@
     "owner": "client-recovery",
     "scope": "Full startup controller and window policy setter; recovered device, keyboard layout/setter and cleanup registry connected through shared queue/diagnostics/callback table.",
     "supported_domain": "Mapped globals/names; returning subsystem bridges; valid device/platform outputs; default nearest-even float conversion. Unrecovered subsystem bodies and live startup are not claimed.",
-    "acceptance": "2028 complete original startup/policy cases and four persistent twelve-operation startup/input/cleanup traces match MSVC and Zig; independent branch/order/policy/viewport tests pass. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer.",
+    "acceptance": "2028 complete original startup/policy cases and four persistent twelve-operation startup/input/cleanup traces match MSVC and Zig; independent branch/order/policy/viewport tests pass. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer. Thirty-two persistent 21-operation full-startup/mouse/Num Lock traces compare shared dimensions, diagnostics, window/registry state and ordered platform events.",
     "comparison_cases": 2028,
     "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",

@@ -48,9 +48,9 @@ class StartupOracle:
             cpu.reg_write(self.oracle.reg.UC_X86_REG_ECX,self.numlock_temporary)
     def output(self):return [*self.values(),len(self.logs),*(v for row in self.logs for v in row)]
     @contextmanager
-    def substituted(self,connected=False,incoming_temporary=0,real_numlock=False):
+    def substituted(self,connected=False,incoming_temporary=0,real_numlock=False,real_helpers=()):
         from unicorn import UC_HOOK_CODE
-        cpu=self.oracle.cpu;addresses=[a for a in HELPERS if (not connected or a not in CONNECTED) and (not real_numlock or a!=0x6bfc80)]
+        cpu=self.oracle.cpu;addresses=[a for a in HELPERS if (not connected or a not in CONNECTED) and (not real_numlock or a!=0x6bfc80) and a not in real_helpers]
         self.numlock_temporary=incoming_temporary if real_numlock else None
         saved={a:bytes(cpu.mem_read(a,6 if connected and a==0x6bfc80 else 1)) for a in addresses if a not in (DIAG0,DIAG1)}
         for a in addresses:cpu.mem_write(a,b'\xc3')

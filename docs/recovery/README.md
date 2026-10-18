@@ -37,6 +37,9 @@ The [startup toggle-key recovery](toggle-key-progress.md) records the recovered 
 The [connected startup toggle batch](startup-toggle-progress.md) now executes that
 body together with device initialization, layout, input and cleanup, including its
 defined original x86 temporary-word transfer.
+The [startup/mouse batch](startup-mouse-progress.md) separately connects actual
+startup, Num Lock and mouse runtime bodies through shared dimensions, diagnostics,
+window state and cleanup, while retaining the keyboard initialization boundary.
 The [mouse lifetime recovery](mouse-lifetime-progress.md) records initialization, cleanup, bounds forwarding and unresolved platform calls.
 The [connected mouse batch](mouse-batch-progress.md) adds state setting, geometry, callbacks and persistent runtime comparisons.
 

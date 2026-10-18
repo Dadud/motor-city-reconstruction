@@ -1,5 +1,9 @@
 # Connected mouse recovery batch
 
+Follow-up: [startup/mouse integration](startup-mouse-progress.md) now connects this
+runtime to the full recovered startup controller in a separate bounded probe.
+The checkpoint below is historical.
+
 This batch adds nine recovered callable bodies in three cells: the complete [state setter](mouse-state-progress.md), two [geometry helpers](mouse-geometry-progress.md), and setup plus five [callbacks](mouse-callbacks-progress.md). It adds 5,424 routine cases and eight persistent 18-operation traces. Five callbacks are explicit hash-scoped supplements to the retained enumeration, with exact instruction-walk provenance.
 
 `InputMouseRuntimeBinding` connects the existing full mouse initializer and bounds setter to actual driver setup, state setting, geometry/update/warp, message registration, window lookup, cleanup registration and shutdown. References share the original observation words. The runtime fixture executes the corresponding original routines, not substituted versions of the recovered children. Its sequences compare the complete selected shared observations, window/handler image, registry, virtual-table state and ordered external events after every operation.
