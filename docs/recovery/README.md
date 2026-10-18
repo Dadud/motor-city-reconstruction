@@ -32,6 +32,8 @@ build verification and the remaining reconstruction work.
 No executable bytes, disassembly, pseudocode or account information are included.
 Names and addresses identify functions in the exact recorded binary.
 
+See the [REA workflow audit and operating contract](rea-workflow.md) for current tool alignment, Evidence rules and limitations.
+
 ## Read the labels
 
 `decompilation=retained` means a saved matching-target REA function/pseudocode
