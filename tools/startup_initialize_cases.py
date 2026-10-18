@@ -44,20 +44,24 @@ class StartupOracle:
         elif address==0x6cb710 and script&1024:self.put(GLOBALS[9],0x80000000+seed);self.put(GLOBALS[10],0x1000001+seed)
         elif address==0x6f0200 and script&2048:self.put(0xaca8f0,7);self.put(0xacae04,0xabcdef02)
         cpu.reg_write(self.oracle.reg.UC_X86_REG_EAX,result)
+        if address==0x6ef890 and getattr(self,'numlock_temporary',None) is not None:
+            cpu.reg_write(self.oracle.reg.UC_X86_REG_ECX,self.numlock_temporary)
     def output(self):return [*self.values(),len(self.logs),*(v for row in self.logs for v in row)]
     @contextmanager
-    def substituted(self,connected=False,incoming_temporary=0):
+    def substituted(self,connected=False,incoming_temporary=0,real_numlock=False):
         from unicorn import UC_HOOK_CODE
-        cpu=self.oracle.cpu;addresses=[a for a in HELPERS if not connected or a not in CONNECTED]
+        cpu=self.oracle.cpu;addresses=[a for a in HELPERS if (not connected or a not in CONNECTED) and (not real_numlock or a!=0x6bfc80)]
+        self.numlock_temporary=incoming_temporary if real_numlock else None
         saved={a:bytes(cpu.mem_read(a,6 if connected and a==0x6bfc80 else 1)) for a in addresses if a not in (DIAG0,DIAG1)}
         for a in addresses:cpu.mem_write(a,b'\xc3')
-        if connected:cpu.mem_write(0x6bfc80,b'\xb9'+struct.pack('<I',incoming_temporary)+b'\xc3')
+        if connected and not real_numlock:cpu.mem_write(0x6bfc80,b'\xb9'+struct.pack('<I',incoming_temporary)+b'\xc3')
         if hasattr(cpu,'ctl_flush_tb'):cpu.ctl_flush_tb()
         hooks=[cpu.hook_add(UC_HOOK_CODE,self.observe,begin=a,end=a) for a in addresses]
         try:yield
         finally:
             for hook in hooks:cpu.hook_del(hook)
             for a,data in saved.items():cpu.mem_write(a,data)
+            self.numlock_temporary=None
             if hasattr(cpu,'ctl_flush_tb'):cpu.ctl_flush_tb()
 
 def configurations():
@@ -88,7 +92,9 @@ def capture(oracle):
     return cases
 
 
-def lifecycle_cases(oracle):
+def lifecycle_cases(oracle,with_toggle=False):
+    from contextlib import nullcontext
+    from tools.startup_toggle_cases import ToggleOracle
     from tools.input_device_lifetime_cases import LifetimeOracle,make
     from tools.input_keyboard_layout_cases import LayoutOracle,tables,OFFSET,TABLES,REMAP_ID
     from tools.cleanup_registry_cases import RegistryOracle,FIRST,THIRD,BASE,REGISTER,RUN
@@ -98,17 +104,22 @@ def lifecycle_cases(oracle):
            (3,0,0,0,0,0),(0,0,0,0,0,0),(1,1,7,0x100,0x70,2|(17<<16)),
            (4,42,1,0,0,0),(5,0x6f0350,0,0,0,0),(3,0,0,0,0,0),
            (6,1,0,0,0,0),(0,0,0,0,0,0),(3,0,0,0,0,0)]
-    for startup_script,profile,device_script,layout_config,full in profiles:
+    profiles=[(*p,t) for p in profiles for t in (((0,0,0),(1,0,0x71001400),(0xffff,3,0x800000ff),(1,7,0xffffffff)) if with_toggle else (None,))]
+    for startup_script,profile,device_script,layout_config,full,toggle_profile in profiles:
         config,values,f=make(4,0,0,profile,device_script,73);put(f['globals'],4,0);put(f['globals'],0x4e0,0);put(f['globals'],0x528,0);f['keys']=bytes(256)
+        toggle_config=toggle_profile[:2] if toggle_profile else None
+        if toggle_profile:config[3]=toggle_profile[2]
         startup_config=[startup_script,0,0 if startup_script==128 else 1,0 if startup_script==128 else 1,0 if startup_script==128 else 1,73]
         startup_values=[0,0x1234,0x5678,1 if full or startup_script==512 else 0,1,0x7777,0,0xa5,0,640,480,32,1,2,0]
         data=bytearray(tables(73));data[OFFSET+17]=42;data[OFFSET+42]=54
         slots=[FIRST]*64 if full else [0]*64
         if not full:slots[63]=THIRD
         registry_config=[1,0,0,*slots];latches=bytes(512)
-        with device.substituted(real_registry=True),device.queue.substituted(),layout.substituted(),registry.substituted(),startup.substituted(connected=True,incoming_temporary=config[3]):
+        toggle=ToggleOracle(oracle) if with_toggle else None
+        with device.substituted(real_registry=True),device.queue.substituted(),layout.substituted(),registry.substituted(),startup.substituted(connected=True,incoming_temporary=config[3],real_numlock=with_toggle), (toggle.substituted() if toggle else nullcontext()):
             device.reset(config,values,f);startup.reset(startup_config,startup_values);layout.reset(layout_config);registry.reset(registry_config)
             oracle.cpu.mem_write(TABLES,bytes(data));device.put(0x8c8924,values[4]);oracle.cpu.mem_write(0x9e1be8,latches)
+            if toggle:toggle.reset(toggle_config)
             output=[]
             for op,a,b,c,d,e in steps:
                 device.temporary=0;result=0
@@ -121,5 +132,8 @@ def lifecycle_cases(oracle):
                 elif op==6:startup.put(GLOBALS[3],a)
                 if op in (1,2,4):result=oracle.cpu.reg_read(oracle.reg.UC_X86_REG_EAX)
                 output.extend([result,*startup.output(),*device.output(),*layout.output(),*registry.output(),*oracle.cpu.mem_read(0x9e1be8,512)])
-            cases.append(dict(input=[*startup_config,*startup_values,*config,*values,*words(f),*layout_config,*data,*registry_config,*latches,len(steps),*(v for step in steps for v in step)],output=output))
+                if toggle:output.extend(toggle.output())
+            cases.append(dict(input=[*startup_config,*startup_values,*config,*values,*words(f),*layout_config,*data,*registry_config,*latches,*(toggle_config or ()),len(steps),*(v for step in steps for v in step)],output=output))
+    if with_toggle:
+        return dict(cases=cases,scope='Persistent full startup with actual Num Lock wrapper/setter, device initialization/setter, keyboard layout, policy and cleanup bodies. Key API bridges define state, import-target mutation and ECX clobbers; the preceding mouse boundary defines a word whose low byte becomes scan 0x45 through the actual toggle local/POP ECX before device initialization. Renderer/mouse/runtime and OS adapters remain synthetic. Void returns normalized.')
     return dict(cases=cases,scope='Persistent full startup body with actual device initialization/setter, keyboard layout, policy setter, cleanup registration/run and device shutdown, plus down/release/query. Renderer/mouse/runtime and device/type/synchronization/other callback boundaries remain explicit. The preceding synthetic helper supplies a defined incoming temporary word for device initialization; its real body is not claimed. Void returns normalized.')

@@ -26,7 +26,13 @@
     "tools/input_toggle_key_cases.py",
     "native/tests/input_toggle_key_cases.hpp",
     "docs/recovery/toggle-key-progress.md",
-    "native/include/mco/input_toggle_key_platform.hpp"
+    "native/include/mco/input_toggle_key_platform.hpp",
+    "native/include/mco/startup_toggle_binding.hpp",
+    "native/tests/startup_toggle_cases.hpp",
+    "native/cmds/startup_toggle_lifecycle.cmake",
+    "tools/startup_toggle_cases.py",
+    "tools/native_startup_toggle_lifecycle_compare.py",
+    "docs/recovery/startup-toggle-progress.md"
   ],
   "bookkeeping": {
     "status": "implemented",
@@ -36,12 +42,12 @@
     "owner": "input-recovery",
     "scope": "Complete toggle setter and startup Num Lock wrapper with explicit Windows query/event bridges.",
     "supported_domain": "Returning query/event bridges; uint32 selectors and desired values. BYTE key/scan arguments compared only in their defined low eight bits. Host Windows state, faults, concurrency and callback register side effects excluded.",
-    "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests.",
+    "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer.",
     "comparison_cases": 984,
     "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
     "unresolved": [
-      "Actual Windows adapters and full startup input linkage."
+      "Actual Windows adapters, mouse initialization, remaining runtime helpers and full linked startup. Num Lock is now connected in a separately declared bounded startup trace."
     ],
     "evidence_ids": [
       "ev_2a83c75f72b24ced24f1b8fc67f065efe2f4669b6424b09a0a7551d6267efdf3",

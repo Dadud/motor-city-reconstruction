@@ -60,7 +60,13 @@
     "native/cmds/input_action_session.cmake",
     "tools/input_action_session_cases.py",
     "tools/native_input_action_session_compare.py",
-    "native/include/mco/input_device_cleanup_binding.hpp"
+    "native/include/mco/input_device_cleanup_binding.hpp",
+    "native/include/mco/startup_toggle_binding.hpp",
+    "native/tests/startup_toggle_cases.hpp",
+    "native/cmds/startup_toggle_lifecycle.cmake",
+    "tools/startup_toggle_cases.py",
+    "tools/native_startup_toggle_lifecycle_compare.py",
+    "docs/recovery/startup-toggle-progress.md"
   ],
   "bookkeeping": {
     "status": "implemented",
@@ -70,7 +76,7 @@
     "owner": "input-recovery",
     "scope": "Complete initialization, cleanup, callback shutdown, set-state and window getter with explicit platform calls. Shutdown callback is an evidenced supplement to the retained static enumeration.",
     "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
-    "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
+    "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer.",
     "comparison_cases": 2376,
     "comparison_corpus": "docs/recovery/corpora/wave0",
     "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",

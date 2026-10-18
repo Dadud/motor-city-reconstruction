@@ -1,5 +1,10 @@
 # Startup toggle-key recovery
 
+Follow-up: [connected startup verification](startup-toggle-progress.md) now replaces
+the mocked Num Lock entry in a separate startup probe. It establishes the bounded
+scan-byte/temporary-word transfer; the original isolated checkpoint below remains
+historical.
+
 The startup wrapper `0x6bfc80` calls the complete toggle setter `0x6bfc90` with selector one and desired state zero: it requests Num Lock off. This corrects the previous description of that startup boundary as an unidentified helper. It does not establish the incoming ECX value required by the later device-initialization fixture; that synthetic register setup remains explicit and is not replaced by a guessed Windows register effect.
 
 ## Static observations

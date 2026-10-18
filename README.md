@@ -15,6 +15,8 @@ not included.
 The [throughput implementation report](docs/recovery/throughput-implementation.md)
 records the corpus migration, reusable Function ID/BSim pilot and verified Windows
 x86 Frida canary.
+The [connected startup batch](docs/recovery/startup-toggle-progress.md) adds actual
+Num Lock handling to startup/device/cleanup verification.
 
 Build the recovered C++ library and checks with `python build.py --test`
 (Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet

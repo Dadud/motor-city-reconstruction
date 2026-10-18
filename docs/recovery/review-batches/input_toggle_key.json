@@ -9,30 +9,36 @@
       "owner": "input-recovery",
       "scope": "Complete toggle setter and startup Num Lock wrapper with explicit Windows query/event bridges.",
       "supported_domain": "Returning query/event bridges; uint32 selectors and desired values. BYTE key/scan arguments compared only in their defined low eight bits. Host Windows state, faults, concurrency and callback register side effects excluded.",
-      "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests.",
+      "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer.",
       "comparison_cases": 984,
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
-        "Actual Windows adapters and full startup input linkage."
+        "Actual Windows adapters, mouse initialization, remaining runtime helpers and full linked startup. Num Lock is now connected in a separately declared bounded startup trace."
       ],
       "evidence_ids": [
         "ev_2a83c75f72b24ced24f1b8fc67f065efe2f4669b6424b09a0a7551d6267efdf3",
         "ev_a70577ea306a84a7816cca212dc0ecd56e0be483e85c2443045a769cb9c28f40"
       ],
       "sources": [
+        "docs/recovery/startup-toggle-progress.md",
         "docs/recovery/toggle-key-progress.md",
         "native/cmds/input_toggle_key.cmake",
+        "native/cmds/startup_toggle_lifecycle.cmake",
         "native/include/mco/input_toggle_key.hpp",
         "native/include/mco/input_toggle_key_platform.hpp",
+        "native/include/mco/startup_toggle_binding.hpp",
         "native/src/input_toggle_key.cpp",
         "native/tests/cell_io.hpp",
         "native/tests/input_toggle_key_cases.hpp",
         "native/tests/input_toggle_key_compare.cpp",
         "native/tests/input_toggle_key_test.cpp",
+        "native/tests/startup_toggle_cases.hpp",
         "tools/cell_corpus.py",
         "tools/input_toggle_key_cases.py",
         "tools/native_input_toggle_key_compare.py",
+        "tools/native_startup_toggle_lifecycle_compare.py",
+        "tools/startup_toggle_cases.py",
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [
@@ -47,30 +53,36 @@
       "owner": "input-recovery",
       "scope": "Complete toggle setter and startup Num Lock wrapper with explicit Windows query/event bridges.",
       "supported_domain": "Returning query/event bridges; uint32 selectors and desired values. BYTE key/scan arguments compared only in their defined low eight bits. Host Windows state, faults, concurrency and callback register side effects excluded.",
-      "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests.",
+      "acceptance": "984 complete original-instruction cases compared against native implementations; independent event-sequence tests. Sixteen additional persistent twelve-operation startup/Num Lock/device/cleanup traces verify shared state, cached event targets and the defined original x86 temporary-word transfer.",
       "comparison_cases": 984,
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
-        "Actual Windows adapters and full startup input linkage."
+        "Actual Windows adapters, mouse initialization, remaining runtime helpers and full linked startup. Num Lock is now connected in a separately declared bounded startup trace."
       ],
       "evidence_ids": [
         "ev_2a83c75f72b24ced24f1b8fc67f065efe2f4669b6424b09a0a7551d6267efdf3",
         "ev_a70577ea306a84a7816cca212dc0ecd56e0be483e85c2443045a769cb9c28f40"
       ],
       "sources": [
+        "docs/recovery/startup-toggle-progress.md",
         "docs/recovery/toggle-key-progress.md",
         "native/cmds/input_toggle_key.cmake",
+        "native/cmds/startup_toggle_lifecycle.cmake",
         "native/include/mco/input_toggle_key.hpp",
         "native/include/mco/input_toggle_key_platform.hpp",
+        "native/include/mco/startup_toggle_binding.hpp",
         "native/src/input_toggle_key.cpp",
         "native/tests/cell_io.hpp",
         "native/tests/input_toggle_key_cases.hpp",
         "native/tests/input_toggle_key_compare.cpp",
         "native/tests/input_toggle_key_test.cpp",
+        "native/tests/startup_toggle_cases.hpp",
         "tools/cell_corpus.py",
         "tools/input_toggle_key_cases.py",
         "tools/native_input_toggle_key_compare.py",
+        "tools/native_startup_toggle_lifecycle_compare.py",
+        "tools/startup_toggle_cases.py",
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [
