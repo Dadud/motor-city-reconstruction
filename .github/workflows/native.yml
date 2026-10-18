@@ -200,6 +200,10 @@ jobs:
         run: python -m tools.native_startup_record_compare build/native/mco_startup_record_compare --radius-cases 128
       - if: runner.os == 'Windows'
         run: python -m tools.native_startup_record_compare build/native/Release/mco_startup_record_compare.exe --radius-cases 128
+      - if: runner.os == 'Linux'
+        run: python -m tools.recovered_vehicle_runtime_compare build/native/mco_recovered_vehicle_runtime_compare
+      - if: runner.os == 'Windows'
+        run: python -m tools.recovered_vehicle_runtime_compare build/native/Release/mco_recovered_vehicle_runtime_compare.exe
       # Recovery cells register themselves: manifests decide which comparison
       # harnesses run, so a new cell needs no step here.
       - run: python -m tools.run_cell_comparisons build/native

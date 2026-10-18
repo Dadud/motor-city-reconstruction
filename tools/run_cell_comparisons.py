@@ -112,6 +112,10 @@ def verify(directory, platform, corpus=None):
     keyboard_layout = locate(directory, 'input_keyboard_layout_lifecycle', platform)
     if keyboard_layout is None:
         raise SystemExit('input_keyboard_layout_lifecycle: built comparison harness not found')
+    from tools.native_combined_input_lifecycle_compare import compare as compare_combined_input
+    combined_input = locate(directory, 'combined_input_lifecycle', platform)
+    if combined_input is None:
+        raise SystemExit('combined_input_lifecycle: built comparison harness not found')
     from tools.native_startup_lifecycle_compare import compare as compare_startup
     from tools.native_startup_mouse_lifecycle_compare import compare as compare_startup_mouse
     startup_mouse = locate(directory, 'startup_mouse_lifecycle', platform)
@@ -129,6 +133,7 @@ def verify(directory, platform, corpus=None):
     if mouse_runtime is None:
         raise SystemExit('input_mouse_runtime_lifecycle: built comparison harness not found')
     return dict(cells=len(results),
+                combined_input_lifecycle=compare_combined_input(combined_input, corpus or DEFAULT, document),
                 startup_mouse_lifecycle=compare_startup_mouse(startup_mouse, corpus or DEFAULT, document),
                 startup_toggle_lifecycle=compare_startup_toggle(startup_toggle, corpus or DEFAULT, document),
                 compared=sum('output' in r for r in results), results=results,

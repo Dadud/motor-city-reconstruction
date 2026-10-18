@@ -1,0 +1,128 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6be4f0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "startup-thread-runtime",
+      "owner": "client-recovery",
+      "scope": "Three complete initialization/capacity/page-allocation routines with actual cleanup registry registration; resource APIs and lock-pool acquisition remain explicit boundaries.",
+      "supported_domain": "Eight state words, 64 registry slots, positive signed page size and returning resource callbacks; 32-bit wrap and signed page rounding preserved. OS handle validity, memory writes of clear bridge, lock-pool body and actual shutdown excluded.",
+      "acceptance": "1024 complete original-instruction cases including 256 four-call persistent sequences compare returns, all state words/registry slots and boundary call order/arguments on MSVC and Zig; native runtime domain checks return failures independently of NDEBUG.",
+      "comparison_cases": 1024,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "True Windows allocation, handle/critical-section lifetime and thread cleanup body; startup subsystem connection."
+      ],
+      "evidence_ids": [
+        "ev_18c732c7de49c4671716e7223039bdc8b59c02a36430cd9dcd603cfba3b9f094",
+        "ev_95790c77fe04b38861201612f0b21b81036b7bd855499f23256dc0149317afc5"
+      ],
+      "sources": [
+        "docs/recovery/startup-thread-runtime.md",
+        "native/cmds/startup_thread_runtime.cmake",
+        "native/include/mco/cleanup_registry_state.hpp",
+        "native/include/mco/startup_thread_runtime.hpp",
+        "native/src/cleanup_registry.cpp",
+        "native/src/startup_thread_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/startup_thread_runtime_cases.hpp",
+        "native/tests/startup_thread_runtime_compare.cpp",
+        "native/tests/startup_thread_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_startup_thread_runtime_compare.py",
+        "tools/startup_thread_runtime_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6be570",
+        "0x6bf450",
+        "0x6eedb0"
+      ]
+    },
+    "0x6be570": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "startup-thread-runtime",
+      "owner": "client-recovery",
+      "scope": "Three complete initialization/capacity/page-allocation routines with actual cleanup registry registration; resource APIs and lock-pool acquisition remain explicit boundaries.",
+      "supported_domain": "Eight state words, 64 registry slots, positive signed page size and returning resource callbacks; 32-bit wrap and signed page rounding preserved. OS handle validity, memory writes of clear bridge, lock-pool body and actual shutdown excluded.",
+      "acceptance": "1024 complete original-instruction cases including 256 four-call persistent sequences compare returns, all state words/registry slots and boundary call order/arguments on MSVC and Zig; native runtime domain checks return failures independently of NDEBUG.",
+      "comparison_cases": 1024,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "True Windows allocation, handle/critical-section lifetime and thread cleanup body; startup subsystem connection."
+      ],
+      "evidence_ids": [
+        "ev_18c732c7de49c4671716e7223039bdc8b59c02a36430cd9dcd603cfba3b9f094",
+        "ev_95790c77fe04b38861201612f0b21b81036b7bd855499f23256dc0149317afc5"
+      ],
+      "sources": [
+        "docs/recovery/startup-thread-runtime.md",
+        "native/cmds/startup_thread_runtime.cmake",
+        "native/include/mco/cleanup_registry_state.hpp",
+        "native/include/mco/startup_thread_runtime.hpp",
+        "native/src/cleanup_registry.cpp",
+        "native/src/startup_thread_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/startup_thread_runtime_cases.hpp",
+        "native/tests/startup_thread_runtime_compare.cpp",
+        "native/tests/startup_thread_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_startup_thread_runtime_compare.py",
+        "tools/startup_thread_runtime_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6be570",
+        "0x6bf450",
+        "0x6eedb0"
+      ]
+    },
+    "0x6eedb0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "startup-thread-runtime",
+      "owner": "client-recovery",
+      "scope": "Three complete initialization/capacity/page-allocation routines with actual cleanup registry registration; resource APIs and lock-pool acquisition remain explicit boundaries.",
+      "supported_domain": "Eight state words, 64 registry slots, positive signed page size and returning resource callbacks; 32-bit wrap and signed page rounding preserved. OS handle validity, memory writes of clear bridge, lock-pool body and actual shutdown excluded.",
+      "acceptance": "1024 complete original-instruction cases including 256 four-call persistent sequences compare returns, all state words/registry slots and boundary call order/arguments on MSVC and Zig; native runtime domain checks return failures independently of NDEBUG.",
+      "comparison_cases": 1024,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "True Windows allocation, handle/critical-section lifetime and thread cleanup body; startup subsystem connection."
+      ],
+      "evidence_ids": [
+        "ev_18c732c7de49c4671716e7223039bdc8b59c02a36430cd9dcd603cfba3b9f094",
+        "ev_95790c77fe04b38861201612f0b21b81036b7bd855499f23256dc0149317afc5"
+      ],
+      "sources": [
+        "docs/recovery/startup-thread-runtime.md",
+        "native/cmds/startup_thread_runtime.cmake",
+        "native/include/mco/cleanup_registry_state.hpp",
+        "native/include/mco/startup_thread_runtime.hpp",
+        "native/src/cleanup_registry.cpp",
+        "native/src/startup_thread_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/startup_thread_runtime_cases.hpp",
+        "native/tests/startup_thread_runtime_compare.cpp",
+        "native/tests/startup_thread_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_startup_thread_runtime_compare.py",
+        "tools/startup_thread_runtime_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6be570",
+        "0x6bf450",
+        "0x6eedb0"
+      ]
+    }
+  }
+}

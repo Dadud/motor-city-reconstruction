@@ -1,0 +1,5 @@
+add_executable(mco_diagnostic_runtime_compare native/tests/diagnostic_runtime_compare.cpp)
+target_link_libraries(mco_diagnostic_runtime_compare PRIVATE mco_core)
+add_executable(mco_diagnostic_runtime_test native/tests/diagnostic_runtime_test.cpp)
+target_link_libraries(mco_diagnostic_runtime_test PRIVATE mco_core)
+add_test(NAME diagnostic_runtime_domain COMMAND mco_diagnostic_runtime_test)

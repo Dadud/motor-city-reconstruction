@@ -1,0 +1,200 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6bedf0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "diagnostic-runtime",
+      "owner": "client-recovery",
+      "scope": "Five complete initialization/channel/device routines with shared flag and metadata image; environment lookup and configuration parsers remain explicit boundaries.",
+      "supported_domain": "160 mapped observation words; channels 0..63, devices 0..7; returning environment/parser bridges. Unchecked invalid original indices, real OS environment and parsers excluded.",
+      "acceptance": "1188 complete original-instruction cases compare full state image and ordered boundary calls on MSVC and Zig; native domain checks pass.",
+      "comparison_cases": 1188,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Environment lookup and PRINT_CHANNEL/PRINT_DEVICE parser bodies; live startup and host diagnostics."
+      ],
+      "evidence_ids": [
+        "ev_da4c57797f8fda743887b42718d151ca08091a04f7848b5711db5c3943bc2581"
+      ],
+      "sources": [
+        "docs/recovery/diagnostic-runtime.md",
+        "native/cmds/diagnostic_runtime.cmake",
+        "native/include/mco/diagnostic_runtime.hpp",
+        "native/src/diagnostic_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/diagnostic_runtime_cases.hpp",
+        "native/tests/diagnostic_runtime_compare.cpp",
+        "native/tests/diagnostic_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/diagnostic_runtime_cases.py",
+        "tools/native_diagnostic_runtime_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bef20",
+        "0x6bef70",
+        "0x6bf1e0",
+        "0x6bf220"
+      ]
+    },
+    "0x6bf220": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "diagnostic-runtime",
+      "owner": "client-recovery",
+      "scope": "Five complete initialization/channel/device routines with shared flag and metadata image; environment lookup and configuration parsers remain explicit boundaries.",
+      "supported_domain": "160 mapped observation words; channels 0..63, devices 0..7; returning environment/parser bridges. Unchecked invalid original indices, real OS environment and parsers excluded.",
+      "acceptance": "1188 complete original-instruction cases compare full state image and ordered boundary calls on MSVC and Zig; native domain checks pass.",
+      "comparison_cases": 1188,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Environment lookup and PRINT_CHANNEL/PRINT_DEVICE parser bodies; live startup and host diagnostics."
+      ],
+      "evidence_ids": [
+        "ev_da4c57797f8fda743887b42718d151ca08091a04f7848b5711db5c3943bc2581"
+      ],
+      "sources": [
+        "docs/recovery/diagnostic-runtime.md",
+        "native/cmds/diagnostic_runtime.cmake",
+        "native/include/mco/diagnostic_runtime.hpp",
+        "native/src/diagnostic_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/diagnostic_runtime_cases.hpp",
+        "native/tests/diagnostic_runtime_compare.cpp",
+        "native/tests/diagnostic_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/diagnostic_runtime_cases.py",
+        "tools/native_diagnostic_runtime_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bef20",
+        "0x6bef70",
+        "0x6bf1e0",
+        "0x6bf220"
+      ]
+    },
+    "0x6bef70": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "diagnostic-runtime",
+      "owner": "client-recovery",
+      "scope": "Five complete initialization/channel/device routines with shared flag and metadata image; environment lookup and configuration parsers remain explicit boundaries.",
+      "supported_domain": "160 mapped observation words; channels 0..63, devices 0..7; returning environment/parser bridges. Unchecked invalid original indices, real OS environment and parsers excluded.",
+      "acceptance": "1188 complete original-instruction cases compare full state image and ordered boundary calls on MSVC and Zig; native domain checks pass.",
+      "comparison_cases": 1188,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Environment lookup and PRINT_CHANNEL/PRINT_DEVICE parser bodies; live startup and host diagnostics."
+      ],
+      "evidence_ids": [
+        "ev_da4c57797f8fda743887b42718d151ca08091a04f7848b5711db5c3943bc2581"
+      ],
+      "sources": [
+        "docs/recovery/diagnostic-runtime.md",
+        "native/cmds/diagnostic_runtime.cmake",
+        "native/include/mco/diagnostic_runtime.hpp",
+        "native/src/diagnostic_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/diagnostic_runtime_cases.hpp",
+        "native/tests/diagnostic_runtime_compare.cpp",
+        "native/tests/diagnostic_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/diagnostic_runtime_cases.py",
+        "tools/native_diagnostic_runtime_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bef20",
+        "0x6bef70",
+        "0x6bf1e0",
+        "0x6bf220"
+      ]
+    },
+    "0x6bf1e0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "diagnostic-runtime",
+      "owner": "client-recovery",
+      "scope": "Five complete initialization/channel/device routines with shared flag and metadata image; environment lookup and configuration parsers remain explicit boundaries.",
+      "supported_domain": "160 mapped observation words; channels 0..63, devices 0..7; returning environment/parser bridges. Unchecked invalid original indices, real OS environment and parsers excluded.",
+      "acceptance": "1188 complete original-instruction cases compare full state image and ordered boundary calls on MSVC and Zig; native domain checks pass.",
+      "comparison_cases": 1188,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Environment lookup and PRINT_CHANNEL/PRINT_DEVICE parser bodies; live startup and host diagnostics."
+      ],
+      "evidence_ids": [
+        "ev_da4c57797f8fda743887b42718d151ca08091a04f7848b5711db5c3943bc2581"
+      ],
+      "sources": [
+        "docs/recovery/diagnostic-runtime.md",
+        "native/cmds/diagnostic_runtime.cmake",
+        "native/include/mco/diagnostic_runtime.hpp",
+        "native/src/diagnostic_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/diagnostic_runtime_cases.hpp",
+        "native/tests/diagnostic_runtime_compare.cpp",
+        "native/tests/diagnostic_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/diagnostic_runtime_cases.py",
+        "tools/native_diagnostic_runtime_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bef20",
+        "0x6bef70",
+        "0x6bf1e0",
+        "0x6bf220"
+      ]
+    },
+    "0x6bef20": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "diagnostic-runtime",
+      "owner": "client-recovery",
+      "scope": "Five complete initialization/channel/device routines with shared flag and metadata image; environment lookup and configuration parsers remain explicit boundaries.",
+      "supported_domain": "160 mapped observation words; channels 0..63, devices 0..7; returning environment/parser bridges. Unchecked invalid original indices, real OS environment and parsers excluded.",
+      "acceptance": "1188 complete original-instruction cases compare full state image and ordered boundary calls on MSVC and Zig; native domain checks pass.",
+      "comparison_cases": 1188,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Environment lookup and PRINT_CHANNEL/PRINT_DEVICE parser bodies; live startup and host diagnostics."
+      ],
+      "evidence_ids": [
+        "ev_da4c57797f8fda743887b42718d151ca08091a04f7848b5711db5c3943bc2581"
+      ],
+      "sources": [
+        "docs/recovery/diagnostic-runtime.md",
+        "native/cmds/diagnostic_runtime.cmake",
+        "native/include/mco/diagnostic_runtime.hpp",
+        "native/src/diagnostic_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/diagnostic_runtime_cases.hpp",
+        "native/tests/diagnostic_runtime_compare.cpp",
+        "native/tests/diagnostic_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/diagnostic_runtime_cases.py",
+        "tools/native_diagnostic_runtime_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bef20",
+        "0x6bef70",
+        "0x6bf1e0",
+        "0x6bf220"
+      ]
+    }
+  }
+}

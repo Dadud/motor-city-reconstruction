@@ -79,7 +79,10 @@ def build(executable):
         def add(inputs, outputs):
             cases.append(dict(input=list(inputs), output=list(outputs)))
 
-        if name == 'startup_initialize':
+        if name in ('diagnostic_runtime', 'startup_thread_runtime'):
+            from importlib import import_module
+            cases = import_module('tools.'+name+'_cases').capture(oracle)
+        elif name == 'startup_initialize':
             from tools.startup_initialize_cases import capture
             cases = capture(oracle)
         elif name in ('input_mouse_geometry','input_mouse_state_set','input_mouse_callbacks'):
@@ -530,6 +533,7 @@ def build(executable):
     from tools.input_action_session_cases import lifecycle_cases as action_session_cases
     from tools.startup_initialize_cases import lifecycle_cases as startup_lifecycle_cases
     from tools.startup_toggle_cases import lifecycle_cases as startup_toggle_lifecycle_cases
+    from tools.combined_input_cases import lifecycle_cases as combined_input_lifecycle_cases
     from tools.startup_mouse_cases import lifecycle_cases as startup_mouse_lifecycle_cases
     from tools.input_mouse_runtime_cases import lifecycle_cases as mouse_runtime_lifecycle_cases
     from tools.input_keyboard_layout_cases import lifecycle_cases as keyboard_layout_lifecycle_cases
@@ -544,7 +548,8 @@ def build(executable):
                 substitutions={'record_callbacks': dict(
                     handler_ids=list(HANDLERS),
                     behavior='RET plus declared observation/mutation hooks; controller bodies unchanged')},
-                probes={'line_counter_wrap': line_counter_wrap_probe(oracle),
+                probes={'combined_input_lifecycle': combined_input_lifecycle_cases(oracle),
+                        'line_counter_wrap': line_counter_wrap_probe(oracle),
                         'record_lifecycle': lifecycle_cases(oracle),
                         'record_selection_lifecycle': selection_lifecycle_cases(oracle),
                         'record_cycle_lifecycle': cycle_lifecycle_cases(oracle),

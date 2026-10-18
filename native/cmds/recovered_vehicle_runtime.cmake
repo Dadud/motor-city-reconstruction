@@ -1,0 +1,4 @@
+add_executable(mco_recovered_vehicle_runtime_compare native/tests/recovered_vehicle_runtime_test.cpp)
+target_link_libraries(mco_recovered_vehicle_runtime_compare PRIVATE mco_core)
+add_test(NAME recovered_vehicle_runtime COMMAND mco_recovered_vehicle_runtime_compare)
+set_tests_properties(recovered_vehicle_runtime PROPERTIES TIMEOUT 60)

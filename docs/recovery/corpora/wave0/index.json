@@ -67,6 +67,9 @@
     "default_constants": {
       "sha256": "633b8adaa418224c2c23c2ad8c7799072810fef5ca20cfc4d3484fe28ca79809"
     },
+    "diagnostic_runtime": {
+      "sha256": "63e0005b62eb50ad2c627582ca8609783a4c86ab44eb10f5e15e62105a29f290"
+    },
     "entity_byte_assign": {
       "sha256": "2a28f94544ec260abb5b4b5161dee29261b08f73db7e3f8b191eafb5e2bc81ac"
     },
@@ -286,6 +289,9 @@
     "startup_initialize": {
       "sha256": "612300bb29813642f8dfe6067bf909b9d11a790b0cfde154b044aef29e923e73"
     },
+    "startup_thread_runtime": {
+      "sha256": "e4111793a4641f08eb77540879543abf757c9ebd4bb4367d57745b3e8eb9847f"
+    },
     "state_and_flag": {
       "sha256": "973b3ab85632891deac82babd2462f769f7fbb7c727f05667bc5585f1d5ff8cf"
     },
@@ -333,6 +339,9 @@
     }
   },
   "probes": {
+    "combined_input_lifecycle": {
+      "sha256": "b56022b32086414a1c91d4a09bd701f10bc9cb85f49dbe53c143137f4f93d0dd"
+    },
     "line_counter_wrap": {
       "sha256": "6696a5e7026ece558ef383e4ee4e6b16429b8024099bda068bf0e6d4ffad736b"
     },

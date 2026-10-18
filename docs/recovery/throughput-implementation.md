@@ -84,3 +84,9 @@ capture one real MCO input lifecycle. Reuse the existing SCC/dependency backlog
 and retained REA evidence for connected packages. PyGhidra type overlays, Qiling,
 angr, x32dbg and TTD remain optional experiments; they were not installed or
 represented as completed integrations by this change.
+
+## Integrated startup and vehicle checkpoint (2026-10-18)
+
+Added diagnostic initialization/channel/device controls (five entries) and thread initialization/capacity/page allocation (three entries). The standard exporter and replay now cover 105 implemented cells, 70,012 routine cases and 158 connected traces. Both MSVC and Zig full replays pass; all previous cell/probe shard references are unchanged. MSVC CTest passes 187 tests; Zig CTest passes 189 under its configured feature set. Python discovery passes 997 tests with seven skips.
+
+The combined input graph links diagnostics, keyboard, mouse, NumLock and shared cleanup, preserving the newly observed translation-table/mouse-word storage alias. The authored vehicle/engine adapter matches Python for 120 synthetic frames with zero observed absolute error. These checks do not establish live startup or gameplay. See combined-input-progress.md, startup-thread-runtime.md, diagnostic-runtime.md, vehicle-runtime-integration.md and original-startup-reference.md for boundaries and next gaps.

@@ -1,0 +1,58 @@
+{
+  "id": "diagnostic_runtime",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bedf0"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bf220"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bef70"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bf1e0"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bef20"
+    }
+  ],
+  "brief": "Recover diagnostic initialization and channel/device flags with explicit environment/parser boundaries.",
+  "decl": "void diagnostic_initialize(DiagnosticRuntime &state, const DiagnosticPlatform &platform);",
+  "comparison": {
+    "includes": [
+      "diagnostic_runtime_cases.hpp"
+    ],
+    "body": "        diagnostic_runtime_cases::compare(input);"
+  },
+  "shared_sources": [
+    "native/tests/diagnostic_runtime_cases.hpp",
+    "tools/diagnostic_runtime_cases.py",
+    "docs/recovery/diagnostic-runtime.md"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "diagnostic-runtime",
+    "owner": "client-recovery",
+    "scope": "Five complete initialization/channel/device routines with shared flag and metadata image; environment lookup and configuration parsers remain explicit boundaries.",
+    "supported_domain": "160 mapped observation words; channels 0..63, devices 0..7; returning environment/parser bridges. Unchecked invalid original indices, real OS environment and parsers excluded.",
+    "acceptance": "1188 complete original-instruction cases compare full state image and ordered boundary calls on MSVC and Zig; native domain checks pass.",
+    "comparison_cases": 1188,
+    "comparison_corpus": "docs/recovery/corpora/wave0",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Environment lookup and PRINT_CHANNEL/PRINT_DEVICE parser bodies; live startup and host diagnostics."
+    ],
+    "evidence_ids": [
+      "ev_da4c57797f8fda743887b42718d151ca08091a04f7848b5711db5c3943bc2581"
+    ]
+  }
+}
