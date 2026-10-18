@@ -1,0 +1,6 @@
+# Integration gate, not another recovered function or counted cell.
+add_executable(mco_input_key_lifecycle_test native/tests/input_key_lifecycle_test.cpp)
+target_link_libraries(mco_input_key_lifecycle_test PRIVATE mco_core)
+add_test(NAME input_key_lifecycle COMMAND mco_input_key_lifecycle_test)
+add_executable(mco_input_key_lifecycle_compare native/tests/input_key_lifecycle_compare.cpp)
+target_link_libraries(mco_input_key_lifecycle_compare PRIVATE mco_core)

@@ -1,0 +1,32 @@
+{
+ "id": "registry_slot_write",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x4077a0"
+  }
+ ],
+ "brief": "Write three dwords into a registry slot.",
+ "decl": "void registry_slot_write(std::span<std::byte> registry, std::uint32_t slot, std::uint32_t first, std::uint32_t second, std::uint32_t third);",
+ "notes": [
+  "Slot stride is 24 bytes; the original writes first/second/third at offsets 12, 16 and 20 of the slot.",
+  "Verified against the original by tools.w0_int_leaf_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "acceptance": "Met: 8 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 8,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto slot = read(input);\n        const auto first = read(input);\n        const auto second = read(input);\n        const auto third = read(input);\n        auto registry = image<0x1804>(input);\n        mco::registry_slot_write(registry, slot, first, second, third);\n        emit(registry);"
+ }
+}

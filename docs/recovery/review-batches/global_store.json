@@ -1,0 +1,33 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x406a30": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-global-state",
+      "owner": "wave0-utilities",
+      "scope": "Complete body. Complete body emulated against the original through the shared call stub; not yet translated.",
+      "supported_domain": "All 32-bit inputs within IDIV semantics; a zero divisor or the INT_MIN/-1 pair is rejected as outside the domain rather than emulated.",
+      "unresolved": [
+        "What owns the globals and their population order."
+      ],
+      "acceptance": "Met: 64 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "status": "implemented",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 64,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/global_store.cmake",
+        "native/include/mco/global_store.hpp",
+        "native/src/global_store.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/global_store_compare.cpp",
+        "native/tests/global_store_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_global_store_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

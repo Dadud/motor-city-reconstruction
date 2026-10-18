@@ -1,0 +1,33 @@
+{
+ "id": "buffer_copy12_b",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x408510"
+  }
+ ],
+ "brief": "Member 12-byte copy, byte-identical twin of 0x4081c0.",
+ "decl": "void buffer_copy12_b(std::span<std::byte,12> destination, std::span<const std::byte,12> source);",
+ "notes": [
+  "Member routine: destination in ECX, source as the stack argument. Identical COMDAT-folded bodies at two addresses.",
+  "Verified against the original by tools.w0_int_leaf_oracle.",
+  "The host function carries the cell suffix because the twin bodies fold to identical code but stay separate cells."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "acceptance": "Met: 3 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 3,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        auto destination = image<24>(input);\n        const auto source = image<12>(input);\n        mco::buffer_copy12_b(std::span<std::byte,12>(destination.data()+8,12), source);\n        emit(destination);\n        emit(source);"
+ }
+}

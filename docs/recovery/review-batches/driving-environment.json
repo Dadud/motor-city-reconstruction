@@ -1,0 +1,211 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x540fd0": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete control-update body with actual original rate/steering/override helpers. Fresh 844-case original and MSVC native/Python comparisons pass with zero reported numeric error. Captures full owner before supplied child entries, ordered calls, virtual receiver/operation and trace arguments; checks final owner/configuration. Remote and gear effects, external queries and trace delivery remain explicit supplied boundaries.",
+      "sources": [
+        "client/control_update.py",
+        "native/src/control_update.cpp",
+        "tools/control_update_oracle.py",
+        "tools/native_control_update_compare.py",
+        "docs/calculations/control-update.md"
+      ],
+      "evidence_ids": [
+        "ev_8a5eb25f92d438b4200c94ae31d6602e9ecba2d54204f27a9e9415af11bc8990"
+      ],
+      "dependencies": [
+        "0x541400",
+        "0x5414a0",
+        "0x541540",
+        "0x5415e0",
+        "0x541880",
+        "0x43b570",
+        "0x548670",
+        "0x548b70",
+        "0x548e30",
+        "0x584fc0",
+        "0x55cfc0"
+      ],
+      "shared_types": [
+        "ControlState",
+        "ControlCall",
+        "ControlExecutor"
+      ],
+      "supported_domain": "Byte controls, bounded signed steering/brake limit, finite normalized fields, steering rates 0..32767 and uint32 settings. Both steering algorithms and local/other-player branches exercised; API rejection does not reproduce original malformed input.",
+      "unresolved": [
+        "Authentic input acquisition and remote input producer; assisted/manual gear state machines; external stopped/vehicle/virtual queries; diagnostic formatting; real sampling/update schedule."
+      ],
+      "acceptance": "Replay844cases including helper thresholds and child-entry owner snapshots; subsequently connect actual input/gear/query producers."
+    },
+    "0x536250": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete axle vertical-contribution and four-wheel-load body with actual original rear-selector helper, no substituted calls. Fresh486original calls pass with zero reported numeric error and unchanged remainder owner/configuration bytes. Same486 native/Python cases pass with zero reported error. Supplies owner/configuration state rather than authentic-car producers.",
+      "sources": [
+        "client/body_vertical_load.py",
+        "native/src/body_vertical_load.cpp",
+        "tools/body_vertical_load_oracle.py",
+        "tools/native_body_vertical_load_compare.py",
+        "docs/calculations/body-vertical-load.md"
+      ],
+      "evidence_ids": [
+        "ev_869a5b7d253052ccb4e7e1b21b13e501ab2103f4f039ac527030e0be30a5d784",
+        "ev_a20801cd3011d70f718dfb4582f14d53d131bb588dd8e66c6e87038ba4135b84"
+      ],
+      "dependencies": [
+        "0x536f80"
+      ],
+      "shared_types": [
+        "BodyVerticalLoadState",
+        "BodyVerticalLoadOutput"
+      ],
+      "supported_domain": "Finite input fields and exactly four wheel loads. Corpus covers signed speed threshold neighbors, reverse speed, signed parameters/adjustments/qualities and zero-clamped loads; physical dimension of axle parameter unresolved.",
+      "unresolved": [
+        "Authentic configuration, damage/quality and prior-load production; complete wheel/contact and linear/angular integration; original runtime traces."
+      ],
+      "acceptance": "Replay486cases then verify real initialized-car parameter/load production through the driving update."
+    },
+    "0x536f80": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete rear vertical-parameter selector is folded into adjust_body_vertical_load in Python/native. Actual original helper executes unchanged through486complete parent calls with threshold neighbors and reverse-speed coverage; parent outputs and state match with zero numeric error. Native counterpart matches same corpus. Evidence is caller-observed; no independent exhaustive unstored-x87-return comparison.",
+      "sources": [
+        "client/body_vertical_load.py",
+        "native/src/body_vertical_load.cpp",
+        "tools/body_vertical_load_oracle.py",
+        "tools/native_body_vertical_load_compare.py",
+        "docs/calculations/body-vertical-load.md"
+      ],
+      "evidence_ids": [
+        "ev_a20801cd3011d70f718dfb4582f14d53d131bb588dd8e66c6e87038ba4135b84"
+      ],
+      "dependencies": [],
+      "shared_types": [
+        "BodyVerticalLoadState"
+      ],
+      "supported_domain": "Finite rear base/speed parameters and signed speed within recorded parent corpus. Original extended return is assessed through parent stores, not every standalone return bit.",
+      "unresolved": [
+        "Authentic rear-parameter production; independent extreme-intermediate coverage and original invalid-memory behavior."
+      ],
+      "acceptance": "Retain original parent486case corpus and threshold-neighbor coverage with actual selector."
+    },
+    "0x540520": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete wheel-force orientation body with original trigonometric helpers and no substituted calls. Fresh243original and native/Python cases pass with zero reported numeric error. Original comparison checks all other owner bytes unchanged. This transforms supplied forces and angles; it is not a full vehicle/world transform.",
+      "sources": [
+        "client/wheel_force_orientation.py",
+        "native/src/wheel_force_orientation.cpp",
+        "tools/wheel_force_orientation_oracle.py",
+        "tools/native_body_moments_compare.py",
+        "docs/calculations/body-moments.md"
+      ],
+      "evidence_ids": [
+        "ev_d55222757ac60a3e9ef9e031707b19e80f051b3147caca889bada8fb30d7b4c2"
+      ],
+      "dependencies": [],
+      "shared_types": [
+        "ForceOrientationWheel"
+      ],
+      "supported_domain": "Finite wheel steering/phase/lateral/longitudinal inputs and front/rear axle parameters. Corpus includes signed phase/steering/forces; host sine/cosine equivalence claimed only within recorded scenarios.",
+      "unresolved": [
+        "Authentic angle/axle-parameter and wheel-force producers; broader transcendental rounding coverage; downstream complete simulation."
+      ],
+      "acceptance": "Replay243cases with actual original trig helpers, then integrate authentic recovered force and angle producers."
+    },
+    "0x540710": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete body-moment accumulator with actual original cross products and correction0x540600, no substitutions. Fresh1440original calls pass within coded tolerance; maximum absolute error1.1920928955078125e-7. Native/Python1440case corpus reports zero error. Owner/configuration remainder checked unchanged. Original support-correction and supplied wheel-force inputs remain externally produced.",
+      "sources": [
+        "client/body_moments.py",
+        "native/src/body_moments.cpp",
+        "tools/body_moments_oracle.py",
+        "tools/native_body_moments_compare.py",
+        "docs/calculations/body-moments.md"
+      ],
+      "evidence_ids": [
+        "ev_562052f2f87aabaa33b332a4e182eba57b808636146ddf65da5b6e41c51528ab",
+        "ev_c6536455188181a143d32e4f7cb7cd64f3bf18b3acfdd313cd21caf225667262"
+      ],
+      "dependencies": [
+        "0x540600"
+      ],
+      "shared_types": [
+        "BodyMomentState",
+        "MomentWheel"
+      ],
+      "supported_domain": "Finite supplied forces, levers, inverse scales and support corrections; four consecutive wheel records. Corpus covers speed threshold0.5 neighbors, force/correction signs, all16contact masks and alternate mode. Tolerance max(0.00025,abs(original)*3e-7).",
+      "unresolved": [
+        "Authentic support-correction/force/lever producers and physical units; complete scheduler, transforms and linear/angular integrated traces; remaining observed floating discrepancy."
+      ],
+      "acceptance": "Retain1440case original tolerance and native comparison; investigate discrepancy before any bit-exact claim; validate carried state through initialized-car integration."
+    },
+    "0x53f630": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete primary26-knot tire-response consumer with original floor helper unchanged. Fresh combined primary/secondary corpus1728original calls and1728native/Python cases pass with zero reported stored-output numeric error. Synthetic supplied tables/wheel state; no children substituted. Does not certify original table construction or full tire update.",
+      "sources": [
+        "client/tire_response.py",
+        "native/src/tire_response.cpp",
+        "tools/tire_response_oracle.py",
+        "tools/native_tire_response_compare.py",
+        "docs/calculations/tire-response-curves.md"
+      ],
+      "evidence_ids": [
+        "ev_bdf154ee4eac889a49aac85fa1bd4b5cd8ab1970f6ceb5fc5b2ba9dc4db74fee"
+      ],
+      "dependencies": [],
+      "shared_types": [
+        "WheelCurveInput",
+        "WheelResponseTable"
+      ],
+      "supported_domain": "Finite binary32 inputs, 26 supplied knots and nonnegative load. Synthetic corpus covers sign/zero, fractional and saturated knots, load threshold neighbors, high load, second angle and alternate-load switch. Original malformed pointers/nonfinite semantics excluded.",
+      "unresolved": [
+        "Authentic slip, load, surface and response-table producers; original units/physical meanings; complete contact/longitudinal-force integration and driving traces."
+      ],
+      "acceptance": "Replay1728combined cases and connect verified original response tables and authentic wheel input producers."
+    },
+    "0x53f830": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "driving-controls-and-force-consumers",
+      "owner": "driving-environment",
+      "scope": "Complete secondary26-knot tire-response consumer with original floor helper unchanged. Fresh combined primary/secondary corpus1728original calls and1728native/Python cases pass with zero reported stored-output numeric error. Synthetic supplied tables/wheel state; no children substituted. Parent active tire update remains a separate recovery gate.",
+      "sources": [
+        "client/tire_response.py",
+        "native/src/tire_response.cpp",
+        "tools/tire_response_oracle.py",
+        "tools/native_tire_response_compare.py",
+        "docs/calculations/tire-response-curves.md"
+      ],
+      "evidence_ids": [
+        "ev_0506dca8b2ebb2a711db07d1a133c96e6dc7caea18d03f0dd6c4fc459969541d"
+      ],
+      "dependencies": [],
+      "shared_types": [
+        "WheelCurveInput",
+        "WheelResponseTable"
+      ],
+      "supported_domain": "Finite binary32 inputs, 26 supplied knots and nonnegative load. Synthetic corpus covers sign/zero, fractional and saturated knots, load threshold neighbors, high load, second angle and alternate-load switch. Original malformed pointers/nonfinite semantics excluded.",
+      "unresolved": [
+        "Authentic slip, load, surface and response-table producers; original units/physical meanings; complete contact/longitudinal-force integration and driving traces."
+      ],
+      "acceptance": "Replay1728combined cases and verify secondary sign/angle contribution through authentic complete tire update."
+    }
+  }
+}

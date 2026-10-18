@@ -1,0 +1,43 @@
+{
+ "id": "record_should_retain",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x435840"
+  }
+ ],
+ "brief": "Decide whether the current record should be retained for a request.",
+ "decl": "std::uint32_t record_should_retain(std::span<const std::byte> record, std::span<const std::byte> request, std::uint32_t tick);",
+ "notes": [
+  "Original instructions establish controller ordering; callback bodies remain external implementations."
+ ],
+ "comparison": {
+  "body": "        const auto tick = read(input);\n        const auto record = image<272>(input);\n        const auto request = image<32>(input);\n        emit(mco::record_should_retain(record, request, tick));\n        emit(record);\n        emit(request);",
+  "includes": []
+ },
+ "shared_sources": [
+  "native/include/mco/detail/byte_words.hpp",
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/record_handler.hpp",
+  "native/src/record_handler.cpp",
+  "tools/record_machine_cases.py"
+ ],
+ "depends_on": [
+  "0x435270"
+ ],
+ "header_includes": [],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-record-transitions",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete current-record retention predicate, including inline handler classification, override matching, parameter equality and signed retention gate. True retains the current record at caller 0x434f90.",
+  "supported_domain": "Valid record/request images and raw uint32 clock bits; no callback is invoked or substituted in this predicate.",
+  "acceptance": "Met: 2040 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 2040,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

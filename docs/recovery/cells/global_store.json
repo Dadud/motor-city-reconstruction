@@ -1,0 +1,36 @@
+{
+ "id": "global_store",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x406a30"
+  }
+ ],
+ "brief": "Wave-0 global store-and-return leaf.",
+ "decl": "std::uint32_t global_store(std::array<std::byte,4>& destination, std::uint32_t stored_value, std::uint32_t returned_value);",
+ "notes": [
+  "Arguments: destination (address written through), stored_value (value written), returned_value (value returned)",
+  "Verified against the original by tools.w0_int_leaf_oracle.",
+  "destination is a four-byte host image: the original writes through an emulated address, which the reconstruction models as an explicit destination buffer."
+ ],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body. Complete body emulated against the original through the shared call stub; not yet translated.",
+  "supported_domain": "All 32-bit inputs within IDIV semantics; a zero divisor or the INT_MIN/-1 pair is rejected as outside the domain rather than emulated.",
+  "unresolved": [
+   "What owns the globals and their population order."
+  ],
+  "acceptance": "Met: 64 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 64,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto stored = read(input);\n        const auto returned = read(input);\n        auto destination = image<4>(input);\n        emit(mco::global_store(destination, stored, returned));\n        emit(destination);"
+ }
+}

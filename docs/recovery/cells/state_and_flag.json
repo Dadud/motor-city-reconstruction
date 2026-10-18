@@ -1,0 +1,32 @@
+{
+ "id": "state_and_flag",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x414c10"
+  }
+ ],
+ "brief": "Member predicate: nonzero when state and mask share bits.",
+ "decl": "std::uint32_t state_and_flag(std::uint32_t state, std::uint32_t mask);",
+ "notes": [
+  "Member routine: state arrives in ECX at +0x6c. The neg/sbb/neg tail yields 1 when the conjunction is nonzero and 0 otherwise.",
+  "Verified against the original by tools.w0_pure_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table indices outside the registered table are rejected rather than emulated.",
+  "acceptance": "Met: 64 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 64,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto first = read(input);\n        const auto second = read(input);\n        emit(mco::state_and_flag(first, second));"
+ }
+}

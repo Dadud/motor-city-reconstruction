@@ -1,0 +1,44 @@
+{
+  "id": "input_queue_resize",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x584ca0"
+    }
+  ],
+  "brief": "Clamp queue capacity to one through thirty-two and reset both cursors.",
+  "decl": "void input_queue_resize(InputKeyQueue &state, std::uint32_t requested);",
+  "header_includes": [
+    "mco/input_key_queue.hpp"
+  ],
+  "comparison": {
+    "body": "        const auto requested = read(input);\n        auto f = queue_cases::Fixture::read(input);\n        auto state = f.state();\n        mco::input_queue_resize(state, requested);\n        f.emit();",
+    "includes": [
+      "input_queue_cases.hpp"
+    ]
+  },
+  "depends_on": [],
+  "shared_sources": [
+    "native/include/mco/layouts.hpp",
+    "native/include/mco/input_key_queue.hpp",
+    "tools/input_queue_cases.py",
+    "native/tests/input_queue_cases.hpp"
+  ],
+  "bookkeeping": {
+    "subsystem": "input-key-queue",
+    "owner": "window-input-recovery",
+    "scope": "Complete original body; actual character translation; only Enter/LeaveCriticalSection imports use declared observation/mutation substitutions.",
+    "supported_domain": "Caller-owned distinct queue image, key image and optional remap. Nonnegative initial capacity, positive capacity at division, returning synchronization bridge; original invalid accesses and division faults are not emulated.",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "status": "implemented",
+    "acceptance": "MSVC and Zig native outputs exactly match captured original observations; standalone native behavior tests pass on both compilers. Live dispatch and Windows synchronization integration remain unresolved.",
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_cases": 18,
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live critical-section behavior, window dispatch and camera-handler integration."
+    ]
+  }
+}

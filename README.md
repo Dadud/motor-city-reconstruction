@@ -7,6 +7,11 @@ source references and reviewed recovery gaps.
 The [installation export report](docs/recovery/export-status.md) covers all
 discovered program binaries; the [approved recovery plan](docs/recovery/plan.md)
 and [export instructions](docs/recovery/exporting.md) describe the current workflow.
+The synthetic original/native comparison corpus uses Git LFS. Install Git LFS,
+then run `git lfs install` and `git lfs pull` after cloning before running the
+full regression checks. Original binaries, assets and private decompilation are
+not included.
+
 Build the recovered C++ library and checks with `python build.py --test`
 (Python 3.11+, CMake 3.24+ and a C++20 compiler required). This does not yet
 rebuild the complete original game. The application and mod work below are

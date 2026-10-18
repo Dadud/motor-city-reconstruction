@@ -1,0 +1,32 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x489cb0": {
+      "subsystem": "utilities-camera-selection",
+      "owner": "camera-selection-dependency",
+      "scope": "Complete original body on bounded synthetic input state.",
+      "supported_domain": "Read-only 12-byte context; all 32-bit discriminator values, ECX input made explicit as a span.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "Met: 238 complete-body cases exact against original execution on MSVC and Zig/Clang. See docs/recovery/camera-selection.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 238,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/camera_context_special.cmake",
+        "native/include/mco/camera_context_special.hpp",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/camera_context_special.cpp",
+        "native/tests/camera_context_special_compare.cpp",
+        "native/tests/camera_context_special_test.cpp",
+        "native/tests/cell_io.hpp",
+        "tools/cell_corpus.py",
+        "tools/native_camera_context_special_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

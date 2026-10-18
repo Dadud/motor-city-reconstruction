@@ -1,0 +1,33 @@
+{
+ "id": "table_byte_read",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x42d380"
+  }
+ ],
+ "brief": "Read one byte from a flat table, with a -1 index sentinel.",
+ "decl": "std::uint8_t table_byte_read(std::span<const std::byte> table, std::int32_t index);",
+ "pseudocode": "undefined1 FUN_0042d380(int param_1)\n\n{\n  if (param_1 == -1) {\n    return 0;\n  }\n  return (&DAT_0097ebcc)[param_1];\n}",
+ "notes": [
+  "An index of -1 returns 0 without touching the table.",
+  "Verified against the original by tools.w0_pure_oracle."
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "acceptance": "Met: 10 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 10,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto index = read(input);\n        const auto table = image<256>(input);\n        emit(mco::table_byte_read(table, std::bit_cast<std::int32_t>(index)));"
+ }
+}

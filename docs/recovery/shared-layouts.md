@@ -1,18 +1,58 @@
 # Established shared layouts and startup dependencies
 
-These are recovered byte-image contracts used by existing authored modules.
-They are not a complete recovery of original C++ classes, vtables or ownership.
+Byte-image offsets, strides, minimum sizes, emulated globals and calling
+conventions are **machine-readable and audited** in
+[`layouts.json`](layouts.json), which `tools/layout_registry.py` renders into
+`native/include/mco/layouts.hpp` and checks against recovered sources. This page
+explains what those contracts mean; it no longer restates offsets that the
+registry owns, because two documents describing the same offset drift apart.
+
+Start from `python -m tools.layout_registry --check`: it reports the registered
+offset count, which sources are audited, and any offset used by more than one
+consumer that the registry does not describe. That last number is the one that
+matters — a single-file constant cannot drift, a shared one can.
+
+Recovered byte-image contracts used by existing authored modules. They are not a
+complete recovery of original C++ classes, vtables or ownership.
 All original addresses here refer only to main executable SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
 Other binaries, including historical cached clients, have separate address spaces.
+
+## Registered images
+
+| Image | Size | Consumers audited |
+| --- | --- | ---: |
+| configuration | `0x820` | 10 |
+| owner | `0x2000` | 10 |
+| startup_record | `0x4a8` | 10 |
+| model | `0x1400` | 10 |
+| entity_record | `0x1c` | See [entity field batch](entity-table.md) |
+| mask_record | `0x54` | See [entity field batch](entity-table.md) |
+| state_record | `0x100` | See [record stack batch](record-stack.md) |
+| record_machine_image | `0x780` | See [record controller batch](record-transitions.md) |
+| record_request | `0x10` | See [record controller batch](record-transitions.md) |
+
+Serialized integers and floats are little-endian; float fields are IEEE-754
+binary32. Native code accesses byte images explicitly instead of relying on
+compiler structure padding or host pointer size.
+Packed byte and word fields carry an explicit width in the registry; legacy
+entries default to four bytes. The entity batch also migrates the two existing
+entity flag readers to the same checked offsets.
 
 ## Mechanical images
 
 `mco::ComponentLoadResult` retains a `0x820`-byte configuration and a `0x984`-byte
 component image plus the original loader status. These sizes and writes are
-compared against original execution. Serialized integers/floats are little-endian;
-float fields are IEEE-754 binary32. Native code accesses byte images explicitly
-instead of relying on compiler structure padding or host pointer size.
+compared against original execution. The `0x984` component image is **not yet in
+the registry**: `native/src/mechanical_loaders.cpp` works on component images
+rather than the registered startup/entity/state images, so it is not audited and its 194 local
+offsets are a separate seeding job.
+
+The component's numeric-count header is at `0x14`, mass at `0x30`, duty at `0x34`,
+and numeric values begin at `0x3c`. Header flags and semantic validation vary by
+part kind; do not reinterpret every component as one populated structure. The
+complete table remains in the recovered loader implementations and
+[component loading writeup](../calculations/mechanical-component-loading.md).
 
 | Configuration offset | Recovered meaning | Representation / units |
 | --- | --- | --- |
@@ -82,3 +122,17 @@ Next shared-definition work: complete model selection/scaling/centering, owner
 main owner initialization, indirect dispatch targets, class boundaries and lifetime contracts.
 Raw Ghidra type identities and function signatures are in the private export
 browser; they require review before becoming authored headers.
+
+Camera selection has a registered 24-byte image with four presets, selected
+index and slot, plus a 12-byte discriminator context. `RecordMachine` carries
+all four presets; its previous count/pending field names have been corrected.
+See [camera selection](camera-selection.md) for producers and limits.
+
+The camera subject observation window registers the `0x3c` spacing between
+current and reference identity tables. Its 120-byte corpus extent is a bounded
+observation window, not a recovered array count. See [camera cycling](camera-cycling.md).
+
+Input contracts register the 128-byte raw query/remap images, a 256-byte
+release observation window overlapping the raw base, and a 512-byte latch
+observation window. These observation extents do not imply recovered original
+array sizes. See [input key state](input-key-state.md).

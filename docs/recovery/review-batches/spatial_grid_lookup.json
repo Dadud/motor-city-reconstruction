@@ -1,0 +1,38 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x552880": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "track-spatial",
+      "owner": "camera-recovery",
+      "scope": "Complete grid lookup; diagnostic child supplied explicitly.",
+      "supported_domain": "Mapped synthetic grid/node images and nearest-even float arithmetic; invalid original dereferences not emulated.",
+      "status": "implemented",
+      "acceptance": "1826 original complete-body cases match MSVC and Zig exactly; native boundary/diagnostic/rejection checks pass on both compilers.",
+      "unresolved": [
+        "Live track ownership and diagnostic implementation."
+      ],
+      "comparison_cases": 1826,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/spatial_grid_lookup.cmake",
+        "native/include/mco/spatial_grid_lookup.hpp",
+        "native/include/mco/spatial_query_memory.hpp",
+        "native/src/spatial_grid_lookup.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/spatial_grid_cases.hpp",
+        "native/tests/spatial_grid_lookup_compare.cpp",
+        "native/tests/spatial_grid_lookup_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_spatial_grid_lookup_compare.py",
+        "tools/spatial_grid_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x4400a0"
+      ]
+    }
+  }
+}

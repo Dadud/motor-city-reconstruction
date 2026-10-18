@@ -1,0 +1,38 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x4acdc0": {
+      "subsystem": "input-key-state",
+      "owner": "camera-input-dependency",
+      "scope": "Complete original body with actual raw key child and no substituted dependencies.",
+      "supported_domain": "Nonnegative code inside a caller-owned latch window disjoint from the read-only 128-byte key image. The raw child accepts the code and the full 32-bit press-only argument is tested for zero. Original latch faults and accesses below the latch base are outside the contract.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "Met: 1472 complete original-body cases exact on MSVC and Zig/Clang, with no input substitutions. Six connected query/release traces also match. See docs/recovery/input-key-state.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 1472,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Original key-state producers, hardware polling, and complete camera-handler integration.",
+        "Original latch accesses outside supplied window and fault behavior."
+      ],
+      "sources": [
+        "native/cmds/input_key_query.cmake",
+        "native/include/mco/input_key_query.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_key_query.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_key_query_compare.cpp",
+        "native/tests/input_key_query_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_key_cases.py",
+        "tools/native_input_key_query_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x460670"
+      ]
+    }
+  }
+}

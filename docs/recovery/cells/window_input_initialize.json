@@ -1,0 +1,52 @@
+{
+  "id": "window_input_initialize",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x583c30"
+    }
+  ],
+  "brief": "Initialize the input queue and install the original 28 message registrations once.",
+  "decl": "std::uint32_t window_input_initialize(WindowDispatchState &state);",
+  "header_includes": [
+    "mco/window_dispatch_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "window_initialization_cases.hpp"
+    ],
+    "body": "        window_initialization_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x582e40",
+    "0x6bd640"
+  ],
+  "shared_sources": [
+    "native/include/mco/layouts.hpp",
+    "native/include/mco/window_dispatch_state.hpp",
+    "native/include/mco/window_keyboard_binding.hpp",
+    "native/tests/window_camera_lifecycle_compare.cpp",
+    "native/tests/window_initialization_cases.hpp",
+    "native/tests/window_registration_cases.hpp",
+    "tools/free_camera_cases.py",
+    "tools/native_window_camera_lifecycle_compare.py",
+    "tools/window_initialization_cases.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "window-dispatch",
+    "owner": "input-recovery",
+    "status": "implemented",
+    "scope": "Complete initializer with actual original registration/search/sort children; lock creation/operations explicitly bridged.",
+    "supported_domain": "Mapped shared state and <=128 message entries at search, returning bridges; registered handler identities are stored without executing unrecovered handlers.",
+    "acceptance": "75 complete original initialization calls match MSVC and Zig exactly with actual registration/search/sort children and explicit synchronizer bridges; native one-shot/full-table tests pass.",
+    "comparison_cases": 75,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6f0b20": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "input-device-acquisition",
+      "owner": "input-recovery",
+      "scope": "Complete information enumeration body with explicit virtual-method bridge and supplied axis offsets.",
+      "supported_domain": "Mapped records/output; returning virtual methods populate all subsequently read fields; temporary record views valid during enumeration only. Original invalid memory accesses unmodeled.",
+      "acceptance": "806 original cases and four persistent information/keyboard state-access traces match MSVC and Zig exactly; independent bounds, name-copy, flag, callback-mutation and failure tests pass.",
+      "comparison_cases": 806,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual platform virtual methods, device initialization/lifetime, live input and process cleanup."
+      ],
+      "sources": [
+        "native/cmds/input_device_information.cmake",
+        "native/cmds/input_device_information_lifecycle.cmake",
+        "native/include/mco/input_device_bridge.hpp",
+        "native/include/mco/input_device_information.hpp",
+        "native/include/mco/input_device_information_binding.hpp",
+        "native/include/mco/input_device_information_bridge.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_device_information.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_device_information_cases.hpp",
+        "native/tests/input_device_information_compare.cpp",
+        "native/tests/input_device_information_lifecycle_compare.cpp",
+        "native/tests/input_device_information_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_device_information_cases.py",
+        "tools/native_input_device_information_compare.py",
+        "tools/native_input_device_information_lifecycle_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x699390",
+        "0x6ee770"
+      ]
+    }
+  }
+}

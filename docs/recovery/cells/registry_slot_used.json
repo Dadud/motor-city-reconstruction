@@ -1,0 +1,32 @@
+{
+ "id": "registry_slot_used",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x407d70"
+  }
+ ],
+ "brief": "Predicate: a registry slot holds a nonzero first field.",
+ "decl": "std::uint32_t registry_slot_used(std::span<const std::byte> registry, std::uint32_t slot);",
+ "notes": [
+  "Slot stride 24; the original tests dword[slot*24] and returns setne.",
+  "Verified against the original by tools.w0_int_leaf_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "acceptance": "Met: 8 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 8,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto slot = read(input);\n        const auto registry = image<0x1804>(input);\n        emit(mco::registry_slot_used(registry, slot));"
+ }
+}

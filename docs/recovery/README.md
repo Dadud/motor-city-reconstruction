@@ -9,6 +9,8 @@ The [approved implementation plan](plan.md) and [private export workflow](export
 now drive that work; [installation export status](export-status.md) covers all binaries.
 [Established shared layouts](shared-layouts.md) document current byte contracts,
 pointer boundaries and unresolved startup dependencies.
+The [cell comparison checkpoint](cell-comparisons.md) documents the shared
+native/original corpus workflow and its bounded coverage.
 The [export checkpoint](export-checkpoint.md) records the completed static pass,
 build verification and the remaining reconstruction work.
 
@@ -16,6 +18,11 @@ build verification and the remaining reconstruction work.
 - `functions.csv`: sortable per-function recovery worksheet.
 - `functions.json`: worksheet with structured references and summary counts.
 - `function-reviews.json`: explicitly reviewed completion claims and remaining work.
+- `triage.json` / [triage.md](triage.md): rule-based classification of every exported
+  function with the rule that fired, code-shape clustering and the resulting required set.
+- `dispositions.json`: published scope decisions. Region dispositions for the game client
+  cite the original's own string vocabulary; module dispositions are role assignments and
+  are marked behavior-review-pending where internals are unreviewed.
 - [status.md](status.md): generated counts and reviewed translation totals.
 - `binary-scope.json`: recursive executable-header scan and EXE/DLL extension candidates.
 - `modules/`: per-binary function inventories, interfaces and direct-call edges.
@@ -41,6 +48,9 @@ and review candidates; callers, oracles and comments can mention a function
 without implementing it. Instruction addresses are included only when they also
 match enumerated function entries. Historical documentation does not automatically
 establish completion either.
+
+`native-bounded` identifies C++-only recovery cells whose stated domains have
+original-execution comparisons; it does not claim a Python implementation.
 
 Explicit reviews distinguish bounded implementations, partial work, unpublished
 drafts and missing translations. Original-comparison labels apply only to each
@@ -83,3 +93,9 @@ Next: review linked candidates, identify subsystem boundaries and external
 interfaces, then translate unresolved functions in dependency order. Counts here
 measure records and reviewed scope; no completion percentage is inferred from
 address mentions or decompiler coverage.
+
+## Supplemental callable boundaries
+
+`function-supplements.json` records independently evidenced, hash-scoped callable entries absent from the retained enumerations. It does not edit the original REA enumeration or module exports. Each entry declares a contiguous boundary, name, direct callees, evidence and existing source paths. The loader rejects duplicate/conflicting entries, overlapping supplemental ranges, unsafe/missing sources, malformed addresses and incomplete base inventories. Unknown call targets are never promoted automatically.
+
+Inventory, module triage and dependency backlog all apply the same supplement loader. Outputs distinguish the base count and supplement count/digest, retain per-entry boundary provenance, and mark new decompilation as `not-exported-supplement`. Supplements establish entry identity only: a separate explicit review is still required to claim translation or verification. The first entry is the registered shutdown callback `0x6f0350`, proven by its registration, instruction boundary and complete original-execution comparisons.

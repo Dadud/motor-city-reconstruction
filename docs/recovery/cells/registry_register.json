@@ -1,0 +1,43 @@
+{
+ "id": "registry_register",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x4072c0"
+  }
+ ],
+ "brief": "Wave-0 registry: assign a node the next id and link it at the head.",
+ "decl": "std::uint32_t registry_register(std::span<std::byte,0x58> node, std::uint32_t counter, std::uint32_t head);",
+ "notes": [
+  "Body: node[0x20]=counter, counter increments at 0x886b9c, node[0x54]=head,",
+  "and the head global at 0x8e3b30 becomes the node. The host form takes the",
+  "counter and head explicitly and returns the new counter; the caller then",
+  "records the node as the new head, since the node address is an emulated",
+  "value the host never dereferences.",
+  "A NULL node is rejected by the original, so the cell requires the image.",
+  "The counter wrap at 0xffffffff is exercised by the oracle.",
+  "Verified against the original by tools.w0_int_leaf_oracle."
+ ],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-registry",
+  "owner": "wave0-utilities",
+  "scope": "Complete body. Registration writes proven against the original across 12 counter/head combinations including the 0xffffffff wrap: the node takes the counter at 0x20, links the head at 0x54, and the counter returns incremented.",
+  "supported_domain": "Any 32-bit counter and head; the NULL-node rejection of the original is carried over as a required image.",
+  "unresolved": [
+   "The two find routines (0x407340 by index, 0x4072f0 by id) walk emulated",
+   "pointers and need the integrated memory model, like the scene query.",
+   "Which object system the registry indexes."
+  ],
+  "acceptance": "Met: 24 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 24,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto counter = read(input);\n        const auto head = read(input);\n        auto node = image<0x5c>(input);\n        emit(mco::registry_register(std::span<std::byte,0x58>(node.data(),0x58), counter, head));\n        emit(node);"
+ }
+}

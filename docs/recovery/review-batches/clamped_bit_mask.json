@@ -1,0 +1,30 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x403370": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-entity-tables",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+      "supported_domain": "All signed 32-bit bit indices, including wrap from INT_MAX to INT_MIN before clamping.",
+      "acceptance": "Met: 11 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 11,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/clamped_bit_mask.cmake",
+        "native/include/mco/clamped_bit_mask.hpp",
+        "native/src/clamped_bit_mask.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/clamped_bit_mask_compare.cpp",
+        "native/tests/clamped_bit_mask_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_clamped_bit_mask_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

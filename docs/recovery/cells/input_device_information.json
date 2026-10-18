@@ -1,0 +1,52 @@
+{
+  "id": "input_device_information",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0b20"
+    }
+  ],
+  "brief": "Build device information and bounded button/axis/POV probe masks from virtual records.",
+  "decl": "std::uint32_t input_device_information(InputDeviceBridge &device, const InputDeviceInformationBridge &platform, std::span<std::byte,540> output);",
+  "header_includes": [
+    "mco/input_device_information_bridge.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_device_information_cases.hpp"
+    ],
+    "body": "        input_device_information_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x6ee770",
+    "0x699390"
+  ],
+  "shared_sources": [
+    "native/include/mco/input_device_information_bridge.hpp",
+    "native/include/mco/input_device_bridge.hpp",
+    "native/include/mco/layouts.hpp",
+    "native/tests/input_device_information_cases.hpp",
+    "tools/input_device_information_cases.py",
+    "native/include/mco/input_device_information_binding.hpp",
+    "native/tests/input_device_information_lifecycle_compare.cpp",
+    "native/cmds/input_device_information_lifecycle.cmake",
+    "tools/native_input_device_information_lifecycle_compare.py"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-device-acquisition",
+    "owner": "input-recovery",
+    "scope": "Complete information enumeration body with explicit virtual-method bridge and supplied axis offsets.",
+    "supported_domain": "Mapped records/output; returning virtual methods populate all subsequently read fields; temporary record views valid during enumeration only. Original invalid memory accesses unmodeled.",
+    "acceptance": "806 original cases and four persistent information/keyboard state-access traces match MSVC and Zig exactly; independent bounds, name-copy, flag, callback-mutation and failure tests pass.",
+    "comparison_cases": 806,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Actual platform virtual methods, device initialization/lifetime, live input and process cleanup."
+    ]
+  }
+}

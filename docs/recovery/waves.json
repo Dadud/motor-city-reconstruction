@@ -1,0 +1,58 @@
+{
+ "schema_version": 1,
+ "basis": "Region-level first cut. Each assignment cites the string vocabulary recovered from the digest-checked original for that region. This is deliberately coarse: waves are executed function by function, and a region's functions can span waves, so the assignment orders the work rather than bounding it.",
+ "regions": {
+  "0x400000": {
+   "wave": "W0",
+   "basis": "Audio file handling and string/localization tables ('close cdaudio', 'animationlist', '.0123456789', 'english/german/french')."
+  },
+  "0x640000": {
+   "wave": "W1",
+   "basis": "Parts database and economy ('dbparts.c', '<AUCTION>', '<WORKSHOP>', '<CARNAME>', '<PARTLIST>')."
+  },
+  "0x500000": {
+   "wave": "W2",
+   "basis": "Physics part names and archive loading (':PHrearsusp', ':PHtire', '%s%s.viv')."
+  },
+  "0x780000": {
+   "wave": "W4",
+   "basis": "Image and style primitives ('GImage.mImageStyle', 'GStaticImage.mTileX', 'PUBLIC', 'SYSTEM')."
+  },
+  "0x4c0000": {
+   "wave": "W5",
+   "basis": "HUD gauge templates ('<GEAR>', '<SPEED>', '<TEMP>', 'hud.guages.fatfender')."
+  },
+  "0x540000": {
+   "wave": "W5",
+   "basis": "Race result views and simulation GUI ('view.RaceResults.*', 'SimGUI_cUserInterface')."
+  },
+  "0x580000": {
+   "wave": "W5",
+   "basis": "Dialog resources and trial data ('system\\\\GDialogs.gui', '<COST>', 'TTrial.Dat')."
+  },
+  "0x5c0000": {
+   "wave": "W5",
+   "basis": "Interface widgets ('GWidget', 'Favorites', 'MHomeTicker')."
+  },
+  "0x600000": {
+   "wave": "W5",
+   "basis": "Pit view and particle configuration ('MPitViewCarDlg', 'MParticle.mShape', 'MStarterCarLot')."
+  },
+  "0x740000": {
+   "wave": "W5",
+   "basis": "Widget library ('GWidget', 'GSliderBar', 'GUIStr', 'GInterface')."
+  },
+  "0x800000": {
+   "wave": "W5",
+   "basis": "Auction, club and marquee classes ('MAuctionNotFound', 'MClubRegisterDlg', 'GMarquee'); 12.1x clone ratio so instantiations are covered by their templates."
+  },
+  "0x440000": {
+   "wave": "W6",
+   "basis": "Lobby rooms and channels ('room not found for commId', 'sendGetMiniRoomList', 'EXPOSE_CHANNEL')."
+  },
+  "0x480000": {
+   "wave": "W6",
+   "basis": "Telemetry and opponent latency ('FPS: %f', 'MOpponentList.mLatencyBitmap')."
+  }
+ }
+}

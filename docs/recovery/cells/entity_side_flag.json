@@ -1,0 +1,37 @@
+{
+ "id": "entity_side_flag",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x4030e0"
+  }
+ ],
+ "brief": "Read the selected entity flag with a null-table default.",
+ "decl": "std::uint32_t entity_side_flag(std::span<const std::byte> table, std::uint32_t index, std::uint32_t side);",
+ "notes": [
+  "Whole cdecl body compared through tools.w0_cell_corpus; original memory is supplied as explicit spans/globals.",
+  "Parameter names describe observed operations, not complete recovered class ownership.",
+  "Shared 28-byte record fields come from the machine-readable layout registry."
+ ],
+ "comparison": {
+  "body": "        const auto present = read(input);\n        const auto index = read(input);\n        const auto side = read(input);\n        const auto table = image<256>(input);\n        emit(mco::entity_side_flag(present ? std::span<const std::byte>(table) : std::span<const std::byte>{}, index, static_cast<std::uint32_t>(side)));\n        emit(table);"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-entity-tables",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+  "supported_domain": "An empty span for a null original table returns zero; nonempty tables require the indexed flag byte. The mode selector reads only its low byte, while the side selector uses the complete dword.",
+  "acceptance": "Met: 100 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 100,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "shared_sources": [
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/detail/entity_table.hpp"
+ ]
+}

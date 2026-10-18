@@ -1,0 +1,33 @@
+{
+ "id": "table_read_b",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x42f070"
+  }
+ ],
+ "brief": "Indexed dword read from the second lookup table.",
+ "decl": "std::uint32_t table_read_b(std::span<const std::byte> table, std::uint32_t index);",
+ "notes": [
+  "The original reads dword[index*4] from the table based at 0x98bae0.",
+  "Verified against the original by tools.w0_pure_oracle.",
+  "The host form takes the table bytes; the original reads a fixed base at 0x98bae0."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table indices outside the registered table are rejected rather than emulated.",
+  "acceptance": "Met: 8 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 8,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto index = read(input);\n        const auto table = image<256>(input);\n        emit(mco::table_read_b(table, index));"
+ }
+}

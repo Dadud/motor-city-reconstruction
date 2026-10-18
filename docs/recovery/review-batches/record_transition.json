@@ -1,0 +1,45 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x432620": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-record-transitions",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete controller body on supplied valid byte images and scalar state. Callback bodies are explicitly substituted by controlled observation/mutation hooks.",
+      "supported_domain": "Stable caller-owned record arena before the external scalar globals; valid mapped current records and returning cdecl callback bridges. Transition requires a valid nonnull entry current record; activation separately supports null current and null optional handlers. DF is clear for original word copies. Pair-table storage represents the separate original 0x88acdc image and must not alias the machine arena.",
+      "acceptance": "Met: 96 controller cases exact under declared callback substitutions on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 96,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "callback_substitutions": "Eight original callback entrypoints are replaced by RET plus explicit scripted observation/mutation hooks. Full controller body, full arena and every callback-entry snapshot are compared; actual handlers remain external.",
+      "unresolved": [
+        "Actual callback implementations and effects outside the observed arena/scalars.",
+        "Complete owner lifecycle and live game integration.",
+        "Original faults, stack overflow and unsupported address windows."
+      ],
+      "sources": [
+        "native/cmds/record_transition.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_machine.hpp",
+        "native/include/mco/record_pair_match.hpp",
+        "native/include/mco/record_transition.hpp",
+        "native/src/record_pair_match.cpp",
+        "native/src/record_transition.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_machine_cases.hpp",
+        "native/tests/record_transition_compare.cpp",
+        "native/tests/record_transition_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_transition_compare.py",
+        "tools/record_machine_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x433dd0"
+      ]
+    }
+  }
+}

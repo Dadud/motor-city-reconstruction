@@ -1,0 +1,40 @@
+{
+ "id": "indexed_masked_bit",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x403320"
+  }
+ ],
+ "brief": "Read a record mask and apply the clamped reversed bit.",
+ "decl": "std::uint32_t indexed_masked_bit(std::span<const std::byte> records, std::uint32_t record, std::int32_t index);",
+ "notes": [
+  "Whole cdecl body compared through tools.w0_cell_corpus; original memory is supplied as explicit spans/globals.",
+  "Parameter names describe observed operations, not complete recovered class ownership."
+ ],
+ "comparison": {
+  "body": "        const auto record = read(input);\n        const auto index = std::bit_cast<std::int32_t>(read(input));\n        const auto records = image<352>(input);\n        emit(mco::indexed_masked_bit(records, record, index));\n        emit(records);"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-entity-tables",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+  "supported_domain": "Any signed 32-bit bit index and a valid record inside the supplied span. Invalid original pointers and indices are outside the domain.",
+  "acceptance": "Met: 165 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 165,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "shared_sources": [
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/clamped_bit_mask.hpp",
+  "native/src/clamped_bit_mask.cpp"
+ ],
+ "depends_on": [
+  "0x403370"
+ ]
+}

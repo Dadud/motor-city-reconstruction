@@ -1,0 +1,54 @@
+{
+  "id": "window_procedure",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x583290"
+    }
+  ],
+  "brief": "Return the handled local result or invoke the original default window-procedure bridge.",
+  "decl": "std::uint32_t window_procedure(WindowDispatchState &state, const WindowProcedureBridge &bridge, std::uint32_t window, std::uint32_t message, std::uint32_t wparam, std::uint32_t lparam);",
+  "header_includes": [
+    "mco/window_procedure_bridge.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "window_dispatch_cases.hpp"
+    ],
+    "body": "        window_dispatch_cases::compare(input,true);"
+  },
+  "depends_on": [
+    "0x69ca7b",
+    "0x582e30",
+    "0x6bd6e0",
+    "0x6bd6f0"
+  ],
+  "shared_sources": [
+    "native/include/mco/detail/window_dispatch_search.hpp",
+    "native/include/mco/window_dispatch_state.hpp",
+    "native/include/mco/window_keyboard_binding.hpp",
+    "native/include/mco/window_procedure_bridge.hpp",
+    "native/tests/window_camera_lifecycle_compare.cpp",
+    "native/tests/window_dispatch_cases.hpp",
+    "tools/free_camera_cases.py",
+    "tools/native_window_camera_lifecycle_compare.py",
+    "tools/window_dispatch_cases.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "window-dispatch",
+    "owner": "input-recovery",
+    "status": "implemented",
+    "scope": "Complete Windows procedure with explicit lock/handler/default bridges and writable local result slot.",
+    "supported_domain": "Bounded shared state and <=128 table entries; returning bridges; original invalid-pointer and platform faults unmodeled.",
+    "acceptance": "2381 complete original Windows-procedure cases match MSVC and Zig exactly with declared lock/handler/default scripts; native handled/result/default/order tests pass.",
+    "comparison_cases": 2381,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."
+    ]
+  }
+}

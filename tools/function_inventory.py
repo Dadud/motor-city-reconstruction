@@ -17,6 +17,50 @@ TARGET = '28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164'
 ADDRESS = re.compile(r'(?i)\b(?:0x([0-9a-f]{6,8})|FUN_([0-9a-f]{8}))\b')
 
 
+def load_reviews(root, target=TARGET):
+    """Merge explicit, hash-scoped reviews without silently overriding a claim."""
+    directory = root / 'docs/recovery'
+    result = {}
+    documents = []
+    if target == TARGET:
+        documents.append((directory / 'function-reviews.json', None))
+    for path in sorted((directory / 'review-batches').glob('*.json')):
+        batch = json.loads(path.read_text(encoding='utf-8'))
+        digest = batch.get('target_sha256', '')
+        if not re.fullmatch('[0-9a-f]{64}', digest):
+            raise ValueError(f'{path.name}: explicit lowercase target hash required')
+        if digest == target:
+            documents.append((path, batch.get('functions')))
+    for path, rows in documents:
+        if rows is None:
+            rows = json.loads(path.read_text(encoding='utf-8'))
+            if path.parent.name == 'review-batches':
+                raise ValueError(f'{path.name}: functions mapping required')
+        if not isinstance(rows, dict):
+            raise ValueError(f'{path.name}: functions mapping required')
+        for supplied, review in rows.items():
+            address = canonical(supplied)
+            if address in result:
+                raise ValueError(f'duplicate review for {target}:{address}')
+            if not isinstance(review, dict) or not all(review.get(key) for key in
+                    ('translation', 'verification', 'scope')):
+                raise ValueError(f'{address}: translation, verification and scope required')
+            if review['translation'] == 'missing':
+                review = dict(sources=[], **review) if 'sources' not in review else review
+            elif not review.get('sources'):
+                raise ValueError(f'{address}: implementation review requires sources')
+            if not isinstance(review['sources'], list):
+                raise ValueError(f'{address}: sources list required')
+            for source in review['sources']:
+                if not isinstance(source, str):
+                    raise ValueError(f'{address}: source path required')
+                relative = Path(source)
+                if relative.is_absolute() or '..' in relative.parts or not (root / relative).is_file():
+                    raise ValueError(f'{address}: missing or unsafe source {source}')
+            result[address] = review
+    return result
+
+
 def records(value):
     """Unwrap saved MCP text blocks without treating pseudocode as metadata."""
     if isinstance(value, dict):
@@ -88,10 +132,23 @@ def evidence_index(directory):
     return result
 
 
-def generate(root, enumeration, evidence, reviews):
+def load_triage(root, target=TARGET):
+    """Read published triage classifications; absence is not a classification."""
+    path = root / 'docs/recovery/triage.json'
+    if not path.exists():
+        return {}
+    document = json.loads(path.read_text(encoding='utf-8'))
+    module = document.get('functions', {}).get(target)
+    if not module:
+        return {}
+    return {row['address']: row for row in module}
+
+
+def generate(root, enumeration, evidence, reviews, triage=None):
     if enumeration['target_sha256'] != TARGET:
         raise ValueError('enumeration target digest mismatch')
     entries = {canonical(item['address']): item['name'] for item in enumeration['functions']}
+    identities = {canonical(item['address']): item for item in enumeration['functions']}
     if len(entries) != enumeration['procedure_count']:
         raise ValueError('duplicate entries or incomplete function enumeration')
     references = source_references(root, entries)
@@ -99,14 +156,22 @@ def generate(root, enumeration, evidence, reviews):
     unknown_reviews = set(reviews) - set(entries)
     if unknown_reviews:
         raise ValueError(f'review addresses absent from enumeration: {sorted(unknown_reviews)}')
+    triage = triage or {}
     rows = []
     for address in sorted(entries, key=lambda value:
             (value.rsplit(':', 1)[0] if ':' in value else '', int(value.rsplit(':', 1)[-1], 16))):
         refs = references[address]
         review = reviews.get(address, {})
+        classification = triage.get(address, {})
         rows.append(dict(address=address, name=entries[address],
+            boundary_origin=identities[address].get('boundary_origin', 'retained-enumeration'),
+            boundary_evidence=identities[address].get('boundary_evidence', ''),
             address_space=address.rsplit(':', 1)[0] if ':' in address else 'default',
             decompilation='retained' if observations.get(address) else 'not-indexed',
+            **{'class': classification.get('class', 'unclassified'),
+               'triage_rule': classification.get('rule', ''),
+               'required': classification.get('required', False),
+               'disposition': classification.get('disposition', 'pending')},
             translation=review.get('translation', 'unreviewed'),
             verification=review.get('verification', 'unreviewed'),
             scope=review.get('scope', ''),
@@ -125,9 +190,11 @@ def main():
     parser.add_argument('--evidence', type=Path, help='private evidence directory; metadata only is retained')
     args = parser.parse_args()
     output = ROOT/'docs/recovery'
-    enumeration = json.loads(args.enumeration.read_text(encoding='utf-8'))
-    reviews = json.loads((output/'function-reviews.json').read_text(encoding='utf-8'))
-    rows = generate(ROOT, enumeration, args.evidence, reviews)
+    from tools.function_supplements import enumeration as supplement_enumeration, module as supplement_module
+    enumeration = supplement_enumeration(json.loads(args.enumeration.read_text(encoding='utf-8')), output)
+    reviews = load_reviews(ROOT)
+    triage = load_triage(ROOT)
+    rows = generate(ROOT, enumeration, args.evidence, reviews, triage)
     # On public checkouts preserve the already indexed evidence identities.
     previous = output/'functions.json'
     if args.evidence is None and previous.exists():
@@ -139,7 +206,7 @@ def main():
     bulk_path = output/'modules'/(TARGET+'.json')
     bulk = {}
     if bulk_path.exists():
-        document = json.loads(bulk_path.read_text(encoding='utf-8'))
+        document = supplement_module(json.loads(bulk_path.read_text(encoding='utf-8')), output)
         if document['target_sha256'] != TARGET:
             raise ValueError('bulk metadata target mismatch')
         bulk = {r['address']: r for r in document['functions']}
@@ -147,21 +214,31 @@ def main():
             raise ValueError('bulk and REA enumerations disagree; review profiles before merging')
     for row in rows:
         row['bulk_decompilation'] = bulk.get(row['address'], {}).get('decompilation', 'not-indexed')
-    summary = dict(total=len(rows), address_spaces=dict(Counter(r['address_space'] for r in rows)),
+    summary = dict(total=len(rows), base_entries=enumeration.get('base_procedure_count', len(rows)),
+        supplemental_entries=enumeration.get('supplemental_entries', 0), address_spaces=dict(Counter(r['address_space'] for r in rows)),
         retained_decompilation=sum(bool(r['evidence_ids']) for r in rows),
         bulk_decompilation=dict(Counter(r['bulk_decompilation'] for r in rows)),
         source_reference_candidates=sum(bool(r['python_refs'] or r['native_refs']) for r in rows),
+        triage=dict(Counter(r['class'] for r in rows)),
+        required=sum(bool(r['required']) for r in rows),
         translation=dict(Counter(r['translation'] for r in rows)),
         verification=dict(Counter(r['verification'] for r in rows)))
     payload = dict(target_sha256=TARGET, enumeration_evidence_id=enumeration['evidence_id'],
-                   summary=summary, functions=rows)
+                   supplement_sha256=enumeration.get('supplement_sha256'), summary=summary, functions=rows)
     status = ['# Inventory status', '',
-        f"Main executable: **{summary['total']:,} analyzed entries**, including "
+        f"Main executable: **{summary['total']:,} inventoried entries**, including "
         f"**{summary['address_spaces'].get('EXTERNAL', 0):,} external imports**.", '',
+        f"- Boundary inventory: **{summary['base_entries']:,} retained enumeration entries + {summary['supplemental_entries']:,} explicit supplements**.",
         f"- Retained decompilation records indexed: **{summary['retained_decompilation']:,} functions**.",
         f"- Bulk private pseudocode exports: **{summary['bulk_decompilation'].get('success', 0):,} functions**.",
         f"- Functions with address mentions in tracked Python/native source: **{summary['source_reference_candidates']:,}** (review candidates).",
-        f"- Explicitly reviewed entries: **{sum(bool(r['scope']) for r in rows):,}**.", '',
+        f"- Explicitly reviewed entries: **{sum(bool(r['scope']) for r in rows):,}**.",
+        f"- Structural triage: game candidates **{summary['triage'].get('game-candidate', 0):,}**, "
+        f"classified non-game **{sum(v for k, v in summary['triage'].items() if k not in ('game-candidate', 'unclassified')):,}**. "
+        f"**Required after dispositions: {summary['required']:,}**. "
+        'An entry is required when its module is in recovery scope and no published '
+        'disposition removes it; see [triage](triage.md) and '
+        '[dispositions](dispositions.json).', '',
         '| Reviewed translation label | Entries |', '| --- | ---: |']
     status += [f'| {label} | {count:,} |' for label, count in sorted(summary['translation'].items())]
     status += ['', 'These counts do not measure whole-game completion. Most entries await review.',

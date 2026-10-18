@@ -1,0 +1,51 @@
+{
+ "id": "record_selection_apply",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x436c90"
+  }
+ ],
+ "brief": "Apply normalized camera selection or a mode-table camera transition.",
+ "decl": "void record_selection_apply(RecordMachine &machine, std::span<const std::byte> pairs, std::span<const std::byte, 36> modes, std::span<const std::byte, 12> context, std::uint32_t mode, std::uint32_t &counter0, std::uint32_t &counter1);",
+ "comparison": {
+  "body": "        auto fixture = selection_cases::Fixture::read(input);\n        auto machine = fixture.machine();\n        mco::record_selection_apply(machine, fixture.pairs, fixture.modes, fixture.context, fixture.mode, fixture.counter0, fixture.counter1);\n        fixture.emit(machine);",
+  "includes": [
+   "selection_controller_cases.hpp"
+  ]
+ },
+ "header_includes": [
+  "mco/record_machine.hpp"
+ ],
+ "depends_on": [
+  "0x4325c0",
+  "0x435270",
+  "0x433dd0",
+  "0x489cb0"
+ ],
+ "shared_sources": [
+  "native/include/mco/detail/byte_words.hpp",
+  "native/include/mco/detail/record_selection.hpp",
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/record_machine.hpp",
+  "native/tests/selection_controller_cases.hpp",
+  "tools/selection_controller_cases.py"
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-camera-selection",
+  "owner": "wave0-utilities",
+  "scope": "Complete controller body and actual context predicate; callback handlers use declared observation/mutation substitutions.",
+  "supported_domain": "All signed preset inputs; low byte of mode selects direct versus table path. Valid current record, disjoint terminated pair table, mode table and context, distinct external counters. Signed nonnegative table index (>=9 is an early return). Caller-owned stable images and returning callback bridges.",
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "status": "implemented",
+  "acceptance": "Met: 1583 complete-body cases and twelve separate connected traces exact on MSVC and Zig/Clang with declared callback substitutions. Native suites 141/143 pass. See docs/recovery/camera-selection.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 1583,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+  "unresolved": [
+   "Actual callback bodies and wider effects; integrated camera handler updates; negative mode-table indexes and original pointer faults."
+  ]
+ }
+}

@@ -1,0 +1,30 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x423310": {
+      "status": "implemented",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-global-state",
+      "owner": "wave0-utilities",
+      "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+      "supported_domain": "Documented per routine: table indices outside the registered table are rejected rather than emulated.",
+      "acceptance": "Met: 11 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "translation": "native-bounded",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 11,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/zero_flag.cmake",
+        "native/include/mco/zero_flag.hpp",
+        "native/src/zero_flag.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/zero_flag_compare.cpp",
+        "native/tests/zero_flag_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_zero_flag_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

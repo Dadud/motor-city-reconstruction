@@ -1,0 +1,2025 @@
+{
+ "schema_version": 1,
+ "basis": "Byte-image contracts established by original-execution comparison. These are observation buffers with known field meanings, not recovered C++ class definitions: no vtable, ownership or lifetime claim is implied.",
+ "images": {
+  "configuration": {
+   "size": "0x820",
+   "documented": "docs/recovery/shared-layouts.md",
+   "fields": {
+    "0x000": {
+     "name": "finalized_mass",
+     "type": "float32",
+     "units": "kg (catalogue interpretation)"
+    },
+    "0x02c": {
+     "name": "wheelbase",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x030": {
+     "name": "front_track",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x034": {
+     "name": "rear_track",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x038": {
+     "name": "com_height_parameter",
+     "type": "float32",
+     "units": "conversion documented in owner binding"
+    },
+    "0x03c": {
+     "name": "front_weight_fraction",
+     "type": "float32",
+     "units": "dimensionless"
+    },
+    "0x048": {
+     "name": "body_shape_selector",
+     "type": "int32",
+     "units": "original stored selector"
+    },
+    "0x058": {
+     "name": "brake_allocation",
+     "type": "float32",
+     "units": "halved by wheel initialization"
+    },
+    "0x070": {
+     "name": "maximum_rpm",
+     "type": "int32",
+     "units": "revolutions per minute"
+    },
+    "0x0ec": {
+     "name": "steering_scale_input",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x0fc": {
+     "name": "rear_spring_rate",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x104": {
+     "name": "front_spring_rate",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x124": {
+     "name": "front_tire_width",
+     "type": "float32",
+     "units": "mm"
+    },
+    "0x128": {
+     "name": "front_tire_aspect",
+     "type": "float32",
+     "units": "percent"
+    },
+    "0x12c": {
+     "name": "front_tire_rim",
+     "type": "float32",
+     "units": "inches"
+    },
+    "0x148": {
+     "name": "front_tire_pressure",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x1c0": {
+     "name": "rear_compliance",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x228": {
+     "name": "rear_tire_width",
+     "type": "float32",
+     "units": "mm"
+    },
+    "0x22c": {
+     "name": "rear_tire_aspect",
+     "type": "float32",
+     "units": "percent"
+    },
+    "0x230": {
+     "name": "rear_tire_rim",
+     "type": "float32",
+     "units": "inches"
+    },
+    "0x238": {
+     "name": "surface_selector",
+     "type": "int32",
+     "units": "resistance surface index"
+    },
+    "0x24c": {
+     "name": "rear_tire_pressure",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x32c": {
+     "name": "gear_count",
+     "type": "int32",
+     "units": "populated gears, at most eight"
+    },
+    "0x334": {
+     "name": "gear_ratios",
+     "type": "float32[8]",
+     "units": "ratios, stride 4"
+    },
+    "0x354": {
+     "name": "gear_losses",
+     "type": "float32[8]",
+     "units": "coefficients, stride 4"
+    },
+    "0x374": {
+     "name": "final_drive",
+     "type": "float32",
+     "units": "ratio"
+    },
+    "0x6c": {
+     "name": "idle_rpm",
+     "type": "int32",
+     "units": "revolutions per minute"
+    },
+    "0x060": {
+     "name": "steering_flags",
+     "type": "uint8[4]",
+     "units": "four flags, stride 1"
+    },
+    "0x080": {
+     "name": "drive_curve",
+     "type": "float32[26]",
+     "units": "curve read by the gear-force and acceleration producers, stride 4"
+    },
+    "0x140": {
+     "name": "front_friction",
+     "type": "float32",
+     "units": "front friction coefficient"
+    },
+    "0x144": {
+     "name": "front_tire_template_width",
+     "type": "float32",
+     "units": "mm; tire aspect divides by it"
+    },
+    "0x220": {
+     "name": "front_corner_mass",
+     "type": "float32",
+     "units": "kg, paired with front_sprung_mass"
+    },
+    "0x244": {
+     "name": "rear_friction",
+     "type": "float32",
+     "units": "rear friction coefficient"
+    },
+    "0x248": {
+     "name": "rear_tire_template_width",
+     "type": "float32",
+     "units": "mm"
+    },
+    "0x324": {
+     "name": "rear_corner_mass",
+     "type": "float32",
+     "units": "kg, paired with rear_sprung_mass"
+    },
+    "0x408": {
+     "name": "body_aero_factor",
+     "type": "float32",
+     "units": "body constructor stores 0.875"
+    },
+    "0x700": {
+     "name": "front_sprung_mass",
+     "type": "float32",
+     "units": "kg; front corner mass is its sum with front_corner_mass"
+    },
+    "0x70c": {
+     "name": "rear_sprung_mass",
+     "type": "float32",
+     "units": "kg; rear corner mass is its sum with rear_corner_mass"
+    },
+    "0x80c": {
+     "name": "rear_com_offset",
+     "type": "float32",
+     "units": "negated rear centre-of-mass offset"
+    }
+   },
+   "minimum_size": "0x380"
+  },
+  "owner": {
+   "size": "0x2000",
+   "documented": "docs/recovery/shared-layouts.md",
+   "fields": {
+    "0x050": {
+     "name": "mass",
+     "type": "float32",
+     "units": "kg"
+    },
+    "0x054": {
+     "name": "inverse_mass",
+     "type": "float32",
+     "units": "per kg"
+    },
+    "0x0cc": {
+     "name": "half_extent_x",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x0d0": {
+     "name": "half_extent_y",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x0d4": {
+     "name": "half_extent_z",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x490": {
+     "name": "state_observation",
+     "type": "pointer32",
+     "units": "nonzero gates mass availability"
+    },
+    "0x18c4": {
+     "name": "prior_front_marker",
+     "type": "float32",
+     "units": "geometry observation"
+    },
+    "0x18c8": {
+     "name": "prior_rear_marker",
+     "type": "float32",
+     "units": "geometry observation"
+    },
+    "0x18ec": {
+     "name": "front_radius",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x18f0": {
+     "name": "rear_radius",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x1c94": {
+     "name": "configuration_pointer",
+     "type": "pointer32",
+     "units": "original 32-bit pointer, not a host pointer"
+    },
+    "0x17ec": {
+     "name": "startup_record",
+     "type": "float32[298]",
+     "units": "0x4a8-byte record copied here by 0x53a1f0"
+    },
+    "0x418": {
+     "name": "base_constructor_clear_boundary",
+     "type": "boundary",
+     "units": "base constructor clears owner 0x000..0x418"
+    }
+   }
+  },
+  "startup_record": {
+   "size": "0x4a8",
+   "documented": "docs/calculations/startup-record.md",
+   "fields": {
+    "0x000": {
+     "name": "top_gear_speed",
+     "type": "float32",
+     "units": "metres per second"
+    },
+    "0x004": {
+     "name": "inverse_near_limit_speed",
+     "type": "float32[8]",
+     "units": "stride 4"
+    },
+    "0x024": {
+     "name": "rpm_per_speed",
+     "type": "float32[8]",
+     "units": "stride 4"
+    },
+    "0x044": {
+     "name": "speed_per_rpm",
+     "type": "float32[8]",
+     "units": "stride 4"
+    },
+    "0x064": {
+     "name": "loss_final_ratio",
+     "type": "float32[8]",
+     "units": "stride 4"
+    },
+    "0x084": {
+     "name": "wheel_inertia_factors",
+     "type": "float32[8]",
+     "units": "stride 4"
+    },
+    "0x0a4": {
+     "name": "shift_threshold",
+     "type": "float32[8]",
+     "units": "crossing fraction, stride 4"
+    },
+    "0x0c4": {
+     "name": "final_drive_inertia",
+     "type": "float32",
+     "units": "unchanged"
+    },
+    "0x0c8": {
+     "name": "wheelbase_turns",
+     "type": "float32",
+     "units": "turns"
+    },
+    "0x0cc": {
+     "name": "rear_lever",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x0d0": {
+     "name": "front_lever",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x0d4": {
+     "name": "surface_area",
+     "type": "float32",
+     "units": "square metres"
+    },
+    "0x0d8": {
+     "name": "front_axle",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x0dc": {
+     "name": "rear_axle",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x0e0": {
+     "name": "rolling_reverse",
+     "type": "float32",
+     "units": "denominator"
+    },
+    "0x0e4": {
+     "name": "rolling_forward",
+     "type": "float32",
+     "units": "denominator"
+    },
+    "0x0e8": {
+     "name": "inertia_pitch",
+     "type": "float32",
+     "units": "kg square metres"
+    },
+    "0x0ec": {
+     "name": "inertia_yaw",
+     "type": "float32",
+     "units": "kg square metres"
+    },
+    "0x0f0": {
+     "name": "inertia_roll",
+     "type": "float32",
+     "units": "kg square metres"
+    },
+    "0x0f4": {
+     "name": "inverse_inertia_pitch",
+     "type": "float32",
+     "units": "per kg square metres"
+    },
+    "0x0f8": {
+     "name": "inverse_inertia_yaw",
+     "type": "float32",
+     "units": "per kg square metres"
+    },
+    "0x0fc": {
+     "name": "inverse_inertia_roll",
+     "type": "float32",
+     "units": "per kg square metres"
+    },
+    "0x100": {
+     "name": "front_wheel_radius",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x104": {
+     "name": "rear_wheel_radius",
+     "type": "float32",
+     "units": "metres"
+    },
+    "0x108": {
+     "name": "turn_difference",
+     "type": "float32",
+     "units": "turns"
+    },
+    "0x10c": {
+     "name": "turn_limit",
+     "type": "float32",
+     "units": "samples, clamped to half a turn"
+    },
+    "0x110": {
+     "name": "turn_scale_rear",
+     "type": "float32",
+     "units": "turns"
+    },
+    "0x114": {
+     "name": "turn_scale_front",
+     "type": "float32",
+     "units": "turns"
+    },
+    "0x118": {
+     "name": "turn_scale_span",
+     "type": "float32",
+     "units": "turns"
+    },
+    "0x11c": {
+     "name": "load_coefficient",
+     "type": "float32",
+     "units": "dimensionless"
+    },
+    "0x120": {
+     "name": "balance_coefficient",
+     "type": "float32",
+     "units": "clamped to +/-10"
+    },
+    "0x124": {
+     "name": "brake_balance",
+     "type": "float32",
+     "units": "dimensionless"
+    },
+    "0x128": {
+     "name": "acceleration_table",
+     "type": "float32[896]",
+     "units": "two 112-sample tables, stride 4"
+    }
+   }
+  },
+  "model": {
+   "size": "0x1400",
+   "documented": "docs/calculations/startup-record.md",
+   "fields": {
+    "0x11c": {
+     "name": "part_count",
+     "type": "int32",
+     "units": "entries in the name table"
+    },
+    "0x128": {
+     "name": "wheel_position",
+     "type": "float32[]",
+     "units": "metres, stride 0x0c"
+    },
+    "0xe28": {
+     "name": "part_name",
+     "type": "char[]",
+     "units": "NUL-terminated, stride 0x40"
+    }
+   },
+   "strides": {
+    "0x0c": "wheel position stride",
+    "0x40": "part name stride"
+   },
+   "minimum_size": "0x0e68"
+  },
+  "entity_record": {
+   "size": "0x1c",
+   "documented": "docs/recovery/entity-table.md",
+   "fields": {
+    "0x10": {
+     "name": "side0_word",
+     "type": "float32-bits",
+     "units": "original stored bits"
+    },
+    "0x14": {
+     "name": "side1_word",
+     "type": "float32-bits",
+     "units": "original stored bits"
+    },
+    "0x18": {
+     "name": "side0_byte",
+     "type": "uint8",
+     "width": 1,
+     "units": "unknown"
+    },
+    "0x19": {
+     "name": "side1_byte",
+     "type": "uint8",
+     "width": 1,
+     "units": "unknown"
+    },
+    "0x1a": {
+     "name": "flags",
+     "type": "uint16",
+     "width": 2,
+     "units": "bit field"
+    }
+   }
+  },
+  "mask_record": {
+   "size": "0x54",
+   "documented": "docs/recovery/entity-table.md",
+   "fields": {
+    "0x4c": {
+     "name": "bits",
+     "type": "uint32",
+     "units": "clamped bit mask"
+    }
+   }
+  },
+  "state_record": {
+   "size": "0x100",
+   "documented": "docs/recovery/record-stack.md",
+   "fields": {
+    "0x004": {
+     "name": "identifier",
+     "type": "uint32",
+     "units": "opaque identifier"
+    },
+    "0x00c": {
+     "name": "exported_state",
+     "type": "uint32-array",
+     "units": "start of twelve-word copy"
+    },
+    "0x088": {
+     "name": "flags",
+     "type": "uint32",
+     "units": "bit field"
+    },
+    "0x08c": {
+     "name": "related_value",
+     "type": "uint32",
+     "units": "opaque original value"
+    },
+    "0x0cc": {
+     "name": "signed_word",
+     "type": "int32",
+     "units": "unknown"
+    },
+    "0x008": {
+     "name": "callback",
+     "type": "pointer32",
+     "units": "original handler identity"
+    },
+    "0x090": {
+     "name": "inherited_word0",
+     "type": "uint32",
+     "units": "matched-pair state"
+    },
+    "0x094": {
+     "name": "inherited_word1",
+     "type": "uint32",
+     "units": "matched-pair state"
+    },
+    "0x098": {
+     "name": "inherited_word2",
+     "type": "uint32",
+     "units": "matched-pair state"
+    },
+    "0x0c8": {
+     "name": "initial_sentinel",
+     "type": "uint32",
+     "units": "initial value 0xffffffff"
+    },
+    "0x0e0": {
+     "name": "retain_until",
+     "type": "int32",
+     "units": "signed time/index gate; units unresolved"
+    },
+    "0x0e8": {
+     "name": "parameter",
+     "type": "uint32",
+     "units": "transition argument"
+    }
+   }
+  },
+  "record_machine_image": {
+   "size": "0x780",
+   "documented": "docs/recovery/record-transitions.md",
+   "fields": {
+    "0x000": {
+     "name": "snapshot",
+     "type": "uint32-array",
+     "units": "start of 256-byte snapshot"
+    },
+    "0x090": {
+     "name": "inherited_word0",
+     "type": "uint32",
+     "units": "snapshot word alias"
+    },
+    "0x094": {
+     "name": "inherited_word1",
+     "type": "uint32",
+     "units": "snapshot word alias"
+    },
+    "0x098": {
+     "name": "inherited_word2",
+     "type": "uint32",
+     "units": "snapshot word alias"
+    },
+    "0x13c": {
+     "name": "base_record",
+     "type": "pointer32",
+     "units": "base record address identity"
+    },
+    "0x140": {
+     "name": "rollover",
+     "type": "uint32",
+     "units": "fallback rollover flag"
+    },
+    "0x148": {
+     "name": "rollover0",
+     "type": "uint32",
+     "units": "fallback state"
+    },
+    "0x14c": {
+     "name": "rollover1",
+     "type": "uint32",
+     "units": "fallback state"
+    },
+    "0x150": {
+     "name": "rollover2",
+     "type": "uint32",
+     "units": "fallback state"
+    },
+    "0x158": {
+     "name": "records",
+     "type": "uint32-array",
+     "units": "six 256-byte records"
+    },
+    "0x758": {
+     "name": "current_record",
+     "type": "pointer32",
+     "units": "current record address identity"
+    },
+    "0x75c": {
+     "name": "after_stack_flag",
+     "type": "uint32",
+     "units": "initialized to zero"
+    },
+    "0x760": {
+     "name": "state_flag",
+     "type": "uint32",
+     "units": "initialized to zero"
+    },
+    "0x76c": {
+     "name": "request_flag",
+     "type": "uint32",
+     "units": "initialized to zero"
+    }
+   }
+  },
+  "record_request": {
+   "size": "0x10",
+   "documented": "docs/recovery/record-transitions.md",
+   "fields": {
+    "0x000": {
+     "name": "identifier",
+     "type": "uint32",
+     "units": "requested record identifier"
+    },
+    "0x008": {
+     "name": "parameter",
+     "type": "uint32",
+     "units": "requested parameter"
+    },
+    "0x00c": {
+     "name": "override_match",
+     "type": "uint32",
+     "units": "nonzero selects identifier-only matching"
+    }
+   }
+  },
+  "camera_selection": {
+   "size": "0x18",
+   "documented": "docs/recovery/camera-selection.md",
+   "fields": {
+    "0x000": {
+     "name": "preset0",
+     "type": "int32",
+     "units": "first camera preset; zero normalized to one"
+    },
+    "0x004": {
+     "name": "preset1",
+     "type": "int32",
+     "units": "second camera preset"
+    },
+    "0x008": {
+     "name": "preset2",
+     "type": "int32",
+     "units": "third camera preset"
+    },
+    "0x00c": {
+     "name": "preset3",
+     "type": "int32",
+     "units": "fourth camera preset"
+    },
+    "0x010": {
+     "name": "selected_index",
+     "type": "int32",
+     "units": "camera identifier minus four"
+    },
+    "0x014": {
+     "name": "selected_slot",
+     "type": "int32",
+     "units": "index into four presets"
+    }
+   }
+  },
+  "camera_context": {
+   "size": "0xc",
+   "documented": "docs/recovery/camera-selection.md",
+   "fields": {
+    "0x000": {
+     "name": "kind",
+     "type": "uint32",
+     "units": "context discriminator"
+    },
+    "0x008": {
+     "name": "secondary",
+     "type": "uint32",
+     "units": "secondary context discriminator"
+    }
+   }
+  },
+  "camera_subjects": {
+   "size": "0x78",
+   "documented": "docs/recovery/camera-cycling.md",
+   "fields": {
+    "0x000": {
+     "name": "current",
+     "type": "pointer32-array",
+     "units": "start of supplied subject identities"
+    },
+    "0x03c": {
+     "name": "reference",
+     "type": "pointer32-array",
+     "units": "reference identities at original 0x98c3ac"
+    }
+   }
+  },
+  "key_state_image": {
+   "size": "0x80",
+   "documented": "docs/recovery/input-key-state.md",
+   "fields": {
+    "0x000": {
+     "name": "bytes",
+     "type": "byte-array",
+     "units": "128 aliased raw key bytes"
+    }
+   }
+  },
+  "key_latch_window": {
+   "size": "0x200",
+   "documented": "docs/recovery/input-key-state.md",
+   "fields": {
+    "0x000": {
+     "name": "bytes",
+     "type": "byte-array",
+     "units": "supplied 512-byte latch observation window; not an array-size claim"
+    }
+   }
+  },
+  "key_remap_image": {
+   "size": "0x80",
+   "documented": "docs/recovery/input-key-state.md",
+   "fields": {
+    "0x000": {
+     "name": "bytes",
+     "type": "byte-array",
+     "units": "optional scan-code remapping bytes"
+    }
+   }
+  },
+  "key_release_window": {
+   "size": "0x100",
+   "documented": "docs/recovery/input-key-state.md",
+   "fields": {
+    "0x000": {
+     "name": "bytes",
+     "type": "byte-array",
+     "units": "256-byte mapped-release observation window; first 128 overlap raw query bytes"
+    }
+   }
+  },
+  "input_queue_image": {
+   "size": "0x530",
+   "documented": "docs/recovery/input-key-queue.md",
+   "fields": {
+    "0x000": {
+     "name": "raw_mode",
+     "type": "uint32",
+     "units": "observed input queue state"
+    },
+    "0x004": {
+     "name": "read_cursor",
+     "type": "int32",
+     "units": "observed input queue state"
+    },
+    "0x428": {
+     "name": "events",
+     "type": "byte-array",
+     "units": "observed input queue state"
+    },
+    "0x4a8": {
+     "name": "capacity",
+     "type": "int32",
+     "units": "observed input queue state"
+    },
+    "0x4c0": {
+     "name": "target_window",
+     "type": "pointer32",
+     "units": "observed input queue state"
+    },
+    "0x4e0": {
+     "name": "write_cursor",
+     "type": "int32",
+     "units": "observed input queue state"
+    },
+    "0x4e4": {
+     "name": "last_code",
+     "type": "uint32",
+     "units": "observed input queue state"
+    },
+    "0x520": {
+     "name": "synchronizer",
+     "type": "pointer32",
+     "units": "observed input queue state"
+    },
+    "0x528": {
+     "name": "remap",
+     "type": "pointer32",
+     "units": "observed input queue state"
+    },
+    "0x28": {
+     "name": "message_handlers",
+     "type": "byte[1024]",
+     "units": "window message dispatch table/state"
+    },
+    "0x4f4": {
+     "name": "message_handler_count",
+     "type": "uint32",
+     "units": "window message dispatch table/state"
+    },
+    "0x524": {
+     "name": "dispatch_synchronizer",
+     "type": "pointer32",
+     "units": "window message dispatch table/state"
+    },
+    "0x51c": {
+     "name": "initialized",
+     "type": "uint32",
+     "units": "input initialization guard"
+    },
+    "0x4c4": {
+     "name": "device_window",
+     "type": "pointer32",
+     "width": 4,
+     "units": "window handle returned by 0x584cf0, supplied with flags 6 to virtual slot 0x34"
+    },
+    "0x510": {
+     "name": "policy_enabled",
+     "type": "uint32",
+     "units": "0x584c80 enables policy callback handling"
+    },
+    "0x514": {
+     "name": "policy_flag",
+     "type": "uint32",
+     "units": "opaque policy flag supplied to 0x584c80"
+    }
+   }
+  },
+  "input_queue_event": {
+   "size": "0x4",
+   "documented": "docs/recovery/input-key-queue.md",
+   "fields": {
+    "0x000": {
+     "name": "extended",
+     "type": "uint8",
+     "width": 1,
+     "units": "message bit 24"
+    },
+    "0x001": {
+     "name": "scan",
+     "type": "uint8",
+     "width": 1,
+     "units": "mapped scan code"
+    },
+    "0x002": {
+     "name": "character",
+     "type": "uint16",
+     "width": 2,
+     "units": "packed key translation"
+    }
+   }
+  },
+  "free_camera_image": {
+   "size": "0x200",
+   "documented": "docs/recovery/free-camera-progress.md",
+   "fields": {
+    "0xc": {
+     "name": "saved_position",
+     "type": "float32[3]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x18": {
+     "name": "saved_matrix",
+     "type": "float32[9]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x3c": {
+     "name": "saved_sensitivity",
+     "type": "float32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x40": {
+     "name": "saved_auxiliary",
+     "type": "uint32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x44": {
+     "name": "saved_surface",
+     "type": "byte[68]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x8c": {
+     "name": "saved_subject",
+     "type": "pointer32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x10c": {
+     "name": "position",
+     "type": "float32[3]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x118": {
+     "name": "matrix",
+     "type": "float32[9]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x13c": {
+     "name": "sensitivity",
+     "type": "float32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x140": {
+     "name": "auxiliary",
+     "type": "uint32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x144": {
+     "name": "surface",
+     "type": "byte[68]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x188": {
+     "name": "active",
+     "type": "uint32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x18c": {
+     "name": "subject",
+     "type": "pointer32",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x190": {
+     "name": "motion",
+     "type": "float32[3]",
+     "units": "original byte-image field; current context at image +0x100"
+    },
+    "0x1fc": {
+     "name": "reset_time",
+     "type": "uint32",
+     "units": "original byte-image field; current context at image +0x100"
+    }
+   }
+  },
+  "mouse_input_image": {
+   "size": "0x1c",
+   "documented": "docs/recovery/mouse-input-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "maximum_x",
+     "type": "int32",
+     "units": "original mouse state at 0xb36574"
+    },
+    "0x4": {
+     "name": "maximum_y",
+     "type": "int32",
+     "units": "original mouse state at 0xb36574"
+    },
+    "0x8": {
+     "name": "minimum_y",
+     "type": "int32",
+     "units": "original mouse state at 0xb36574"
+    },
+    "0xc": {
+     "name": "minimum_x",
+     "type": "int32",
+     "units": "original mouse state at 0xb36574"
+    },
+    "0x10": {
+     "name": "buttons",
+     "type": "uint32",
+     "units": "original mouse state at 0xb36574"
+    },
+    "0x14": {
+     "name": "y",
+     "type": "int32",
+     "units": "original mouse state at 0xb36574"
+    },
+    "0x18": {
+     "name": "x",
+     "type": "int32",
+     "units": "original mouse state at 0xb36574"
+    }
+   }
+  },
+  "direct_key_image": {
+   "size": "0x104",
+   "documented": "docs/recovery/queue-consumption-progress.md",
+   "fields": {
+    "0x3c": {
+     "name": "alt_left",
+     "type": "uint8",
+     "width": 1,
+     "units": "device state byte at original state image offset"
+    },
+    "0xbc": {
+     "name": "alt_right",
+     "type": "uint8",
+     "width": 1,
+     "units": "device state byte at original state image offset"
+    },
+    "0x21": {
+     "name": "control_left",
+     "type": "uint8",
+     "width": 1,
+     "units": "device state byte at original state image offset"
+    },
+    "0xa1": {
+     "name": "control_right",
+     "type": "uint8",
+     "width": 1,
+     "units": "device state byte at original state image offset"
+    },
+    "0x2e": {
+     "name": "shift_left",
+     "type": "uint8",
+     "width": 1,
+     "units": "device state byte at original state image offset"
+    },
+    "0x3a": {
+     "name": "shift_right",
+     "type": "uint8",
+     "width": 1,
+     "units": "device state byte at original state image offset"
+    },
+    "0x4": {
+     "name": "payload",
+     "type": "uint8",
+     "width": 1,
+     "units": "first of 256 acquired keyboard bytes after retained four-byte prefix"
+    }
+   }
+  },
+  "scan_translation_tables": {
+   "size": "0x26c",
+   "documented": "docs/recovery/queue-consumption-progress.md",
+   "strides": {
+    "0x5b": "distance between original plane starts"
+   },
+   "fields": {
+    "0x0": {
+     "name": "normal",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of a translation plane within the mapped lookup window"
+    },
+    "0x5b": {
+     "name": "shift",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of a translation plane within the mapped lookup window"
+    },
+    "0xb6": {
+     "name": "caps",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of a translation plane within the mapped lookup window"
+    },
+    "0x111": {
+     "name": "control",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of a translation plane within the mapped lookup window"
+    },
+    "0x16c": {
+     "name": "alt",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of a translation plane within the mapped lookup window"
+    },
+    "0x1dc": {
+     "name": "callback_word",
+     "type": "pointer32",
+     "width": 4,
+     "units": "callback identity aliases alt-plane scans 112 through 115 in the mapped window"
+    },
+    "0x1e8": {
+     "name": "keyboard_remap",
+     "type": "byte[128]",
+     "meaning": "Original 0x8c8930 aliases 128 bytes within the scan translation window; selected by keyboard-type setup 0x6f09f0.",
+     "width": 1,
+     "units": "shared translation/remap bytes"
+    }
+   }
+  },
+  "input_device_vtable": {
+   "size": "0x68",
+   "documented": "docs/recovery/device-acquisition-progress.md",
+   "fields": {
+    "0x1c": {
+     "name": "acquire",
+     "type": "pointer32",
+     "units": "opaque stdcall virtual-method slot; host uses explicit bridge"
+    },
+    "0x24": {
+     "name": "read_state",
+     "type": "pointer32",
+     "units": "opaque stdcall virtual-method slot; host uses explicit bridge"
+    },
+    "0x64": {
+     "name": "poll",
+     "type": "pointer32",
+     "units": "opaque stdcall virtual-method slot; host uses explicit bridge"
+    },
+    "0xc": {
+     "name": "capabilities",
+     "type": "pointer32",
+     "width": 4,
+     "units": "opaque stdcall virtual method slot"
+    },
+    "0x38": {
+     "name": "object_information",
+     "type": "pointer32",
+     "width": 4,
+     "units": "opaque stdcall virtual method slot"
+    },
+    "0x3c": {
+     "name": "device_information",
+     "type": "pointer32",
+     "width": 4,
+     "units": "opaque stdcall virtual method slot"
+    }
+   }
+  },
+  "input_device_information_image": {
+   "size": "0x21c",
+   "documented": "docs/recovery/device-information-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "device_type",
+     "type": "uint32",
+     "width": 4,
+     "units": "original device type"
+    },
+    "0x4": {
+     "name": "flags",
+     "type": "uint32",
+     "width": 4,
+     "units": "capability bits 0 and 8 mapped to bits 0 and 1"
+    },
+    "0x8": {
+     "name": "axes",
+     "type": "uint32",
+     "width": 4,
+     "units": "successful axis probe mask"
+    },
+    "0xc": {
+     "name": "buttons",
+     "type": "uint32",
+     "width": 4,
+     "units": "successful button probe mask"
+    },
+    "0x10": {
+     "name": "povs",
+     "type": "uint32",
+     "width": 4,
+     "units": "successful POV probe mask"
+    },
+    "0x14": {
+     "name": "instance_name",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of 259-byte padded name"
+    },
+    "0x118": {
+     "name": "product_name",
+     "type": "uint8",
+     "width": 1,
+     "units": "start of 259-byte padded name"
+    }
+   }
+  },
+  "device_instance_record": {
+   "size": "0x244",
+   "documented": "docs/recovery/device-information-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "record_size",
+     "type": "uint32",
+     "width": 4,
+     "units": "virtual-method size tag"
+    },
+    "0x24": {
+     "name": "device_type",
+     "type": "uint32",
+     "width": 4,
+     "units": "type copied into information output"
+    },
+    "0x28": {
+     "name": "instance_name",
+     "type": "uint8",
+     "width": 1,
+     "units": "first of 260 bytes"
+    },
+    "0x12c": {
+     "name": "product_name",
+     "type": "uint8",
+     "width": 1,
+     "units": "first of 260 bytes"
+    }
+   }
+  },
+  "device_capabilities_record": {
+   "size": "0x2c",
+   "documented": "docs/recovery/device-information-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "record_size",
+     "type": "uint32",
+     "width": 4,
+     "units": "virtual-method size tag"
+    },
+    "0x4": {
+     "name": "flags",
+     "type": "uint32",
+     "width": 4,
+     "units": "original capability flags"
+    },
+    "0xc": {
+     "name": "axes",
+     "type": "uint32",
+     "width": 4,
+     "units": "reported successful axis count"
+    },
+    "0x10": {
+     "name": "buttons",
+     "type": "uint32",
+     "width": 4,
+     "units": "reported successful button count"
+    },
+    "0x14": {
+     "name": "povs",
+     "type": "uint32",
+     "width": 4,
+     "units": "reported successful POV count"
+    }
+   }
+  },
+  "device_object_record": {
+   "size": "0x13c",
+   "documented": "docs/recovery/device-information-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "record_size",
+     "type": "uint32",
+     "width": 4,
+     "units": "initialized once and retained between probes"
+    }
+   }
+  },
+  "input_action_image": {
+   "size": "0x400",
+   "documented": "docs/recovery/default-key-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "handlers",
+     "type": "pointer32",
+     "width": 4,
+     "units": "first of 256 potential handler words; overlaps maps"
+    },
+    "0x104": {
+     "name": "low_map",
+     "type": "uint8",
+     "width": 1,
+     "units": "low-code map; signed mapped negative indices can precede this start"
+    },
+    "0x204": {
+     "name": "high_map",
+     "type": "uint8",
+     "width": 1,
+     "units": "extended-code high-byte map"
+    }
+   }
+  },
+  "console_input_image": {
+   "size": "0x878",
+   "documented": "docs/recovery/console-input-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "enhanced_rows",
+     "type": "uint16",
+     "width": 2,
+     "units": "first of twelve ten-byte scan/pair rows"
+    },
+    "0x78": {
+     "name": "normal_rows",
+     "type": "uint8",
+     "width": 1,
+     "units": "first of 256 mapped eight-byte scan rows"
+    },
+    "0x340": {
+     "name": "pending",
+     "type": "uint32",
+     "width": 4,
+     "units": "pending byte or UINT_MAX; overlaps scan-row window"
+    },
+    "0x400": {
+     "name": "handle",
+     "type": "pointer32",
+     "width": 4,
+     "units": "console handle; -2 uninitialized, -1 invalid; overlaps scan rows"
+    }
+   }
+  },
+  "console_event_record": {
+   "size": "0x14",
+   "documented": "docs/recovery/console-input-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "event_type",
+     "type": "uint16",
+     "width": 2,
+     "units": "KEY_EVENT is 1"
+    },
+    "0x4": {
+     "name": "key_event",
+     "type": "uint32",
+     "width": 4,
+     "units": "start of sixteen-byte key event"
+    }
+   }
+  },
+  "console_key_record": {
+   "size": "0x10",
+   "documented": "docs/recovery/console-input-progress.md",
+   "fields": {
+    "0x0": {
+     "name": "key_down",
+     "type": "uint32",
+     "width": 4,
+     "units": "nonzero key-down flag"
+    },
+    "0x8": {
+     "name": "scan",
+     "type": "uint16",
+     "width": 2,
+     "units": "scan code"
+    },
+    "0xa": {
+     "name": "character",
+     "type": "uint8",
+     "width": 1,
+     "units": "selected ANSI byte"
+    },
+    "0xc": {
+     "name": "control",
+     "type": "uint32",
+     "width": 4,
+     "units": "modifier and enhanced-key bits"
+    }
+   }
+  }
+ },
+ "consumers": {
+  "native/src/startup_record.cpp": [
+   "configuration",
+   "owner",
+   "startup_record",
+   "model"
+  ],
+  "client/startup_record.py": [
+   "configuration",
+   "owner",
+   "startup_record",
+   "model"
+  ],
+  "native/src/acceleration_table.cpp": [
+   "configuration",
+   "startup_record"
+  ],
+  "native/src/gear_force_table.cpp": [
+   "configuration"
+  ],
+  "native/src/startup_balance.cpp": [
+   "configuration"
+  ],
+  "native/src/startup_resistance.cpp": [
+   "configuration"
+  ],
+  "native/src/assembly_finalization.cpp": [
+   "configuration"
+  ],
+  "native/src/body_constructor.cpp": [
+   "configuration",
+   "owner"
+  ],
+  "native/src/owner_binding.cpp": [
+   "configuration",
+   "owner"
+  ],
+  "native/src/owner_wheel_setup.cpp": [
+   "configuration",
+   "owner"
+  ],
+  "native/include/mco/detail/entity_table.hpp": [
+   "entity_record"
+  ],
+  "native/src/entity_side_flag.cpp": [
+   "entity_record"
+  ],
+  "native/src/entity_word_assign.cpp": [
+   "entity_record"
+  ],
+  "native/src/entity_byte_assign.cpp": [
+   "entity_record"
+  ],
+  "native/src/entity_side_flag_assign.cpp": [
+   "entity_record"
+  ],
+  "native/src/entity_mode_flag.cpp": [
+   "entity_record"
+  ],
+  "native/src/entity_flag.cpp": [
+   "entity_record"
+  ],
+  "native/src/entity_flag3.cpp": [
+   "entity_record"
+  ],
+  "native/src/indexed_masked_bit.cpp": [
+   "mask_record"
+  ],
+  "native/src/record_cursor_pop.cpp": [
+   "state_record"
+  ],
+  "native/src/record_stack_contains.cpp": [
+   "state_record"
+  ],
+  "native/src/record_identifier.cpp": [
+   "state_record"
+  ],
+  "native/src/record_related_value.cpp": [
+   "state_record"
+  ],
+  "native/src/record_state_copy48.cpp": [
+   "state_record"
+  ],
+  "native/src/record_signed_negate.cpp": [
+   "state_record"
+  ],
+  "native/src/record_flag_toggle.cpp": [
+   "state_record"
+  ],
+  "native/src/record_machine_initialize.cpp": [
+   "state_record",
+   "record_machine_image"
+  ],
+  "native/src/record_machine_reset.cpp": [
+   "state_record",
+   "record_machine_image"
+  ],
+  "native/src/record_transition.cpp": [
+   "state_record",
+   "record_machine_image"
+  ],
+  "native/src/record_activate.cpp": [
+   "state_record",
+   "record_machine_image"
+  ],
+  "native/src/record_should_retain.cpp": [
+   "state_record",
+   "record_request"
+  ],
+  "native/src/record_selection_apply.cpp": [
+   "camera_selection",
+   "record_machine_image",
+   "state_record"
+  ],
+  "native/src/selection_state_normalize.cpp": [
+   "camera_selection"
+  ],
+  "native/src/camera_context_special.cpp": [
+   "camera_context"
+  ],
+  "native/src/record_selection_cycle.cpp": [
+   "camera_subjects",
+   "camera_selection",
+   "record_machine_image",
+   "state_record"
+  ],
+  "native/src/record_mode_apply.cpp": [
+   "record_machine_image"
+  ],
+  "native/include/mco/detail/record_selection.hpp": [
+   "camera_selection"
+  ],
+  "native/src/input_key_raw.cpp": [
+   "key_state_image"
+  ],
+  "native/src/input_key_query.cpp": [
+   "key_state_image",
+   "key_latch_window"
+  ],
+  "native/src/input_key_release.cpp": [
+   "key_state_image",
+   "key_remap_image",
+   "key_release_window"
+  ],
+  "native/include/mco/input_key_queue.hpp": [
+   "input_queue_image",
+   "input_queue_event"
+  ],
+  "native/src/input_key_down.cpp": [
+   "input_queue_image",
+   "input_queue_event"
+  ],
+  "native/src/input_queue_resize.cpp": [
+   "input_queue_image",
+   "input_queue_event"
+  ],
+  "native/src/input_character.cpp": [
+   "input_queue_image",
+   "input_queue_event"
+  ],
+  "native/src/input_cursor_warp.cpp": [
+   "input_queue_image"
+  ],
+  "native/src/input_mouse_update.cpp": [
+   "mouse_input_image",
+   "input_queue_image"
+  ],
+  "native/src/input_mouse_press.cpp": [
+   "mouse_input_image",
+   "input_queue_image"
+  ],
+  "native/src/input_mouse_motion.cpp": [
+   "mouse_input_image",
+   "input_queue_image"
+  ],
+  "native/src/window_handler_register.cpp": [
+   "input_queue_image"
+  ],
+  "native/src/window_input_initialize.cpp": [
+   "input_queue_image"
+  ],
+  "native/src/window_message_dispatch.cpp": [
+   "input_queue_image"
+  ],
+  "native/src/window_procedure.cpp": [
+   "input_queue_image"
+  ],
+  "native/include/mco/detail/input_queue_append.hpp": [
+   "input_queue_image",
+   "input_queue_event"
+  ],
+  "native/include/mco/detail/input_mouse_message.hpp": [
+   "input_queue_image",
+   "mouse_input_image"
+  ],
+  "native/include/mco/mouse_input_state.hpp": [
+   "input_queue_image",
+   "mouse_input_image"
+  ],
+  "native/include/mco/window_keyboard_binding.hpp": [
+   "input_queue_image"
+  ],
+  "native/include/mco/window_mouse_binding.hpp": [
+   "mouse_input_image",
+   "input_queue_image"
+  ],
+  "native/src/input_scan_translate.cpp": [
+   "direct_key_image",
+   "scan_translation_tables"
+  ],
+  "native/include/mco/input_translation_state.hpp": [
+   "direct_key_image",
+   "scan_translation_tables"
+  ],
+  "native/include/mco/input_device_access.hpp": [
+   "direct_key_image",
+   "input_device_information_image"
+  ],
+  "native/src/input_device_state.cpp": [
+   "direct_key_image"
+  ],
+  "native/src/input_device_read.cpp": [
+   "input_device_vtable"
+  ],
+  "native/src/input_device_information.cpp": [
+   "input_device_information_image",
+   "device_instance_record",
+   "device_capabilities_record",
+   "device_object_record",
+   "input_device_vtable"
+  ],
+  "native/include/mco/input_device_information_binding.hpp": [
+   "input_device_information_image"
+  ],
+  "native/src/input_device_lifetime.cpp": [
+   "input_queue_image"
+  ],
+  "native/include/mco/input_device_lifetime_access.hpp": [
+   "scan_translation_tables"
+  ],
+  "native/src/input_default_key.cpp": [
+   "input_action_image"
+  ],
+  "native/include/mco/input_key_actions.hpp": [
+   "input_action_image"
+  ],
+  "native/include/mco/input_console_state.hpp": [
+   "console_input_image",
+   "console_event_record",
+   "console_key_record"
+  ],
+  "native/src/input_console_read.cpp": [
+   "console_input_image",
+   "console_event_record",
+   "console_key_record"
+  ],
+  "native/src/input_keyboard_layout.cpp": [
+   "input_queue_image"
+  ],
+  "native/include/mco/input_keyboard_layout_state.hpp": [
+   "scan_translation_tables"
+  ],
+  "native/include/mco/window_keyboard_layout_binding.hpp": [
+   "input_queue_image",
+   "scan_translation_tables"
+  ],
+  "native/src/startup_initialize.cpp": [
+   "input_queue_image"
+  ]
+ },
+ "globals": {
+  "0x83b634": {
+   "value": 1.0,
+   "observed_as": "constant compared against configuration 0x3c at 0x53a7bc"
+  },
+  "0x83b638": {
+   "value": 0.0,
+   "observed_as": "zero tested against FUN_00483450's return at 0x53a7ff"
+  },
+  "0x83b698": {
+   "value": null,
+   "observed_as": "float multiplied into the FUN_00483450 result at 0x4836bb"
+  },
+  "0x83b7c8": {
+   "value": 0.8,
+   "observed_as": "geometric area fallback multiplier at 0x53a7f1"
+  },
+  "0xacae24": {
+   "value": null,
+   "observed_as": "nonzero callback-dispatch gate at 0x6f0459; explicit shared mutable word, separate from queue image"
+  }
+ },
+ "calling_conventions": {
+  "0x483450": {
+   "kind": "cdecl",
+   "arguments": 5,
+   "evidence": "plain RET at 0x4836cd and ADD ESP,0x14 at 0x53a805",
+   "returns": "binary32 in ST0"
+  },
+  "0x006f1430": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "evidence": "caller reuses its argument slots across two calls, so the callee does not clean",
+   "returns": "binary64 in ST0"
+  },
+  "0x00536d80": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "evidence": "caller reuses its argument slot, so the callee does not clean",
+   "returns": "binary32 in ST0"
+  },
+  "0x53a1f0": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "evidence": "the startup-record initializer writes EBP-0x4d8 and copies to owner+0x17ec",
+   "returns": "status code"
+  },
+  "0x434e40": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void; handler return ignored",
+   "evidence": "complete call through shared cdecl stub; direct event-zero callback before post resets"
+  },
+  "0x434ef0": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void; handler return ignored",
+   "evidence": "duplicate initializer body; complete cdecl-stub comparisons"
+  },
+  "0x432620": {
+   "kind": "cdecl",
+   "arguments": 4,
+   "returns": "void; handler returns ignored",
+   "evidence": "four EBP stack arguments; plain RET at 0x432722; caller cleanup after handler events"
+  },
+  "0x436230": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void; handler return ignored",
+   "evidence": "plain RET at 0x43624c; PUSH event zero / CALL EAX / POP ECX"
+  },
+  "0x435270": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "opaque pointer32 callback identity",
+   "evidence": "complete cdecl-stub calls across jump-table and default groups"
+  },
+  "0x433dd0": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "boolean in EAX",
+   "evidence": "complete two-argument pair scans through the cdecl stub"
+  },
+  "0x435840": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "boolean in AL, normalized for the host interface",
+   "evidence": "two EBP stack arguments; RET at 0x43590e; caller 0x434f90 retains on true"
+  },
+  "0x4325c0": {
+   "kind": "register-input",
+   "arguments": 0,
+   "register_arguments": {
+    "ECX": "writable six-word image"
+   },
+   "returns": "signed fourth-word division quotient in EAX",
+   "evidence": "ECX-relative loads/stores throughout 0x4325c0..0x43261f; no stack argument reads; plain RET; full-body ECX oracle cases"
+  },
+  "0x489cb0": {
+   "kind": "register-input",
+   "arguments": 0,
+   "register_arguments": {
+    "ECX": "read-only context"
+   },
+   "returns": "boolean in EAX",
+   "evidence": "ECX-relative discriminator reads; full-body register-input comparisons; caller loads 0x9aa9b0 at 0x436e19"
+  },
+  "0x436c90": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void",
+   "evidence": "No stack arguments; plain RET at 0x436f57; complete controller calls through oracle stub"
+  },
+  "0x436520": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "void",
+   "evidence": "EBP+8 viewport index; plain RET at 0x43682f; original children execute unchanged"
+  },
+  "0x436fa0": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "void",
+   "evidence": "EBP+8 signed mode index; caller pushes state_flag at 0x436821; complete-body comparisons"
+  },
+  "0x460670": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "zero-extended raw byte in EAX",
+   "evidence": "Signed JL after CMP 0x100; AND 0x7f; XOR ECX/MOV CL/MOV EAX,ECX; plain RET at 0x46068f"
+  },
+  "0x4acdc0": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "boolean in EAX",
+   "evidence": "Actual 0x460670 call; full dword mode TEST; byte latch write; plain RET at 0x4ace0c"
+  },
+  "0x584610": {
+   "kind": "stdcall",
+   "arguments": 6,
+   "returns": "zero in EAX",
+   "evidence": "RET 0x18 at 0x584655/0x584667; six planted arguments and no caller cleanup. Decompiler omitted unused sixth argument; arguments three/four/six unused."
+  },
+  "0x584450": {
+   "kind": "stdcall",
+   "arguments": 6,
+   "returns": "zero for failed translation, otherwise one in EAX",
+   "evidence": "RET 0x18 at 0x584553/0x584604/0x58460d; sixth argument unused; full message producer body"
+  },
+  "0x583a90": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "packed character in EAX",
+   "evidence": "Two stack arguments; key-down caller cleans eight bytes at 0x584565"
+  },
+  "0x584ca0": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "void",
+   "evidence": "Signed clamp to 1..32; global cursor reset; complete calls"
+  },
+  "0x584370": {
+   "kind": "stdcall",
+   "arguments": 6,
+   "returns": "one in EAX",
+   "evidence": "RET 0x18 at 0x584440/0x584449; complete six-argument character calls with callee cleanup."
+  },
+  "0x584670": {
+   "kind": "stdcall",
+   "arguments": 6,
+   "returns": "zero in EAX",
+   "evidence": "RET 0x18 at 0x5846c0; six planted callback arguments; actual mouse child executes."
+  },
+  "0x5846d0": {
+   "kind": "stdcall",
+   "arguments": 6,
+   "returns": "zero in EAX",
+   "evidence": "RET 0x18 at 0x584720; six planted callback arguments; actual mouse child executes."
+  },
+  "0x582fe0": {
+   "kind": "cdecl",
+   "arguments": 3,
+   "returns": "void",
+   "evidence": "Plain RET at 0x583024/0x58303a; owner window at +0x10 and two integer coordinates."
+  },
+  "0x6f08d0": {
+   "kind": "cdecl",
+   "arguments": 4,
+   "returns": "void",
+   "evidence": "Plain RET at 0x6f09aa; complete four-argument state update and notification calls."
+  },
+  "0x582e40": {
+   "kind": "stdcall",
+   "arguments": 2,
+   "returns": "success flag in EAX",
+   "evidence": "RET 8 at 0x582f18; explicit no-caller-cleanup registration probes."
+  },
+  "0x583210": {
+   "kind": "cdecl",
+   "arguments": 5,
+   "returns": "handler flag in EAX",
+   "evidence": "Plain RET at 0x583287/0x58328e; actual six-argument stdcall handler invocation."
+  },
+  "0x583290": {
+   "kind": "stdcall",
+   "arguments": 4,
+   "returns": "local or default result in EAX",
+   "evidence": "RET 0x10 at 0x58331f/0x58332b; four planted Windows procedure arguments."
+  },
+  "0x583c30": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "zero/one in EAX",
+   "evidence": "Plain RET at 0x583dfd; complete no-argument initializer calls."
+  },
+  "0x6f0a30": {
+   "kind": "cdecl",
+   "arguments": 3,
+   "returns": "final read/acquire status in EAX",
+   "evidence": "Plain RET at 0x6f0a67; device, destination, byte count; actual poll/retry/clear bodies execute."
+  },
+  "0x6f0a70": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "last virtual-call status in EAX (ignored by outer reader)",
+   "evidence": "Plain RET at 0x6f0a9a; poll +0x64 and acquire +0x1c are stdcall one-argument calls; reload vtable after callbacks."
+  },
+  "0x6f0aa0": {
+   "kind": "cdecl",
+   "arguments": 3,
+   "returns": "last read/acquire status in EAX",
+   "evidence": "Plain RET at 0x6f0ada; device, byte count, destination; read +0x24 stdcall three arguments and acquire +0x1c one argument."
+  },
+  "0x6f03c0": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "null, information image or keyboard image pointer in EAX",
+   "evidence": "Plain RET 0x6f044b and branch returns; keyboard pointer returned independently of acquisition status; actual keyboard child code executes."
+  },
+  "0x6f0b20": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "instance/capability status in EAX; object failures only affect masks",
+   "evidence": "Plain RET 0x6f0d0c; virtual 0x3c/0x0c stdcall two arguments, 0x38 stdcall four arguments. Disassembly 0x6f0bc8 loads flags from capabilities; no incoming EBX dependency."
+  },
+  "0x6f0200": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "final initialization flag in EAX",
+   "evidence": "Plain RET 0x6f0304; pushed ECX is output scratch. Slot 0x34 stdcall receives device, window, flags 6 and cleans 12 bytes."
+  },
+  "0x6f0310": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void",
+   "evidence": "Plain RET 0x6f034d; global device reloaded between unacquire and release."
+  },
+  "0x6f0350": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void",
+   "evidence": "Registered callback; calls cleanup, clears initialization and RET 0x6f035f. Supplemental inventory entry pending."
+  },
+  "0x6f0360": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "zero/one in EAX",
+   "evidence": "Plain RET 0x6f03b8; kind and value on stack; actual resize child."
+  },
+  "0x584cf0": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "window handle in EAX",
+   "evidence": "Plain RET 0x584cf5; loads global window, consumes no arguments."
+  },
+  "0x6f0450": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "full selected callback EAX or masked fallback EAX",
+   "evidence": "Tail jumps at 0x6f0463/0x6f0465; caller 0x4b65db and 0x4b67b0 compare full EAX."
+  },
+  "0x6f01d0": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "zero or explicitly byte-masked read value in EAX",
+   "evidence": "No-argument helper calls; AND EAX,0xff at 0x6f01ec; RET at 0x6f01f2."
+  },
+  "0x6f0580": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "masked fallback or action-router result in EAX",
+   "evidence": "Tail fallback at 0x6f0589; queue result AND EAX,0xffff at 0x6f0593; router caller cleanup and RET 0x6f05a1."
+  },
+  "0x6f0e80": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "original input or consumed zero in EAX",
+   "evidence": "Signed JGE bounds at 0x6f0e89/0x6f0e9a; no-argument action call and XOR EAX,EAX before RET 0x6f0ebe."
+  },
+  "0x7b0cd6": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "saved inner read result in EAX",
+   "evidence": "Lock identity 8, inner 0x7b0d0e, unlock, ESI-restored EAX, RET 0x7b0cf1."
+  },
+  "0x7b0e17": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "saved inner availability result in EAX",
+   "evidence": "Lock identity 8, inner 0x7b0e33, unlock, ESI-restored EAX, RET 0x7b0e32."
+  },
+  "0x7b0d0e": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "buffered/ANSI/decoded byte or UINT_MAX",
+   "evidence": "Pending buffer, mode APIs, 20-byte records, pair extraction before pending store; RET 0x7b0dde."
+  },
+  "0x7b0e33": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "zero/one in EAX",
+   "evidence": "Successful bounded 20-byte dynamic-record allocation; count/peek guards, filters and decoder; RET 0x7b0eeb."
+  },
+  "0x7b0f33": {
+   "kind": "cdecl",
+   "arguments": 1,
+   "returns": "null or two-byte table-view pointer in EAX",
+   "evidence": "Sixteen-byte key record, byte-pair validity for normal rows, unvalidated matched enhanced pairs; no helper substitution."
+  },
+  "0x7b1fe9": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "CreateFileA handle preserved in EAX",
+   "evidence": "Seven stdcall arguments, CONIN$ access 0xc0000000/share3/creation3; global handle store then RET 0x7b2007."
+  },
+  "0x6f09f0": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "zero/one in EAX",
+   "evidence": "IAT 0x83b3d4 cached in ESI before stdcall queries 0/1; signed subtype range 0xd01..0xd04; conditional remap store then RET 0x6f0a22/0x6f0a26."
+  },
+  "0x6bfa10": {
+   "kind": "cdecl",
+   "arguments": 0,
+   "returns": "void",
+   "evidence": "Full controller 0x6bfa10..0x6bfc56; integer dimensions FILD/FSTP into final six-argument viewport call; RET with caller cleanup for helpers."
+  },
+  "0x584c80": {
+   "kind": "cdecl",
+   "arguments": 2,
+   "returns": "void",
+   "evidence": "Writes flag/callback/enabled state from two stack arguments; no semantic EAX result."
+  }
+ },
+ "ownership": [
+  "Byte images are observations, not recovered class instances. No vtable, lifetime or host-pointer claim is implied.",
+  "Host calculations receive configurations separately and never dereference an original process address; pointer32 fields are emulated addresses only.",
+  "The base constructor clears owner 0x000..0x418; producers of every high-offset observation above that boundary are not yet established."
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "id": "registry_reset",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x407550"
+  }
+ ],
+ "brief": "Reset the registry table: cleared counters and one live sentinel record.",
+ "decl": "void registry_reset(std::span<std::byte> registry);",
+ "notes": [
+  "The original walks 24-byte records from 0x8e3b38 to 0x8e533c: the first record gets a zero tail and counter, and the sentinel record at offset 4 keeps 0xffffffff.",
+  "Verified against the original by tools.w0_int_leaf_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "acceptance": "Met: 2 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 2,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        auto registry = image<0x1804>(input);\n        mco::registry_reset(registry);\n        emit(registry);"
+ }
+}

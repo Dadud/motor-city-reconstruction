@@ -1,0 +1,32 @@
+{
+ "id": "clamped_bit_mask",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x403370"
+  }
+ ],
+ "brief": "Increment with 32-bit wrap, clamp to 0..15 and choose the reversed bit.",
+ "decl": "std::uint32_t clamped_bit_mask(std::int32_t index);",
+ "notes": [
+  "Whole cdecl body compared through tools.w0_cell_corpus; original memory is supplied as explicit spans/globals.",
+  "Parameter names describe observed operations, not complete recovered class ownership."
+ ],
+ "comparison": {
+  "body": "        const auto index = std::bit_cast<std::int32_t>(read(input));\n        emit(mco::clamped_bit_mask(index));"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-entity-tables",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+  "supported_domain": "All signed 32-bit bit indices, including wrap from INT_MAX to INT_MIN before clamping.",
+  "acceptance": "Met: 11 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 11,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

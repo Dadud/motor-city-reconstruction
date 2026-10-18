@@ -1,0 +1,33 @@
+{
+ "id": "copy_prefix2",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x43ad80"
+  }
+ ],
+ "brief": "Copy two bytes with the second staged first, then append a zero.",
+ "decl": "void copy_prefix2(std::span<std::byte,3> destination, std::span<const std::byte,2> source);",
+ "notes": [
+  "Original bytes and execution establish argument widths and access order.",
+  "Spans are host byte views; original 32-bit address identities are explicit where needed."
+ ],
+ "comparison": {
+  "body": "        const auto source = read(input);\n        const auto destination = read(input);\n        auto backing = image<96>(input);\n        mco::copy_prefix2(view<3>(backing, destination), view<2>(backing, source));\n        emit(backing);"
+ },
+ "shared_sources": [],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-record-stack",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
+  "supported_domain": "Valid fixed-size byte spans, including tested unaligned overlap. Native copies preserve the machine instruction read/write order rather than snapshot or generic byte-copy semantics.",
+  "acceptance": "Met: 27 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 27,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

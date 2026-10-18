@@ -1,0 +1,31 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x435f80": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-record-stack",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
+      "supported_domain": "All 32-bit cursor and base bit patterns. This body does not dereference either address identity; subtraction wraps and the clamp is unsigned.",
+      "acceptance": "Met: 64 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 64,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/record_cursor_pop.cmake",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_cursor_pop.hpp",
+        "native/src/record_cursor_pop.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_cursor_pop_compare.cpp",
+        "native/tests/record_cursor_pop_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_cursor_pop_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

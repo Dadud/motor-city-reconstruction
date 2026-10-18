@@ -57,6 +57,70 @@ class DynoOracle:
         self.cpu.reg_write(self.reg.UC_X86_REG_ESP, self.frame-0x1000)
         self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
 
+    def call(self, entry, arguments=(), *, tail=b'', cleanup=None,
+             this_pointer=None, instruction_limit=4096):
+        """Call a cdecl routine in the original with planted arguments.
+
+        Arguments are given in source order: the first argument ends up at
+        [EBP+8], which is where every original reads it. That is the opposite
+        of the push order, and getting it backwards is the single easiest way
+        to produce an oracle that passes for the wrong reason.
+
+        `this_pointer` sets ECX first, for member routines that read their
+        state through the register instead of a stack argument.
+
+        `tail` runs after the call and before the return, which is how a result
+        is captured. `cleanup` defaults to dropping every pushed argument, which
+        is what cdecl requires.
+
+        `instruction_limit` keeps each emulated call bounded; complex routines
+        may explicitly request up to one million instructions instead of 4096.
+
+        Verified against the original for integer results: `call(0x405900)`
+        reproduces both branches of the global singleton accessor exactly.
+        **Float results are not reliable on this emulator.** A routine whose
+        result travels in ST0 does not survive the round trip: FILD stores 0.0
+        for a nonzero operand, and a post-call FSTP through `tail` yields
+        garbage, while the original's own stored results read back correctly.
+        Float-returning routines need the original's own store, as `power`
+        does, or no oracle at all. Capture integers here and leave floats to
+        the routine's own memory writes.
+        """
+        if type(instruction_limit) is not int or not 1 <= instruction_limit <= 1_000_000:
+            raise ValueError('oracle instruction limit must be between 1 and 1000000')
+        self._reset()
+        # The stop address is planted below the pushed arguments: after cdecl
+        # cleanup drops them, ESP is back to `stack` and the stub's final RET
+        # consumes the planted address from there.
+        stack = self.frame-0x1000
+        self.cpu.mem_write(stack, struct.pack('<I', self.stop))
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESP, stack)
+        self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
+        if this_pointer is not None:
+            self.cpu.reg_write(self.reg.UC_X86_REG_ECX,
+                               this_pointer & 0xffffffff)
+        prologue = b''.join(b'\x68'+struct.pack('<I', value & 0xffffffff)
+                            for value in reversed(list(arguments)))
+        call_at = self.stub+len(prologue)
+        if cleanup is None:
+            # Nothing was pushed, so nothing is dropped: emitting `add esp,0`
+            # would be dead code in every no-argument stub.
+            cleanup = (b'\x83\xc4'+struct.pack('<B', 4*len(arguments))
+                       if arguments else b'')
+        body = (prologue + b'\xe8' + b'\x00'*4 + tail + cleanup + b'\xc3')
+        # The displacement is relative to the end of the call instruction.
+        relative = entry-(call_at+5)
+        body = body[:len(prologue)+1]+struct.pack('<i', relative)+body[len(prologue)+5:]
+        self.cpu.mem_write(self.stub, body)
+        # Unicorn caches translated blocks by guest address. The stub is
+        # rewritten at the same address on every call, so without this flush
+        # the second routine in a process executes the first routine's cached
+        # translation and every result after the first call is wrong.
+        if hasattr(self.cpu, 'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self._run(self.stub, self.stop, timeout=0, count=instruction_limit)
+        return self
+
     def power(self, base, exponent):
         """Original 0x69ba30/0x69ba52 helper; double arguments and output."""
         self._reset()

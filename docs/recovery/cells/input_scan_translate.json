@@ -1,0 +1,61 @@
+{
+  "id": "input_scan_translate",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f05b0"
+    }
+  ],
+  "brief": "Translate a queued scan byte using current modifiers, caps state and caller-supplied layout tables.",
+  "decl": "std::uint32_t input_scan_translate(InputTranslationState &state, std::uint32_t scan, std::uint32_t extended);",
+  "header_includes": [
+    "mco/input_translation_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_translation_cases.hpp"
+    ],
+    "body": "        input_translation_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x6f03c0",
+    "0x69c189"
+  ],
+  "shared_sources": [
+    "native/include/mco/input_translation_state.hpp",
+    "native/include/mco/layouts.hpp",
+    "native/tests/input_translation_cases.hpp",
+    "tools/input_translation_cases.py",
+    "native/tests/input_queue_lifecycle_compare.cpp",
+    "tools/input_queue_cases.py",
+    "native/include/mco/input_translation_device_binding.hpp",
+    "native/tests/input_device_session_compare.cpp",
+    "native/cmds/input_device_session.cmake",
+    "tools/input_device_session_cases.py",
+    "tools/native_input_device_session_compare.py",
+    "native/include/mco/input_device_callback.hpp",
+    "native/include/mco/input_device_lifetime_access.hpp",
+    "native/tests/input_device_session_cases.hpp",
+    "native/tests/input_action_session_compare.cpp",
+    "native/cmds/input_action_session.cmake",
+    "tools/input_action_session_cases.py",
+    "tools/native_input_action_session_compare.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-queue-consumption",
+    "owner": "input-recovery",
+    "status": "implemented",
+    "scope": "Complete translation body with explicit device-state and nonreturning exit bridges; synthetic supplied layout data.",
+    "supported_domain": "Byte scan values and mapped modifier/table views; returning state acquisition and nonreturning exit request when selected. Invalid original dereferences/process cleanup unmodeled.",
+    "acceptance": "3152 original cases match MSVC and Zig exactly, including eight observed nonreturning exit requests, with declared state/exit bridges; native priority/encoding/caps/exit tests pass.",
+    "comparison_cases": 3152,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+    ]
+  }
+}

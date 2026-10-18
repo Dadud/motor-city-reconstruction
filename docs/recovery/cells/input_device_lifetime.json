@@ -1,0 +1,81 @@
+{
+  "id": "input_device_lifetime",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0200"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0310"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0350"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0360"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x584cf0"
+    }
+  ],
+  "brief": "Initialize device interfaces, preserve failure cleanup and registration behavior, and expose set-state/window access.",
+  "decl": "std::uint32_t input_device_initialize(InputDeviceLifetimeState &state, const InputDeviceLifetimePlatform &platform, std::uint32_t incoming_temporary);",
+  "header_includes": [
+    "mco/input_device_lifetime_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_device_lifetime_cases.hpp"
+    ],
+    "body": "        input_device_lifetime_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x584ca0",
+    "0x6bd640",
+    "0x6bf450",
+    "0x748ba0"
+  ],
+  "shared_sources": [
+    "native/include/mco/input_device_lifetime_state.hpp",
+    "native/include/mco/layouts.hpp",
+    "native/tests/input_device_lifetime_cases.hpp",
+    "tools/input_device_lifetime_cases.py",
+    "native/tests/input_device_lifetime_lifecycle_compare.cpp",
+    "native/cmds/input_device_lifetime_lifecycle.cmake",
+    "tools/native_input_device_lifetime_lifecycle_compare.py",
+    "docs/recovery/function-supplements.json",
+    "native/include/mco/input_device_lifetime_access.hpp",
+    "native/tests/input_device_session_compare.cpp",
+    "native/cmds/input_device_session.cmake",
+    "tools/input_device_session_cases.py",
+    "tools/native_input_device_session_compare.py",
+    "native/include/mco/input_device_callback.hpp",
+    "native/tests/input_device_session_cases.hpp",
+    "native/tests/input_action_session_compare.cpp",
+    "native/cmds/input_action_session.cmake",
+    "tools/input_action_session_cases.py",
+    "tools/native_input_action_session_compare.py",
+    "native/include/mco/input_device_cleanup_binding.hpp"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-device-lifetime",
+    "owner": "input-recovery",
+    "scope": "Complete initialization, cleanup, callback shutdown, set-state and window getter with explicit platform calls. Shutdown callback is an evidenced supplement to the retained static enumeration.",
+    "supported_domain": "Mapped non-null handles at every virtual dispatch; returning factories and virtual calls with valid temporary output lifetime. Original invalid dereferences and host resource allocation unmodeled.",
+    "acceptance": "2376 original cases across five callable entries and four persistent 12-step lifetime traces match MSVC and Zig exactly; independent ordering, failure, handle, flags and diagnostic tests pass.",
+    "comparison_cases": 2376,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Action configuration/lifetime and actual action callbacks; other platform helper internals, live input and full process cleanup. Device registration and shutdown connect to recovered registry through InputDeviceCleanupBinding."
+    ]
+  }
+}

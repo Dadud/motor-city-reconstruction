@@ -1,0 +1,34 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x405900": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-global-state",
+      "owner": "wave0-utilities",
+      "scope": "Complete fifteen-byte body; both original globals are explicit host inputs. The current native/original corpus covers 64 supplied pairs and both selection branches.",
+      "supported_domain": "Any two 32-bit original addresses, including zero. The original contains no branches beyond the nonzero test, so the rule is total.",
+      "unresolved": [
+        "What the two globals hold and which subsystem owns the fallback.",
+        "Why five call sites in three subsystems resolve the same singleton."
+      ],
+      "acceptance": "Met: 64 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "status": "implemented",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 64,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/instance_accessor.cmake",
+        "native/include/mco/instance_accessor.hpp",
+        "native/src/instance_accessor.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/instance_accessor_compare.cpp",
+        "native/tests/instance_accessor_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_instance_accessor_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

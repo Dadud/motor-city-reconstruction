@@ -29,6 +29,17 @@ class FunctionInventoryTests(unittest.TestCase):
         self.assertEqual(rows[1]['python_refs'], [])
 
     @patch('tools.function_inventory.source_references')
+    def test_triage_classifies_and_absence_stays_unclassified(self, refs):
+        from collections import defaultdict
+        refs.return_value = defaultdict(dict)
+        triage = {'0x400000': {'class': 'thunk', 'rule': 'thunk-flag-or-prefix'}}
+        rows = generate(None, self.enumeration(), None, {}, triage)
+        self.assertEqual(rows[0]['class'], 'thunk')
+        self.assertEqual(rows[0]['triage_rule'], 'thunk-flag-or-prefix')
+        self.assertEqual(rows[1]['class'], 'unclassified')
+        self.assertEqual(rows[1]['triage_rule'], '')
+
+    @patch('tools.function_inventory.source_references')
     def test_review_for_nonexistent_function_is_rejected(self, refs):
         with self.assertRaises(ValueError):
             generate(None, self.enumeration(), None, {'0x500000': {}})

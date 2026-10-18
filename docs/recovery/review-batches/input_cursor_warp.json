@@ -1,0 +1,41 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x582fe0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "mouse-input",
+      "owner": "input-recovery",
+      "status": "implemented",
+      "scope": "Complete original body with actual recovered children; explicit platform/lock/notification bridges.",
+      "supported_domain": "Distinct mapped mouse/window images and returning platform callbacks; original import/pointer faults unmodeled.",
+      "acceptance": "336 complete original calls match MSVC and Zig exactly with declared platform scripts; focused native behavior tests pass.",
+      "comparison_cases": 336,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live platform/synchronization behavior, host message pumping, and remaining nonmouse/window handlers."
+      ],
+      "sources": [
+        "native/cmds/input_cursor_warp.cmake",
+        "native/include/mco/detail/input_mouse_message.hpp",
+        "native/include/mco/input_cursor_warp.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/mouse_input_state.hpp",
+        "native/include/mco/window_mouse_binding.hpp",
+        "native/src/input_cursor_warp.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_cursor_warp_compare.cpp",
+        "native/tests/input_cursor_warp_test.cpp",
+        "native/tests/mouse_input_cases.hpp",
+        "native/tests/window_mouse_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/mouse_input_cases.py",
+        "tools/native_input_cursor_warp_compare.py",
+        "tools/native_window_mouse_lifecycle_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

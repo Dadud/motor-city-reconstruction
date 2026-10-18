@@ -1,0 +1,32 @@
+{
+ "id": "cyclic_index_difference",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x403220"
+  }
+ ],
+ "brief": "Compute the original wrapped index difference and optional half-ring adjustment.",
+ "decl": "std::int32_t cyclic_index_difference(std::int32_t first, std::int32_t second, std::int32_t count, std::uint32_t mode);",
+ "notes": [
+  "Whole cdecl body compared through tools.w0_cell_corpus; original memory is supplied as explicit spans/globals.",
+  "Parameter names describe observed operations, not complete recovered class ownership."
+ ],
+ "comparison": {
+  "body": "        const auto first = std::bit_cast<std::int32_t>(read(input));\n        const auto second = std::bit_cast<std::int32_t>(read(input));\n        const auto count = std::bit_cast<std::int32_t>(read(input));\n        const auto mode = read(input);\n        emit(std::bit_cast<std::uint32_t>(mco::cyclic_index_difference(first, second, count, mode)));"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-entity-tables",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+  "supported_domain": "All 32-bit first, second, count and mode values; arithmetic wraps as x86 does. The zero-mode path adjusts by count once, not repeated modulo reduction.",
+  "acceptance": "Met: 1344 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 1344,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

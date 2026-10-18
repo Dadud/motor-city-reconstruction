@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "modules": {
+    "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164": [
+      {
+        "address": "0x6f0350",
+        "end_exclusive": "0x6f0360",
+        "name": "input_device_shutdown",
+        "evidence": "Initialization registers 0x6f0350 at 0x6f02e7; instructions call 0x6f0310, clear initialized global, and RET at 0x6f035f. Complete original entry is executed in lifetime comparison mode 1.",
+        "sources": [
+          "native/src/input_device_lifetime.cpp",
+          "tools/input_device_lifetime_cases.py"
+        ],
+        "direct_callees": [
+          "0x6f0310"
+        ]
+      }
+    ]
+  }
+}

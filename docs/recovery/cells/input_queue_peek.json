@@ -1,0 +1,67 @@
+{
+  "id": "input_queue_peek",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x583160"
+    }
+  ],
+  "brief": "Read the original packed queue result with signed character extension and exact head-advance behavior.",
+  "decl": "std::uint32_t input_queue_peek(InputKeyQueue &queue, InputTranslationState &translation);",
+  "header_includes": [
+    "mco/input_key_queue.hpp",
+    "mco/input_translation_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_consumer_cases.hpp"
+    ],
+    "body": "        input_consumer_cases::compare(input,false);"
+  },
+  "depends_on": [
+    "0x6f05b0",
+    "0x6bd6e0",
+    "0x6bd6f0"
+  ],
+  "shared_sources": [
+    "native/include/mco/detail/input_queue_consume.hpp",
+    "native/include/mco/input_translation_state.hpp",
+    "native/tests/input_consumer_cases.hpp",
+    "native/tests/input_translation_cases.hpp",
+    "native/tests/input_queue_cases.hpp",
+    "tools/input_consumer_cases.py",
+    "tools/input_translation_cases.py",
+    "native/tests/input_consumer_tests.hpp",
+    "native/tests/input_queue_lifecycle_compare.cpp",
+    "tools/input_queue_cases.py",
+    "native/include/mco/input_translation_device_binding.hpp",
+    "native/tests/input_device_session_compare.cpp",
+    "native/cmds/input_device_session.cmake",
+    "tools/input_device_session_cases.py",
+    "tools/native_input_device_session_compare.py",
+    "native/include/mco/input_device_callback.hpp",
+    "native/include/mco/input_device_lifetime_access.hpp",
+    "native/tests/input_device_session_cases.hpp",
+    "native/tests/input_action_session_compare.cpp",
+    "native/cmds/input_action_session.cmake",
+    "tools/input_action_session_cases.py",
+    "tools/native_input_action_session_compare.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-queue-consumption",
+    "owner": "input-recovery",
+    "status": "implemented",
+    "scope": "Complete consumer and actual scan translation; declared lock, device-state and terminal-exit bridges.",
+    "supported_domain": "Mapped, terminating queue states; positive capacity when division executes; byte scan and valid translation views. Original faults/process cleanup unmodeled.",
+    "acceptance": "138 original cases match MSVC and Zig exactly; native consumption, sign extension, zero-prefix, provider mutation and terminal exit tests pass.",
+    "comparison_cases": 138,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+    ]
+  }
+}

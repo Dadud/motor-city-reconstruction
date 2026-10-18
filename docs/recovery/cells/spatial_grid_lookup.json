@@ -1,0 +1,45 @@
+{
+  "id": "spatial_grid_lookup",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x552880"
+    }
+  ],
+  "brief": "Resolve a grid/quadtree leaf using original rounded X/Z coordinates and child ordering.",
+  "decl": "std::uint32_t spatial_grid_lookup(const SpatialQueryMemory &memory, std::span<const float,3> position, std::span<const float,2> origin, std::span<const float,2> scale);",
+  "header_includes": [
+    "mco/spatial_query_memory.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "spatial_grid_cases.hpp"
+    ],
+    "body": "        spatial_grid_cases::compare(input);"
+  },
+  "shared_sources": [
+    "native/include/mco/spatial_query_memory.hpp",
+    "native/tests/spatial_grid_cases.hpp",
+    "tools/spatial_grid_cases.py"
+  ],
+  "depends_on": [
+    "0x4400a0"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "track-spatial",
+    "owner": "camera-recovery",
+    "scope": "Complete grid lookup; diagnostic child supplied explicitly.",
+    "supported_domain": "Mapped synthetic grid/node images and nearest-even float arithmetic; invalid original dereferences not emulated.",
+    "status": "implemented",
+    "acceptance": "1826 original complete-body cases match MSVC and Zig exactly; native boundary/diagnostic/rejection checks pass on both compilers.",
+    "unresolved": [
+      "Live track ownership and diagnostic implementation."
+    ],
+    "comparison_cases": 1826,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+  }
+}

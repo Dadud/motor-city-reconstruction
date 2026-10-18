@@ -1,0 +1,60 @@
+{
+  "id": "input_callback_dispatch",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0450"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f01d0"
+    }
+  ],
+  "brief": "Return the selected callback result or the conditionally read, byte-masked fallback value.",
+  "decl": "std::uint32_t input_callback_dispatch(InputCallbackDispatchState &state, const InputCallbackDispatchPlatform &platform);",
+  "header_includes": [
+    "mco/input_callback_dispatch_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_callback_dispatch_cases.hpp"
+    ],
+    "body": "        input_callback_dispatch_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x7b0e17",
+    "0x7b0cd6"
+  ],
+  "shared_sources": [
+    "native/include/mco/input_callback_dispatch_state.hpp",
+    "native/include/mco/input_device_callback.hpp",
+    "native/tests/input_callback_dispatch_cases.hpp",
+    "tools/input_callback_dispatch_cases.py",
+    "native/tests/input_callback_dispatch_lifecycle_compare.cpp",
+    "native/cmds/input_callback_dispatch_lifecycle.cmake",
+    "tools/native_input_callback_dispatch_lifecycle_compare.py",
+    "native/tests/input_device_session_cases.hpp",
+    "native/tests/input_action_session_compare.cpp",
+    "native/cmds/input_action_session.cmake",
+    "tools/input_action_session_cases.py",
+    "tools/native_input_action_session_compare.py",
+    "native/include/mco/input_console_dispatch_binding.hpp"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-callback-dispatch",
+    "owner": "input-recovery",
+    "scope": "Complete dispatcher and fallback; explicit callback, availability and read bridges.",
+    "supported_domain": "Mapped callback and enable word; returning cdecl no-argument callbacks/helpers. Invalid original pointers and platform internals unmodeled.",
+    "acceptance": "2496 original cases across dispatcher and fallback plus four persistent ten-call setter/dispatch traces match MSVC and Zig exactly; independent full-result, mask, gate and mutation tests pass.",
+    "comparison_cases": 2496,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Action configuration/lifetime and actual actions; platform/lock API adapters, uninitialized-output/allocation-fault paths, live input and process cleanup."
+    ]
+  }
+}

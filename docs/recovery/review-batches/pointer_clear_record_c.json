@@ -1,0 +1,30 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x429460": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-global-state",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete original body on supplied synthetic globals, valid images and indices; original ABI checked from bytes and execution. Host memory and original identities are explicit inputs.",
+      "supported_domain": "Null entries/empty spans where original has a null guard; otherwise valid supplied spans. Invalid host lengths and slots are rejected, not evidence of original fault equivalence.",
+      "acceptance": "Met: 16 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 16,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/pointer_clear_record_c.cmake",
+        "native/include/mco/pointer_clear_record_c.hpp",
+        "native/src/pointer_clear_record_c.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/pointer_clear_record_c_compare.cpp",
+        "native/tests/pointer_clear_record_c_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_pointer_clear_record_c_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

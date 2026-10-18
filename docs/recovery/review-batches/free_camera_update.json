@@ -1,0 +1,46 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x433820": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "free-camera",
+      "owner": "camera-recovery",
+      "status": "implemented",
+      "scope": "Complete handler; verified no-op child elided; actual input, rotation and spatial children.",
+      "supported_domain": "Distinct mapped image/key/latch/subject/world views; finite child-supported matrix/spatial inputs. Caller resolver supplies the subject surface for the post-reset opaque identity.",
+      "acceptance": "202 complete original calls match MSVC and Zig exactly without substitutions; native repeated-frame and reset-latch tests pass.",
+      "comparison_cases": 202,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live window dispatch and critical-section behavior; floating-point exception state and original invalid faults."
+      ],
+      "sources": [
+        "native/cmds/free_camera_update.cmake",
+        "native/include/mco/free_camera_state.hpp",
+        "native/include/mco/free_camera_update.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/free_camera_update.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/free_camera_cases.hpp",
+        "native/tests/free_camera_lifecycle_compare.cpp",
+        "native/tests/free_camera_update_compare.cpp",
+        "native/tests/free_camera_update_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/free_camera_cases.py",
+        "tools/native_free_camera_lifecycle_compare.py",
+        "tools/native_free_camera_update_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x413810",
+        "0x42e760",
+        "0x4acdc0",
+        "0x6f1780",
+        "0x6f1850",
+        "0x6f1910"
+      ]
+    }
+  }
+}

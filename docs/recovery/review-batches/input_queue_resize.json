@@ -1,0 +1,37 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x584ca0": {
+      "subsystem": "input-key-queue",
+      "owner": "window-input-recovery",
+      "scope": "Complete original body; actual character translation; only Enter/LeaveCriticalSection imports use declared observation/mutation substitutions.",
+      "supported_domain": "Caller-owned distinct queue image, key image and optional remap. Nonnegative initial capacity, positive capacity at division, returning synchronization bridge; original invalid accesses and division faults are not emulated.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "MSVC and Zig native outputs exactly match captured original observations; standalone native behavior tests pass on both compilers. Live dispatch and Windows synchronization integration remain unresolved.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 18,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live critical-section behavior, window dispatch and camera-handler integration."
+      ],
+      "sources": [
+        "native/cmds/input_queue_resize.cmake",
+        "native/include/mco/input_key_queue.hpp",
+        "native/include/mco/input_queue_resize.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_queue_resize.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_queue_cases.hpp",
+        "native/tests/input_queue_resize_compare.cpp",
+        "native/tests/input_queue_resize_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_queue_cases.py",
+        "tools/native_input_queue_resize_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x4c4050": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Complete local-space part half-extents for finite bounded complete FCE images. Forty original calls cover valid, empty and invalid parts, exact result/status. Does not establish upstream model selection, attachment or lifetime. REA ev_d7d24f4e6b390a76ff3f4edfa09189c93f9309ecf9f9d0e5f743f6a368ccaf91.",
+      "sources": ["client/model_preparation.py", "native/src/model_preparation.cpp", "tools/model_preparation_oracle.py", "docs/calculations/model_preparation.md"]
+    },
+    "0x4c42d0": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Complete three-stream part scaling for bounded FCE images and finite supported calculations. Forty original calls verify full image bytes, invalid/empty parts, separate and aliased streams. Original stream order retained; no semantic guesses about stream contents. REA ev_5e50dc0766a99b7f87c8ce67f37388aae53a3113f010bc36b5e30fc1a4bbc5aa.",
+      "sources": ["client/model_preparation.py", "native/src/model_preparation.cpp", "tools/model_preparation_oracle.py", "docs/calculations/model_preparation.md"]
+    },
+    "0x52bc60": {
+      "translation": "partial",
+      "verification": "original-comparison-bounded",
+      "scope": "Python/native secondary alignment after explicitly supplied first-type0x11 reference selection; full linked-list adapter remains unimplemented. Twenty-six complete original calls with synthetic owner/node inputs verify full mutated image, names, dummies and missing-secondary/node gates; original strstr executes without replacements. Valid selected reference image/part required. Full model startup/lifetime not verified. REA ev_dbb8bb8c451d3072a60915d8a99e2c36ad0b8c8f37bea7ede24bd1adcef9157f.",
+      "sources": ["client/model_preparation.py", "native/src/model_preparation.cpp", "tools/model_preparation_oracle.py", "docs/calculations/model_preparation.md"]
+    }
+  }
+}

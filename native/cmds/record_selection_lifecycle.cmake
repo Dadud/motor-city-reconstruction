@@ -1,0 +1,6 @@
+# Integration gate, not another recovered function or counted cell.
+add_executable(mco_record_selection_lifecycle_test native/tests/record_selection_lifecycle_test.cpp)
+target_link_libraries(mco_record_selection_lifecycle_test PRIVATE mco_core)
+add_test(NAME record_selection_lifecycle COMMAND mco_record_selection_lifecycle_test)
+add_executable(mco_record_selection_lifecycle_compare native/tests/record_selection_lifecycle_compare.cpp)
+target_link_libraries(mco_record_selection_lifecycle_compare PRIVATE mco_core)

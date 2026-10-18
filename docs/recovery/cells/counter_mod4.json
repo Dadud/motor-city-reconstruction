@@ -1,0 +1,34 @@
+{
+ "id": "counter_mod4",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x42cc60"
+  }
+ ],
+ "brief": "Advance a counter modulo four.",
+ "decl": "std::uint32_t counter_mod4(std::uint32_t counter);",
+ "pseudocode": "void FUN_0042cc60(void)\n\n{\n  DAT_009aba2c = DAT_009aba2c + 1 & 0x80000003;\n  if ((int)DAT_009aba2c < 0) {\n    DAT_009aba2c = (DAT_009aba2c - 1 | 0xfffffffc) + 1;\n  }\n  return;\n}",
+ "notes": [
+  "The original masks with 0x80000003 and then repairs a negative result, so the",
+  "sign-bit path is exercised explicitly in the oracle rather than assumed away.",
+  "Verified against the original by tools.w0_pure_oracle."
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "acceptance": "Met: 11 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 11,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto value = read(input);\n        emit(mco::counter_mod4(value));"
+ }
+}

@@ -1,0 +1,62 @@
+{
+  "id": "input_default_key",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0580"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f0e80"
+    }
+  ],
+  "brief": "Read the default queue callback and route its low word through overlapping action maps and handler words.",
+  "decl": "std::uint32_t input_default_key(InputDefaultKeyState &state, const InputCallbackDispatchPlatform &platform);",
+  "header_includes": [
+    "mco/input_default_key_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "input_default_key_cases.hpp"
+    ],
+    "body": "        input_default_key_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x5830c0",
+    "0x6f01d0"
+  ],
+  "shared_sources": [
+    "native/include/mco/input_default_key_state.hpp",
+    "native/include/mco/input_key_actions.hpp",
+    "native/include/mco/layouts.hpp",
+    "native/tests/input_default_key_cases.hpp",
+    "tools/input_default_key_cases.py",
+    "native/include/mco/input_default_key_binding.hpp",
+    "native/tests/input_default_key_lifecycle_compare.cpp",
+    "native/cmds/input_default_key_lifecycle.cmake",
+    "tools/native_input_default_key_lifecycle_compare.py",
+    "native/tests/input_device_session_cases.hpp",
+    "native/tests/input_action_session_compare.cpp",
+    "native/cmds/input_action_session.cmake",
+    "tools/input_action_session_cases.py",
+    "tools/native_input_action_session_compare.py",
+    "native/include/mco/input_console_dispatch_binding.hpp"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "input-key-actions",
+    "owner": "input-recovery",
+    "scope": "Complete default callback with actual pop/translation/fallback and complete action router; explicit action/provider/platform bridges.",
+    "supported_domain": "Mapped 1024-byte action image; signed low indices within that image, nonnegative extended and signed-positive passthrough inputs; valid returning bridges and queue/translation states. Invalid original accesses unmodeled.",
+    "acceptance": "1920 original cases (1746 router and 174 default callback) and four persistent ten-call producer/dispatch/default/action traces match MSVC and Zig exactly; independent alias, signed-index, consumption, truncation and forwarding tests pass.",
+    "comparison_cases": 1920,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Action configuration/lifetime and actual actions; platform/lock API adapters, uninitialized-output/allocation-fault paths, live input and process cleanup."
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "cleanup_registry",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bf450"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bf410"
+    }
+  ],
+  "brief": "Register unique cleanup identities and invoke mutable slots in reverse order.",
+  "decl": "void cleanup_registry_run(CleanupRegistry &state, const CleanupRegistryPlatform &platform);",
+  "header_includes": [
+    "mco/cleanup_registry_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "cleanup_registry_cases.hpp"
+    ],
+    "body": "        cleanup_registry_cases::compare(input);"
+  },
+  "shared_sources": [
+    "native/include/mco/cleanup_registry_state.hpp",
+    "native/tests/cleanup_registry_cases.hpp",
+    "tools/cleanup_registry_cases.py",
+    "native/include/mco/input_device_cleanup_binding.hpp",
+    "native/tests/cleanup_registry_lifecycle_compare.cpp",
+    "native/cmds/cleanup_registry_lifecycle.cmake",
+    "tools/native_cleanup_registry_lifecycle_compare.py",
+    "tools/input_device_lifetime_cases.py",
+    "native/tests/input_device_lifetime_cases.hpp",
+    "docs/recovery/cleanup-registry-progress.md"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "process-lifetime",
+    "owner": "input-recovery",
+    "scope": "Complete 64-slot duplicate-suppressing registration and reverse mutable cleanup run; actual device registration/shutdown connected.",
+    "supported_domain": "Mapped 64-word registry, returning callbacks resolving every nonzero selected identity, finite nested registration. No nonreturning callback or OS process-exit claim.",
+    "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass.",
+    "comparison_cases": 288,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Other registered callback implementations; process-exit adapter, full startup/teardown, callback faults/nonreturning behavior and live resources."
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "record_cursor_pop",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x435f80"
+  }
+ ],
+ "brief": "Retreat the current record cursor by 256 bytes with an unsigned clamp.",
+ "decl": "std::uint32_t record_cursor_pop(std::uint32_t cursor, std::uint32_t base);",
+ "notes": [
+  "Original bytes and execution establish argument widths and access order.",
+  "Spans are host byte views; original 32-bit address identities are explicit where needed."
+ ],
+ "comparison": {
+  "body": "        const auto cursor = read(input);\n        const auto base = read(input);\n        emit(mco::record_cursor_pop(cursor, base));"
+ },
+ "shared_sources": [
+  "native/include/mco/layouts.hpp"
+ ],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-record-stack",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
+  "supported_domain": "All 32-bit cursor and base bit patterns. This body does not dereference either address identity; subtraction wraps and the clamp is unsigned.",
+  "acceptance": "Met: 64 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 64,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

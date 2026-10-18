@@ -1,0 +1,47 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x436520": {
+      "subsystem": "utilities-camera-selection",
+      "owner": "wave0-utilities",
+      "scope": "Complete controller body, actual recovered children, and declared observation/mutation substitutions for callback handlers.",
+      "supported_domain": "Stable caller-owned arena and nonnull current record. Mode uses its low byte. Disjoint terminated pairs, nine mode words, context, checked current/reference subject entries, and distinct external counters. Mode cycling must terminate and all resulting signed table indexes must be nonnegative; initial minus one and large positive indexes can be valid after wrapping/remainder.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "Met: 3192 complete original-body cases exact on MSVC and Zig/Clang under declared callback substitutions; eight separate six-call lifecycle traces also match. See docs/recovery/camera-cycling.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 3192,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual callback bodies, authentic UI/input producers, and integrated camera updates.",
+        "Negative mode-table accesses, invalid subject table reads, original faults and nonterminating cycles."
+      ],
+      "sources": [
+        "native/cmds/record_selection_cycle.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/detail/record_selection.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_machine.hpp",
+        "native/include/mco/record_selection_cycle.hpp",
+        "native/src/record_selection_cycle.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_selection_cycle_compare.cpp",
+        "native/tests/record_selection_cycle_test.cpp",
+        "native/tests/selection_controller_cases.hpp",
+        "tools/camera_cycle_cases.py",
+        "tools/cell_corpus.py",
+        "tools/native_record_selection_cycle_compare.py",
+        "tools/selection_controller_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x4325c0",
+        "0x432620",
+        "0x435270",
+        "0x436c90",
+        "0x436fa0"
+      ]
+    }
+  }
+}

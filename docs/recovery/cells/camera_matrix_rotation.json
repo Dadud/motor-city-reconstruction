@@ -1,0 +1,47 @@
+{
+  "id": "camera_matrix_rotation",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f1780"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f1850"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6f1910"
+    }
+  ],
+  "brief": "Rotate a nine-float matrix about the selected original axis using turn-based angles.",
+  "decl": "void camera_matrix_rotation(std::span<const float,9> source, float turns, std::span<float,9> destination, std::uint32_t axis);",
+  "comparison": {
+    "body": "        const auto axis=read(input),alias=read(input);\n        const auto turns=std::bit_cast<float>(read(input));\n        std::array<float,9> source{},destination{};\n        for(auto& value:source) value=std::bit_cast<float>(read(input));\n        for(auto& value:destination) value=std::bit_cast<float>(read(input));\n        auto& output=alias ? source : destination;\n        mco::camera_matrix_rotation(source,turns,output,axis);\n        for(auto value:source) emit(std::bit_cast<std::uint32_t>(value));\n        for(auto value:output) emit(std::bit_cast<std::uint32_t>(value));"
+  },
+  "depends_on": [
+    "0x6f13d0",
+    "0x6f13b0",
+    "0x6f13c0"
+  ],
+  "shared_sources": [
+    "tools/camera_matrix_rotation_cases.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "camera-matrix",
+    "owner": "camera-recovery",
+    "status": "implemented",
+    "scope": "Three complete matrix rotation bodies with actual original trig children in oracle; host trig equivalent checked on retained finite inputs.",
+    "supported_domain": "Finite turns +/-1024, finite matrix magnitudes <=1e20, identical or disjoint source/destination. Partial overlap, exception flags, nonfinite values and x87 return-register precision unmodeled.",
+    "acceptance": "4356 synthetic complete-body cases match MSVC and Zig exactly; focused native tests cover axis invariants, aliases and rejected inputs.",
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_cases": 4356,
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Host trig equivalence outside sampled inputs; partial overlap; free-camera and spatial lookup integration."
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+ "id": "entity_clear",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x408ea0"
+  }
+ ],
+ "brief": "Clear five entity fields.",
+ "decl": "void entity_clear(std::span<std::byte> image);",
+ "notes": [
+  "Member routine: zeroes byte 0 and the dwords at 0x104, 0x114, 0x11c and 0x118.",
+  "Verified against the original by tools.w0_int_leaf_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "acceptance": "Met: 8 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 8,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        auto target = image<0x124>(input);\n        mco::entity_clear(target);\n        emit(target);"
+ }
+}

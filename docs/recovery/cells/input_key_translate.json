@@ -1,0 +1,36 @@
+{
+  "id": "input_key_translate",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x583a90"
+    }
+  ],
+  "brief": "Translate supported key-down messages to the original packed character codes.",
+  "decl": "std::uint32_t input_key_translate(std::uint32_t message, std::uint32_t key);",
+  "header_includes": [],
+  "comparison": {
+    "body": "        const auto message = read(input);\n        const auto key = read(input);\n        emit(mco::input_key_translate(message, key));"
+  },
+  "depends_on": [],
+  "shared_sources": [
+    "tools/input_queue_cases.py"
+  ],
+  "bookkeeping": {
+    "subsystem": "input-key-queue",
+    "owner": "window-input-recovery",
+    "scope": "Complete pure translator body; no substituted dependencies.",
+    "supported_domain": "All two unsigned 32-bit arguments.",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "status": "implemented",
+    "acceptance": "MSVC and Zig native outputs exactly match captured original observations; standalone native behavior tests pass on both compilers. Live dispatch and Windows synchronization integration remain unresolved.",
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_cases": 1548,
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live critical-section behavior, window dispatch and camera-handler integration."
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x435fb0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-record-stack",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
+      "supported_domain": "Readable identifier words in a supplied nonwrapping address window. The base record is always examined, including a null cursor. No original fault or wrapped-address traversal claim.",
+      "acceptance": "Met: 200 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 200,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/record_stack_contains.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_stack_contains.hpp",
+        "native/src/record_stack_contains.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_stack_contains_compare.cpp",
+        "native/tests/record_stack_contains_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_stack_contains_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

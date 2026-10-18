@@ -1,0 +1,60 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x538660": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "vehicle-startup-force-tables",
+      "owner": "acceleration-table-translation",
+      "scope": "Complete bounded startup-force helper with the real original 0x548f00 torque lookup and its children. All 720 original calls match binary64 result bits across RPM bounds 1 and 800..12000, selectors 0, 2 and 7, samples -1 through 10.001 and both secondary-argument values, with unchanged input records. The sixth ABI argument is passed but unused by the original. The 0x68c easing window covers 0 <= sample <= 10 with stored binary32 0.1, so sample ten's factor sits slightly below one. No substituted child results.",
+      "sources": [
+        "client/acceleration_table.py",
+        "native/include/mco/acceleration_table.hpp",
+        "native/src/acceleration_table.cpp",
+        "native/tests/acceleration_table_test.cpp",
+        "tools/acceleration_table_oracle.py",
+        "tools/native_acceleration_table_compare.py",
+        "tests/test_acceleration_table.py",
+        "docs/calculations/acceleration-table.md"
+      ],
+      "evidence_ids": [
+        "ev_b69818b038c26ba632d54a4e83f9376006f68ad1c81c7be87d9da1f7e3ff08e3"
+      ],
+      "dependencies": ["0x548f00"],
+      "shared_types": ["assembled-configuration-0x820", "startup-record-0x4a8", "eight-selector-schedule", "binary64-startup-force"],
+      "supported_domain": "Complete 0x820-byte configuration and 0x4a8-byte record; maximum RPM within [1,12000]; positive denominator, mass and idle as used by each caller; selector 0..7; finite torque knots and stored intermediates. Invalid authored inputs are rejected, not original malformed-input behavior.",
+      "unresolved": [
+        "Authentic caller production of the startup record fields (0x2c increments, 0x64 factors, 0xac thresholds, 0x104 denominator); the caller is identified as the owner-binding initializer 0x53a1f0 at call site 0x53ab60, whose per-gear gear-force/resistance crossing logic still requires instruction-level translation."
+      ],
+      "acceptance": "Retain the bit-exact complete helper corpus and connect recovered caller inputs in full owner initialization before claiming integrated startup."
+    },
+    "0x5384f0": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "vehicle-startup-force-tables",
+      "owner": "acceleration-table-translation",
+      "scope": "Complete 112-sample producer writing only the two stored ranges 0x128..0x2e7 and 0x2e8..0x4a7. All 36 original calls (8,064 stored samples) match output bits with surrounding 16-byte sentinels and unchanged input configuration and record bytes. Secondary range gated by positive 0x3e0/0x3e4; selector schedule starts at two, advances on stored binary32 thresholds at 0xac and rejects more than eight selectors; RPM uses half-to-even rounding after clamping; nonpositive forces store zero. MSVC native/Python comparisons match the same complete corpus bit-exactly.",
+      "sources": [
+        "client/acceleration_table.py",
+        "native/include/mco/acceleration_table.hpp",
+        "native/src/acceleration_table.cpp",
+        "native/tests/acceleration_table_test.cpp",
+        "native/tests/acceleration_table_compare.cpp",
+        "tools/acceleration_table_oracle.py",
+        "tools/native_acceleration_table_compare.py",
+        "tests/test_acceleration_table.py",
+        "docs/calculations/acceleration-table.md"
+      ],
+      "evidence_ids": [
+        "ev_57d0da54c52a8b9ee7c6491373e39b2c225b025ff1a196372cfbc18a2cc6a238"
+      ],
+      "dependencies": ["0x538660"],
+      "shared_types": ["assembled-configuration-0x820", "startup-record-0x4a8", "112-binary32-acceleration-samples", "eight-selector-schedule"],
+      "supported_domain": "Complete 0x820-byte configuration and 0x4a8-byte record; idle within [1,12000]; positive mass and denominator; ascending thresholds within eight selectors; finite stored intermediates and samples. Invalid authored inputs are rejected, not original malformed-input behavior.",
+      "unresolved": [
+        "Authentic caller ownership of the record, upstream increment/threshold production and integrated startup traces; the producer's sole caller is the owner-binding initializer 0x53a1f0 (call site 0x53ab60), which stores the finished record at owner +0x17ec."
+      ],
+      "acceptance": "Retain bit-exact whole-record output with sentinels and connect the recovered caller before claiming integrated startup."
+    }
+  }
+}

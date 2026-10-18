@@ -1,0 +1,2 @@
+add_executable(mco_window_mouse_lifecycle_compare native/tests/window_mouse_lifecycle_compare.cpp)
+target_link_libraries(mco_window_mouse_lifecycle_compare PRIVATE mco_core)

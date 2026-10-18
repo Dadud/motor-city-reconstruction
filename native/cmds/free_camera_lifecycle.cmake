@@ -1,0 +1,2 @@
+add_executable(mco_free_camera_lifecycle_compare native/tests/free_camera_lifecycle_compare.cpp)
+target_link_libraries(mco_free_camera_lifecycle_compare PRIVATE mco_core)

@@ -1,0 +1,50 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x582e40": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "window-dispatch",
+      "owner": "input-recovery",
+      "status": "implemented",
+      "scope": "Complete registration body and original specialized table ordering; explicit synchronizer creation/enter/leave bridges.",
+      "supported_domain": "Bounded table <=128 entries; returning bridge implementations; original allocation/import/pointer faults unmodeled.",
+      "acceptance": "813 complete original registration calls match MSVC and Zig exactly, including full table ordering and declared lock-creation scripts; native registration-to-dispatch tests pass.",
+      "comparison_cases": 813,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."
+      ],
+      "sources": [
+        "native/cmds/window_handler_register.cmake",
+        "native/include/mco/detail/window_dispatch_search.hpp",
+        "native/include/mco/detail/window_dispatch_sort.hpp",
+        "native/include/mco/window_dispatch_state.hpp",
+        "native/include/mco/window_handler_register.hpp",
+        "native/include/mco/window_keyboard_binding.hpp",
+        "native/src/window_handler_register.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/window_camera_lifecycle_compare.cpp",
+        "native/tests/window_dispatch_cases.hpp",
+        "native/tests/window_handler_register_compare.cpp",
+        "native/tests/window_handler_register_test.cpp",
+        "native/tests/window_registration_cases.hpp",
+        "tools/cell_corpus.py",
+        "tools/free_camera_cases.py",
+        "tools/native_window_camera_lifecycle_compare.py",
+        "tools/native_window_handler_register_compare.py",
+        "tools/w0_cell_corpus.py",
+        "tools/window_registration_cases.py"
+      ],
+      "dependencies": [
+        "0x582e30",
+        "0x69bc4d",
+        "0x69bda1",
+        "0x69bdef",
+        "0x69ca7b",
+        "0x6bd640"
+      ]
+    }
+  }
+}

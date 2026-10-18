@@ -1,0 +1,54 @@
+{
+ "id": "record_selection_cycle",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x436520"
+  }
+ ],
+ "brief": "Cycle camera presets or mode-table selections for a viewport.",
+ "decl": "void record_selection_cycle(RecordMachine &machine, std::span<const std::byte> pairs, std::span<const std::byte, 36> modes, std::span<const std::byte, 12> context, std::uint32_t mode, std::uint32_t &counter0, std::uint32_t &counter1, std::span<const std::byte> subjects, std::uint32_t viewport);",
+ "header_includes": [
+  "mco/record_machine.hpp"
+ ],
+ "comparison": {
+  "includes": [
+   "selection_controller_cases.hpp"
+  ],
+  "body": "        const auto viewport = read(input);\n        auto subjects = image<120>(input);\n        auto f = selection_cases::Fixture::read(input);\n        auto machine = f.machine();\n        mco::record_selection_cycle(machine, f.pairs, f.modes, f.context, f.mode, f.counter0, f.counter1, subjects, viewport);\n        f.emit(machine);\n        emit(subjects);"
+ },
+ "depends_on": [
+  "0x4325c0",
+  "0x436c90",
+  "0x436fa0",
+  "0x435270",
+  "0x432620"
+ ],
+ "shared_sources": [
+  "native/include/mco/record_machine.hpp",
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/detail/byte_words.hpp",
+  "native/include/mco/detail/record_selection.hpp",
+  "native/tests/selection_controller_cases.hpp",
+  "tools/camera_cycle_cases.py",
+  "tools/selection_controller_cases.py"
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-camera-selection",
+  "owner": "wave0-utilities",
+  "scope": "Complete controller body, actual recovered children, and declared observation/mutation substitutions for callback handlers.",
+  "supported_domain": "Stable caller-owned arena and nonnull current record. Mode uses its low byte. Disjoint terminated pairs, nine mode words, context, checked current/reference subject entries, and distinct external counters. Mode cycling must terminate and all resulting signed table indexes must be nonnegative; initial minus one and large positive indexes can be valid after wrapping/remainder.",
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "status": "implemented",
+  "acceptance": "Met: 3192 complete original-body cases exact on MSVC and Zig/Clang under declared callback substitutions; eight separate six-call lifecycle traces also match. See docs/recovery/camera-cycling.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 3192,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+  "unresolved": [
+   "Actual callback bodies, authentic UI/input producers, and integrated camera updates.",
+   "Negative mode-table accesses, invalid subject table reads, original faults and nonterminating cycles."
+  ]
+ }
+}

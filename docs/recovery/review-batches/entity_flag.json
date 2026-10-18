@@ -1,0 +1,35 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x405df0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-entity-table",
+      "owner": "wave0-utilities",
+      "scope": "Complete body. The predicate reads the flag byte of the 28-byte record at table_base[index*28+0x1a] and returns its low bit as 0 or 1, matching the original across 12 oracle cases over three table offsets and five indices.",
+      "supported_domain": "Indices whose 28-byte record lies inside the supplied table; an out-of-range index is rejected rather than emulated.",
+      "unresolved": [
+        "Which entity system owns the 28-byte record and its bit-0 meaning."
+      ],
+      "acceptance": "Met: 8 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "status": "implemented",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 8,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/entity_flag.cmake",
+        "native/include/mco/detail/entity_table.hpp",
+        "native/include/mco/entity_flag.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/entity_flag.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/entity_flag_compare.cpp",
+        "native/tests/entity_flag_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_entity_flag_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

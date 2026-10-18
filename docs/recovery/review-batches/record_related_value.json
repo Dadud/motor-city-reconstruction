@@ -1,0 +1,32 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x436280": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-record-stack",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
+      "supported_domain": "Valid supplied images; nonwrapping address windows for stack scans; clear direction flag for the original MOVSD copy. Invalid pointers and original fault behavior remain outside scope.",
+      "acceptance": "Met: 16 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 16,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/record_related_value.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_related_value.hpp",
+        "native/src/record_related_value.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_related_value_compare.cpp",
+        "native/tests/record_related_value_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_related_value_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

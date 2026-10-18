@@ -1,0 +1,50 @@
+{
+  "id": "input_mouse_press",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x584670"
+    }
+  ],
+  "brief": "Preserve original mouse/cursor state transitions with explicit platform bridges.",
+  "decl": "std::uint32_t input_mouse_press(MouseInputState &mouse, const MousePlatformBridge &platform, std::uint32_t enabled, std::uint32_t window, std::uint32_t message, std::uint32_t wparam, std::uint32_t lparam);",
+  "header_includes": [
+    "mco/mouse_input_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "mouse_input_cases.hpp"
+    ],
+    "body": "        mouse_input_cases::compare(input,2);"
+  },
+  "shared_sources": [
+    "native/include/mco/detail/input_mouse_message.hpp",
+    "native/include/mco/layouts.hpp",
+    "native/include/mco/mouse_input_state.hpp",
+    "native/include/mco/window_mouse_binding.hpp",
+    "native/tests/mouse_input_cases.hpp",
+    "native/tests/window_mouse_lifecycle_compare.cpp",
+    "tools/mouse_input_cases.py",
+    "tools/native_window_mouse_lifecycle_compare.py"
+  ],
+  "depends_on": [
+    "0x6f08d0"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "mouse-input",
+    "owner": "input-recovery",
+    "status": "implemented",
+    "scope": "Complete original body with actual recovered children; explicit platform/lock/notification bridges.",
+    "supported_domain": "Distinct mapped mouse/window images and returning platform callbacks; original import/pointer faults unmodeled.",
+    "acceptance": "594 complete original calls match MSVC and Zig exactly with declared platform scripts; focused native behavior tests pass.",
+    "comparison_cases": 594,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live platform/synchronization behavior, host message pumping, and remaining nonmouse/window handlers."
+    ]
+  }
+}

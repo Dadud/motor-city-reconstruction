@@ -1,0 +1,31 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x435270": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-record-transitions",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete callback-identity selector. This returns original 32-bit identities and never invokes or reconstructs the handlers.",
+      "supported_domain": "All uint32 record identifiers; original jump-table groups and out-of-range defaults are compared.",
+      "acceptance": "Met: 38 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 38,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/record_handler.cmake",
+        "native/include/mco/record_handler.hpp",
+        "native/src/record_handler.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_handler_compare.cpp",
+        "native/tests/record_handler_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_handler_compare.py",
+        "tools/record_machine_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

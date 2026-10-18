@@ -1,0 +1,32 @@
+{
+ "id": "pointer_clear_record_b",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x429440"
+  }
+ ],
+ "brief": "Clear an optional pointer target and record its original identity.",
+ "decl": "void pointer_clear_record_b(std::span<std::byte> target, std::uint32_t target_id, std::uint32_t &record);",
+ "notes": [
+  "Original pointer global 0x988d0c; record global 0x988cfc.",
+  "Empty span models null; valid targets use the verified shared pointer-clear behavior."
+ ],
+ "comparison": {
+  "body": "        const auto pointer = read(input);\n        auto record = read(input);\n        auto target = image<8>(input);\n        mco::pointer_clear_record_b(pointer ? std::span<std::byte>(target.data(),4) : std::span<std::byte>{}, pointer, record);\n        emit(record);\n        emit(target);"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete original body on supplied synthetic globals, valid images and indices; original ABI checked from bytes and execution. Host memory and original identities are explicit inputs.",
+  "supported_domain": "Null entries/empty spans where original has a null guard; otherwise valid supplied spans. Invalid host lengths and slots are rejected, not evidence of original fault equivalence.",
+  "acceptance": "Met: 16 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 16,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

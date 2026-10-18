@@ -1,0 +1,47 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x583290": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "window-dispatch",
+      "owner": "input-recovery",
+      "status": "implemented",
+      "scope": "Complete Windows procedure with explicit lock/handler/default bridges and writable local result slot.",
+      "supported_domain": "Bounded shared state and <=128 table entries; returning bridges; original invalid-pointer and platform faults unmodeled.",
+      "acceptance": "2381 complete original Windows-procedure cases match MSVC and Zig exactly with declared lock/handler/default scripts; native handled/result/default/order tests pass.",
+      "comparison_cases": 2381,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."
+      ],
+      "sources": [
+        "native/cmds/window_procedure.cmake",
+        "native/include/mco/detail/window_dispatch_search.hpp",
+        "native/include/mco/window_dispatch_state.hpp",
+        "native/include/mco/window_keyboard_binding.hpp",
+        "native/include/mco/window_procedure.hpp",
+        "native/include/mco/window_procedure_bridge.hpp",
+        "native/src/window_procedure.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/window_camera_lifecycle_compare.cpp",
+        "native/tests/window_dispatch_cases.hpp",
+        "native/tests/window_procedure_compare.cpp",
+        "native/tests/window_procedure_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/free_camera_cases.py",
+        "tools/native_window_camera_lifecycle_compare.py",
+        "tools/native_window_procedure_compare.py",
+        "tools/w0_cell_corpus.py",
+        "tools/window_dispatch_cases.py"
+      ],
+      "dependencies": [
+        "0x582e30",
+        "0x69ca7b",
+        "0x6bd6e0",
+        "0x6bd6f0"
+      ]
+    }
+  }
+}

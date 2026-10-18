@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "modules": {
+    "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5": {
+      "role": "installation-tool",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680": {
+      "role": "installation-tool",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22": {
+      "role": "compression-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "9cb0069a6f6c7d92d99c96e885fc95a8d160dec31f42a0e7b6bba111858a666a": {
+      "role": "non-executable-data",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60": {
+      "role": "patch-or-launcher-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c": {
+      "role": "graphics-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209": {
+      "role": "graphics-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed": {
+      "role": "input-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3": {
+      "role": "compression-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164": {
+      "role": "game-client",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826": {
+      "role": "patch-or-launcher-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9": {
+      "role": "online-support-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d": {
+      "role": "database-library-candidate",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc": {
+      "role": "database-library-candidate",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34": {
+      "role": "database-library-candidate",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54": {
+      "role": "database-library-candidate",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3": {
+      "role": "patch-or-launcher-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d": {
+      "role": "patch-or-launcher-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c": {
+      "role": "graphics-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e": {
+      "role": "historical-reference",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802": {
+      "role": "historical-reference",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9": {
+      "role": "installation-tool",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    },
+    "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20": {
+      "role": "graphics-library-investigation",
+      "basis": "Installed paths and hash-scoped static inventory; role is a research assignment, not a reviewed function equivalence.",
+      "review_status": "role-assigned; behavior-review-pending"
+    }
+  }
+}

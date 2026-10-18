@@ -1,0 +1,35 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x4072c0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-registry",
+      "owner": "wave0-utilities",
+      "scope": "Complete body. Registration writes proven against the original across 12 counter/head combinations including the 0xffffffff wrap: the node takes the counter at 0x20, links the head at 0x54, and the counter returns incremented.",
+      "supported_domain": "Any 32-bit counter and head; the NULL-node rejection of the original is carried over as a required image.",
+      "unresolved": [
+        "The two find routines (0x407340 by index, 0x4072f0 by id) walk emulated",
+        "pointers and need the integrated memory model, like the scene query.",
+        "Which object system the registry indexes."
+      ],
+      "acceptance": "Met: 24 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "status": "implemented",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 24,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/registry_register.cmake",
+        "native/include/mco/registry_register.hpp",
+        "native/src/registry_register.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/registry_register_compare.cpp",
+        "native/tests/registry_register_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_registry_register_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

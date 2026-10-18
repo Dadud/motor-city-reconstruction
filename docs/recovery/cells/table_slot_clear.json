@@ -1,0 +1,32 @@
+{
+ "id": "table_slot_clear",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x424cc0"
+  }
+ ],
+ "brief": "Clear the second word of a nonnull table target.",
+ "decl": "void table_slot_clear(std::span<const std::span<std::byte>> table, std::uint32_t slot);",
+ "notes": [
+  "Original cdecl reads pointer table 0x92c40c at slot*4 and clears target+4 if nonnull.",
+  "Host table entries are byte spans, with an empty span for a null original pointer."
+ ],
+ "comparison": {
+  "body": "        const auto slot = read(input);\n        const auto present = image<256>(input);\n        auto targets = image<3072>(input);\n        std::array<std::span<std::byte>,256> table{};\n        for (std::size_t k = 0; k < table.size(); ++k)\n            if (present[k] != std::byte{0}) table[k] = std::span<std::byte>(targets.data()+k*12,12);\n        mco::table_slot_clear(table, slot);\n        emit(targets);"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete original body on supplied synthetic globals, valid images and indices; original ABI checked from bytes and execution. Host memory and original identities are explicit inputs.",
+  "supported_domain": "Null entries/empty spans where original has a null guard; otherwise valid supplied spans. Invalid host lengths and slots are rejected, not evidence of original fault equivalence.",
+  "acceptance": "Met: 16 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 16,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

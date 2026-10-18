@@ -1,0 +1,85 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6bf450": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "process-lifetime",
+      "owner": "input-recovery",
+      "scope": "Complete 64-slot duplicate-suppressing registration and reverse mutable cleanup run; actual device registration/shutdown connected.",
+      "supported_domain": "Mapped 64-word registry, returning callbacks resolving every nonzero selected identity, finite nested registration. No nonreturning callback or OS process-exit claim.",
+      "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass.",
+      "comparison_cases": 288,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Other registered callback implementations; process-exit adapter, full startup/teardown, callback faults/nonreturning behavior and live resources."
+      ],
+      "sources": [
+        "docs/recovery/cleanup-registry-progress.md",
+        "native/cmds/cleanup_registry.cmake",
+        "native/cmds/cleanup_registry_lifecycle.cmake",
+        "native/include/mco/cleanup_registry.hpp",
+        "native/include/mco/cleanup_registry_state.hpp",
+        "native/include/mco/input_device_cleanup_binding.hpp",
+        "native/src/cleanup_registry.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/cleanup_registry_cases.hpp",
+        "native/tests/cleanup_registry_compare.cpp",
+        "native/tests/cleanup_registry_lifecycle_compare.cpp",
+        "native/tests/cleanup_registry_test.cpp",
+        "native/tests/input_device_lifetime_cases.hpp",
+        "tools/cell_corpus.py",
+        "tools/cleanup_registry_cases.py",
+        "tools/input_device_lifetime_cases.py",
+        "tools/native_cleanup_registry_compare.py",
+        "tools/native_cleanup_registry_lifecycle_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bf410"
+      ]
+    },
+    "0x6bf410": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "process-lifetime",
+      "owner": "input-recovery",
+      "scope": "Complete 64-slot duplicate-suppressing registration and reverse mutable cleanup run; actual device registration/shutdown connected.",
+      "supported_domain": "Mapped 64-word registry, returning callbacks resolving every nonzero selected identity, finite nested registration. No nonreturning callback or OS process-exit claim.",
+      "acceptance": "288 complete original cases and four persistent twelve-call device/registry traces match MSVC and Zig; independent mutation/order and duplicate/full-table tests pass.",
+      "comparison_cases": 288,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Other registered callback implementations; process-exit adapter, full startup/teardown, callback faults/nonreturning behavior and live resources."
+      ],
+      "sources": [
+        "docs/recovery/cleanup-registry-progress.md",
+        "native/cmds/cleanup_registry.cmake",
+        "native/cmds/cleanup_registry_lifecycle.cmake",
+        "native/include/mco/cleanup_registry.hpp",
+        "native/include/mco/cleanup_registry_state.hpp",
+        "native/include/mco/input_device_cleanup_binding.hpp",
+        "native/src/cleanup_registry.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/cleanup_registry_cases.hpp",
+        "native/tests/cleanup_registry_compare.cpp",
+        "native/tests/cleanup_registry_lifecycle_compare.cpp",
+        "native/tests/cleanup_registry_test.cpp",
+        "native/tests/input_device_lifetime_cases.hpp",
+        "tools/cell_corpus.py",
+        "tools/cleanup_registry_cases.py",
+        "tools/input_device_lifetime_cases.py",
+        "tools/native_cleanup_registry_compare.py",
+        "tools/native_cleanup_registry_lifecycle_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6bf410"
+      ]
+    }
+  }
+}

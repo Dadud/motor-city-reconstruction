@@ -1,0 +1,32 @@
+{
+ "id": "buffer_set_length",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x4154c0"
+  }
+ ],
+ "brief": "Store a buffer length and write its trailing zero byte.",
+ "decl": "void buffer_set_length(std::span<std::byte> buffer, std::uint32_t length, std::uint32_t &stored_length);",
+ "notes": [
+  "Original thiscall: owner+8 receives length; the buffer pointer lives at owner+4.",
+  "The owner field and pointed buffer are separate host arguments. A truncated buffer is rejected before mutation."
+ ],
+ "comparison": {
+  "body": "        auto length_field = read(input);\n        const auto length = read(input);\n        auto buffer = image<20>(input);\n        mco::buffer_set_length(buffer, length, length_field);\n        emit(length_field);\n        emit(buffer);"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete original body on supplied synthetic globals, valid images and indices; original ABI checked from bytes and execution. Host memory and original identities are explicit inputs.",
+  "supported_domain": "Null entries/empty spans where original has a null guard; otherwise valid supplied spans. Invalid host lengths and slots are rejected, not evidence of original fault equivalence.",
+  "acceptance": "Met: 12 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 12,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "id": "entity_side_flag_assign",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x4031a0"
+  }
+ ],
+ "brief": "Assign the selected entity field using the original signed remainder.",
+ "decl": "void entity_side_flag_assign(std::span<std::byte> table, std::int32_t index, std::int32_t count, std::uint32_t side, std::uint32_t value);",
+ "notes": [
+  "Whole cdecl body compared through tools.w0_cell_corpus; original memory is supplied as explicit spans/globals.",
+  "Parameter names describe observed operations, not complete recovered class ownership.",
+  "Shared 28-byte record fields come from the machine-readable layout registry."
+ ],
+ "comparison": {
+  "body": "        const auto present = read(input);\n        const auto index = std::bit_cast<std::int32_t>(read(input));\n        const auto count = std::bit_cast<std::int32_t>(read(input));\n        const auto side = read(input);\n        const auto value = read(input);\n        auto table = image<256>(input);\n        mco::entity_side_flag_assign(present ? std::span<std::byte>(table) : std::span<std::byte>{}, index, count, side, value);\n        emit(table);"
+ },
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-entity-tables",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+  "supported_domain": "Valid supplied tables/indices; empty spans only where original has a null guard. Wrapped writes require positive counts and nonnegative remainders. Float-word writes exclude NaNs and FPU status. Original faults are not emulated.",
+  "acceptance": "Met: 244 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 244,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "shared_sources": [
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/detail/entity_table.hpp"
+ ]
+}

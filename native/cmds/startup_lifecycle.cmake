@@ -1,0 +1,2 @@
+add_executable(mco_startup_lifecycle_compare native/tests/startup_lifecycle_compare.cpp)
+target_link_libraries(mco_startup_lifecycle_compare PRIVATE mco_core)

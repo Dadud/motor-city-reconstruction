@@ -1,0 +1,33 @@
+{
+ "id": "scratch_clear_return",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x4082c0"
+  }
+ ],
+ "brief": "Clear through a fallback pointer and return a primary global.",
+ "decl": "std::uint32_t clear_through(std::span<std::byte> fallback_target, std::uint32_t primary);",
+ "pseudocode": "undefined4 FUN_004082c0(void)\n\n{\n  undefined4 uVar1;\n  \n  uVar1 = DAT_0092971c;\n  if (DAT_00929720 != (undefined4 *)0x0) {\n    *DAT_00929720 = 0;\n  }\n  return uVar1;\n}",
+ "notes": [
+  "The original reads the primary first, clears the fallback when it is set, and returns the primary.",
+  "Verified including the null branch by tools.w0_cell_corpus and native corpus replay."
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "acceptance": "Met: 16 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "supported_domain": "Empty span represents a null original pointer; otherwise a target span of at least four bytes, with original 32-bit identity supplied separately where needed.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 16,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto present = read(input);\n        const auto primary = read(input);\n        auto target = image<8>(input);\n        emit(mco::clear_through(present ? std::span<std::byte>(target.data(),4) : std::span<std::byte>{}, primary));\n        emit(target);"
+ }
+}

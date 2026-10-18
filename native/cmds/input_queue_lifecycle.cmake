@@ -1,0 +1,2 @@
+add_executable(mco_input_queue_lifecycle_compare native/tests/input_queue_lifecycle_compare.cpp)
+target_link_libraries(mco_input_queue_lifecycle_compare PRIVATE mco_core)

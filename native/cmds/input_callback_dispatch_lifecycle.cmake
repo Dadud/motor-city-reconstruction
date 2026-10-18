@@ -1,0 +1,2 @@
+add_executable(mco_input_callback_dispatch_lifecycle_compare native/tests/input_callback_dispatch_lifecycle_compare.cpp)
+target_link_libraries(mco_input_callback_dispatch_lifecycle_compare PRIVATE mco_core)

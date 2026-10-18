@@ -25,6 +25,31 @@ outside the published repository.
 
 ## Feature map
 
+The [cell comparison checkpoint](recovery/cell-comparisons.md) connects all
+67 implemented cells to a shared original/native corpus: 17,589 synthetic cases
+match bit-exact, including whole image writes and two restored null-pointer
+branches. Empty comparisons now fail. W0 coverage is now 63 of 658 required entries, plus three supporting dependencies in W6 and one release producer in W5. The [entity and mask batch](recovery/entity-table.md)
+also shares packed layout contracts with existing flag readers.
+The [camera application controller](recovery/camera-selection.md) now composes
+preset normalization and mode/context selection, with actual handlers still
+substituted and twelve separate connected traces. The subsequent
+[cycling controller and explicit mode child](recovery/camera-cycling.md)
+add preset/subject cycling and eight more connected traces.
+The [input state batch](recovery/input-key-state.md) recovers raw-key/latch
+queries and the real release-message producer; six connected traces use no
+input-body substitutions. Key-down queuing and live message dispatch remain open.
+The [record stack batch](recovery/record-stack.md) preserves unsigned cursor
+comparisons and staged-copy ordering, including tested overlapping byte views.
+The [record controller batch](recovery/record-transitions.md) connects initialization,
+retention, push/replace, activation and stack lookup in two original/native traces.
+Callback-entry images and mutations are compared under explicit handler
+substitutions; actual handler bodies and owner integration remain unfinished.
+The MSVC `__int128` blocker is resolved
+with portable integer arithmetic, checked against 5,464 Python cases on MSVC
+and Zig/Clang. Both compilers reproduce 135 Python startup records exactly;
+the original-code oracle still needs its documented one-ULP angular tolerance
+in 17 of those cases. See [startup record](calculations/startup-record.md).
+
 The latest source translation adds [complete base body construction and catalogue
 sample customization](calculations/body-construction.md), native owner-binding
 producers, and a connected startup-body phase matching 320 original scenarios.
@@ -36,6 +61,24 @@ authored configurations and all eight supported stock configurations.
 Its [135-entry resistance table and surface helper](calculations/startup-resistance.md)
 also match complete original calls; the projected-area producer and integrated
 shift-curve publication remain unresolved.
+The [startup force helper and 112-sample acceleration tables](calculations/acceleration-table.md)
+match 720 helper calls and 36 complete producer calls (8,064 stored samples)
+bit-exactly with real original torque-lookup children and surrounding-sentinel
+checks; MSVC native/Python comparisons match the same corpus exactly.
+Cross-reference and instruction-level evidence now identify the producer's
+sole caller: the owner-binding initializer `0x53a1f0` builds the record at
+`EBP-0x4d8` per gear from recovered gear-force tables minus recovered startup
+resistance, derives the shift thresholds from the adjusted curves' crossing
+sample counts (gears zero/one pinned to `-10000`, top gear to `12000`, producer
+index biased +2 gears), and stores the finished 0x4a8-byte record at owner
+`+0x17ec`; record `0x104` is the rear tire radius used as the startup-force
+denominator. The [full constructor](calculations/startup-record.md) is now
+translated and ported: seven oracle cases (4/8/6/5-gear, marker-present,
+marker-missing and NULL-model inputs, four supplied scene-area returns)
+compare the whole record bit-exactly and confirm the missing-marker failure
+returns 0 with an unmutated owner; the native port matches the translation
+bit-for-bit over the same corpus. The `FUN_00483450` scene-area query itself
+remains untranslated and is supplied as an explicit input.
 
 | Feature | Current status and evidence | Remaining recovery path | Acceptance scenario |
 | --- | --- | --- | --- |
@@ -342,8 +385,8 @@ matches 208 bounded original-function scenarios and 63 C++/Python action traces.
 The start-request wire layout, live worker/cache driver and session integration
 remain unresolved; this does not complete race entry.
 
-Current batch verification on Windows: 837 Python tests (830 pass, seven skipped)
-and 63 native checks pass, plus the separately recorded original comparisons above. Linux and live
+Current batch verification on Windows: 950 Python tests (943 pass, seven skipped)
+and 75 native checks pass, plus the separately recorded original comparisons above. Linux and live
 fan-server race acceptance remain unverified.
 
 The [engine-to-controller bridge](driving-pipeline.md#engine-bound-into-the-vehicle-tick)

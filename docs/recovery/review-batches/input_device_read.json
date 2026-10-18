@@ -1,0 +1,152 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6f0a30": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "subsystem": "input-device-acquisition",
+      "owner": "input-recovery",
+      "scope": "Complete poll/read retry and clearing wrappers; explicit device virtual-method bridge.",
+      "supported_domain": "Mapped device and output buffers; returning virtual methods. Host device acquisition and invalid original accesses unmodeled.",
+      "acceptance": "2808 original cases across all three complete wrappers match MSVC and Zig exactly; independent retry/order/table-reload/clearing tests pass.",
+      "comparison_cases": 2808,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+      ],
+      "sources": [
+        "native/cmds/input_action_session.cmake",
+        "native/cmds/input_device_read.cmake",
+        "native/cmds/input_device_session.cmake",
+        "native/include/mco/input_device_bridge.hpp",
+        "native/include/mco/input_device_callback.hpp",
+        "native/include/mco/input_device_lifetime_access.hpp",
+        "native/include/mco/input_device_read.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_device_read.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_action_session_compare.cpp",
+        "native/tests/input_device_cases.hpp",
+        "native/tests/input_device_read_compare.cpp",
+        "native/tests/input_device_read_test.cpp",
+        "native/tests/input_device_session_cases.hpp",
+        "native/tests/input_device_session_compare.cpp",
+        "native/tests/input_queue_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_action_session_cases.py",
+        "tools/input_device_cases.py",
+        "tools/input_device_session_cases.py",
+        "tools/input_queue_cases.py",
+        "tools/native_input_action_session_compare.py",
+        "tools/native_input_device_read_compare.py",
+        "tools/native_input_device_session_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6ee770",
+        "0x6f0a70",
+        "0x6f0aa0"
+      ]
+    },
+    "0x6f0a70": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "subsystem": "input-device-acquisition",
+      "owner": "input-recovery",
+      "scope": "Complete poll/read retry and clearing wrappers; explicit device virtual-method bridge.",
+      "supported_domain": "Mapped device and output buffers; returning virtual methods. Host device acquisition and invalid original accesses unmodeled.",
+      "acceptance": "2808 original cases across all three complete wrappers match MSVC and Zig exactly; independent retry/order/table-reload/clearing tests pass.",
+      "comparison_cases": 2808,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+      ],
+      "sources": [
+        "native/cmds/input_action_session.cmake",
+        "native/cmds/input_device_read.cmake",
+        "native/cmds/input_device_session.cmake",
+        "native/include/mco/input_device_bridge.hpp",
+        "native/include/mco/input_device_callback.hpp",
+        "native/include/mco/input_device_lifetime_access.hpp",
+        "native/include/mco/input_device_read.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_device_read.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_action_session_compare.cpp",
+        "native/tests/input_device_cases.hpp",
+        "native/tests/input_device_read_compare.cpp",
+        "native/tests/input_device_read_test.cpp",
+        "native/tests/input_device_session_cases.hpp",
+        "native/tests/input_device_session_compare.cpp",
+        "native/tests/input_queue_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_action_session_cases.py",
+        "tools/input_device_cases.py",
+        "tools/input_device_session_cases.py",
+        "tools/input_queue_cases.py",
+        "tools/native_input_action_session_compare.py",
+        "tools/native_input_device_read_compare.py",
+        "tools/native_input_device_session_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6ee770",
+        "0x6f0a70",
+        "0x6f0aa0"
+      ]
+    },
+    "0x6f0aa0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "subsystem": "input-device-acquisition",
+      "owner": "input-recovery",
+      "scope": "Complete poll/read retry and clearing wrappers; explicit device virtual-method bridge.",
+      "supported_domain": "Mapped device and output buffers; returning virtual methods. Host device acquisition and invalid original accesses unmodeled.",
+      "acceptance": "2808 original cases across all three complete wrappers match MSVC and Zig exactly; independent retry/order/table-reload/clearing tests pass.",
+      "comparison_cases": 2808,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+      ],
+      "sources": [
+        "native/cmds/input_action_session.cmake",
+        "native/cmds/input_device_read.cmake",
+        "native/cmds/input_device_session.cmake",
+        "native/include/mco/input_device_bridge.hpp",
+        "native/include/mco/input_device_callback.hpp",
+        "native/include/mco/input_device_lifetime_access.hpp",
+        "native/include/mco/input_device_read.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_device_read.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_action_session_compare.cpp",
+        "native/tests/input_device_cases.hpp",
+        "native/tests/input_device_read_compare.cpp",
+        "native/tests/input_device_read_test.cpp",
+        "native/tests/input_device_session_cases.hpp",
+        "native/tests/input_device_session_compare.cpp",
+        "native/tests/input_queue_lifecycle_compare.cpp",
+        "tools/cell_corpus.py",
+        "tools/input_action_session_cases.py",
+        "tools/input_device_cases.py",
+        "tools/input_device_session_cases.py",
+        "tools/input_queue_cases.py",
+        "tools/native_input_action_session_compare.py",
+        "tools/native_input_device_read_compare.py",
+        "tools/native_input_device_session_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x6ee770",
+        "0x6f0a70",
+        "0x6f0aa0"
+      ]
+    }
+  }
+}

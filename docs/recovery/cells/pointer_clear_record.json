@@ -1,0 +1,34 @@
+{
+ "id": "pointer_clear_record",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x429420"
+  }
+ ],
+ "brief": "Clear a pointer target and record its identity.",
+ "decl": "void pointer_clear_record(std::span<std::byte> target, std::uint32_t target_id, std::uint32_t &record);",
+ "pseudocode": "void FUN_00429420(void)\n\n{\n  undefined4 *puVar1;\n  \n  puVar1 = DAT_00988d08;\n  if (DAT_00988d08 != (undefined4 *)0x0) {\n    *DAT_00988d08 = 0;\n    DAT_00988cf4 = puVar1;\n  }\n  return;\n}",
+ "notes": [
+  "Two of the three null-guard siblings at 0x429420, 0x429440 and 0x429460 differ only in the",
+  "globals they read and write, so each keeps its own cell.",
+  "Verified including the null branch by tools.w0_cell_corpus and native corpus replay."
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "acceptance": "Met: 16 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "supported_domain": "Empty span represents a null original pointer; otherwise a target span of at least four bytes, with original 32-bit identity supplied separately where needed.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 16,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto pointer = read(input);\n        auto record = read(input);\n        auto target = image<8>(input);\n        mco::pointer_clear_record(pointer ? std::span<std::byte>(target.data(),4) : std::span<std::byte>{}, pointer, record);\n        emit(record);\n        emit(target);"
+ }
+}

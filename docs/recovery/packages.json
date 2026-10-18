@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "id": "startup-force-tables",
+      "owner": "integration/gear-force",
+      "depends_on": [],
+      "roots": [
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x538660"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x5384f0"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x53b260"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x550ed0"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x53e620"
+        }
+      ],
+      "targets": [
+        "mco_acceleration_table_test",
+        "mco_acceleration_table_compare",
+        "mco_gear_force_table_test",
+        "mco_gear_force_table_compare",
+        "mco_startup_resistance_test",
+        "mco_startup_resistance_compare"
+      ],
+      "comparisons": [
+        {
+          "module": "tools.native_acceleration_table_compare",
+          "runner": "mco_acceleration_table_compare"
+        },
+        {
+          "module": "tools.acceleration_table_oracle",
+          "original": true
+        },
+        {
+          "module": "tools.native_gear_force_table_compare",
+          "runner": "mco_gear_force_table_compare"
+        },
+        {
+          "module": "tools.gear_force_table_oracle",
+          "original": true
+        },
+        {
+          "module": "tools.native_startup_resistance_compare",
+          "runner": "mco_startup_resistance_compare"
+        },
+        {
+          "module": "tools.startup_resistance_oracle",
+          "original": true
+        }
+      ],
+      "acceptance": "Complete bounded gear-force, resistance and acceleration table outputs match original; native/Python output bits exact.",
+      "unresolved": "Authentic RPM increments, projected area, shift selection and full owner publication."
+    },
+    {
+      "id": "model-preparation",
+      "owner": "integration/model-startup",
+      "depends_on": [],
+      "roots": [
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x4c4050"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x4c42d0"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x52bc60"
+        }
+      ],
+      "targets": [
+        "mco_model_preparation_test",
+        "mco_model_preparation_compare"
+      ],
+      "comparisons": [
+        {
+          "module": "tools.native_model_preparation_compare",
+          "runner": "mco_model_preparation_compare"
+        },
+        {
+          "module": "tools.model_preparation_oracle",
+          "original": true
+        }
+      ],
+      "acceptance": "Complete extents/scaling and selected-reference alignment images match original.",
+      "unresolved": "Alignment linked-node selection, attachment producers and full52be40 remain incomplete."
+    },
+    {
+      "id": "engine-dispatch",
+      "owner": "integration/engine-audit",
+      "depends_on": [],
+      "roots": [
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x545af0"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x548f00"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x547120"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x546330"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x5464c0"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x546e70"
+        }
+      ],
+      "targets": [
+        "mco_engine_update_test",
+        "mco_engine_update_compare",
+        "mco_engine_torque_update_test",
+        "mco_engine_torque_update_compare",
+        "mco_drivetrain_stages_test",
+        "mco_drivetrain_stages_compare",
+        "mco_driving_engine_rpm_test",
+        "mco_driving_engine_rpm_compare",
+        "mco_engine_pipeline_test",
+        "mco_engine_pipeline_compare"
+      ],
+      "comparisons": [
+        {
+          "module": "tools.native_engine_update_compare",
+          "runner": "mco_engine_update_compare"
+        },
+        {
+          "module": "tools.engine_update_oracle",
+          "original": true
+        },
+        {
+          "module": "tools.native_engine_torque_update_compare",
+          "runner": "mco_engine_torque_update_compare"
+        },
+        {
+          "module": "tools.engine_torque_update_oracle",
+          "original": true
+        },
+        {
+          "module": "tools.native_drivetrain_stages_compare",
+          "runner": "mco_drivetrain_stages_compare"
+        },
+        {
+          "module": "tools.drivetrain_stages_oracle",
+          "original": true
+        },
+        {
+          "module": "tools.native_driving_engine_rpm_compare",
+          "runner": "mco_driving_engine_rpm_compare"
+        },
+        {
+          "module": "tools.driving_engine_rpm_oracle",
+          "original": true
+        },
+        {
+          "module": "tools.native_engine_pipeline_compare",
+          "runner": "mco_engine_pipeline_compare"
+        },
+        {
+          "module": "tools.engine_pipeline_oracle",
+          "original": true
+        }
+      ],
+      "acceptance": "Bounded original dispatcher/torque/RPM/links comparisons and persistent shared-owner pipeline.",
+      "unresolved": "Explicit supplied control, boost, limiter, pulse, damage and interface/effect children; complete driving not verified."
+    }
+  ]
+}

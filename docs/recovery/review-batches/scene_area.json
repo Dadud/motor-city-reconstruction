@@ -1,0 +1,29 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x483450": {
+      "translation": "missing",
+      "verification": "static-analysis-only",
+      "subsystem": "vehicle-startup-area",
+      "owner": "scene-area-translation",
+      "scope": "ABI and body shape only. Five cdecl dword arguments and a binary32 return are proven from the call site at 0x53a7fa and the plain RET at 0x4836cd. The body is characterized as a per-surface geometry area accumulator reading an 8.9 MB scene singleton. No behavior is translated, so the caller still uses the geometric fallback.",
+      "supported_domain": "None. The routine throws until translated.",
+      "unresolved": [
+        "Argument semantics for arguments three through five.",
+        "The scene singleton layout at 0x890238 bytes and its population order.",
+        "The geometry fields behind the area accumulation, and when the result is nonzero.",
+        "An original-comparison oracle, which needs scene and terrain state to exist first."
+      ],
+      "acceptance": "Build scene state, translate the body, reproduce the binary32 return against the original through an oracle, then let the startup record consume it instead of an injected area query.",
+      "sources": [
+        "native/cmds/scene_area.cmake",
+        "native/include/mco/scene_area.hpp",
+        "native/src/scene_area.cpp",
+        "native/tests/scene_area_compare.cpp",
+        "native/tests/scene_area_test.cpp",
+        "tools/native_scene_area_compare.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

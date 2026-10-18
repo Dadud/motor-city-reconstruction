@@ -1,0 +1,47 @@
+{
+  "id": "track_surface_lookup",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x42e760"
+    }
+  ],
+  "brief": "Update a track surface record through cached quad, spatial candidates and nearest-path fallback.",
+  "decl": "std::uint32_t track_surface_lookup(const TrackSurfaceWorld &world, std::span<const float,3> position, std::span<std::byte,68> record);",
+  "header_includes": [
+    "mco/track_surface_world.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "track_surface_cases.hpp"
+    ],
+    "body": "        track_surface_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x552880",
+    "0x42e6b0",
+    "0x42ee50"
+  ],
+  "shared_sources": [
+    "native/include/mco/track_surface_world.hpp",
+    "native/tests/track_surface_cases.hpp",
+    "tools/track_surface_cases.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "track-spatial",
+    "owner": "camera-recovery",
+    "status": "implemented",
+    "scope": "Complete track surface controller on supplied bounded mapped world.",
+    "supported_domain": "Distinct record/position/world images with valid geometry, block and path mappings; invalid original pointer faults not emulated.",
+    "acceptance": "1200 complete-body original observations match MSVC and Zig exactly with actual grid and path children; native cached-hit/fallback/bounds checks pass.",
+    "comparison_cases": 1200,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live world ownership, arbitrary pointer aliasing, invalid original faults, and integrated free-camera handler remain unverified."
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+add_executable(mco_input_device_session_compare native/tests/input_device_session_compare.cpp)
+target_link_libraries(mco_input_device_session_compare PRIVATE mco_core)

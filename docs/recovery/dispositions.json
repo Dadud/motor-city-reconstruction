@@ -1,0 +1,322 @@
+{
+ "schema_version": 1,
+ "basis": "Region dispositions cite string vocabulary recovered from the digest-checked originals. Module dispositions are role assignments from installed paths and export surfaces.",
+ "modules": {
+  "e3c9e6dec12790b200b0137b95f9290a070536bd01983c4dcd275414853d8ca5": {
+   "installed_path": "3dSetup/3DSetup.dll",
+   "disposition": "installation-tool",
+   "counts_toward_required": false,
+   "basis": "Installer and uninstaller; not client behavior.",
+   "review_status": "role-assigned",
+   "game_candidates": 1095
+  },
+  "bc2507ccb8d4e4b210d95a9d0de3b814650745cdb2b2df10d802aaf317f6a680": {
+   "installed_path": "3dSetup/3DSetup.exe",
+   "disposition": "installation-tool",
+   "counts_toward_required": false,
+   "basis": "Installer and uninstaller; not client behavior.",
+   "review_status": "role-assigned",
+   "game_candidates": 2247
+  },
+  "36db44eacfdf1a9557469380e1d9ea17d910492714bc8aea34a13797ef6a1f22": {
+   "installed_path": "Compress.dll",
+   "disposition": "replaceable-library",
+   "counts_toward_required": false,
+   "basis": "Compression libraries; call sites are recorded and behavior matched.",
+   "review_status": "role-assigned",
+   "game_candidates": 6
+  },
+  "04654e83e748885187622a1e89b64eb4cd3aa201b40ef3d00354bbb2fee5e1ed": {
+   "installed_path": "IFC22.dll",
+   "disposition": "client-input",
+   "counts_toward_required": true,
+   "basis": "Input library called by the client; mapping behavior is gameplay-visible.",
+   "review_status": "role-assigned; region-treatment-pending",
+   "game_candidates": 792
+  },
+  "349a62749766d1a8f9fe6e7bdd13b0cad67959c7454223557cae286c637c06d3": {
+   "installed_path": "IMPLODE.DLL",
+   "disposition": "replaceable-library",
+   "counts_toward_required": false,
+   "basis": "Compression libraries; call sites are recorded and behavior matched.",
+   "review_status": "role-assigned",
+   "game_candidates": 51
+  },
+  "491fa7cc4807c69e2a794697c1d8c613fba938d07f9c75e71b886358938e128e": {
+   "installed_path": "Stage/.castanet/undo/40/287",
+   "disposition": "historical-reference",
+   "counts_toward_required": false,
+   "basis": "Historical cached builds of the same product: used as a diff oracle, not a second implementation target.",
+   "review_status": "cross-reference-only",
+   "game_candidates": 248
+  },
+  "37b738e3668fa6d0316bb121448e7b11268d5b1f3098f6bda41f96f88b110802": {
+   "installed_path": "Stage/.castanet/undo/40/290",
+   "disposition": "historical-reference",
+   "counts_toward_required": false,
+   "basis": "Historical cached builds of the same product: used as a diff oracle, not a second implementation target.",
+   "review_status": "cross-reference-only",
+   "game_candidates": 22504
+  },
+  "c6b469eed7ee68194a1701150475345f290815a52a312499cb05c88f51dcdfd9": {
+   "installed_path": "Uninst.dll",
+   "disposition": "installation-tool",
+   "counts_toward_required": false,
+   "basis": "Installer and uninstaller; not client behavior.",
+   "review_status": "role-assigned",
+   "game_candidates": 125
+  },
+  "c7277e832f6f07af64903a99ecebab2936260cbf55eda70787c5d7b2d5b9fe60": {
+   "installed_path": "dinput8.dll",
+   "disposition": "patch-layer-replaceable",
+   "counts_toward_required": false,
+   "basis": "Patched DirectInput wrapper; replaceable by a behavior-matching implementation.",
+   "review_status": "role-assigned; call-sites-pending",
+   "game_candidates": 6098
+  },
+  "297714f2a32069234143293192240dc4aef50ed94f6f8abc3c8e3bba0598ee0c": {
+   "installed_path": "dx7z.dll",
+   "disposition": "bundled-library-replaceable",
+   "counts_toward_required": false,
+   "basis": "DirectX-era graphics wrappers; replaceable by a behavior-matching implementation.",
+   "review_status": "role-assigned; call-sites-pending",
+   "game_candidates": 141
+  },
+  "fd3ee34eb3aded087db0fd19997cebd0458c1ba49cad38133eb8c1ef4833a209": {
+   "installed_path": "dx8z.dll",
+   "disposition": "bundled-library-replaceable",
+   "counts_toward_required": false,
+   "basis": "DirectX-era graphics wrappers; replaceable by a behavior-matching implementation.",
+   "review_status": "role-assigned; call-sites-pending",
+   "game_candidates": 246
+  },
+  "b0fc84022365947788471d9efedd6ee0a593ee4030a2e5b9d8682aa6a6e9a205": {
+   "installed_path": "ip.exe",
+   "disposition": "client-networking",
+   "counts_toward_required": true,
+   "basis": "Online-support binaries shipped with the client; online behavior is in recovery scope.",
+   "review_status": "role-assigned; region-treatment-pending",
+   "game_candidates": 1711
+  },
+  "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164": {
+   "installed_path": "mcity.exe",
+   "disposition": "client-region",
+   "counts_toward_required": true,
+   "basis": "The game client. Dispositioned per address region in regions[] below.",
+   "review_status": "region-reviewed",
+   "game_candidates": 16070
+  },
+  "2c1f8f64eb97146d94a6ce3b59bfa0e0d68c048f9f79427e4e1ef20c2372e826": {
+   "installed_path": "mco-launcher.exe",
+   "disposition": "launcher",
+   "counts_toward_required": false,
+   "basis": "Rust launcher/updater; not client game behavior.",
+   "review_status": "role-assigned",
+   "game_candidates": 3708
+  },
+  "1153022dbd5c3c45d87c686b82e53a771d4b230c770f88f5245d9f2f680e02ac": {
+   "installed_path": "nps/NPSAnlyz.dll",
+   "disposition": "service-tool",
+   "counts_toward_required": false,
+   "basis": "Network service and diagnostic tools; shipped with the client but not client behavior.",
+   "review_status": "role-assigned; service-role-pending",
+   "game_candidates": 15
+  },
+  "3cb700789965f9df9b85fcb4dee9c52e7c768488fcd75f96633c3b344eba2d76": {
+   "installed_path": "nps/PBA.exe",
+   "disposition": "service-tool",
+   "counts_toward_required": false,
+   "basis": "Network service and diagnostic tools; shipped with the client but not client behavior.",
+   "review_status": "role-assigned; service-role-pending",
+   "game_candidates": 65
+  },
+  "74c079a58fb39a24747728503c92d53343be2f6ea27ccb4b3237bb69893540c9": {
+   "installed_path": "nps/ProxyTool.exe",
+   "disposition": "service-tool",
+   "counts_toward_required": false,
+   "basis": "Network service and diagnostic tools; shipped with the client but not client behavior.",
+   "review_status": "role-assigned; service-role-pending",
+   "game_candidates": 25
+  },
+  "b4822e997cd86c0890fafb6a395013d61daa413f70880d3e26e8b660a24635f6": {
+   "installed_path": "nps/authlogin.dll",
+   "disposition": "client-networking",
+   "counts_toward_required": true,
+   "basis": "Online-support binaries shipped with the client; online behavior is in recovery scope.",
+   "review_status": "role-assigned; region-treatment-pending",
+   "game_candidates": 384
+  },
+  "5c950d24a8f962c998917e721e2492780320ea603357fe25da44caa9c6ea681b": {
+   "installed_path": "nps/mco.exe",
+   "disposition": "client-networking",
+   "counts_toward_required": true,
+   "basis": "Online-support binaries shipped with the client; online behavior is in recovery scope.",
+   "review_status": "role-assigned; region-treatment-pending",
+   "game_candidates": 2708
+  },
+  "e3bed061360fffa7a0f8d686c9dbafb1157b051adc5657e7769e3b7ffec1e53c": {
+   "installed_path": "nps/mrbupd.dll",
+   "disposition": "client-networking",
+   "counts_toward_required": true,
+   "basis": "Online-support binaries shipped with the client; online behavior is in recovery scope.",
+   "review_status": "role-assigned; region-treatment-pending",
+   "game_candidates": 444
+  },
+  "a4b20735be317a924d2e36707baaf911fbae890ca53c5044fb506f15d33bcb6d": {
+   "installed_path": "scripts/DAO/dao350.dll",
+   "disposition": "replaceable-library",
+   "counts_toward_required": false,
+   "basis": "Jet Database Engine. No game behavior is encoded in the engine.",
+   "review_status": "role-assigned",
+   "game_candidates": 1455
+  },
+  "91dc7e10f4f97c0046b4b91b04b5195b95f3f0fd36260fa6433ef2ef623cb0dc": {
+   "installed_path": "scripts/DAO/msjet35.dll",
+   "disposition": "replaceable-library",
+   "counts_toward_required": false,
+   "basis": "Jet Database Engine. No game behavior is encoded in the engine.",
+   "review_status": "role-assigned",
+   "game_candidates": 3479
+  },
+  "3016d572ea5e695b52b1759432dd30b7a9cbc2b53ac42e8c7735854b464e7d34": {
+   "installed_path": "scripts/DAO/msjint35.dll",
+   "disposition": "replaceable-library",
+   "counts_toward_required": false,
+   "basis": "Jet Database Engine. No game behavior is encoded in the engine.",
+   "review_status": "role-assigned",
+   "game_candidates": 23
+  },
+  "3430b3680415b494ba7eb41f7bc83933da68d364a94287b9c07384b2fe3dcb54": {
+   "installed_path": "scripts/DAO/msjter35.dll",
+   "disposition": "replaceable-library",
+   "counts_toward_required": false,
+   "basis": "Jet Database Engine. No game behavior is encoded in the engine.",
+   "review_status": "role-assigned",
+   "game_candidates": 46
+  },
+  "9ec8de370c187789e55441d8b84e0d08ce625946bc538e408fbcebdb194bf8a3": {
+   "installed_path": "scripts/MCOExOps.asi",
+   "disposition": "third-party-plugin",
+   "counts_toward_required": false,
+   "basis": "Third-party modifications that patch the client; not original behavior.",
+   "review_status": "role-assigned",
+   "game_candidates": 139
+  },
+  "0d084715e5c311e91d6fc7198f3d479514eb5be2e69573a1e43a5005f143b42d": {
+   "installed_path": "scripts/MCOWidescreenMod.asi",
+   "disposition": "third-party-plugin",
+   "counts_toward_required": false,
+   "basis": "Third-party modifications that patch the client; not original behavior.",
+   "review_status": "role-assigned",
+   "game_candidates": 391
+  },
+  "22f28fcd37411cf6cc345bac1d7ac47807da00f57c97577d3935bdd7fbd1525c": {
+   "installed_path": "softtriz.dll",
+   "disposition": "bundled-library-replaceable",
+   "counts_toward_required": false,
+   "basis": "DirectX-era graphics wrappers; replaceable by a behavior-matching implementation.",
+   "review_status": "role-assigned; call-sites-pending",
+   "game_candidates": 281
+  },
+  "30f8fca63f77861cf1cbaf9553d7c2ecf2e0f44ce9aeab38d0c8f934af94fb20": {
+   "installed_path": "voodoo2z.dll",
+   "disposition": "bundled-library-replaceable",
+   "counts_toward_required": false,
+   "basis": "DirectX-era graphics wrappers; replaceable by a behavior-matching implementation.",
+   "review_status": "role-assigned; call-sites-pending",
+   "game_candidates": 85
+  }
+ },
+ "regions": {
+  "client": {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "regions": [
+    {
+     "block": "0x400000",
+     "disposition": "game",
+     "basis": "Audio, animation list and localization tables."
+    },
+    {
+     "block": "0x440000",
+     "disposition": "game",
+     "basis": "Lobby room and channel strings (\"room not found for commId\", \"EXPOSE_CHANNEL\")."
+    },
+    {
+     "block": "0x480000",
+     "disposition": "game",
+     "basis": "Frame timing, opponent latency list and camera title markup."
+    },
+    {
+     "block": "0x4c0000",
+     "disposition": "game",
+     "basis": "HUD gauge templates (<GEAR>, <TEMP>, <SPEED>, fatfender/shoebox)."
+    },
+    {
+     "block": "0x500000",
+     "disposition": "game",
+     "basis": "Physics and vehicle part names (\":PHrearsusp\", \":PHtire\") and .viv archives."
+    },
+    {
+     "block": "0x540000",
+     "disposition": "game",
+     "basis": "Race result views (view.RaceResults.*) and simulation GUI names."
+    },
+    {
+     "block": "0x580000",
+     "disposition": "game",
+     "basis": "Game dialog resources (system\\GDialogs.gui, <COST>)."
+    },
+    {
+     "block": "0x5c0000",
+     "disposition": "game",
+     "basis": "Interface widget names (GWidget, Favorites, MHomeTicker)."
+    },
+    {
+     "block": "0x600000",
+     "disposition": "game",
+     "basis": "Pit view and particle configuration (MPitViewCarDlg, MParticle.mShape)."
+    },
+    {
+     "block": "0x640000",
+     "disposition": "game",
+     "basis": "Parts database and economy (dbparts.c, <AUCTION>, <WORKSHOP>, <CARNAME>)."
+    },
+    {
+     "block": "0x680000",
+     "disposition": "library",
+     "basis": "MFC/ATL and locale/currency support (\"AfxThrowMemoryException\", \"missing locale facet\")."
+    },
+    {
+     "block": "0x6c0000",
+     "disposition": "library",
+     "basis": "File and message-pool utilities (\"pc\\nfile.c\", \"MessagePool::Get\")."
+    },
+    {
+     "block": "0x700000",
+     "disposition": "library",
+     "basis": "NPS online SDK, ASN.1 BER decoding (\"BER decode error\", \"End NPSDLL Log\")."
+    },
+    {
+     "block": "0x740000",
+     "disposition": "game",
+     "basis": "GUI widget library (GWidget, GSliderBar, GUIStr)."
+    },
+    {
+     "block": "0x780000",
+     "disposition": "game",
+     "basis": "GUI image primitives (GImage.mImageStyle, GStaticImage.mTileX)."
+    },
+    {
+     "block": "0x7c0000",
+     "disposition": "library",
+     "basis": "NPSLib sources and serializers (NPSLog.cpp, NPS_Serialize.c, MsgPack.cpp)."
+    },
+    {
+     "block": "0x800000",
+     "disposition": "game",
+     "basis": "Game GUI and economy classes (MAuctionNotFound, MPitCompareView, GHInputCheck); 12.1x clone ratio, so instantiations are covered by their templates."
+    }
+   ]
+  }
+ }
+}

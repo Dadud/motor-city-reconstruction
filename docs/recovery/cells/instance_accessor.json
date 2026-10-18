@@ -1,0 +1,41 @@
+{
+ "id": "instance_accessor",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x405900"
+  }
+ ],
+ "brief": "Global instance accessor with a fallback default.",
+ "decl": "std::uint32_t instance_accessor(std::uint32_t primary, std::uint32_t fallback);",
+ "notes": [
+  "Whole body, fifteen bytes at 0x405900:",
+  "  mov eax, [0x009aaa98] / test eax, eax / jne 0x40590e",
+  "  mov eax, [0x00988e38] / ret",
+  "It takes no arguments and calls nothing, so the reconstruction takes the",
+  "two globals as explicit inputs rather than reproducing process addresses.",
+  "The returned value is an original 32-bit address, never a host pointer.",
+  "Five call sites: 0x43b750, 0x43f400, 0x43f550, 0x43fee0, 0x579240."
+ ],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete fifteen-byte body; both original globals are explicit host inputs. The current native/original corpus covers 64 supplied pairs and both selection branches.",
+  "supported_domain": "Any two 32-bit original addresses, including zero. The original contains no branches beyond the nonzero test, so the rule is total.",
+  "unresolved": [
+   "What the two globals hold and which subsystem owns the fallback.",
+   "Why five call sites in three subsystems resolve the same singleton."
+  ],
+  "acceptance": "Met: 64 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 64,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto first = read(input);\n        const auto second = read(input);\n        emit(mco::instance_accessor(first, second));"
+ }
+}

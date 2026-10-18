@@ -1,0 +1,19 @@
+# Callback dispatch recovery
+
+`input_callback_dispatch` implements original dispatcher `0x6f0450` and fallback `0x6f01d0`. Dispatch reads the callback identity and selects it only when both callback and gate `0xacae24` are nonzero. Otherwise it runs the actual fallback body. The original uses tail jumps, preserving the selected callback's full return value. Caller instructions compare full EAX with 0x1b, 0x20 and 0x0d; the decompiler's apparent void return was not a valid native contract.
+
+Fallback calls availability helper `0x7b0e17`; zero returns zero without a read. Any nonzero status selects helper `0x7b0cd6`, whose result is explicitly masked to 255. Callback/gate mutations during either helper do not restart selection. Selected callbacks, availability and read helpers are returning no-argument cdecl bridges; their internals and live behavior are not claimed. Opaque callback identities are never cast to host pointers.
+
+Verification: 2,496 complete original cases match MSVC and Zig exactly. The 192 fallback cases and 2,304 dispatcher cases cover absent/present callbacks, zero/high-bit/nonzero gates, zero/high-bit availability, byte boundaries and high-bit read results, full-width callback returns and callback/gate mutations at each bridge. Results, final callback/gate values, complete callback-word bytes and ordered bridge observations are compared. Actual dispatcher/fallback code remains unchanged; only selected helper bodies are substituted.
+
+Four persistent traces each execute ten original setter/dispatch/fallback calls. The actual kind-10 setter shares callback storage with dispatch, and provider changes affect later calls without reselecting an already-entered path. Both compilers match all 40 calls and accumulated observations. Native tests independently check full return preservation, byte masking, high-bit flags, selection across calls, mutations and unused bridge dependencies.
+
+The hash-checked shipped data initializes callback identity to `0x6f0580` and gate to zero. Retained pseudocode indicates this default callback uses the queue consumer and routes its low word through `0x6f0e80` when enabled, otherwise using the fallback. These routines still need instruction-level review, recovery and original comparisons. The underlying helper identities have not been replaced with guessed platform APIs.
+
+The retained corpus now contains 93 implemented cells, 53,264 routine cases and 64 connected traces. Full checkpoint passes: fresh hash-checked original execution against MSVC and retained original observations against Zig verify all 93 cells and 64 connected traces. Native CTest passes 174 MSVC/176 Zig tests. Python passes 993 tests with seven skips; 35 targeted metadata/corpus/layout checks pass after inventory refresh. Inventories record 164 reviewed entries. These counts do not measure whole-game completion. Default key callback/action routing, platform helper internals, live input and process cleanup remain unfinished.
+
+## Next callback preflight
+
+The default callback and router need a connected recovery batch. Disassembly confirms the queue result is zero-extended from AX before routing, so its scan-prefix bits are discarded. The router's direct input comparisons are signed, so its standalone supported domain must explicitly handle mapped negative indices or exclude original invalid accesses. Its handler table starts at `0xb36594`; the byte maps at `0xb36698` and `0xb36798` overlap the potential 256-entry handler window. Those views must share one byte image rather than independent host arrays. Platform callback invocation and the selected action's consume/return behavior still require complete comparisons.
+
+The subsequent default-key batch implements `0x6f0580` and `0x6f0e80`, including their overlapping image views and dispatcher binding; see `default-key-progress.md`. Full initialization/acquisition-to-action integration and action configuration/implementations remain pending.

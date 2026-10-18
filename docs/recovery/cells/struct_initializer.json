@@ -1,0 +1,32 @@
+{
+ "id": "struct_initializer",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x403200"
+  }
+ ],
+ "brief": "Initialize a count and a three-dword state.",
+ "decl": "void struct_initializer(std::span<std::byte,4> count_image, std::span<std::byte,12> state_image);",
+ "notes": [
+  "The original writes 0x1e through the first pointer and 0x42a00000 followed by two zero dwords through the second.",
+  "Verified against the original by tools.w0_int_leaf_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
+  "acceptance": "Met: 3 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 3,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        auto count = image<8>(input);\n        auto state = image<16>(input);\n        mco::struct_initializer(std::span<std::byte,4>(count.data(),4), std::span<std::byte,12>(state.data(),12));\n        emit(count);\n        emit(state);"
+ }
+}

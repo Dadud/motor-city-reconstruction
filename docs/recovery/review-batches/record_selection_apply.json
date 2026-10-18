@@ -1,0 +1,44 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x436c90": {
+      "subsystem": "utilities-camera-selection",
+      "owner": "wave0-utilities",
+      "scope": "Complete controller body and actual context predicate; callback handlers use declared observation/mutation substitutions.",
+      "supported_domain": "All signed preset inputs; low byte of mode selects direct versus table path. Valid current record, disjoint terminated pair table, mode table and context, distinct external counters. Signed nonnegative table index (>=9 is an early return). Caller-owned stable images and returning callback bridges.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "Met: 1583 complete-body cases and twelve separate connected traces exact on MSVC and Zig/Clang with declared callback substitutions. Native suites 141/143 pass. See docs/recovery/camera-selection.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 1583,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual callback bodies and wider effects; integrated camera handler updates; negative mode-table indexes and original pointer faults."
+      ],
+      "sources": [
+        "native/cmds/record_selection_apply.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/detail/record_selection.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_machine.hpp",
+        "native/include/mco/record_selection_apply.hpp",
+        "native/src/record_selection_apply.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_selection_apply_compare.cpp",
+        "native/tests/record_selection_apply_test.cpp",
+        "native/tests/selection_controller_cases.hpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_selection_apply_compare.py",
+        "tools/selection_controller_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x4325c0",
+        "0x433dd0",
+        "0x435270",
+        "0x489cb0"
+      ]
+    }
+  }
+}

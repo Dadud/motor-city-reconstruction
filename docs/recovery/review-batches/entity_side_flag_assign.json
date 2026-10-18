@@ -1,0 +1,32 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x4031a0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-entity-tables",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete body on the documented bounded host inputs; original bytes establish calling convention and integer widths. Shared layout offsets are named registry constants.",
+      "supported_domain": "Valid supplied tables/indices; empty spans only where original has a null guard. Wrapped writes require positive counts and nonnegative remainders. Float-word writes exclude NaNs and FPU status. Original faults are not emulated.",
+      "acceptance": "Met: 244 synthetic original-execution cases matched bit-exact by the native runner. See docs/recovery/entity-table.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 244,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/entity_side_flag_assign.cmake",
+        "native/include/mco/detail/entity_table.hpp",
+        "native/include/mco/entity_side_flag_assign.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/entity_side_flag_assign.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/entity_side_flag_assign_compare.cpp",
+        "native/tests/entity_side_flag_assign_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_entity_side_flag_assign_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

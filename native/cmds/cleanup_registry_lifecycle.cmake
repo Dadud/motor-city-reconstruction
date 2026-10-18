@@ -1,0 +1,2 @@
+add_executable(mco_cleanup_registry_lifecycle_compare native/tests/cleanup_registry_lifecycle_compare.cpp)
+target_link_libraries(mco_cleanup_registry_lifecycle_compare PRIVATE mco_core)

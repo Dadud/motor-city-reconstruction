@@ -1,0 +1,54 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x6f05b0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "input-queue-consumption",
+      "owner": "input-recovery",
+      "status": "implemented",
+      "scope": "Complete translation body with explicit device-state and nonreturning exit bridges; synthetic supplied layout data.",
+      "supported_domain": "Byte scan values and mapped modifier/table views; returning state acquisition and nonreturning exit request when selected. Invalid original dereferences/process cleanup unmodeled.",
+      "acceptance": "3152 original cases match MSVC and Zig exactly, including eight observed nonreturning exit requests, with declared state/exit bridges; native priority/encoding/caps/exit tests pass.",
+      "comparison_cases": 3152,
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+      ],
+      "sources": [
+        "native/cmds/input_action_session.cmake",
+        "native/cmds/input_device_session.cmake",
+        "native/cmds/input_scan_translate.cmake",
+        "native/include/mco/input_device_callback.hpp",
+        "native/include/mco/input_device_lifetime_access.hpp",
+        "native/include/mco/input_scan_translate.hpp",
+        "native/include/mco/input_translation_device_binding.hpp",
+        "native/include/mco/input_translation_state.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/input_scan_translate.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_action_session_compare.cpp",
+        "native/tests/input_device_session_cases.hpp",
+        "native/tests/input_device_session_compare.cpp",
+        "native/tests/input_queue_lifecycle_compare.cpp",
+        "native/tests/input_scan_translate_compare.cpp",
+        "native/tests/input_scan_translate_test.cpp",
+        "native/tests/input_translation_cases.hpp",
+        "tools/cell_corpus.py",
+        "tools/input_action_session_cases.py",
+        "tools/input_device_session_cases.py",
+        "tools/input_queue_cases.py",
+        "tools/input_translation_cases.py",
+        "tools/native_input_action_session_compare.py",
+        "tools/native_input_device_session_compare.py",
+        "tools/native_input_scan_translate_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x69c189",
+        "0x6f03c0"
+      ]
+    }
+  }
+}

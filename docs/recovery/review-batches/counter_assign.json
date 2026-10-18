@@ -1,0 +1,30 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x42cad0": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-global-state",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete original body on supplied synthetic globals, valid images and indices; original ABI checked from bytes and execution. Host memory and original identities are explicit inputs.",
+      "supported_domain": "Null entries/empty spans where original has a null guard; otherwise valid supplied spans. Invalid host lengths and slots are rejected, not evidence of original fault equivalence.",
+      "acceptance": "Met: 11 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 11,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/counter_assign.cmake",
+        "native/include/mco/counter_assign.hpp",
+        "native/src/counter_assign.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/counter_assign_compare.cpp",
+        "native/tests/counter_assign_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_counter_assign_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

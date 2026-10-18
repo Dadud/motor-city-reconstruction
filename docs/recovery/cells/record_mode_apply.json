@@ -1,0 +1,53 @@
+{
+ "id": "record_mode_apply",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x436fa0"
+  }
+ ],
+ "brief": "Apply an explicit camera mode index, preserving callback writes.",
+ "decl": "void record_mode_apply(RecordMachine &machine, std::span<const std::byte> pairs, std::span<const std::byte, 36> modes, std::span<const std::byte, 12> context, std::uint32_t mode, std::uint32_t &counter0, std::uint32_t &counter1, std::uint32_t index);",
+ "header_includes": [
+  "mco/record_machine.hpp"
+ ],
+ "comparison": {
+  "includes": [
+   "selection_controller_cases.hpp"
+  ],
+  "body": "        const auto index = read(input);\n        auto f = selection_cases::Fixture::read(input);\n        auto machine = f.machine();\n        mco::record_mode_apply(machine, f.pairs, f.modes, f.context, f.mode, f.counter0, f.counter1, index);\n        f.emit(machine);"
+ },
+ "depends_on": [
+  "0x489cb0",
+  "0x433dd0",
+  "0x435270",
+  "0x432620"
+ ],
+ "shared_sources": [
+  "native/include/mco/record_machine.hpp",
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/detail/byte_words.hpp",
+  "native/include/mco/detail/record_selection.hpp",
+  "native/tests/selection_controller_cases.hpp",
+  "tools/camera_cycle_cases.py",
+  "tools/selection_controller_cases.py"
+ ],
+ "bookkeeping": {
+  "subsystem": "utilities-camera-selection",
+  "owner": "wave0-utilities",
+  "scope": "Complete controller body, actual recovered children, and declared observation/mutation substitutions for callback handlers.",
+  "supported_domain": "Explicit signed nonnegative index; >=9 returns before current-record reads. Otherwise valid nonnull current record, stable caller-owned arena, disjoint terminated pairs, nine mode words and context, distinct external counters. Low mode byte selects the special-23 behavior.",
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "status": "implemented",
+  "acceptance": "Met: 1155 complete original-body cases exact on MSVC and Zig/Clang under declared callback substitutions; eight separate six-call lifecycle traces also match. See docs/recovery/camera-cycling.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 1155,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+  "unresolved": [
+   "Actual callback bodies, authentic UI/input producers, and integrated camera updates.",
+   "Negative table accesses, original pointer faults and unsupported memory windows."
+  ]
+ }
+}

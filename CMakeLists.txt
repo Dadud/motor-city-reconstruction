@@ -21,56 +21,9 @@ if(MCO_BUILD_PLATFORM)
 endif()
 
 # This target contains recovered calculations, not prototype vehicle handling.
-add_library(mco_core native/src/owned_valuation.cpp native/src/viv.cpp
-  native/src/tire_response.cpp
-  native/src/rolling_resistance.cpp
-  native/src/load_transfer.cpp
-  native/src/normal_load.cpp
-  native/src/wheel_speed.cpp
-  native/src/suspension_load_correction.cpp
-  native/src/steering_response.cpp
-  native/src/tire_update.cpp
-  native/src/driving_engine_rpm.cpp native/src/drivetrain_coupling.cpp
-  native/src/drivetrain_stages.cpp
-  native/src/gear_binding.cpp
-  native/src/assembly_weight.cpp
-  native/src/assembly_finalization.cpp
-  native/src/mechanical_loaders.cpp
-  native/src/owner_wheel_setup.cpp
-  native/src/model_bounds.cpp
-  native/src/body_constructor.cpp
-  native/src/owner_binding.cpp
-  native/src/startup_balance.cpp
-  native/src/startup_resistance.cpp
-  native/src/wheel_force_correction.cpp native/src/brake_thermal.cpp
-  native/src/brake_forces.cpp
-  native/src/wheel_spin.cpp
-  native/src/combined_slip.cpp
-  native/src/vehicle_update.cpp
-  native/src/engine_update.cpp
-  native/src/engine_torque_update.cpp
-  native/src/engine_pipeline.cpp
-  native/src/body_vertical_load.cpp native/src/body_resistance.cpp
-  native/src/air_density.cpp native/src/vehicle_preparation.cpp
-  native/src/wind.cpp native/src/drafting.cpp native/src/body_environment.cpp
-  native/src/control_update.cpp native/src/drivetrain_links.cpp
-  native/src/scheduler.cpp
-  native/src/body_moments.cpp native/src/wheel_force_orientation.cpp
-  native/src/collision_response.cpp native/src/collision_impulse.cpp
-  native/src/lobby_channel_codec.cpp native/src/lobby_channel_record.cpp native/src/lobby_channel_wait.cpp
-  native/src/async_worker_record.cpp native/src/room_join_request.cpp native/src/room_join_result.cpp
-  native/src/async_worker_completion.cpp
-  native/src/room_server_binding.cpp
-  native/src/room_settings.cpp
-  native/src/room_disconnect.cpp
-  native/src/room_disconnect_flow.cpp
-  native/src/room_selection.cpp
-  native/src/game_start_flow.cpp
-  native/src/lobby_channel_close.cpp
-  native/src/mcots_framing.cpp native/src/nps_framing.cpp native/src/owned_dependencies.cpp native/src/owned_parent_links.cpp
-  native/src/part_type_cache.cpp native/src/owned_induction.cpp native/src/owned_insertion.cpp
-  native/src/owned_aggregates.cpp native/src/owned_ordering.cpp native/src/owned_postload.cpp
-  native/src/owned_descriptions.cpp native/src/fce.cpp native/src/textures.cpp)
+file(GLOB mco_recovered_sources CONFIGURE_DEPENDS native/src/*.cpp)
+list(FILTER mco_recovered_sources EXCLUDE REGEX "/(mod_script|mod_script_main|script_runtime|garage_main|platform_main)\\.cpp$")
+add_library(mco_core ${mco_recovered_sources})
 target_include_directories(mco_core PUBLIC native/include)
 if(MCO_BUILD_PLATFORM)
   add_executable(mco_native_garage native/src/garage_main.cpp)
@@ -104,9 +57,14 @@ if(MCO_BUILD_SCRIPTING)
 endif()
 
 if(BUILD_TESTING)
+  add_executable(mco_wide_int_test native/tests/wide_int_test.cpp)
+  target_include_directories(mco_wide_int_test PRIVATE native/include)
+  add_test(NAME portable_startup_arithmetic COMMAND mco_wide_int_test)
+  add_executable(mco_wide_int_compare native/tests/wide_int_compare.cpp)
+  target_include_directories(mco_wide_int_compare PRIVATE native/include)
   add_executable(mco_assembly_finalization_compare native/tests/assembly_finalization_compare.cpp)
   target_link_libraries(mco_assembly_finalization_compare PRIVATE mco_core)
-  foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding assembly_weight mechanical_loaders owner_wheel_setup model_bounds body_constructor body_startup owner_binding startup_balance startup_resistance wheel_force_correction
+  foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding assembly_weight mechanical_loaders owner_wheel_setup model_bounds body_constructor body_startup owner_binding startup_balance startup_resistance acceleration_table gear_force_table model_preparation wheel_force_correction startup_record
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update engine_torque_update engine_pipeline
       body_vertical_load body_resistance air_density vehicle_preparation
       wind drafting body_environment control_update drivetrain_links
@@ -302,4 +260,10 @@ if(BUILD_TESTING)
     add_test(NAME bounded_scripting COMMAND mco_script_test)
     set_tests_properties(bounded_scripting PROPERTIES TIMEOUT 10)
   endif()
+  # Recovery cells register themselves: tools/function_cell.py renders one
+  # fragment per cell manifest, so scaffolding a cell needs no edit here.
+  file(GLOB mco_recovery_cells CONFIGURE_DEPENDS native/cmds/*.cmake)
+  foreach(cell ${mco_recovery_cells})
+    include(${cell})
+  endforeach()
 endif()

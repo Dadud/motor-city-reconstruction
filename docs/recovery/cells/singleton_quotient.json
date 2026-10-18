@@ -1,0 +1,36 @@
+{
+ "id": "singleton_quotient",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x405910"
+  }
+ ],
+ "brief": "Wave-0 singleton-divide leaf.",
+ "decl": "std::int32_t singleton_quotient(std::int32_t dividend, std::uint32_t primary, std::uint32_t fallback);",
+ "notes": [
+  "Arguments: dividend (value divided), primary (global selected when nonzero), fallback (global used when primary is zero)",
+  "Verified against the original by tools.w0_int_leaf_oracle.",
+  "Divisor is signed (IDIV semantics); a zero divisor faults in the original, so it is rejected here rather than emulated."
+ ],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body. Complete body emulated against the original through the shared call stub; not yet translated.",
+  "supported_domain": "All 32-bit inputs within IDIV semantics; a zero divisor or the INT_MIN/-1 pair is rejected as outside the domain rather than emulated.",
+  "unresolved": [
+   "What owns the globals and their population order."
+  ],
+  "acceptance": "Met: 13 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "status": "implemented",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 13,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto dividend = std::bit_cast<std::int32_t>(read(input));\n        const auto primary = read(input);\n        const auto fallback = read(input);\n        emit(std::bit_cast<std::uint32_t>(mco::singleton_quotient(dividend, primary, fallback)));"
+ }
+}

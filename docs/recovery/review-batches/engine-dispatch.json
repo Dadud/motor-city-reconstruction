@@ -1,0 +1,205 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x545af0": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Complete dispatcher body with recovered RPM and curve consumers. Fresh original comparison passes 1,159 cases; native/Python same corpus passes. Connected original/native pipeline additionally passes 514 scenarios and 1,696 persistent ticks with actual torque/condition/thermal consumers. All reported numeric errors are zero, call identities/order and remaining owner/configuration bytes agree. Unknown stages, interface observations and delay/curve data remain explicit supplied boundaries.",
+      "sources": [
+        "client/engine_update.py",
+        "native/src/engine_update.cpp",
+        "tools/engine_update_oracle.py",
+        "tools/native_engine_update_compare.py",
+        "docs/calculations/engine-update.md"
+      ],
+      "evidence_ids": [
+        "ev_f4138fe586f7a644826c3fed0bf4ac2ff952ab9063efe9cdcc51b1623111253b"
+      ],
+      "dependencies": [
+        "0x546e70",
+        "0x548f00",
+        "0x547120",
+        "0x546330",
+        "0x5464c0",
+        "0x545ec0",
+        "0x546130",
+        "0x546ad0",
+        "0x547c60",
+        "0x548050",
+        "0x548fa0",
+        "0x546c50",
+        "0x55ce20",
+        "0x540070",
+        "0x55cee0"
+      ],
+      "shared_types": [
+        "DrivingEngineRPM",
+        "EnginePipelineState",
+        "EnginePipelineConfig"
+      ],
+      "supported_domain": "Finite stored values, selector 0..7, positive limiter, bounded signed RPM fields and valid adjacent torque knots. Authored invalid-input rejection is not original malformed-input behavior.",
+      "unresolved": [
+        "Interface and counter producers; setup, controls, engagement, wheel-drive, finalization, starting/idle children; authentic catalogue/global producers; integrated native driving."
+      ],
+      "acceptance": "Replay dispatcher corpus and persistent pipeline; then remove supplied producers before full driving acceptance."
+    },
+    "0x548f00": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Torque-knot interpolation body is authored in Python/native and runs unchanged inside 1,159 original dispatcher cases, including explicit RPM knot boundaries and signed/zero curves, and the connected persistent pipeline. Native counterpart uses the same corpus; zero reported numeric errors. This is caller-observed bounded equivalence, not standalone exhaustive x87 return-value or CRT-internal certification.",
+      "sources": [
+        "client/engine_update.py",
+        "native/src/engine_update.cpp",
+        "tools/engine_update_oracle.py",
+        "tools/native_engine_update_compare.py",
+        "docs/calculations/engine-update.md"
+      ],
+      "evidence_ids": [
+        "ev_38e498015340681f1f22d7f40a90d90b9ad32d11cdb5642169b37851a9d4bf6e"
+      ],
+      "dependencies": [],
+      "shared_types": [
+        "DrivingEngineRPM",
+        "EnginePipelineState",
+        "EnginePipelineConfig"
+      ],
+      "supported_domain": "Finite supplied binary32 knots and nonnegative RPM with valid adjacent indices. Comparison observes stored curve torque and power; unstored x87 returns are not exhaustively characterized.",
+      "unresolved": [
+        "Original torque-curve production and every out-of-range/malformed access; independent exhaustive intermediate/CRT edge testing."
+      ],
+      "acceptance": "Retain original dispatcher knot-boundary corpus and native comparison; connect authentic curve producer."
+    },
+    "0x547120": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Complete torque-update body with original CRT powers, environmental helper and RPM helper executing unchanged in bounded original comparison. Fresh 1,094-case original and native/Python corpora pass with zero reported numeric error; owner/configuration bytes, ordered calls and callback-mutation rereads checked. Connected pipeline also runs this body across 1,696 persistent ticks. Pulse, boost, query, RPM-limit, damage and effect children remain supplied.",
+      "sources": [
+        "client/engine_torque_update.py",
+        "native/src/engine_torque_update.cpp",
+        "tools/engine_torque_update_oracle.py",
+        "tools/native_engine_torque_update_compare.py",
+        "docs/calculations/engine-torque-update.md"
+      ],
+      "evidence_ids": [
+        "ev_287a64b85764bf6ac1fd3474ee9c2a7a25b31ff198369aedd2755021570487c8"
+      ],
+      "dependencies": [
+        "0x548f00",
+        "0x546e70",
+        "0x535e20",
+        "0x4b7170",
+        "0x549580",
+        "0x55cfc0",
+        "0x54d250",
+        "0x5452c0",
+        "0x591180"
+      ],
+      "shared_types": [
+        "DrivingEngineRPM",
+        "EnginePipelineState",
+        "EnginePipelineConfig"
+      ],
+      "supported_domain": "Finite bounded state/catalogue values, positive idle/limiter, valid torque knots, nonsingular capacity and supported real-power arguments. Original invalid-input semantics are excluded.",
+      "unresolved": [
+        "Pulse/boost/query/RPM-limit producers; damage/effect consumers; actual vehicle/catalogue assembly and native whole-driving integration."
+      ],
+      "acceptance": "Retain 1,094-case corpus and persistent pipeline, then exercise real recovered producers in an initialized-car update."
+    },
+    "0x546330": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Complete condition/gate routine body. Fresh combined condition/thermal original and native/Python comparisons pass 1,136 cases with zero reported numeric error, exact call order, remainder owner/configuration bytes and deliberate child mutations. Runs unchanged in persistent connected original pipeline. Damage and effect consumers are supplied; working dispatcher name gear_link does not establish gear selection.",
+      "sources": [
+        "client/drivetrain_links.py",
+        "native/src/drivetrain_links.cpp",
+        "tools/drivetrain_links_oracle.py",
+        "tools/native_drivetrain_links_compare.py",
+        "docs/calculations/drivetrain-links.md"
+      ],
+      "evidence_ids": [
+        "ev_666ad5a328b851f0f2396a6ad75e7e1be3a9addcf69236ba4f3f29db0894d037"
+      ],
+      "dependencies": [
+        "0x5452c0",
+        "0x591500"
+      ],
+      "shared_types": [
+        "DrivingEngineRPM",
+        "EnginePipelineState",
+        "EnginePipelineConfig"
+      ],
+      "supported_domain": "Finite stored values and material_index != -4. Callback writes must remain in the authored finite domain; inferred field names/physical units remain unverified.",
+      "unresolved": [
+        "Damage/effect implementations; physical names/units and authentic input producers; complete vehicle integration."
+      ],
+      "acceptance": "Replay gate thresholds, effect/damage sequencing and child-mutation corpus, then connect real consumers."
+    },
+    "0x5464c0": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Complete thermal/load routine body. Fresh combined condition/thermal original and native/Python comparisons pass 1,136 cases with zero reported numeric error and unchanged remainder owner/configuration bytes. Persistent connected pipeline verifies shared-state relationships and callback rereads. Damage/effect consumers are supplied; this body does not establish differential or wheel torque.",
+      "sources": [
+        "client/drivetrain_links.py",
+        "native/src/drivetrain_links.cpp",
+        "tools/drivetrain_links_oracle.py",
+        "tools/native_drivetrain_links_compare.py",
+        "docs/calculations/drivetrain-links.md"
+      ],
+      "evidence_ids": [
+        "ev_93f172b8530abd4d7631be96a4cd4d8c8d1f97bcfce2146070591d79fd4ce017"
+      ],
+      "dependencies": [
+        "0x5452c0",
+        "0x591180"
+      ],
+      "shared_types": [
+        "DrivingEngineRPM",
+        "EnginePipelineState",
+        "EnginePipelineConfig"
+      ],
+      "supported_domain": "Finite state/catalogue values, available mode coefficients, nonzero reference and exercised capacities/denominators; invalid singular inputs are rejected. Thermal field names and units remain inferred.",
+      "unresolved": [
+        "Damage/effect consumers; physical field meanings and authentic catalogue/state producers; native full-driving integration."
+      ],
+      "acceptance": "Replay thermal thresholds, bypass, mode/upgrade variants and mutation corpus plus persistent pipeline before integrated vehicle acceptance."
+    },
+    "0x546e70": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Complete driving RPM helper. Fresh bounded execution of original x87 instructions passes 2,592 cases, zero errors for both floating output fields, exact integer outputs and no unmodelled owner writes. No original calls replaced. Native/Python identical corpus passes with zero reported error; also exercised unchanged through dispatcher, torque and persistent pipeline.",
+      "sources": [
+        "client/driving_engine_rpm.py",
+        "native/src/driving_engine_rpm.cpp",
+        "tools/driving_engine_rpm_oracle.py",
+        "tools/native_driving_engine_rpm_compare.py",
+        "docs/calculations/driving-engine-rpm.md"
+      ],
+      "evidence_ids": [
+        "ev_3c8099ab7007ea9a2eb5f2aaa8d0f9810ddcb1d07efdde478a912e3a8402e7d7"
+      ],
+      "dependencies": [],
+      "shared_types": [
+        "DrivingEngineRPM",
+        "EnginePipelineState",
+        "EnginePipelineConfig"
+      ],
+      "supported_domain": "Finite stored values and bounded signed integer RPM/gear inputs; authored normalized-RPM limit [-10,10] is an API bound, not exhaustive verification of that interval. Corpus varies enable, throttle, normalized RPM, acceleration sign, prior RPM, gear slot and signed road speed.",
+      "unresolved": [
+        "Authentic per-gear speed factors and engagement/input producers; host exponential equivalence outside recorded corpus; invalid/overflow behavior."
+      ],
+      "acceptance": "Replay 2,592 original/native cases and persistent engine pipeline; connect actual gearing and initialized-car inputs."
+    }
+  }
+}

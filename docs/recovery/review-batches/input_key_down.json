@@ -1,0 +1,53 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x584450": {
+      "subsystem": "input-key-queue",
+      "owner": "window-input-recovery",
+      "scope": "Complete original body; actual character translation; only Enter/LeaveCriticalSection imports use declared observation/mutation substitutions.",
+      "supported_domain": "Caller-owned distinct queue image, key image and optional remap. Nonnegative initial capacity, positive capacity at division, returning synchronization bridge; original invalid accesses and division faults are not emulated.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "MSVC and Zig native outputs exactly match captured original observations; standalone native behavior tests pass on both compilers. Live dispatch and Windows synchronization integration remain unresolved.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 816,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live synchronization and Windows message pumping remain unverified.",
+        "Action configuration/lifetime and actual action callbacks; platform helper internals, live input and process cleanup."
+      ],
+      "sources": [
+        "native/cmds/input_action_session.cmake",
+        "native/cmds/input_device_session.cmake",
+        "native/cmds/input_key_down.cmake",
+        "native/include/mco/detail/input_queue_append.hpp",
+        "native/include/mco/input_device_callback.hpp",
+        "native/include/mco/input_device_lifetime_access.hpp",
+        "native/include/mco/input_key_down.hpp",
+        "native/include/mco/input_key_queue.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/window_keyboard_binding.hpp",
+        "native/src/input_key_down.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/input_action_session_compare.cpp",
+        "native/tests/input_device_session_cases.hpp",
+        "native/tests/input_device_session_compare.cpp",
+        "native/tests/input_key_down_compare.cpp",
+        "native/tests/input_key_down_test.cpp",
+        "native/tests/input_queue_cases.hpp",
+        "tools/cell_corpus.py",
+        "tools/input_action_session_cases.py",
+        "tools/input_device_session_cases.py",
+        "tools/input_queue_cases.py",
+        "tools/native_input_action_session_compare.py",
+        "tools/native_input_device_session_compare.py",
+        "tools/native_input_key_down_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x583a90"
+      ]
+    }
+  }
+}

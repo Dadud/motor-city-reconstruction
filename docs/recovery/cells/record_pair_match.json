@@ -1,0 +1,38 @@
+{
+ "id": "record_pair_match",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x433dd0"
+  }
+ ],
+ "brief": "Match either orientation of a pair, stopping at the first-word sentinel.",
+ "decl": "std::uint32_t record_pair_match(std::span<const std::byte> pairs, std::uint32_t first, std::uint32_t second);",
+ "notes": [
+  "Original instructions establish controller ordering; callback bodies remain external implementations."
+ ],
+ "comparison": {
+  "body": "        const auto first = read(input);\n        const auto second = read(input);\n        const auto pairs = image<64>(input);\n        emit(mco::record_pair_match(pairs, first, second));\n        emit(pairs);",
+  "includes": []
+ },
+ "shared_sources": [
+  "native/include/mco/detail/byte_words.hpp",
+  "tools/record_machine_cases.py"
+ ],
+ "depends_on": [],
+ "header_includes": [],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-record-transitions",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete symmetric pair scan; a first-word 0xffffffff sentinel ends scanning before the second word is accessed.",
+  "supported_domain": "Readable pair rows through a sentinel or earlier match; unterminated/truncated host spans are rejected, not original-fault equivalents.",
+  "acceptance": "Met: 216 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 216,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

@@ -1,0 +1,37 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x435840": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-record-transitions",
+      "owner": "wave0-utilities",
+      "status": "implemented",
+      "scope": "Complete current-record retention predicate, including inline handler classification, override matching, parameter equality and signed retention gate. True retains the current record at caller 0x434f90.",
+      "supported_domain": "Valid record/request images and raw uint32 clock bits; no callback is invoked or substituted in this predicate.",
+      "acceptance": "Met: 2040 original/native cases exact on MSVC and Zig/Clang; connected lifecycle traces also match. See docs/recovery/record-transitions.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 2040,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/record_should_retain.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/record_handler.hpp",
+        "native/include/mco/record_should_retain.hpp",
+        "native/src/record_handler.cpp",
+        "native/src/record_should_retain.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/record_should_retain_compare.cpp",
+        "native/tests/record_should_retain_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_record_should_retain_compare.py",
+        "tools/record_machine_cases.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x435270"
+      ]
+    }
+  }
+}

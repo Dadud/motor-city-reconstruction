@@ -1,0 +1,35 @@
+{
+  "id": "nearest_path_point",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x42e6b0"
+    }
+  ],
+  "brief": "Track path query preserving original float-store and strict-comparison ordering.",
+  "decl": "std::uint32_t nearest_path_point(std::span<const std::array<float,3>> points, std::span<const float,3> position, std::uint32_t group, std::int32_t count);",
+  "comparison": {
+    "includes": [
+      "track_path_cases.hpp"
+    ],
+    "body": "        path_cases::compare(input,0);"
+  },
+  "shared_sources": [
+    "native/tests/track_path_cases.hpp",
+    "tools/track_path_cases.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "track-spatial",
+    "owner": "camera-recovery",
+    "status": "implemented",
+    "scope": "Complete original helper; path-record positions and counts supplied explicitly.",
+    "supported_domain": "Finite path/query positions of magnitude <=1e20 and mapped point ranges; invalid original access faults unmodeled.",
+    "acceptance": "1512 complete original-body cases match MSVC and Zig exactly; focused group/tie/wrap/bounds native tests pass on both compilers.",
+    "comparison_cases": 1512,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+  }
+}

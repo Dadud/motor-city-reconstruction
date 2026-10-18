@@ -1,0 +1,54 @@
+{
+  "id": "window_message_dispatch",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x583210"
+    }
+  ],
+  "brief": "Dispatch a registered window message with original synchronization and callback argument order.",
+  "decl": "std::uint32_t window_message_dispatch(WindowDispatchState &state, std::uint32_t window, std::uint32_t message, std::uint32_t wparam, std::uint32_t lparam, std::uint32_t result_identity);",
+  "header_includes": [
+    "mco/window_dispatch_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "window_dispatch_cases.hpp"
+    ],
+    "body": "        window_dispatch_cases::compare(input);"
+  },
+  "depends_on": [
+    "0x69ca7b",
+    "0x582e30",
+    "0x6bd6e0",
+    "0x6bd6f0"
+  ],
+  "shared_sources": [
+    "native/include/mco/detail/window_dispatch_search.hpp",
+    "native/include/mco/layouts.hpp",
+    "native/include/mco/window_dispatch_state.hpp",
+    "native/include/mco/window_keyboard_binding.hpp",
+    "native/tests/window_camera_lifecycle_compare.cpp",
+    "native/tests/window_dispatch_cases.hpp",
+    "tools/free_camera_cases.py",
+    "tools/native_window_camera_lifecycle_compare.py",
+    "tools/window_dispatch_cases.py"
+  ],
+  "bookkeeping": {
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "window-dispatch",
+    "owner": "input-recovery",
+    "status": "implemented",
+    "scope": "Complete general dispatcher; original binary-search/comparator ordering; explicit synchronization and registered handler bridges.",
+    "supported_domain": "Shared bounded queue/global image with <=128 table entries at search; returning callback bridges; original invalid function-pointer and memory faults unmodeled.",
+    "acceptance": "1653 complete original dispatcher calls match MSVC and Zig exactly with declared lock/handler scripts; focused native ordering/reload/bounds tests pass.",
+    "comparison_cases": 1653,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Live synchronizer creation/operations, host message pumping and platform adapters; remaining nonkeyboard handler bodies."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "startup_initialize",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x6bfa10"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x584c80"
+    }
+  ],
+  "brief": "Preserve full startup branching, diagnostics and input setup order with explicit unresolved subsystem bridges.",
+  "decl": "void startup_initialize(StartupState &state, const StartupPlatform &platform);",
+  "header_includes": [
+    "mco/startup_state.hpp"
+  ],
+  "comparison": {
+    "includes": [
+      "startup_initialize_cases.hpp"
+    ],
+    "body": "        startup_initialize_cases::compare(input);"
+  },
+  "shared_sources": [
+    "native/include/mco/startup_state.hpp",
+    "native/tests/startup_initialize_cases.hpp",
+    "tools/startup_initialize_cases.py",
+    "native/include/mco/layouts.hpp",
+    "native/include/mco/startup_input_binding.hpp",
+    "native/include/mco/input_device_cleanup_binding.hpp",
+    "native/tests/startup_lifecycle_compare.cpp",
+    "native/cmds/startup_lifecycle.cmake",
+    "tools/native_startup_lifecycle_compare.py",
+    "tools/input_device_lifetime_cases.py",
+    "tools/input_keyboard_layout_cases.py",
+    "tools/cleanup_registry_cases.py",
+    "docs/recovery/startup-progress.md"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "startup",
+    "owner": "client-recovery",
+    "scope": "Full startup controller and window policy setter; recovered device, keyboard layout/setter and cleanup registry connected through shared queue/diagnostics/callback table.",
+    "supported_domain": "Mapped globals/names; returning subsystem bridges; valid device/platform outputs; default nearest-even float conversion. Unrecovered subsystem bodies and live startup are not claimed.",
+    "acceptance": "2028 complete original startup/policy cases and four persistent twelve-operation startup/input/cleanup traces match MSVC and Zig; independent branch/order/policy/viewport tests pass.",
+    "comparison_cases": 2028,
+    "comparison_corpus": "docs/recovery/corpora/wave0.json",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Renderer, mouse initialization, runtime and other startup helper bodies; actual OS adapters and resource ownership; full linked client/gameplay acceptance."
+    ]
+  }
+}

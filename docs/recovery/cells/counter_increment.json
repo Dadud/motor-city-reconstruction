@@ -1,0 +1,32 @@
+{
+ "id": "counter_increment",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x41bf80"
+  }
+ ],
+ "brief": "Increment a monotonically increasing counter.",
+ "decl": "std::uint32_t counter_increment(std::uint32_t counter);",
+ "notes": [
+  "The original increments the global at 0x92beb0; the host form takes and returns it.",
+  "Verified against the original by tools.w0_pure_oracle."
+ ],
+ "bookkeeping": {
+  "status": "implemented",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-global-state",
+  "owner": "wave0-utilities",
+  "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+  "supported_domain": "Documented per routine: table indices outside the registered table are rejected rather than emulated.",
+  "acceptance": "Met: 11 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+  "translation": "native-bounded",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 11,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ },
+ "comparison": {
+  "body": "        const auto value = read(input);\n        emit(mco::counter_increment(value));"
+ }
+}

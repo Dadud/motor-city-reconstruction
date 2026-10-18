@@ -124,11 +124,18 @@
     "verification": "original-comparison-subregions",
     "scope": "Owner initializer: native/Python gear tables and mass/inertia/levers recovered in bounded regions. Complete initializer, projected area and required geometry inputs remain missing. See docs/calculations/owner-binding.md.",
     "sources": [
-      "client/owner_binding.py",
-      "native/src/owner_binding.cpp",
       "client/gear_binding.py",
-      "docs/calculations/owner-binding.md"
-    ]
+      "client/owner_binding.py",
+      "docs/calculations/owner-binding.md",
+      "docs/calculations/startup-record.md",
+      "native/include/mco/detail/wide_int.hpp",
+      "native/src/owner_binding.cpp",
+      "native/src/startup_record.cpp",
+      "tools/native_startup_record_compare.py",
+      "tools/native_wide_int_compare.py",
+      "tools/startup_record_oracle.py"
+    ],
+    "additional_verification": "Portable startup arithmetic: 5464 Python integer/conversion cases on MSVC and Zig/Clang; 135 native/Python startup records exact; original execution accepts 135 with 17 documented one-ULP angular tolerances. Complete owner startup and scene-area query remain unresolved."
   },
   "0x539fe0": {
     "translation": "python-and-native-bounded",
@@ -168,11 +175,6 @@
     "translation": "missing",
     "verification": "static-analysis-only",
     "scope": "Assembled model extents, centering and dependent attachment placement: retained analysis, no complete published translation."
-  },
-  "0x483450": {
-    "translation": "missing",
-    "verification": "static-analysis-only",
-    "scope": "Geometry rasterization for projected area; bounding-box substitutes are not recovered original behavior."
   },
   "0x54a5a0": {
     "translation": "python-and-native-bounded",

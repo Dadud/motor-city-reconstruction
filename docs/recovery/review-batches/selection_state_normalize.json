@@ -1,0 +1,35 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x4325c0": {
+      "subsystem": "utilities-selection-state",
+      "owner": "wave0-utilities",
+      "scope": "Complete original body, six-word ECX image and EAX result; no substituted dependencies.",
+      "supported_domain": "All six signed 32-bit words; writable 24-byte image. Four preset values, selected camera index and preset slot; the complete selection controller now composes this normalization.",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "status": "implemented",
+      "acceptance": "Met: 536 complete-function original comparisons exact on MSVC and Zig/Clang; all six words and EAX checked. Native suites 138/140 pass. See docs/recovery/selection-state.md.",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 536,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual callback implementations and live camera integration."
+      ],
+      "sources": [
+        "native/cmds/selection_state_normalize.cmake",
+        "native/include/mco/detail/byte_words.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/selection_state_normalize.hpp",
+        "native/src/selection_state_normalize.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/selection_state_normalize_compare.cpp",
+        "native/tests/selection_state_normalize_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_selection_state_normalize_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

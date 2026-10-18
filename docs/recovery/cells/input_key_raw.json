@@ -1,0 +1,36 @@
+{
+ "id": "input_key_raw",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x460670"
+  }
+ ],
+ "brief": "Read the raw aliased key byte after a signed range check.",
+ "decl": "std::uint32_t input_key_raw(std::span<const std::byte, 128> keys, std::uint32_t code);",
+ "comparison": {
+  "body": "        const auto code = read(input);\n        auto keys = image<128>(input);\n        emit(mco::input_key_raw(keys, code));\n        emit(keys);"
+ },
+ "depends_on": [],
+ "shared_sources": [
+  "native/include/mco/layouts.hpp",
+  "tools/input_key_cases.py"
+ ],
+ "bookkeeping": {
+  "subsystem": "input-key-state",
+  "owner": "camera-input-dependency",
+  "scope": "Complete original body; no substituted dependencies.",
+  "supported_domain": "Every 32-bit code with a read-only 128-byte key image; signed codes >=256 return zero, all others use code & 127. Full zero-extended byte returned in EAX.",
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "status": "implemented",
+  "acceptance": "Met: 2396 complete original-body cases exact on MSVC and Zig/Clang, with no input substitutions. Six connected query/release traces also match. See docs/recovery/input-key-state.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 2396,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+  "unresolved": [
+   "Original key-down producers, window dispatch, hardware polling and complete camera-handler integration."
+  ]
+ }
+}

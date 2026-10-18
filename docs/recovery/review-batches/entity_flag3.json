@@ -1,0 +1,35 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x403440": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "utilities-entity-table",
+      "owner": "wave0-utilities",
+      "scope": "Complete body. The inverted bit-3 predicate is matched across 12 oracle cases over two table bases, three indices and both polarities, plus the empty-table default.",
+      "supported_domain": "Indices whose 28-byte record lies inside the supplied table; an out-of-range index is rejected rather than emulated. An empty table models the original NULL base and returns one.",
+      "unresolved": [
+        "What bit 3 means and which entity system owns the records."
+      ],
+      "acceptance": "Met: 9 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
+      "status": "implemented",
+      "comparison_corpus": "docs/recovery/corpora/wave0.json",
+      "comparison_cases": 9,
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "sources": [
+        "native/cmds/entity_flag3.cmake",
+        "native/include/mco/detail/entity_table.hpp",
+        "native/include/mco/entity_flag3.hpp",
+        "native/include/mco/layouts.hpp",
+        "native/src/entity_flag3.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/entity_flag3_compare.cpp",
+        "native/tests/entity_flag3_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_entity_flag3_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

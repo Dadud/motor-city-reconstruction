@@ -1,0 +1,36 @@
+{
+ "id": "record_related_value",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x436280"
+  }
+ ],
+ "brief": "Read a word from the current record.",
+ "decl": "std::uint32_t record_related_value(std::span<const std::byte> record);",
+ "notes": [
+  "Original bytes and execution establish argument widths and access order.",
+  "Spans are host byte views; original 32-bit address identities are explicit where needed."
+ ],
+ "comparison": {
+  "body": "        const auto record = image<272>(input);\n        emit(mco::record_related_value(record));\n        emit(record);"
+ },
+ "shared_sources": [
+  "native/include/mco/layouts.hpp",
+  "native/include/mco/detail/byte_words.hpp"
+ ],
+ "bookkeeping": {
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "subsystem": "utilities-record-stack",
+  "owner": "wave0-utilities",
+  "status": "implemented",
+  "scope": "Complete original body on supplied scalar state and valid byte spans. Copy cases include overlapping and unaligned views with the original read/write order.",
+  "supported_domain": "Valid supplied images; nonwrapping address windows for stack scans; clear direction flag for the original MOVSD copy. Invalid pointers and original fault behavior remain outside scope.",
+  "acceptance": "Met: 16 synthetic original-execution cases matched bit-exact by MSVC and Zig/Clang runners. See docs/recovery/record-stack.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 16,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE"
+ }
+}

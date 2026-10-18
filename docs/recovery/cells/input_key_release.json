@@ -1,0 +1,36 @@
+{
+ "id": "input_key_release",
+ "status": "implemented",
+ "roots": [
+  {
+   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+   "address": "0x584610"
+  }
+ ],
+ "brief": "Apply a matching-window key-release message and optional scan remapping.",
+ "decl": "std::uint32_t input_key_release(std::span<std::byte> keys, std::span<const std::byte, 128> remap, std::uint32_t remap_present, std::uint32_t enabled, std::uint32_t message_window, std::uint32_t target_window, std::uint32_t message_bits);",
+ "comparison": {
+  "body": "        const auto present = read(input);\n        const auto enabled = read(input);\n        const auto window = read(input);\n        const auto target = read(input);\n        const auto bits = read(input);\n        auto keys = image<256>(input);\n        auto remap = image<128>(input);\n        emit(mco::input_key_release(keys, remap, present, enabled, window, target, bits));\n        emit(keys);\n        emit(remap);"
+ },
+ "shared_sources": [
+  "native/include/mco/layouts.hpp",
+  "tools/input_key_cases.py"
+ ],
+ "depends_on": [],
+ "bookkeeping": {
+  "subsystem": "input-key-state",
+  "owner": "camera-input-dependency",
+  "scope": "Complete original release-message producer, no substituted dependencies or host APIs.",
+  "supported_domain": "Caller-owned key image covering the selected mapped byte; disjoint 128-byte optional remap. Nonzero enabled and matching opaque window identities gate mutation. Original third, fourth and sixth arguments are unused; original pointer faults are outside the span contract.",
+  "translation": "native-bounded",
+  "verification": "original-comparison-bounded",
+  "status": "implemented",
+  "acceptance": "Met: 688 complete original-body cases exact on MSVC and Zig/Clang, with no input substitutions. Six connected query/release traces also match. See docs/recovery/input-key-state.md.",
+  "comparison_corpus": "docs/recovery/corpora/wave0.json",
+  "comparison_cases": 688,
+  "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+  "unresolved": [
+   "Key-down queue/translation, window dispatch and live hardware integration."
+  ]
+ }
+}
