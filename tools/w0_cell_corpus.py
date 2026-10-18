@@ -82,6 +82,9 @@ def build(executable):
         if name == 'startup_initialize':
             from tools.startup_initialize_cases import capture
             cases = capture(oracle)
+        elif name == 'input_mouse_lifetime':
+            from tools.input_mouse_lifetime_cases import capture
+            cases = capture(oracle)
         elif name == 'input_toggle_key':
             from tools.input_toggle_key_cases import capture
             cases = capture(oracle)
