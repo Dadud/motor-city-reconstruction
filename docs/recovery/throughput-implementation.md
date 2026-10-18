@@ -16,9 +16,13 @@
   the old JSON. MSVC and Zig each pass **103 cells, 67,800 routine cases and 96
   connected traces**. Python discovery passes **997 tests with seven skips**.
 
-See [corpus operations](corpora/README.md). The upload speedup remains a payload
-projection until measured on a real publication; this change does not accelerate
-the original-instruction emulator or complete additional game behavior.
+See [corpus operations](corpora/README.md). The first actual push carrying this
+compressed snapshot (`783cafe`) completed in **10.58 seconds**, compared with
+approximately ten minutes for the previous 546 MB LFS upload. This is one observed
+publication, not a controlled network benchmark or an overall recovery speedup.
+The change does not accelerate the original-instruction emulator or complete
+additional game behavior. Timing is retained privately in
+`build/recovery/throughput-publication.json`.
 
 ## Library and similarity tools
 
