@@ -10,7 +10,7 @@ function block(module, name, result, types) {
     const address = module.getExportByName(name);
     const callback = new NativeCallback(function () {
         counts[name] = (counts[name] || 0) + 1;
-        if (counts[name] <= 4) report({kind:'blocked_api', name});
+        if (counts[name] <= 4) report({kind:'blocked_api', name,caller:this.returnAddress.toString()});
         return result;
     }, 'int', types);
     retained.push(callback); Interceptor.replace(address, callback); guardHooks.push(name);
@@ -22,6 +22,7 @@ block(sockets,'sendto',-1,['pointer','pointer','int','int','pointer','int']);
 block(sockets,'WSASendTo',-1,['pointer','pointer','uint','pointer','uint','pointer','int','pointer','pointer']);
 block(sockets,'WSAIoctl',-1,['pointer','uint','pointer','uint','pointer','uint','pointer','pointer','pointer']);
 const kernel = Process.getModuleByName('kernel32.dll');
+block(kernel,'WinExec',2,['pointer','uint']);
 block(kernel,'CreateProcessA',0,['pointer','pointer','pointer','pointer','int','uint','pointer','pointer','pointer','pointer']);
 block(kernel,'CreateProcessW',0,['pointer','pointer','pointer','pointer','int','uint','pointer','pointer','pointer','pointer']);
 // Deny attempts to create/modify files through an absolute original-install path.
@@ -78,15 +79,29 @@ for (const wide of [false,true]) {
     retained.push(callback);Interceptor.replace(user.getExportByName(name),callback);
 }
 const main=Process.mainModule;
-for (const [name,address] of Object.entries({entry:0x69dda2,startup:0x6bfa10,diagnostic:0x6bedf0,
+for (const [name,address] of Object.entries({entry:0x69dda2,winmain:0x5241f0,launcher_atoms:0x523ed0,install_check:0x530790,nps_log:0x718d40,startup:0x6bfa10,diagnostic:0x6bedf0,
     mouse:0x6ef890,keyboard:0x6f0200,layout:0x6f09f0,numlock:0x6bfc80,cleanup:0x6bf410})) {
     const target=main.base.add(address-0x400000);
     Interceptor.attach(target,{onEnter() {
         counts[name]=(counts[name]||0)+1;
         if(counts[name]<=8)report({kind:'routine_enter',name,rva:'0x'+(address-0x400000).toString(16)});
+    },onLeave(result) {
+        if(['winmain','launcher_atoms','install_check'].includes(name)) report({kind:'routine_return',name,result:result.toUInt32()});
     }});
 }
-Interceptor.attach(kernel.getExportByName('ExitProcess'),{onEnter(args){report({kind:'target_exit',code:args[0].toUInt32()});}});
+const ntdll=Process.getModuleByName('ntdll.dll');
+for(const [module,name,index] of [[kernel,'ExitProcess',0],[kernel,'TerminateProcess',1],[ntdll,'RtlExitUserProcess',0],[ntdll,'NtTerminateProcess',1]]) {
+    Interceptor.attach(module.getExportByName(name),{onEnter(args) {
+        report({kind:'target_exit',name,code:args[index].toUInt32(),caller:this.returnAddress.toString(),
+            stack:Thread.backtrace(this.context,Backtracer.ACCURATE).slice(0,12).map(p=>p.toString())});
+    }});
+}
+Interceptor.attach(ntdll.getExportByName('LdrLoadDll'),{onEnter(args) {
+    try {this.library=args[2].add(4).readPointer().readUtf16String(args[2].readU16()/2);this.caller=this.returnAddress.toString();}catch(_){}
+},onLeave(result) {
+    if(result.toInt32()<0 && this.library)report({kind:'library_load_failed',name:this.library,status:result.toUInt32(),caller:this.caller});
+}});
+
 Process.setExceptionHandler(details=>{report({kind:'target_exception',type:details.type,address:details.address.toString()});return false;});
 report({kind:'guard_ready',hooks:guardHooks,architecture:Process.arch,pointer_size:Process.pointerSize,
     limits:'API-level network/child/write guards; modified dialogs; not OS network isolation or gameplay acceptance'});

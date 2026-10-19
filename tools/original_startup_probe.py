@@ -2,13 +2,50 @@
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
-import signal
 import time
 from tools.rea_stdio import ReaSession,observation
 from tools.recovery_export import ROOT,private_output
 from client.dyno import _SOURCE_SHA256
+
+class OwnedWindowsProcess:
+    """Retain the spawned process handle so cleanup cannot hit a recycled PID."""
+    def __init__(self,pid):
+        import ctypes
+        from ctypes import wintypes
+        self.ctypes=ctypes
+        self.api=ctypes.WinDLL('kernel32',use_last_error=True)
+        self.api.OpenProcess.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.DWORD]
+        self.api.OpenProcess.restype=wintypes.HANDLE
+        self.api.GetExitCodeProcess.argtypes=[wintypes.HANDLE,ctypes.POINTER(wintypes.DWORD)]
+        self.api.GetExitCodeProcess.restype=wintypes.BOOL
+        self.api.TerminateProcess.argtypes=[wintypes.HANDLE,wintypes.UINT]
+        self.api.TerminateProcess.restype=wintypes.BOOL
+        self.api.WaitForSingleObject.argtypes=[wintypes.HANDLE,wintypes.DWORD]
+        self.api.WaitForSingleObject.restype=wintypes.DWORD
+        self.api.CloseHandle.argtypes=[wintypes.HANDLE]
+        self.api.CloseHandle.restype=wintypes.BOOL
+        self.handle=self.api.OpenProcess(0x00100000|0x1000|1,False,pid)
+        if not self.handle:raise ctypes.WinError(ctypes.get_last_error())
+    def stop(self):
+        from ctypes import wintypes
+        try:
+            waited=self.api.WaitForSingleObject(self.handle,0)
+            if waited==0xffffffff:
+                raise self.ctypes.WinError(self.ctypes.get_last_error())
+            if waited==0:
+                code=wintypes.DWORD()
+                if not self.api.GetExitCodeProcess(self.handle,self.ctypes.byref(code)):
+                    raise self.ctypes.WinError(self.ctypes.get_last_error())
+                return {'already_exited':True,'exit_code':code.value}
+            if not self.api.TerminateProcess(self.handle,0xe04d434f):
+                raise self.ctypes.WinError(self.ctypes.get_last_error())
+            waited=self.api.WaitForSingleObject(self.handle,5000)
+            return {'terminated_owned_copy':True,'exit_confirmed':waited==0}
+        finally:
+            self.api.CloseHandle(self.handle)
+            self.handle=None
+
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -30,10 +67,11 @@ def main():
     source='const MCO_BLOCKED_ROOT = '+json.dumps(str(args.original_root.resolve()))+';\nconst MCO_STAGE_ROOT = '+json.dumps(str(stage))+';\nconst MCO_REGISTRY_READONLY = '+json.dumps(args.registry_readonly)+';\n'+script.read_text()
     (output/'probe-source.js').write_text(source,encoding='utf-8')
     session=ReaSession(args.rea_root,output,stage)
-    session_id=None;pid=None;resumed=False;ready=False;status={};cleanup=None;target_stop=None
+    session_id=None;pid=None;resumed=False;ready=False;status={};cleanup=None;target_stop=None;owned=None
     try:
         started=observation(session.call('start_frida_session',{'mode':'spawn','program':str(executable)}))
         session_id=started['session_id'];pid=started['pid']
+        owned=OwnedWindowsProcess(pid)
         session.call('load_frida_script',{'session_id':session_id,'source_kind':'inline','source':source})
         status=observation(session.call('frida_session_status',{'session_id':session_id}))
         ready=any(m.get('payload',{}).get('kind')=='guard_ready' for m in status.get('messages',[]))
@@ -44,14 +82,9 @@ def main():
     finally:
         # REA detaches but does not own target lifetime. Stop our owned copy
         # before releasing its hooks, including on a load/readiness failure.
-        if pid is not None:
-            try:
-                os.kill(pid,signal.SIGTERM)
-                target_stop={"signal_sent":True}
-            except ProcessLookupError:
-                target_stop={"already_exited":True}
-            except OSError as error:
-                target_stop={"error":str(error)}
+        if owned is not None:
+            try:target_stop=owned.stop()
+            except OSError as error:target_stop={'error':str(error)}
         if session_id is not None:
             try:cleanup=session.call('close_frida_session',{'session_id':session_id})
             except Exception as error:cleanup={'error':str(error)}
@@ -64,7 +97,10 @@ def main():
             registry_opens=[m for m in messages if m.get('kind')=='registry_open'],
             file_open_failures=[m for m in messages if m.get('kind')=='file_open_failed'],
             target_exits=[m for m in messages if m.get('kind')=='target_exit'],
+            library_load_failures=[m for m in messages if m.get('kind')=='library_load_failed'],
+            target_exceptions=[m for m in messages if m.get('kind')=='target_exception'],
             routines=[m['name'] for m in messages if m.get('kind')=='routine_enter'],
+            routine_returns=[m for m in messages if m.get('kind')=='routine_return'],
             dialogs=[m.get('text') for m in messages if m.get('kind')=='target_dialog'],
             blocked_api_calls=[m.get('name') for m in messages if m.get('kind')=='blocked_api'],
             scope='controlled copied-original reference run; API guards/modified dialogs, not reconstructed-client or network-isolation acceptance',

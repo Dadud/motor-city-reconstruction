@@ -1,0 +1,58 @@
+{
+  "id": "install_registry_runtime",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x51d330"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x51d580"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x51d490"
+    },
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x530ab0"
+    }
+  ],
+  "brief": "Recover registry install owner construction/reopen/predicate and bounded language query with explicit platform boundaries.",
+  "decl": "void registry_install_construct(RegistryInstallState &state, const RegistryInstallPlatform &platform, std::uint32_t root, std::uint32_t path, std::uint32_t access);",
+  "comparison": {
+    "includes": [
+      "install_registry_runtime_cases.hpp"
+    ],
+    "body": "        install_registry_runtime_cases::compare(input);"
+  },
+  "shared_sources": [
+    "native/tests/install_registry_runtime_cases.hpp",
+    "tools/install_registry_runtime_cases.py",
+    "docs/recovery/install-registry-runtime.md"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "install-registry-runtime",
+    "owner": "client-recovery",
+    "scope": "Complete constructor, reopen, handle predicate and language-query routines with full owner byte image and explicit path, registry, bounded-copy boundaries.",
+    "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded.",
+    "acceptance": "1024 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; Release domain test remains active without assertions.",
+    "comparison_cases": 1024,
+    "comparison_corpus": "docs/recovery/corpora/wave0",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Executable path initializer0x51d3c0; actual registry access and source string copy; language failed-open uninitialized local handle."
+    ],
+    "evidence_ids": [
+      "ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627",
+      "ev_c9c847e151226245bd076fc5262ab929d8cb048a2e85c8fa45bc0f856fe2ae8e",
+      "ev_58a255ef93365cd34bf50f0c3b333423de847131136a7fd7cdc91c43b08d8836",
+      "ev_545fb83da9cc65cef0137a042bf746b413f9d4c286755a8e3476e894d24e3b84",
+      "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93"
+    ]
+  }
+}

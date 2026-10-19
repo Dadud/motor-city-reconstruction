@@ -14,6 +14,30 @@ struct Backend {
     std::vector<std::uint32_t> events;
     std::uint32_t toggle_state{},toggle_calls{};
     InputMouseRuntimeBinding* mouse{};
+    StartupThreadRuntime* thread{};
+    std::uint32_t thread_profile{},process_calls{};
+    std::vector<std::uint32_t> thread_events;
+    static std::uint32_t thread_call(StartupThreadRuntime& s,std::uint32_t id,std::span<const std::uint32_t> args,void* user){
+        auto& b=*static_cast<Backend*>(user);
+        b.thread_events.push_back(id);b.thread_events.push_back(static_cast<std::uint32_t>(args.size()));
+        for(auto v:args)b.thread_events.push_back(v);for(auto v:s.words)b.thread_events.push_back(v);
+        switch(id){
+        case 1:return 0x12345678;
+        case 2:return 4096;
+        case 3:return b.thread_profile&4?0:0x71003000;
+        case 4:if(b.thread_profile&8){s.allocation()=0x71004000;s.capacity()=0xcafe;}return 0;
+        case 5:return 0x1234;
+        case 6:return 0xa000+(++b.process_calls);
+        case 7:return 0xb000;
+        case 8:if(!(b.thread_profile&16))s.handle()=0xc000;return b.thread_profile&16?0:1;
+        case 9:return 0; // Explicit unresolved original thread cleanup callback.
+        default:throw std::invalid_argument("combined thread bridge");
+        }
+    }
+    static void cleanup(CleanupRegistry&,std::uint32_t id,void* user){
+        auto& b=*static_cast<Backend*>(user);if(id!=0x6be3b0||!b.thread)throw std::invalid_argument("combined external cleanup");
+        thread_call(*b.thread,9,{},&b);
+    }
     std::uint32_t com(unsigned domain,std::uint32_t code,std::uint32_t id,std::uint32_t slot,std::span<std::uint32_t> out){
         const auto base=0x71001000u+domain*0x2000;
         if(id && (id<base || id>=base+0x600 || (id&255)))throw std::invalid_argument("combined COM namespace");
@@ -68,7 +92,7 @@ struct Backend {
 };
 }
 int main(){return cell_io::run([](std::istream& in){
-    Backend b;b.profiles[0]=cell_io::read(in);b.profiles[1]=cell_io::read(in);b.toggle_state=cell_io::read(in);
+    Backend b;b.profiles[0]=cell_io::read(in);b.profiles[1]=cell_io::read(in);b.toggle_state=cell_io::read(in);b.thread_profile=cell_io::read(in);
     std::array<std::byte,input_queue_image::size> globals{};std::array<std::byte,256> keys{};std::array<std::byte,128> other_remap{};
     InputKeyQueue queue{globals,keys,Backend::syncq,&b};queue.store(input_queue_image::target_window,7);queue.store(input_queue_image::device_window,7);queue.store(input_queue_image::dispatch_synchronizer,0x12345678);
     std::array<std::uint32_t,15> startup_words{0,0x1234,0x5678,0,1,0x7777,0,0xa5,0,640,480,32,1,2,0};
@@ -95,6 +119,9 @@ int main(){return cell_io::run([](std::istream& in){
     diagnostic_runtime_cases::Boundary diagnostic_boundary{b.toggle_state,{}};
     binding.diagnostics=&diagnostics;
     binding.diagnostic_platform={diagnostic_runtime_cases::env,diagnostic_runtime_cases::config,&diagnostic_boundary};
+    StartupThreadRuntime thread_runtime;b.thread=&thread_runtime;
+    binding.thread_runtime=&thread_runtime;binding.thread_platform={Backend::thread_call,&b};
+    binding.other_cleanup={Backend::cleanup,&b};
     std::array<std::byte,512> latches{};auto count=cell_io::read(in);if(!count || count>256)throw std::invalid_argument("combined step count");
     for(unsigned i=0;i<count;++i){
         auto op=cell_io::read(in),a=cell_io::read(in),c=cell_io::read(in),d=cell_io::read(in),e=cell_io::read(in),g=cell_io::read(in);std::uint32_t result=0;
@@ -109,6 +136,7 @@ int main(){return cell_io::run([](std::istream& in){
         case 8:input_mouse_counter_increment(cb);break;
         case 9:startup.at(G::width)=a;startup.at(G::height)=c;break;
         case 10:startup.at(G::graphics_ready)=a;break;
+        case 11:result=startup_thread_capacity(thread_runtime,binding.thread_platform,a);break;
         default:throw std::invalid_argument("combined operation");
         }
         cell_io::emit(result);cell_io::emit(startup_words);cell_io::emit(words);cell_io::emit(lifetime.width);cell_io::emit(lifetime.height);
@@ -120,5 +148,7 @@ int main(){return cell_io::run([](std::istream& in){
         cell_io::emit(diagnostics.initialized);cell_io::emit(diagnostics.words);
         cell_io::emit(static_cast<std::uint32_t>(diagnostic_boundary.logs.size()));
         for(auto value:diagnostic_boundary.logs)cell_io::emit(value);
+        cell_io::emit(thread_runtime.words);cell_io::emit(static_cast<std::uint32_t>(b.thread_events.size()));
+        for(auto value:b.thread_events)cell_io::emit(value);
     }
 });}

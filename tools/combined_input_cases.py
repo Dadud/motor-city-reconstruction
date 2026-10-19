@@ -9,6 +9,7 @@ from tools.input_keyboard_layout_cases import LayoutOracle, TABLES, tables
 from tools.startup_toggle_cases import ToggleOracle
 from tools.input_queue_cases import QueueOracle, fixture, put as image_put
 from tools.diagnostic_runtime_cases import DiagnosticOracle
+from tools.startup_thread_runtime_oracle import ThreadOracle
 
 # Distinct object/table/stub namespaces: no keyboard/mouse synthetic aliasing.
 OBJECTS=(0x71001000,0x71003000)
@@ -21,13 +22,13 @@ APIS={0x7000b400:4,0x748ba0:16,0x7000b200:16,0x7000b500:4,0x7000b600:8,
 IATS={0x83b264:0x7000b400,0x83b040:0x7000b200,0x83b3d8:0x7000b500,
       0x83b3dc:0x7000b600,0x83b45c:0x70007200,0x83b384:0x70007300,
       0x83b434:0x70007400,0x8c4938:0x7000f100}
-STEPS=((0,0,0,0,0,0),(1,1,7,0x100,0x70,1|(17<<16)),
+STEPS=((0,0,0,0,0,0),(11,342,0,0,0,0),(1,1,7,0x100,0x70,1|(17<<16)),
        (2,1,7,0,0,17<<16),(4,42,1,0,0,0),(5,0xff880000,7,0,0,0),
        (6,320,240,0,0,0),(7,0,0,0,0,0),(8,0,0,0,0,0),
-       (3,0,0,0,0,0),(3,0,0,0,0,0),(0,0,0,0,0,0),
+       (3,0,0,0,0,0),(11,0,0,0,0,0),(3,0,0,0,0,0),(0,0,0,0,0,0),
        (1,1,7,0x100,0x70,2|(42<<16)),(2,1,7,0,0,42<<16),
        (9,800,600,0,0,0),(10,0,0,0,0,0),(0,0,0,0,0,0),
-       (5,120<<16,7,0,0,0),(3,0,0,0,0,0))
+       (5,120<<16,7,0,0,0),(11,341,0,0,0,0),(3,0,0,0,0,0))
 
 class CombinedOracle:
     def __init__(self, oracle): self.oracle=oracle
@@ -76,22 +77,25 @@ class CombinedOracle:
             if hasattr(cpu,'ctl_flush_tb'):cpu.ctl_flush_tb()
 
 def lifecycle_cases(oracle):
-    b=CombinedOracle(oracle);startup=StartupOracle(oracle);layout=LayoutOracle(oracle);queue=QueueOracle(oracle);toggle=ToggleOracle(oracle);diagnostic=DiagnosticOracle(oracle);cpu=oracle.cpu;cases=[]
+    b=CombinedOracle(oracle);startup=StartupOracle(oracle);layout=LayoutOracle(oracle);queue=QueueOracle(oracle);toggle=ToggleOracle(oracle);diagnostic=DiagnosticOracle(oracle);thread=ThreadOracle(oracle);cpu=oracle.cpu;cases=[]
     with ExitStack() as stack:
         stack.enter_context(b.substituted());stack.enter_context(queue.substituted());stack.enter_context(layout.substituted());stack.enter_context(toggle.substituted())
-        stack.enter_context(startup.substituted(connected=True,real_numlock=True,real_helpers=(0x6ef890,0x6bedf0)))
+        stack.enter_context(startup.substituted(connected=True,real_numlock=True,real_helpers=(0x6ef890,0x6bedf0,0x6be4f0)))
         stack.enter_context(diagnostic.substituted())
+        stack.enter_context(thread.substituted())
         for mp,kp in ((0,0),(1,0),(2,3),(3,2),(4,4),(5,5),(0,1)):
-            for variant in range(2):
+            for variant in range(8):
                 b.profiles=(mp,kp);b.events=[]
                 f=fixture(0,4,1);f['globals']=bytearray(0x530);f['keys']=bytes(256);image_put(f['globals'],0x4c0,7);image_put(f['globals'],0x4c4,7)
                 queue.reset(f)
                 for a in set(FIELDS+KEYBOARD):b.put(a,0)
                 sv=[0,0x1234,0x5678,0,1,0x7777,0,0xa5,0,640,480,32,1,2,0]
-                startup.reset([0,0,1,1,1,0],sv);layout.reset([7,0xd01,0,0]);toggle.reset([variant,0])
+                startup.reset([0,0,1,1,1,0],sv);layout.reset([7,0xd01,0,0]);toggle.reset([variant%2,0])
+                thread_profile=(0,4,16,8)[variant//2]
+                thread.reset(thread_profile)
                 diagnostic_values=[i*7919 for i in range(160)]
                 diagnostic_values[(0x8c4938-0x8c4730)//4]=0x7000f100
-                diagnostic.reset(variant,diagnostic_values)
+                diagnostic.reset(variant%2,diagnostic_values)
                 data=bytearray(tables(0));data[488+17]=42;data[488+42]=54;cpu.mem_write(TABLES_ADDR,bytes(data))
                 b.put(0xacadb0,7);b.put(0xacae14,0x12345678);b.put(0x89bdd4,1);cpu.mem_write(0xb2bbe8,bytes(256));cpu.mem_write(0x9e1be8,bytes(512))
                 out=[]
@@ -107,10 +111,12 @@ def lifecycle_cases(oracle):
                     elif op==8:oracle.call(0x6f06a0)
                     elif op==9:b.put(0x8c4618,a);b.put(0x8c461c,c)
                     elif op==10:b.put(0x8c45f8,a)
+                    elif op==11:oracle.call(0x6be570,(a,),instruction_limit=100000);result=cpu.reg_read(oracle.reg.UC_X86_REG_EAX)
                     out.extend((result,*startup.values(),*(b.word(x) for x in FIELDS),*(b.word(x) for x in KEYBOARD),*cpu.mem_read(0xaca8f0,0x530),*cpu.mem_read(0x8c8648,256),*cpu.mem_read(TABLES_ADDR,620),*cpu.mem_read(0x9e1be8,512),*(b.word(0xb2bbe8+i*4) for i in range(64)),toggle.state,len(toggle.logs),len(b.events)//3,*b.events))
                     out.extend(diagnostic.output())
-                cases.append(dict(input=[mp,kp,variant,len(STEPS),*(v for s in STEPS for v in s)],output=out))
-    return dict(cases=cases,scope='Actual connected startup, Num Lock, mouse and keyboard initialization, layout, down/release/query, wheel/report/geometry, one shared cleanup registry, repeat cleanup and restart. Distinct synthetic mouse/keyboard COM object and table namespaces; output slots always fully written. Platform imports/graphics/context/device factories remain explicit returning boundaries. Selected full shared images/words and ordered COM events observed after every operation; no live OS acceptance.')
+                    out.extend(thread.output())
+                cases.append(dict(input=[mp,kp,variant%2,thread_profile,len(STEPS),*(v for s in STEPS for v in s)],output=out))
+    return dict(cases=cases,scope='Actual connected startup, diagnostic and thread initialization/allocation/capacity, Num Lock, mouse and keyboard initialization, layout, down/release/query, wheel/report/geometry, one shared cleanup registry, repeat cleanup and restart. Distinct synthetic mouse/keyboard COM object and table namespaces; output slots always fully written. Thread cleanup 0x6be3b0, lock-pool acquisition, memory clear and resource imports remain explicit returning boundaries, alongside graphics/context/device factories. Thread cleanup boundary logs but does not release resources or reset state. Selected full shared images/words and ordered COM events observed after every operation; no live OS acceptance.')
 
 # Avoid confusion with the pair of synthetic COM table bases above.
 from tools.input_keyboard_layout_cases import TABLES as TABLES_ADDR

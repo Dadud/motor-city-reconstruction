@@ -187,6 +187,9 @@
     "input_toggle_key": {
       "sha256": "459ea6a1578cd0f1bfd84a27a008222bba2af43cd40792f697c0d57accebcac7"
     },
+    "install_registry_runtime": {
+      "sha256": "9b3053699830dd35fb6b219b828c88dab9683816c6e7ae041d175ec2096642b3"
+    },
     "instance_accessor": {
       "sha256": "f98df7e2c30e8d5629b2aff9c790d847825ffc15c796131ec97b7e056897701f"
     },
@@ -340,7 +343,7 @@
   },
   "probes": {
     "combined_input_lifecycle": {
-      "sha256": "b56022b32086414a1c91d4a09bd701f10bc9cb85f49dbe53c143137f4f93d0dd"
+      "sha256": "5556e2601bc19903cd1f29100b365a71f225ba3c640cac767311ff7e83f02135"
     },
     "line_counter_wrap": {
       "sha256": "6696a5e7026ece558ef383e4ee4e6b16429b8024099bda068bf0e6d4ffad736b"

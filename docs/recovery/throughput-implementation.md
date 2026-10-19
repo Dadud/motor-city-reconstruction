@@ -90,3 +90,11 @@ represented as completed integrations by this change.
 Added diagnostic initialization/channel/device controls (five entries) and thread initialization/capacity/page allocation (three entries). The standard exporter and replay now cover 105 implemented cells, 70,012 routine cases and 158 connected traces. Both MSVC and Zig full replays pass; all previous cell/probe shard references are unchanged. MSVC CTest passes 187 tests; Zig CTest passes 189 under its configured feature set. Python discovery passes 997 tests with seven skips.
 
 The combined input graph links diagnostics, keyboard, mouse, NumLock and shared cleanup, preserving the newly observed translation-table/mouse-word storage alias. The authored vehicle/engine adapter matches Python for 120 synthetic frames with zero observed absolute error. These checks do not establish live startup or gameplay. See combined-input-progress.md, startup-thread-runtime.md, diagnostic-runtime.md, vehicle-runtime-integration.md and original-startup-reference.md for boundaries and next gaps.
+
+## Registry and connected thread checkpoint (2026-10-18)
+
+Added four install-registry routines with 1,024 original-instruction cases. The combined input/diagnostic probe now executes real thread initialization/capacity/allocation on 56 persistent 21-step traces, with unresolved thread cleanup explicit. The corpus contains 106 implemented cells, 71,036 routine cases and 200 connected traces. Only the expanded combined probe changes an existing shard reference.
+
+Original-client tracing now distinguishes the unelevated excessive-registry-access failure from the normal launcher handoff. Read-only substitutions remove the first dialog; the original atom parser rejects an empty direct-launch handoff, WinMain attempts WinExec for nps_MCO.exe, and exits with code zero. The absent Network Play System key is an optional logging setting. No launcher-authenticated startup or playable reconstruction is established.
+
+Verification: full MSVC and Zig replays pass all 71,036 routine cases and 200 connected traces. MSVC CTest passes 188 tests; Zig CTest passes 190 for its configured features. Python discovery passes 1,000 tests with seven skips; post-refresh inventory/backlog/cell/corpus checks pass 33 tests.
