@@ -1,0 +1,185 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x51d1d0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "install-registry-query",
+      "owner": "client-recovery",
+      "scope": "Complete close/create/direct DWORD query/read wrapper with shared owner bytes, external output and live platform buffer/metadata views.",
+      "supported_domain": "Writable 0x210-byte owner image, 4-byte output, valid synthetic identities and returning close/create/profile/query/scan callbacks. Owner and output mutations admitted; create disposition initial owner identity preserved. Actual registry/files, source dereference and text conversion remain explicit boundaries.",
+      "acceptance": "1280 fresh original-instruction cases include 1024 single calls and 256 persistent six-operation sequences. Both MSVC and Zig compare owner/output bytes and ordered boundary pre-state images exactly; NDEBUG native domain tests remain active.",
+      "comparison_cases": 1280,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual Windows registry/profile reads, scanf conversion and real handle/resource lifetime."
+      ],
+      "evidence_ids": [
+        "ev_a6e347252cf77991e82353147b50c1267c1ca696e57a3b4fbdebb1be4ae8a40a",
+        "ev_7a40b2c7c1bd43d031eb63b5cd16eaf4fc167468829d310050d8ba5988f6bd20",
+        "ev_43a1b42fd0194592547e8e68ef0e33720ec82e8fadf794c405130bd54a046ac9",
+        "ev_8af2e727f60f2a24903809156beaefc8816e33bbf61d72417404e6eaaef1a078",
+        "ev_417ddc52feb9ccd68e07ba44ab4092e23d9b7290680455b3d6d8616935fdfc83",
+        "ev_1df3a46866e5a8976a19fe9a21176a357f526a827e96a3d07eff70e848ed55e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
+      ],
+      "sources": [
+        "docs/recovery/install-registry-query.md",
+        "native/cmds/install_registry_query.cmake",
+        "native/include/mco/install_registry_query.hpp",
+        "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_query.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/install_registry_query_cases.hpp",
+        "native/tests/install_registry_query_compare.cpp",
+        "native/tests/install_registry_query_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/install_registry_query_cases.py",
+        "tools/native_install_registry_query_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x51d520",
+        "0x51d690",
+        "0x51d6c0"
+      ]
+    },
+    "0x51d520": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "install-registry-query",
+      "owner": "client-recovery",
+      "scope": "Complete close/create/direct DWORD query/read wrapper with shared owner bytes, external output and live platform buffer/metadata views.",
+      "supported_domain": "Writable 0x210-byte owner image, 4-byte output, valid synthetic identities and returning close/create/profile/query/scan callbacks. Owner and output mutations admitted; create disposition initial owner identity preserved. Actual registry/files, source dereference and text conversion remain explicit boundaries.",
+      "acceptance": "1280 fresh original-instruction cases include 1024 single calls and 256 persistent six-operation sequences. Both MSVC and Zig compare owner/output bytes and ordered boundary pre-state images exactly; NDEBUG native domain tests remain active.",
+      "comparison_cases": 1280,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual Windows registry/profile reads, scanf conversion and real handle/resource lifetime."
+      ],
+      "evidence_ids": [
+        "ev_a6e347252cf77991e82353147b50c1267c1ca696e57a3b4fbdebb1be4ae8a40a",
+        "ev_7a40b2c7c1bd43d031eb63b5cd16eaf4fc167468829d310050d8ba5988f6bd20",
+        "ev_43a1b42fd0194592547e8e68ef0e33720ec82e8fadf794c405130bd54a046ac9",
+        "ev_8af2e727f60f2a24903809156beaefc8816e33bbf61d72417404e6eaaef1a078",
+        "ev_417ddc52feb9ccd68e07ba44ab4092e23d9b7290680455b3d6d8616935fdfc83",
+        "ev_1df3a46866e5a8976a19fe9a21176a357f526a827e96a3d07eff70e848ed55e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
+      ],
+      "sources": [
+        "docs/recovery/install-registry-query.md",
+        "native/cmds/install_registry_query.cmake",
+        "native/include/mco/install_registry_query.hpp",
+        "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_query.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/install_registry_query_cases.hpp",
+        "native/tests/install_registry_query_compare.cpp",
+        "native/tests/install_registry_query_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/install_registry_query_cases.py",
+        "tools/native_install_registry_query_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x51d520",
+        "0x51d690",
+        "0x51d6c0"
+      ]
+    },
+    "0x51d6c0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "install-registry-query",
+      "owner": "client-recovery",
+      "scope": "Complete close/create/direct DWORD query/read wrapper with shared owner bytes, external output and live platform buffer/metadata views.",
+      "supported_domain": "Writable 0x210-byte owner image, 4-byte output, valid synthetic identities and returning close/create/profile/query/scan callbacks. Owner and output mutations admitted; create disposition initial owner identity preserved. Actual registry/files, source dereference and text conversion remain explicit boundaries.",
+      "acceptance": "1280 fresh original-instruction cases include 1024 single calls and 256 persistent six-operation sequences. Both MSVC and Zig compare owner/output bytes and ordered boundary pre-state images exactly; NDEBUG native domain tests remain active.",
+      "comparison_cases": 1280,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual Windows registry/profile reads, scanf conversion and real handle/resource lifetime."
+      ],
+      "evidence_ids": [
+        "ev_a6e347252cf77991e82353147b50c1267c1ca696e57a3b4fbdebb1be4ae8a40a",
+        "ev_7a40b2c7c1bd43d031eb63b5cd16eaf4fc167468829d310050d8ba5988f6bd20",
+        "ev_43a1b42fd0194592547e8e68ef0e33720ec82e8fadf794c405130bd54a046ac9",
+        "ev_8af2e727f60f2a24903809156beaefc8816e33bbf61d72417404e6eaaef1a078",
+        "ev_417ddc52feb9ccd68e07ba44ab4092e23d9b7290680455b3d6d8616935fdfc83",
+        "ev_1df3a46866e5a8976a19fe9a21176a357f526a827e96a3d07eff70e848ed55e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
+      ],
+      "sources": [
+        "docs/recovery/install-registry-query.md",
+        "native/cmds/install_registry_query.cmake",
+        "native/include/mco/install_registry_query.hpp",
+        "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_query.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/install_registry_query_cases.hpp",
+        "native/tests/install_registry_query_compare.cpp",
+        "native/tests/install_registry_query_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/install_registry_query_cases.py",
+        "tools/native_install_registry_query_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x51d520",
+        "0x51d690",
+        "0x51d6c0"
+      ]
+    },
+    "0x51d690": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "install-registry-query",
+      "owner": "client-recovery",
+      "scope": "Complete close/create/direct DWORD query/read wrapper with shared owner bytes, external output and live platform buffer/metadata views.",
+      "supported_domain": "Writable 0x210-byte owner image, 4-byte output, valid synthetic identities and returning close/create/profile/query/scan callbacks. Owner and output mutations admitted; create disposition initial owner identity preserved. Actual registry/files, source dereference and text conversion remain explicit boundaries.",
+      "acceptance": "1280 fresh original-instruction cases include 1024 single calls and 256 persistent six-operation sequences. Both MSVC and Zig compare owner/output bytes and ordered boundary pre-state images exactly; NDEBUG native domain tests remain active.",
+      "comparison_cases": 1280,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual Windows registry/profile reads, scanf conversion and real handle/resource lifetime."
+      ],
+      "evidence_ids": [
+        "ev_a6e347252cf77991e82353147b50c1267c1ca696e57a3b4fbdebb1be4ae8a40a",
+        "ev_7a40b2c7c1bd43d031eb63b5cd16eaf4fc167468829d310050d8ba5988f6bd20",
+        "ev_43a1b42fd0194592547e8e68ef0e33720ec82e8fadf794c405130bd54a046ac9",
+        "ev_8af2e727f60f2a24903809156beaefc8816e33bbf61d72417404e6eaaef1a078",
+        "ev_417ddc52feb9ccd68e07ba44ab4092e23d9b7290680455b3d6d8616935fdfc83",
+        "ev_1df3a46866e5a8976a19fe9a21176a357f526a827e96a3d07eff70e848ed55e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
+      ],
+      "sources": [
+        "docs/recovery/install-registry-query.md",
+        "native/cmds/install_registry_query.cmake",
+        "native/include/mco/install_registry_query.hpp",
+        "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_query.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/install_registry_query_cases.hpp",
+        "native/tests/install_registry_query_compare.cpp",
+        "native/tests/install_registry_query_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/install_registry_query_cases.py",
+        "tools/native_install_registry_query_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x51d520",
+        "0x51d690",
+        "0x51d6c0"
+      ]
+    }
+  }
+}

@@ -1,0 +1,3 @@
+add_executable(mco_install_registry_path_test native/tests/install_registry_path_test.cpp)
+target_link_libraries(mco_install_registry_path_test PRIVATE mco_core)
+add_test(NAME install_registry_path_domain COMMAND mco_install_registry_path_test)

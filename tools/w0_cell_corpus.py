@@ -79,7 +79,7 @@ def build(executable):
         def add(inputs, outputs):
             cases.append(dict(input=list(inputs), output=list(outputs)))
 
-        if name in ('diagnostic_runtime', 'startup_thread_runtime', 'install_registry_runtime'):
+        if name in ('diagnostic_runtime', 'startup_thread_runtime', 'install_registry_runtime', 'install_registry_query'):
             from importlib import import_module
             cases = import_module('tools.'+name+'_cases').capture(oracle)
         elif name == 'startup_initialize':

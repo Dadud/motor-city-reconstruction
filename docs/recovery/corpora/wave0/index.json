@@ -187,8 +187,11 @@
     "input_toggle_key": {
       "sha256": "459ea6a1578cd0f1bfd84a27a008222bba2af43cd40792f697c0d57accebcac7"
     },
+    "install_registry_query": {
+      "sha256": "370c8c5bdd34c3f74520f554e23cd9e095a895c1199481b146d5761e7636a58c"
+    },
     "install_registry_runtime": {
-      "sha256": "9b3053699830dd35fb6b219b828c88dab9683816c6e7ae041d175ec2096642b3"
+      "sha256": "d17f4419502c396eaff3be76687bb159b9365dbeb5b20882dccb6a22e827c902"
     },
     "instance_accessor": {
       "sha256": "f98df7e2c30e8d5629b2aff9c790d847825ffc15c796131ec97b7e056897701f"

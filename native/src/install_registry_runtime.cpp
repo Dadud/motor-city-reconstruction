@@ -21,7 +21,7 @@ bool registry_install_reopen(RegistryInstallState& s,const RegistryInstallPlatfo
 }
 void registry_install_construct(RegistryInstallState& s,const RegistryInstallPlatform& p,std::uint32_t root,std::uint32_t path,std::uint32_t access){
  put(s.image.subspan(0,4),0x83ec68);put(s.image.subspan(4,4),0);s.image[8]=std::byte{};s.image[0x10c]=std::byte{};
- call(s,p,1,{});registry_install_reopen(s,p,root,path,access);
+ registry_install_prepare_path(s,p);registry_install_reopen(s,p,root,path,access);
 }
 bool registry_install_is_open(const RegistryInstallState& s){return word(s.image.subspan(4,4))!=0;}
 void registry_install_language(RegistryInstallState& s,const RegistryInstallPlatform& p){

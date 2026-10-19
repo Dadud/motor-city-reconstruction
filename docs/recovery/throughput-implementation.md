@@ -98,3 +98,13 @@ Added four install-registry routines with 1,024 original-instruction cases. The 
 Original-client tracing now distinguishes the unelevated excessive-registry-access failure from the normal launcher handoff. Read-only substitutions remove the first dialog; the original atom parser rejects an empty direct-launch handoff, WinMain attempts WinExec for nps_MCO.exe, and exits with code zero. The absent Network Play System key is an optional logging setting. No launcher-authenticated startup or playable reconstruction is established.
 
 Verification: full MSVC and Zig replays pass all 71,036 routine cases and 200 connected traces. MSVC CTest passes 188 tests; Zig CTest passes 190 for its configured features. Python discovery passes 1,000 tests with seven skips; post-refresh inventory/backlog/cell/corpus checks pass 33 tests.
+
+## Executable path and integer-query checkpoint (2026-10-18)
+
+Recovered the executable-path initializer and connected it directly to registry construction. The original ASCII uppercase and string-search children execute in the oracle; only the module-filename API remains synthetic for this path. Cases preserve substring-based NPS double trimming, suffix case, stale bytes and failed-API partial writes. Nonzero locale, unterminated and overflowing paths remain excluded.
+
+Added close/reset, key creation, direct integer query and its conditional-commit wrapper. The new cell has 1,024 single-call cases plus 256 persistent six-operation sequences with shared owner/output. These sequences are included in the cell case count, not added to the separate connected-probe total. The corpus now contains 107 implemented cells and 72,572 cases; the separate 200 connected probes remain unchanged.
+
+Only the existing install-registry-runtime cell shard changed; all other prior cell and probe references remain identical. Primary Evidence and snapshots are retained privately under install-registry-query-primary; public cells, review records and focused documents link the observed facts and explicit boundaries. Complete launcher-authenticated startup and original game acceptance remain unresolved.
+
+Verification: MSVC and Zig full replays pass 72,572 cases and the separate 200 connected probes. Native CTest passes 190 MSVC and 192 Zig tests for their configured features. Python discovery passes 1,000 tests with seven skips. Reviewed main-executable entries total 208; required-entry count remains 11,760. These inventory counts do not measure game completion.

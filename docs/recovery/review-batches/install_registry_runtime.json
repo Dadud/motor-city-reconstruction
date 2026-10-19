@@ -7,28 +7,34 @@
       "verification": "original-comparison-bounded",
       "subsystem": "install-registry-runtime",
       "owner": "client-recovery",
-      "scope": "Complete constructor, reopen, handle predicate and language-query routines with full owner byte image and explicit path, registry, bounded-copy boundaries.",
-      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded.",
-      "acceptance": "1024 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; Release domain test remains active without assertions.",
-      "comparison_cases": 1024,
+      "scope": "Complete constructor, module-path initializer, reopen, handle predicate and language query; constructor executes recovered path preparation.",
+      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded. Path preparation admits terminated ASCII module paths with locale zero and a bounded suffix append; nonzero locale, unterminated and overflowing paths are excluded.",
+      "acceptance": "1280 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; actual path/ASCII uppercase/string children execute in constructor and standalone path cases. Release bounds/domain checks pass.",
+      "comparison_cases": 1280,
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
-        "Executable path initializer0x51d3c0; actual registry access and source string copy; language failed-open uninitialized local handle."
+        "Actual GetModuleFileName/registry/copy services; nonzero-locale and overflowing path behavior; language failed-open uninitialized local handle."
       ],
       "evidence_ids": [
         "ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627",
         "ev_c9c847e151226245bd076fc5262ab929d8cb048a2e85c8fa45bc0f856fe2ae8e",
         "ev_58a255ef93365cd34bf50f0c3b333423de847131136a7fd7cdc91c43b08d8836",
         "ev_545fb83da9cc65cef0137a042bf746b413f9d4c286755a8e3476e894d24e3b84",
-        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93"
+        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93",
+        "ev_95d194c8149e5b23e6a8cdb51da4e938dd089b1ac59e0e0a33fa8ece48ddc2e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
       ],
       "sources": [
+        "docs/recovery/install-registry-path.md",
         "docs/recovery/install-registry-runtime.md",
+        "native/cmds/install_registry_path.cmake",
         "native/cmds/install_registry_runtime.cmake",
         "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_path.cpp",
         "native/src/install_registry_runtime.cpp",
         "native/tests/cell_io.hpp",
+        "native/tests/install_registry_path_test.cpp",
         "native/tests/install_registry_runtime_cases.hpp",
         "native/tests/install_registry_runtime_compare.cpp",
         "native/tests/install_registry_runtime_test.cpp",
@@ -38,6 +44,7 @@
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [
+        "0x51d3c0",
         "0x51d490",
         "0x51d580",
         "0x530ab0"
@@ -49,28 +56,34 @@
       "verification": "original-comparison-bounded",
       "subsystem": "install-registry-runtime",
       "owner": "client-recovery",
-      "scope": "Complete constructor, reopen, handle predicate and language-query routines with full owner byte image and explicit path, registry, bounded-copy boundaries.",
-      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded.",
-      "acceptance": "1024 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; Release domain test remains active without assertions.",
-      "comparison_cases": 1024,
+      "scope": "Complete constructor, module-path initializer, reopen, handle predicate and language query; constructor executes recovered path preparation.",
+      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded. Path preparation admits terminated ASCII module paths with locale zero and a bounded suffix append; nonzero locale, unterminated and overflowing paths are excluded.",
+      "acceptance": "1280 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; actual path/ASCII uppercase/string children execute in constructor and standalone path cases. Release bounds/domain checks pass.",
+      "comparison_cases": 1280,
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
-        "Executable path initializer0x51d3c0; actual registry access and source string copy; language failed-open uninitialized local handle."
+        "Actual GetModuleFileName/registry/copy services; nonzero-locale and overflowing path behavior; language failed-open uninitialized local handle."
       ],
       "evidence_ids": [
         "ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627",
         "ev_c9c847e151226245bd076fc5262ab929d8cb048a2e85c8fa45bc0f856fe2ae8e",
         "ev_58a255ef93365cd34bf50f0c3b333423de847131136a7fd7cdc91c43b08d8836",
         "ev_545fb83da9cc65cef0137a042bf746b413f9d4c286755a8e3476e894d24e3b84",
-        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93"
+        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93",
+        "ev_95d194c8149e5b23e6a8cdb51da4e938dd089b1ac59e0e0a33fa8ece48ddc2e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
       ],
       "sources": [
+        "docs/recovery/install-registry-path.md",
         "docs/recovery/install-registry-runtime.md",
+        "native/cmds/install_registry_path.cmake",
         "native/cmds/install_registry_runtime.cmake",
         "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_path.cpp",
         "native/src/install_registry_runtime.cpp",
         "native/tests/cell_io.hpp",
+        "native/tests/install_registry_path_test.cpp",
         "native/tests/install_registry_runtime_cases.hpp",
         "native/tests/install_registry_runtime_compare.cpp",
         "native/tests/install_registry_runtime_test.cpp",
@@ -80,6 +93,7 @@
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [
+        "0x51d3c0",
         "0x51d490",
         "0x51d580",
         "0x530ab0"
@@ -91,28 +105,34 @@
       "verification": "original-comparison-bounded",
       "subsystem": "install-registry-runtime",
       "owner": "client-recovery",
-      "scope": "Complete constructor, reopen, handle predicate and language-query routines with full owner byte image and explicit path, registry, bounded-copy boundaries.",
-      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded.",
-      "acceptance": "1024 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; Release domain test remains active without assertions.",
-      "comparison_cases": 1024,
+      "scope": "Complete constructor, module-path initializer, reopen, handle predicate and language query; constructor executes recovered path preparation.",
+      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded. Path preparation admits terminated ASCII module paths with locale zero and a bounded suffix append; nonzero locale, unterminated and overflowing paths are excluded.",
+      "acceptance": "1280 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; actual path/ASCII uppercase/string children execute in constructor and standalone path cases. Release bounds/domain checks pass.",
+      "comparison_cases": 1280,
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
-        "Executable path initializer0x51d3c0; actual registry access and source string copy; language failed-open uninitialized local handle."
+        "Actual GetModuleFileName/registry/copy services; nonzero-locale and overflowing path behavior; language failed-open uninitialized local handle."
       ],
       "evidence_ids": [
         "ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627",
         "ev_c9c847e151226245bd076fc5262ab929d8cb048a2e85c8fa45bc0f856fe2ae8e",
         "ev_58a255ef93365cd34bf50f0c3b333423de847131136a7fd7cdc91c43b08d8836",
         "ev_545fb83da9cc65cef0137a042bf746b413f9d4c286755a8e3476e894d24e3b84",
-        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93"
+        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93",
+        "ev_95d194c8149e5b23e6a8cdb51da4e938dd089b1ac59e0e0a33fa8ece48ddc2e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
       ],
       "sources": [
+        "docs/recovery/install-registry-path.md",
         "docs/recovery/install-registry-runtime.md",
+        "native/cmds/install_registry_path.cmake",
         "native/cmds/install_registry_runtime.cmake",
         "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_path.cpp",
         "native/src/install_registry_runtime.cpp",
         "native/tests/cell_io.hpp",
+        "native/tests/install_registry_path_test.cpp",
         "native/tests/install_registry_runtime_cases.hpp",
         "native/tests/install_registry_runtime_compare.cpp",
         "native/tests/install_registry_runtime_test.cpp",
@@ -122,6 +142,7 @@
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [
+        "0x51d3c0",
         "0x51d490",
         "0x51d580",
         "0x530ab0"
@@ -133,28 +154,34 @@
       "verification": "original-comparison-bounded",
       "subsystem": "install-registry-runtime",
       "owner": "client-recovery",
-      "scope": "Complete constructor, reopen, handle predicate and language-query routines with full owner byte image and explicit path, registry, bounded-copy boundaries.",
-      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded.",
-      "acceptance": "1024 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; Release domain test remains active without assertions.",
-      "comparison_cases": 1024,
+      "scope": "Complete constructor, module-path initializer, reopen, handle predicate and language query; constructor executes recovered path preparation.",
+      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded. Path preparation admits terminated ASCII module paths with locale zero and a bounded suffix append; nonzero locale, unterminated and overflowing paths are excluded.",
+      "acceptance": "1280 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; actual path/ASCII uppercase/string children execute in constructor and standalone path cases. Release bounds/domain checks pass.",
+      "comparison_cases": 1280,
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
       "unresolved": [
-        "Executable path initializer0x51d3c0; actual registry access and source string copy; language failed-open uninitialized local handle."
+        "Actual GetModuleFileName/registry/copy services; nonzero-locale and overflowing path behavior; language failed-open uninitialized local handle."
       ],
       "evidence_ids": [
         "ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627",
         "ev_c9c847e151226245bd076fc5262ab929d8cb048a2e85c8fa45bc0f856fe2ae8e",
         "ev_58a255ef93365cd34bf50f0c3b333423de847131136a7fd7cdc91c43b08d8836",
         "ev_545fb83da9cc65cef0137a042bf746b413f9d4c286755a8e3476e894d24e3b84",
-        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93"
+        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93",
+        "ev_95d194c8149e5b23e6a8cdb51da4e938dd089b1ac59e0e0a33fa8ece48ddc2e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
       ],
       "sources": [
+        "docs/recovery/install-registry-path.md",
         "docs/recovery/install-registry-runtime.md",
+        "native/cmds/install_registry_path.cmake",
         "native/cmds/install_registry_runtime.cmake",
         "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_path.cpp",
         "native/src/install_registry_runtime.cpp",
         "native/tests/cell_io.hpp",
+        "native/tests/install_registry_path_test.cpp",
         "native/tests/install_registry_runtime_cases.hpp",
         "native/tests/install_registry_runtime_compare.cpp",
         "native/tests/install_registry_runtime_test.cpp",
@@ -164,6 +191,56 @@
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [
+        "0x51d3c0",
+        "0x51d490",
+        "0x51d580",
+        "0x530ab0"
+      ]
+    },
+    "0x51d3c0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "install-registry-runtime",
+      "owner": "client-recovery",
+      "scope": "Complete constructor, module-path initializer, reopen, handle predicate and language query; constructor executes recovered path preparation.",
+      "supported_domain": "Writable 0x210-byte owner image; valid synthetic source identities and returning platform callbacks. Language helper admits successful open only; original uninitialized handle on failed open, real registry/module paths and host resources excluded. Path preparation admits terminated ASCII module paths with locale zero and a bounded suffix append; nonzero locale, unterminated and overflowing paths are excluded.",
+      "acceptance": "1280 complete original-instruction cases compare return bits, every owner byte, language global and ordered boundary arguments/images on MSVC and Zig; actual path/ASCII uppercase/string children execute in constructor and standalone path cases. Release bounds/domain checks pass.",
+      "comparison_cases": 1280,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual GetModuleFileName/registry/copy services; nonzero-locale and overflowing path behavior; language failed-open uninitialized local handle."
+      ],
+      "evidence_ids": [
+        "ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627",
+        "ev_c9c847e151226245bd076fc5262ab929d8cb048a2e85c8fa45bc0f856fe2ae8e",
+        "ev_58a255ef93365cd34bf50f0c3b333423de847131136a7fd7cdc91c43b08d8836",
+        "ev_545fb83da9cc65cef0137a042bf746b413f9d4c286755a8e3476e894d24e3b84",
+        "ev_4b4cce70bd30c199eb859a7cf387ed9c92ba5a07a9263a321c8f467e85104b93",
+        "ev_95d194c8149e5b23e6a8cdb51da4e938dd089b1ac59e0e0a33fa8ece48ddc2e4",
+        "ev_ca1aeed137400cd14e165e144848ef6068814911fbcb839fa595e3af765f883e"
+      ],
+      "sources": [
+        "docs/recovery/install-registry-path.md",
+        "docs/recovery/install-registry-runtime.md",
+        "native/cmds/install_registry_path.cmake",
+        "native/cmds/install_registry_runtime.cmake",
+        "native/include/mco/install_registry_runtime.hpp",
+        "native/src/install_registry_path.cpp",
+        "native/src/install_registry_runtime.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/install_registry_path_test.cpp",
+        "native/tests/install_registry_runtime_cases.hpp",
+        "native/tests/install_registry_runtime_compare.cpp",
+        "native/tests/install_registry_runtime_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/install_registry_runtime_cases.py",
+        "tools/native_install_registry_runtime_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x51d3c0",
         "0x51d490",
         "0x51d580",
         "0x530ab0"
