@@ -1,0 +1,45 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x530790": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "installation-startup",
+      "owner": "client-recovery",
+      "scope": "Complete coordinator body with synthetic returning registry, profile, drive and file services; exact shipped path table included.",
+      "supported_domain": "At most31 valid terminated rows and nonempty terminated root. Exact shipped table has19 rows and no type3 row; two type2 rows are Music and Movies. Synthetic type3 rows are admitted only when installation level is not2. The original level2/type3 path consumes uninitialized stack bytes and is excluded. The empty-root precheck reads one byte before its buffer and is excluded. SEH, real registry/profile data, drives and files remain external.",
+      "acceptance": "520 complete original-instruction calls compare return value, four globals, all8320 path-table bytes and ordered helper arguments on MSVC and Zig.",
+      "comparison_cases": 520,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual Windows registry/profile, drive and filesystem behavior; SEH exception behavior; empty-root inputs; arbitrary level2/type3 tables."
+      ],
+      "evidence_ids": [
+        "ev_19f623e75f8047e3ddf83b003e378f7a839580990f506ac5cac221cc1de92ca3",
+        "ev_b3ad95cad2414c931a32f2d01905112449ae3af6d0332e830a2426a2279d9f98",
+        "ev_097c52388edbc82479678786315d45f1d524b542e21a9b7653015e53b2ec5c00",
+        "ev_e229ba23bfcf229f84be9f080676bb4526c90057ae2a7f8b436a439211dfeed5",
+        "ev_cc285f9b5d3560dd868183513e656da297492378555b4730934727b46f7d191a",
+        "ev_72545d70799356e8b0f86b0a219efe707c369acf27edd2dbcb9ccaac27be88a8"
+      ],
+      "sources": [
+        "docs/recovery/installation-check.md",
+        "native/cmds/installation_check.cmake",
+        "native/include/mco/installation_check.hpp",
+        "native/include/mco/installation_support.hpp",
+        "native/src/installation_check.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/installation_check_cases.hpp",
+        "native/tests/installation_check_compare.cpp",
+        "native/tests/installation_check_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/installation_check_cases.py",
+        "tools/native_installation_check_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": []
+    }
+  }
+}

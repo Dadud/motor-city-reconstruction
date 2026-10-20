@@ -44,11 +44,9 @@
       "Actual host drive API and complete install coordinator/Windows startup acceptance."
     ],
     "evidence_ids": [
-      "ev_a32a4347bdb661d40a90ff83fbf7176fdb8a26c23515a469257343aa0e8644aa",
-      "ev_bbe836809938933770ece69d331379e45abac019525ce8d3c98f9b8ced5e2b29",
-      "ev_d72dbeac07301dd161b46a246d7974981f97894bd59554333904ff6cafbbae8c",
-      "ev_7b67d1019895b2c7d5713b89632df70788ee5d689c33ba814b51568c05523a65",
-      "ev_793ded4e5feaeee8c8fc72e5acfb366bea505486df9859b79a706a9559235dc6"
+      "ev_b3ad95cad2414c931a32f2d01905112449ae3af6d0332e830a2426a2279d9f98",
+      "ev_097c52388edbc82479678786315d45f1d524b542e21a9b7653015e53b2ec5c00",
+      "ev_e229ba23bfcf229f84be9f080676bb4526c90057ae2a7f8b436a439211dfeed5"
     ]
   }
 }

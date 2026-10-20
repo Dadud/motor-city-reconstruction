@@ -63,8 +63,8 @@ was supplied to this run, so the shape total understates the full set.
 
 ## Wave order (region-level first cut)
 
-Wave execution: W0 67/658, W1 0/1,189, W2 12/437, W4 6/1,078, W5 16/6,635, W6 3/1,763
-104 of 11,760 required entries covered across 5 active wave(s).
+Wave execution: W0 67/658, W1 0/1,189, W2 13/437, W4 6/1,078, W5 16/6,635, W6 3/1,763
+105 of 11,760 required entries covered across 5 active wave(s).
 
 | Wave | Required entries |
 | --- | ---: |
