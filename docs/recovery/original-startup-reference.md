@@ -15,6 +15,8 @@ Private probes ran the SHA-pinned mcity.exe (`28c0cdde77ed24bac6aeeea65699c16be0
 
 Full results remain private under `evidence/original-startup-offline-20261018/probe-01` through `probe-08`. Probe 08 script SHA-256: `097522ff145635e0943417cae2c67490fe91c17d7a75901cb5d0308f91431dbc`. Prior stop attempts after process exit returned Windows error 87; subsequent probes retain the spawned process handle and distinguish already-exited state from forced termination without relying on a reusable PID.
 
+The retained Probe 08 status payload is `evidence/original-startup-offline-20261018/probe-08/006-tools-call.json`; its summary is `summary.json`. Within the eight-second controlled run, Frida observed entries and returns for `WinMain` (`0x5241f0`), launcher atoms (`0x523ed0`), and install check (`0x530790`): returns were 0, 0, and 0 respectively. It then observed a blocked `WinExec` call at `0x52436d`, followed by WinMain return 0 and `ExitProcess(0)`. Hook list included `WinExec`; API/child/network/write controls and modified dialogs still bound the observation. This establishes the observed direct-launch handoff sequence for that run, not the behavior of the blocked child.
+
 ## Primary static confirmation
 
 Ghidra 12.1.4, target SHA above, batch analysis profile `71d7ca265fa4ce13787c44df478e19d5e53d867f56db0648321f11364213ffcd`:
