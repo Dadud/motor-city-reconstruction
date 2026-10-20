@@ -1,0 +1,44 @@
+{
+  "id": "install_registry_string",
+  "status": "implemented",
+  "roots": [
+    {
+      "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+      "address": "0x51d7c0"
+    }
+  ],
+  "brief": "Recover profile/registry string selection and exact bounded copy with full owner/output byte preservation.",
+  "decl": "bool registry_read_string(RegistryInstallState &state, const RegistryStringPlatform &platform, std::uint32_t name, std::span<std::byte> output, std::uint32_t count);",
+  "comparison": {
+    "includes": [
+      "install_registry_string_cases.hpp"
+    ],
+    "body": "        install_registry_string_cases::compare(input);"
+  },
+  "shared_sources": [
+    "native/tests/install_registry_string_cases.hpp",
+    "tools/install_registry_string_cases.py",
+    "docs/recovery/install-registry-string.md",
+    "native/include/mco/install_registry_runtime.hpp"
+  ],
+  "bookkeeping": {
+    "status": "implemented",
+    "translation": "native-bounded",
+    "verification": "original-comparison-bounded",
+    "subsystem": "install-registry-string",
+    "owner": "client-recovery",
+    "scope": "Complete string query with actual original strncpy comparison, profile-vs-registry branch, live owner and preserved output bytes.",
+    "supported_domain": "Distinct writable 0x210-byte owner and up to320-byte output images; count0..256 with sufficient destination; null name/handle/output guards; platform buffers zero-initialized256 bytes and query callback always writes type metadata. Uninitialized type prestate is unobserved. Counts above256, aliasing, actual registry/files excluded.",
+    "acceptance": "2048 fresh complete original-instruction cases compare every owner/output byte and ordered boundary snapshots on MSVC and Zig; NDEBUG native tests check guards, missing bridge, count bound, profile empty-result semantics, padding/nontermination and type/size rejection.",
+    "comparison_cases": 2048,
+    "comparison_corpus": "docs/recovery/corpora/wave0",
+    "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+    "unresolved": [
+      "Real Windows profile/registry strings and API resource semantics; admitted query must write type metadata."
+    ],
+    "evidence_ids": [
+      "ev_a32a4347bdb661d40a90ff83fbf7176fdb8a26c23515a469257343aa0e8644aa",
+      "ev_7340ca6540b8d94ae7bcc6ab693c9d22b74412953f73a13eba083f38b08d9048"
+    ]
+  }
+}

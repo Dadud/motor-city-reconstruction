@@ -1,0 +1,128 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x533f60": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "installation-startup",
+      "owner": "client-recovery",
+      "scope": "Three complete helper bodies; original sprintf child executes in drive oracle, only GetDriveType is replaced. Wrapped address helper returns an identity without dereference.",
+      "supported_domain": "All32-bit drive indices/path indices/mode words; explicit returning synthetic drive-type service. Real host drive classification excluded.",
+      "acceptance": "5120 full original-instruction cases compare results and exact four formatted drive-root bytes on MSVC and Zig; Release domain checks remain active.",
+      "comparison_cases": 5120,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual host drive API and complete install coordinator/Windows startup acceptance."
+      ],
+      "evidence_ids": [
+        "ev_a32a4347bdb661d40a90ff83fbf7176fdb8a26c23515a469257343aa0e8644aa",
+        "ev_bbe836809938933770ece69d331379e45abac019525ce8d3c98f9b8ced5e2b29",
+        "ev_d72dbeac07301dd161b46a246d7974981f97894bd59554333904ff6cafbbae8c",
+        "ev_7b67d1019895b2c7d5713b89632df70788ee5d689c33ba814b51568c05523a65",
+        "ev_793ded4e5feaeee8c8fc72e5acfb366bea505486df9859b79a706a9559235dc6"
+      ],
+      "sources": [
+        "docs/recovery/installation-support.md",
+        "native/cmds/installation_support.cmake",
+        "native/include/mco/installation_support.hpp",
+        "native/src/installation_support.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/installation_support_cases.hpp",
+        "native/tests/installation_support_compare.cpp",
+        "native/tests/installation_support_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/installation_support_cases.py",
+        "tools/native_installation_support_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x530a90",
+        "0x5354d0"
+      ]
+    },
+    "0x530a90": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "installation-startup",
+      "owner": "client-recovery",
+      "scope": "Three complete helper bodies; original sprintf child executes in drive oracle, only GetDriveType is replaced. Wrapped address helper returns an identity without dereference.",
+      "supported_domain": "All32-bit drive indices/path indices/mode words; explicit returning synthetic drive-type service. Real host drive classification excluded.",
+      "acceptance": "5120 full original-instruction cases compare results and exact four formatted drive-root bytes on MSVC and Zig; Release domain checks remain active.",
+      "comparison_cases": 5120,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual host drive API and complete install coordinator/Windows startup acceptance."
+      ],
+      "evidence_ids": [
+        "ev_a32a4347bdb661d40a90ff83fbf7176fdb8a26c23515a469257343aa0e8644aa",
+        "ev_bbe836809938933770ece69d331379e45abac019525ce8d3c98f9b8ced5e2b29",
+        "ev_d72dbeac07301dd161b46a246d7974981f97894bd59554333904ff6cafbbae8c",
+        "ev_7b67d1019895b2c7d5713b89632df70788ee5d689c33ba814b51568c05523a65",
+        "ev_793ded4e5feaeee8c8fc72e5acfb366bea505486df9859b79a706a9559235dc6"
+      ],
+      "sources": [
+        "docs/recovery/installation-support.md",
+        "native/cmds/installation_support.cmake",
+        "native/include/mco/installation_support.hpp",
+        "native/src/installation_support.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/installation_support_cases.hpp",
+        "native/tests/installation_support_compare.cpp",
+        "native/tests/installation_support_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/installation_support_cases.py",
+        "tools/native_installation_support_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x530a90",
+        "0x5354d0"
+      ]
+    },
+    "0x5354d0": {
+      "status": "implemented",
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "installation-startup",
+      "owner": "client-recovery",
+      "scope": "Three complete helper bodies; original sprintf child executes in drive oracle, only GetDriveType is replaced. Wrapped address helper returns an identity without dereference.",
+      "supported_domain": "All32-bit drive indices/path indices/mode words; explicit returning synthetic drive-type service. Real host drive classification excluded.",
+      "acceptance": "5120 full original-instruction cases compare results and exact four formatted drive-root bytes on MSVC and Zig; Release domain checks remain active.",
+      "comparison_cases": 5120,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Actual host drive API and complete install coordinator/Windows startup acceptance."
+      ],
+      "evidence_ids": [
+        "ev_a32a4347bdb661d40a90ff83fbf7176fdb8a26c23515a469257343aa0e8644aa",
+        "ev_bbe836809938933770ece69d331379e45abac019525ce8d3c98f9b8ced5e2b29",
+        "ev_d72dbeac07301dd161b46a246d7974981f97894bd59554333904ff6cafbbae8c",
+        "ev_7b67d1019895b2c7d5713b89632df70788ee5d689c33ba814b51568c05523a65",
+        "ev_793ded4e5feaeee8c8fc72e5acfb366bea505486df9859b79a706a9559235dc6"
+      ],
+      "sources": [
+        "docs/recovery/installation-support.md",
+        "native/cmds/installation_support.cmake",
+        "native/include/mco/installation_support.hpp",
+        "native/src/installation_support.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/installation_support_cases.hpp",
+        "native/tests/installation_support_compare.cpp",
+        "native/tests/installation_support_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/installation_support_cases.py",
+        "tools/native_installation_support_compare.py",
+        "tools/w0_cell_corpus.py"
+      ],
+      "dependencies": [
+        "0x530a90",
+        "0x5354d0"
+      ]
+    }
+  }
+}

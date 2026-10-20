@@ -342,6 +342,12 @@
     },
     "zero_flag": {
       "sha256": "42cbc6ce1d7e02a404e10af5a75171665cdb75c55de8cd3e88113f572d538278"
+    },
+    "install_registry_string": {
+      "sha256": "c0362df613d6d51fbd3c2895857fccc476d00c7d7c640380d0d6a0db7e3a6aae"
+    },
+    "installation_support": {
+      "sha256": "9cfd70b9b86b326442a8e52496dc54c79621a699f9f434bcc76e3cd039b7490d"
     }
   },
   "probes": {
