@@ -298,6 +298,14 @@ Checksum setup evidence:
 Checksum instruction evidence:
 `ev_845ede42f71e5874074abb89dde0407172aa653a3a8989ea5ce38cab1deef2c0`.
 
+### Original client entry after launcher handoff
+
+The game's controller `0x5eda30` consumes the recovered launcher values only after the client startup gate succeeds. It reads the active shard count, chooses a randomized starting index, then cycles through the shard list. It checks each candidate's `ShardId` and optional `StatusId`, applies another eligibility check, and skips invalid candidates. With an eligible shard it checks the current account/session state, then makes an indirect call through the client service object at vtable offset `+0x0c`, passing the two launcher strings, service ID `2176`, the client identity value, and two output buffers. The indirect target remains unresolved in static references; this establishes the caller's arguments and order, not the request implementation or wire format.
+
+When that call returns zero, the controller invokes another service method and requests the persona list. It then selects the literal `Motor City` through one service method and invokes the following method with that selection. This is consistent with the separately recovered account, persona, and lobby operations in [the developer account flow](online-account.md), but the controller's indirect methods have not yet been proven identical to those portable service calls. A zero-shard list reports `No shards active`; invalid candidate records are logged and skipped. Failed account attempts are logged with the attempt index and status before trying the remaining candidates, unless the controller's stop flag is set. Error-code-specific UI branches include an invalid-executable message.
+
+Current static evidence is from the hash-pinned shipped client (`28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`), Ghidra 12.1.4: complete instruction listing for controller `0x5eda30`, `ev_681e144cfbf2aa5960e013013e96d2c6b2342f4f35788c62400e6e917cd1d3df`; the account dispatch at `0x5ede3d` is explicitly unresolved by the provider's static call-reference analysis, `ev_fa69153c12f53a325c14ae88987326f94c62941b44639a490778ed5b30aabb94`. No authenticated original-client session has been captured. Linking the virtual methods to concrete implementations, matching them to the recovered portable protocol stages, and passing successful persona/lobby results into the actual game UI remain open.
+
 ### Login success response
 
 `client/nps_response.py` decodes the `0x601` payload read by native function
