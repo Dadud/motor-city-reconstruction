@@ -19,6 +19,8 @@ The retained Probe 08 status payload is `evidence/original-startup-offline-20261
 
 ## Primary static confirmation
 
+The complementary launcher-side atom creation and `mcity.exe` invocation are documented in [launcher protocol](launcher-protocol.md).
+
 Ghidra 12.1.4, target SHA above, batch analysis profile `71d7ca265fa4ce13787c44df478e19d5e53d867f56db0648321f11364213ffcd`:
 
 - `ev_187bc9ccf772d1215142971cc0927676867dc56622ba2ab235abf9e7a7bb1627`: `0x718d40` sets a logging-enable field from the optional registry value and continues regardless of the absent key. Also confirms registry constructor/reopen/language helper pseudocode.
