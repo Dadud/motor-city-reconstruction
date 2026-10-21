@@ -141,7 +141,22 @@ before `0x457550` and no object mutation. Its sampled and fallback heights are
 produced by the Python track lookup/plane composition and passed through the
 height filter. Run
 `python -m tools.terrain_candidate_height_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
-Accepted candidates and their response construction remain unverified.
+
+The accepted-candidate normal helper `0x459e30`
+(`ev_68a8ef9c98355d85f293f808bb9ece61329e4891ca5db1018c235e20427e321b`) is
+translated as `terrain_response_normal` and matched 261 direct original calls
+with maximum absolute error `1.4901161193847656e-7`. The body response helper
+`0x457550` (`ev_83c698b2ec1c4b875f84246b3e11dbbbf6a676b523333c3bff83c55949ff0684`) is
+translated as `terrain_impact_response`; 260 supplied-state original calls
+matched with maximum absolute error `0.0001220703125` under a magnitude-scaled
+tolerance. One accepted supplied-world triangle also runs through the actual
+`0x45a320` entry: it performs three terrain/plane queries, calls
+`0x459e30` twice and `0x457550` once, and the translated normal, response
+status, velocity changes and tangential contact record match. No other body
+fields change in that fixture. Run
+`python -m tools.terrain_response_normal_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` and
+`python -m tools.terrain_impact_response_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the helper comparisons, or
+`python -m tools.terrain_candidate_impact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the enclosing accepted-candidate case. Triangle table coverage, motion-based vertex selection over varied states and live-world behavior remain open.
 
 `0x458530` constructs center-of-mass contact levers and radial directions from
 the supplied world-space point. It samples for up to 32 steps and stops when

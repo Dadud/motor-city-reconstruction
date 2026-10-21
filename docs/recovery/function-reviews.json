@@ -1782,12 +1782,15 @@
   "0x45a320": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The shape-0 early candidate gates and three-vertex height filter are translated in Python. Five direct original cases verify projected-edge and degenerate-edge rejection. A further supplied flat-world case executes the actual 0x45a320 entry, performs three real 0x42e760 terrain lookups and three 0x42dc50 plane queries, then rejects at the 0.1016 minimum-gap gate without calling response or mutating the body. The Python height gate covers the per-vertex ±0.5 fallback to object-plane height. Shape tables, accepted-candidate response construction, the specialized byte +6 path, and live terrain behavior remain unported.",
+    "scope": "The shape-0 early candidate gates, three-vertex height filter, response normal and supplied-body terrain impulse are translated in Python. Five direct original cases verify projected-edge and degenerate-edge rejection; one supplied flat-world case verifies height rejection after three real terrain lookups and plane queries. A separate accepted triangle executes the actual 0x45a320 entry through three 0x42e760 lookups, three 0x42dc50 plane queries, two 0x459e30 normal constructions and one 0x457550 response; the normal, response status, velocity changes and tangential contact record match the translated composition and no other supplied body fields change. Independent helper comparisons cover 261 original 0x459e30 cases (maximum error 1.4901161193847656e-7) and 260 original 0x457550 cases (maximum error 0.0001220703125 under a magnitude-scaled tolerance). Shape tables, candidate motion/selection across varied body state, the specialized byte +6 path, and live terrain behavior remain unported.",
     "sources": [
       "client/collision_terrain.py",
       "tests/test_collision_terrain.py",
       "tools/collision_terrain_gate_oracle.py",
       "tools/terrain_candidate_height_oracle.py",
+      "tools/terrain_candidate_impact_oracle.py",
+      "tools/terrain_response_normal_oracle.py",
+      "tools/terrain_impact_response_oracle.py",
       "docs/collision-world.md"
     ]
   },

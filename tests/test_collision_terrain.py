@@ -2,7 +2,9 @@ import unittest
 
 from client.collision_terrain import (triangle_candidate_gate,
                                       triangle_candidate_height_gate,
-                                      sample_triangle_candidate_heights)
+                                      sample_triangle_candidate_heights,
+                                      terrain_response_normal,
+                                      terrain_impact_response)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -73,6 +75,27 @@ class TerrainTriangleGateTests(unittest.TestCase):
         self.assertFalse(result.candidate.accepted)
         self.assertEqual(result.candidate.gaps, (1., 1., 1.))
         self.assertEqual(len(result.query_records), 3)
+
+    def test_response_normal_is_upward_and_degenerate_is_zero(self):
+        self.assertEqual(terrain_response_normal(self.triangle), (0., 1., 0.))
+        reverse = (self.triangle[0], self.triangle[2], self.triangle[1])
+        self.assertEqual(terrain_response_normal(reverse), (0., 1., 0.))
+        self.assertEqual(terrain_response_normal((self.triangle[0],) * 3),
+                         (0., 0., 0.))
+
+    def test_terrain_impulse_respects_load_and_work_limits(self):
+        normal = (0., 1., 0.)
+        limited = terrain_impact_response((1., 0., 0.), (0., 0., 0.),
+                                          1., normal, .45, .2)
+        full = terrain_impact_response((1., 0., 0.), (0., 0., 0.),
+                                       1., normal, 4., .5)
+        unloaded = terrain_impact_response((1., 0., 0.), (0., 0., 0.),
+                                           1., (0., -1., 0.), .45, .2)
+        self.assertTrue(limited.applied)
+        self.assertEqual(limited.response_status, 2)
+        self.assertEqual(full.response_status, 1)
+        self.assertFalse(unloaded.applied)
+        self.assertEqual(unloaded.linear_velocity, (1., 0., 0.))
 
 
 if __name__ == '__main__':
