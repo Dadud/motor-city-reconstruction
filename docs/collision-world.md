@@ -145,6 +145,19 @@ contact record from supplied body, point and normal data; 128 direct original
 cases and the matching native/Python corpus pass. The terrain query, support
 point correction and complete `0x459150` caller remain unresolved.
 
+Additional static inspection of `0x459150` narrows the remaining port boundary.
+It transforms 22 local points by the object's 3x3 orientation, selects points
+whose transformed local Y is nonpositive, and copies a 0x44-byte per-point
+query seed from the object's `+0x370` table before calling `0x42e760` at each
+world-space point. For successful queries it normalizes the first three
+surface coefficients, tests the point against the returned surface reference
+and a one-step vertical-motion allowance, and may translate the object and
+all 22 transformed points together. A second pass evaluates eligible support
+contacts through `0x457df0` with per-surface coefficients. This is a static
+control-flow recovery only: byte-for-byte query-seed semantics, the complete
+second-pass memory layout, and caller-level dynamic equivalence still need a
+portable implementation and direct original comparison.
+
 The observed dispatcher order now has a bounded Python source translation in
 [`client/collision_dispatch.py`](../client/collision_dispatch.py), documented
 with its explicit child and global-state boundaries in

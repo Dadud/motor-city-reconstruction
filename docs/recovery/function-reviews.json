@@ -1791,11 +1791,14 @@
       "tools/vector_array_oracle.py",
       "tools/surface_impulse_oracle.py",
       "docs/collision-world.md",
-      "docs/calculations/collision-helpers.md"
+      "docs/calculations/collision-helpers.md",
+      "native/include/mco/track_surface_lookup.hpp",
+      "client/track_surface_lookup.py"
     ],
     "evidence_ids": [
       "ev_c3f3b262fb8913fa5ff557be4a24aaafac22d2ca4509199dbb425410887d4565",
-      "ev_80d1d52723145fbcdedd1f6dd115dc7233a64423af5180920d0ead2fd25e40e1"
+      "ev_80d1d52723145fbcdedd1f6dd115dc7233a64423af5180920d0ead2fd25e40e1",
+      "ev_34a2a4197ce5a2c1b9b49ae330f474cc989eb7249897b8c66e82f76fd5875e1b"
     ],
     "verification_refs": [
       "tools/vector_array_oracle.py",
