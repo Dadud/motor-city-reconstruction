@@ -145,28 +145,35 @@ contact record from supplied body, point and normal data; 128 direct original
 cases and the matching native/Python corpus pass. The terrain query, support
 point correction and complete `0x459150` caller remain unresolved.
 
-Additional static inspection of `0x459150` narrows the remaining port boundary.
-It transforms 22 local points by the object's 3x3 orientation, selects points
-whose transformed local Y is nonpositive, and copies a 0x44-byte per-point
-query seed from the object's `+0x370` table before calling `0x42e760` at each
-world-space point. For successful queries it normalizes the first three
-surface coefficients, tests the point against the returned surface reference
-and a one-step vertical-motion allowance, and may translate the object and
-all 22 transformed points together. A second pass evaluates eligible support
-contacts through `0x457df0` with per-surface coefficients. This is a static
-control-flow recovery only: byte-for-byte query-seed semantics, the complete
-second-pass memory layout, and caller-level dynamic equivalence still need a
-portable implementation and direct original comparison.
+`0x459150` transforms 22 local points by the object's 3x3 orientation, selects
+points whose transformed local Y is nonpositive, and copies the 0x44-byte query
+seed at object `+0x370` into a separate stack record for each selected point.
+Each world-space point is passed to `0x42e760`. Successful queries supply the
+surface coefficients, descriptor and first-vertex pointers used by a signed
+plane test and one-step vertical-motion allowance. Penetration can translate
+the object and its 22-point world buffer. A second pass checks corrected point
+distances, selects material coefficients from the descriptor type and calls
+`0x457df0`; successful impulses update the support count and material field.
 
-The first pass is now represented in Python by
-[`client/collision_support.py`](../client/collision_support.py). It composes
-the existing 22-point transform and `TrackSurfaceWorld` query, retains the
-mutated per-point query records, and applies the traced signed-plane correction
-to the object position. Its synthetic tests cover the local-height filter and
-penetration correction. It has not yet been compared at the `0x459150` entry;
-the later support-impulse pass and complete memory-image side effects remain
-outside this port.
+Python now composes both passes in
+[`client/collision_support.py`](../client/collision_support.py). The direct
+original-execution harness `tools/support_correction_oracle.py` ran the actual
+`0x459150` entry and its real lookup, point-translation and impulse callees in
+256 supplied-world cases. It compared return counts, corrected positions,
+linear/angular velocities, all 22 world support points, discrete contact
+fields and recorded contact floats. The cases included 89 position corrections
+and 39 successful impulses; maximum absolute error among compared floats was
+`4.76837158203125e-7` (acceptance tolerance `max(4e-4, 2e-5 relative)`). This
+is bounded synthetic-world evidence, not complete live-track or game-tick
+equivalence.
 
+The native C++ first/second-pass implementation is in
+[`native/src/collision_support.cpp`](../native/src/collision_support.cpp) and
+builds as part of `mco_core`. The native/Python comparison covers the same 256
+worlds and all compared outputs, with maximum absolute error
+`4.897460925690211e-8`. Its direct original comparison is still pending; the
+256-case original check currently executes the translated Python composition
+against the original caller.
 The observed dispatcher order now has a bounded Python source translation in
 [`client/collision_dispatch.py`](../client/collision_dispatch.py), documented
 with its explicit child and global-state boundaries in

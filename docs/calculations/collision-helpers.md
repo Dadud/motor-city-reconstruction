@@ -81,8 +81,10 @@ shared vector to each point, and supports the in-place source/destination
 alias used by its caller. Across 128 direct original calls, counts 0, 1, 2, 22
 and 47 and alternating alias/out-of-place buffers matched float-for-float.
 The native implementation matches Python across the same corpus, and its
-in-place 22-point test passes. This recovers the array operation only; it does
-not recover the terrain candidate query or the full `0x459150` support routine.
+in-place 22-point test passes. The helper is also composed into the bounded
+`0x459150` support-correction caller described in
+[`collision-world.md`](../collision-world.md); full track and game-tick
+equivalence remain open.
 
 ## Sampled pair impact
 

@@ -1781,8 +1781,8 @@
   },
   "0x459150": {
     "translation": "partial",
-    "verification": "original-comparison-pending",
-    "scope": "Partial first-pass support correction is translated in Python in client/collision_support.py over a supplied bounded TrackSurfaceWorld, 22 local points, orientation, owner position/vertical velocity and 22 query-record seeds. It composes the existing point transform and 0x42e760 query translation, applies the traced local-height and signed-plane tests, and returns corrected object/world support positions plus mutated query records. Focused synthetic tests cover skipped upper points and penetration correction. The full 0x459150 entry has not been compared directly; the later impulse pass, exact query-record pointer behavior and complete owner-memory side effects remain unresolved.",
+    "verification": "original-comparison-bounded",
+    "scope": "Partial 0x459150 implementation is present in Python and C++, including 22-point transforms/filtering, per-point query records, signed-plane position correction, material selection and the second support-impulse pass. A direct original-entry harness executed actual 0x459150 and its real 0x42e760, 0x6f1450 and 0x457df0 callees in 256 supplied-world cases. Return counts, corrected positions, linear/angular velocities, all world support points, discrete contact fields and contact floats matched within max(4e-4, 2e-5 relative); maximum observed absolute float error was 4.76837158203125e-7. The Python path had 89 corrections and 39 impacts. Native/Python parity on the same 256 cases has maximum absolute output error 4.897460925690211e-8. Coverage is synthetic bounded worlds, not live track/game-tick equivalence; native C++ has not yet been directly compared with the original executable.",
     "sources": [
       "client/geometry_transform.py",
       "native/src/geometry_transform.cpp",
@@ -1795,7 +1795,14 @@
       "native/include/mco/track_surface_lookup.hpp",
       "client/track_surface_lookup.py",
       "client/collision_support.py",
-      "tests/test_collision_support.py"
+      "tests/test_collision_support.py",
+      "native/include/mco/collision_support.hpp",
+      "native/src/collision_support.cpp",
+      "native/tests/collision_support_test.cpp",
+      "tools/support_correction_oracle.py",
+      "CMakeLists.txt",
+      "native/tests/collision_support_compare.cpp",
+      "tools/native_support_correction_compare.py"
     ],
     "evidence_ids": [
       "ev_c3f3b262fb8913fa5ff557be4a24aaafac22d2ca4509199dbb425410887d4565",
@@ -1805,12 +1812,17 @@
     "verification_refs": [
       "tools/vector_array_oracle.py",
       "tools/surface_impulse_oracle.py",
-      "tests/test_collision_support.py"
+      "tests/test_collision_support.py",
+      "tools/support_correction_oracle.py",
+      "native/tests/collision_support_test.cpp",
+      "native/tests/collision_support_compare.cpp",
+      "tools/native_support_correction_compare.py"
     ],
     "doc_refs": [
       "docs/collision-world.md",
       "docs/calculations/collision-helpers.md",
-      "docs/collision-world.md"
+      "docs/collision-world.md",
+      "docs/calculations/collision-helpers.md"
     ]
   }
 }
