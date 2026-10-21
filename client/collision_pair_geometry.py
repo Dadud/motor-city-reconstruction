@@ -35,6 +35,14 @@ class OrientedBoxPointResult:
     target_direction: tuple | None
 
 
+@dataclass(frozen=True)
+class OwnerBoxPointResult:
+    inside: bool
+    target_local_point: tuple
+    owner_world_point: tuple | None
+    owner_direction: tuple | None
+
+
 def oriented_box_point_test(owner, target, local_point):
     """Translate original helper 0x45b8e0 for a normalized target-local point.
 
@@ -75,3 +83,49 @@ def oriented_box_point_test(owner, target, local_point):
         inverse_length = _f32(1.0 / math.sqrt(squared_length))
         direction = tuple(_f32(value * inverse_length) for value in direction)
     return OrientedBoxPointResult(True, projected, world_point, direction)
+
+
+def _owner_point_test(owner, target, local_point, with_direction):
+    if not isinstance(owner, OrientedCollisionBox) or not isinstance(target, OrientedCollisionBox):
+        raise ValueError('owner and target collision boxes are required')
+    if len(local_point) != 3 or any(not math.isfinite(float(x)) for x in local_point):
+        raise ValueError('normalized local point must contain three finite values')
+    point = tuple(_f32(x) for x in local_point)
+    offset = tuple(_f32(target.center[i] - owner.center[i]) for i in range(3))
+    projected = []
+    for target_axis in target.axes:
+        center_projection = sum(target_axis[k] * offset[k] for k in range(3))
+        extent_projection = sum(
+            _f32(_f32(sum(owner.axes[axis][k] * target_axis[k]
+                          for k in range(3))) * owner.half_extents[axis])
+            * point[axis]
+            for axis in range(3))
+        projected.append(_f32(extent_projection - center_projection))
+    projected = tuple(projected)
+    inside = all(-target.half_extents[i] <= projected[i] <= target.half_extents[i]
+                 for i in range(3))
+    if not inside:
+        return OwnerBoxPointResult(False, projected, None, None)
+
+    world_point = tuple(_f32(owner.center[k] + sum(
+        owner.axes[axis][k] * owner.half_extents[axis] * point[axis]
+        for axis in range(3))) for k in range(3))
+    if not with_direction:
+        return OwnerBoxPointResult(True, projected, world_point, None)
+    direction = tuple(_f32(-sum(owner.axes[axis][k] * point[axis]
+                                for axis in range(3))) for k in range(3))
+    squared_length = _f32(sum(value * value for value in direction))
+    if squared_length != 0.0:
+        inverse_length = _f32(1.0 / math.sqrt(squared_length))
+        direction = tuple(_f32(value * inverse_length) for value in direction)
+    return OwnerBoxPointResult(True, projected, world_point, direction)
+
+
+def owner_point_direction_test(owner, target, local_point):
+    """Translate original 0x45bb70: test an owner point and publish its normal."""
+    return _owner_point_test(owner, target, local_point, True)
+
+
+def owner_point_contact_test(owner, target, local_point):
+    """Translate original 0x45be10: test an owner point and publish contact point."""
+    return _owner_point_test(owner, target, local_point, False)

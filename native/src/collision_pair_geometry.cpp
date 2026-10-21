@@ -20,6 +20,70 @@ void validate(const OrientedCollisionBox& box) {
         for (float value : axis)
             if (!std::isfinite(value)) throw std::invalid_argument("finite collision axes required");
 }
+OwnerBoxPointResult owner_point_test(
+    const OrientedCollisionBox& owner,
+    const OrientedCollisionBox& target,
+    const std::array<double, 3>& normalized_point,
+    bool with_direction) {
+    validate(owner);
+    validate(target);
+    std::array<float, 3> point{};
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (!std::isfinite(normalized_point[i]))
+            throw std::invalid_argument("finite normalized collision point required");
+        point[i] = stored(normalized_point[i]);
+    }
+    std::array<float, 3> offset{};
+    for (std::size_t i = 0; i < 3; ++i)
+        offset[i] = stored(static_cast<double>(target.center[i]) - owner.center[i]);
+
+    OwnerBoxPointResult result{};
+    for (std::size_t i = 0; i < 3; ++i) {
+        double center_projection = 0;
+        for (std::size_t k = 0; k < 3; ++k)
+            center_projection += static_cast<double>(target.axes[i][k]) * offset[k];
+        double extent_projection = 0;
+        for (std::size_t j = 0; j < 3; ++j) {
+            double axis_dot = 0;
+            for (std::size_t k = 0; k < 3; ++k)
+                axis_dot += static_cast<double>(owner.axes[j][k]) * target.axes[i][k];
+            const float scaled_axis = stored(static_cast<double>(stored(axis_dot)) *
+                                              owner.half_extents[j]);
+            extent_projection += static_cast<double>(scaled_axis) * point[j];
+        }
+        result.target_local_point[i] = stored(extent_projection - center_projection);
+    }
+    result.inside = true;
+    for (std::size_t i = 0; i < 3; ++i)
+        result.inside = result.inside &&
+            -target.half_extents[i] <= result.target_local_point[i] &&
+            result.target_local_point[i] <= target.half_extents[i];
+    if (!result.inside) return result;
+
+    for (std::size_t k = 0; k < 3; ++k) {
+        double displacement = 0;
+        double direction = 0;
+        for (std::size_t j = 0; j < 3; ++j) {
+            displacement += static_cast<double>(owner.axes[j][k]) *
+                            owner.half_extents[j] * point[j];
+            direction -= static_cast<double>(owner.axes[j][k]) * point[j];
+        }
+        result.owner_world_point[k] = stored(owner.center[k] + displacement);
+        if (with_direction) result.owner_direction[k] = stored(direction);
+    }
+    if (with_direction) {
+        const double squared = stored(
+            static_cast<double>(result.owner_direction[0]) * result.owner_direction[0] +
+            static_cast<double>(result.owner_direction[1]) * result.owner_direction[1] +
+            static_cast<double>(result.owner_direction[2]) * result.owner_direction[2]);
+        if (squared != 0) {
+            const float inverse = stored(1.0 / std::sqrt(squared));
+            for (auto& value : result.owner_direction)
+                value = stored(static_cast<double>(value) * inverse);
+        }
+    }
+    return result;
+}
 } // namespace
 
 OrientedBoxPointResult oriented_box_point_test(
@@ -85,5 +149,17 @@ OrientedBoxPointResult oriented_box_point_test(
             value = stored(static_cast<double>(value) * inverse);
     }
     return result;
+}
+
+OwnerBoxPointResult owner_point_direction_test(
+    const OrientedCollisionBox& owner, const OrientedCollisionBox& target,
+    const std::array<double, 3>& point) {
+    return owner_point_test(owner, target, point, true);
+}
+
+OwnerBoxPointResult owner_point_contact_test(
+    const OrientedCollisionBox& owner, const OrientedCollisionBox& target,
+    const std::array<double, 3>& point) {
+    return owner_point_test(owner, target, point, false);
 }
 } // namespace mco

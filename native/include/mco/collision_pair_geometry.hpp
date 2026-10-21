@@ -16,9 +16,26 @@ struct OrientedBoxPointResult {
     std::array<float, 3> target_direction;
 };
 
+struct OwnerBoxPointResult {
+    bool inside;
+    std::array<float, 3> target_local_point;
+    std::array<float, 3> owner_world_point;
+    std::array<float, 3> owner_direction;
+};
+
 // Complete bounded translation of original helper 0x45b8e0.
 OrientedBoxPointResult oriented_box_point_test(
     const OrientedCollisionBox& owner,
     const OrientedCollisionBox& target,
     const std::array<double, 3>& normalized_target_point);
+
+// Complete bounded translations of original helpers 0x45bb70 and 0x45be10.
+OwnerBoxPointResult owner_point_direction_test(
+    const OrientedCollisionBox& owner,
+    const OrientedCollisionBox& target,
+    const std::array<double, 3>& normalized_owner_point);
+OwnerBoxPointResult owner_point_contact_test(
+    const OrientedCollisionBox& owner,
+    const OrientedCollisionBox& target,
+    const std::array<double, 3>& normalized_owner_point);
 } // namespace mco

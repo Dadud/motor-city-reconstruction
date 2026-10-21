@@ -109,11 +109,10 @@ records a collision and applies accumulated deltas.
 This pair routine depends on the two recovered numerical helpers, but its
 sample geometry, iteration order, per-body gating, contact-record layout,
 accumulation and coupled body mutations have not yet been reproduced in a
-comparison harness. One of its three oriented-box point-test leaves,
-`0x45b8e0`, is now translated to Python and C++; 192 direct original calls
-match hit/reject decisions and output fields within the documented tolerance.
-The companion leaves `0x45bb70` and `0x45be10`, plus the enclosing pair routine,
-remain open. `0x459150` likewise transforms an array of support points
+comparison harness. All three oriented-box point-test leaves (`0x45b8e0`,
+`0x45bb70`, and `0x45be10`) are now translated to Python and C++; each matches
+192 direct original calls with the documented tolerances. The enclosing pair
+routine remains open. `0x459150` likewise transforms an array of support points
 and applies terrain-plane corrections, but its complete terrain and contact
 producer chain remains open.
 

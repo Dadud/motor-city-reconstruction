@@ -47,6 +47,62 @@
       "docs/collision-world.md"
     ]
   },
+  "0x45bb70": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete bounded owner-point-in-target-box helper translated in Python and C++. 192 original executions include 108 hits; inclusive hit/reject decisions and compared target-local point, owner world contact and normalized inverse owner-basis direction match with maximum absolute float difference 3.814697265625e-6. Caller-prepared matrices are seeded from synthetic box records; the surrounding 0x45af30 setup and response remain unresolved.",
+    "sources": [
+      "client/collision_pair_geometry.py",
+      "native/include/mco/collision_pair_geometry.hpp",
+      "native/src/collision_pair_geometry.cpp",
+      "native/tests/collision_pair_geometry_test.cpp",
+      "native/tests/collision_pair_reverse_compare.cpp",
+      "tools/collision_pair_geometry_oracle.py",
+      "tools/native_collision_pair_reverse_compare.py",
+      "docs/calculations/collision-pair-geometry.md"
+    ],
+    "evidence_ids": [
+      "ev_47af7817d94130338a593452cec9ef05af2846d7da3b1e202f1af00d698eb9e1",
+      "ev_d07c6168165f0bef8d76f4b3aec6b75e67eb1682d94daf5a5a4b9c263e650fde"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_geometry_oracle.py",
+      "tools/native_collision_pair_reverse_compare.py",
+      "native/tests/collision_pair_geometry_test.cpp"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-pair-geometry.md",
+      "docs/collision-world.md"
+    ]
+  },
+  "0x45be10": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete bounded owner-point-in-target-box/contact-point helper translated in Python and C++. 192 original executions include 108 hits; inclusive hit/reject decisions and compared target-local point and owner world contact match with maximum absolute float difference 3.814697265625e-6. Caller-prepared matrices are seeded from synthetic box records; the surrounding 0x45af30 setup and response remain unresolved.",
+    "sources": [
+      "client/collision_pair_geometry.py",
+      "native/include/mco/collision_pair_geometry.hpp",
+      "native/src/collision_pair_geometry.cpp",
+      "native/tests/collision_pair_geometry_test.cpp",
+      "native/tests/collision_pair_reverse_compare.cpp",
+      "tools/collision_pair_geometry_oracle.py",
+      "tools/native_collision_pair_reverse_compare.py",
+      "docs/calculations/collision-pair-geometry.md"
+    ],
+    "evidence_ids": [
+      "ev_7c74d135bbf27cd454c1f44c8f4000b78c260839b54c97651aaad864ddb73f8e",
+      "ev_d07c6168165f0bef8d76f4b3aec6b75e67eb1682d94daf5a5a4b9c263e650fde"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_geometry_oracle.py",
+      "tools/native_collision_pair_reverse_compare.py",
+      "native/tests/collision_pair_geometry_test.cpp"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-pair-geometry.md",
+      "docs/collision-world.md"
+    ]
+  },
   "0x46d1d0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
