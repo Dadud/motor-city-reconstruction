@@ -17,6 +17,8 @@ IDENTITY = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
 
 def body_image(body):
     data = bytearray(body.contact_record)
+    if len(data) < 0x408:
+        data.extend(bytes(0x408 - len(data)))
     struct.pack_into('<B', data, 5, body.mode & 0xff)
     struct.pack_into('<3f', data, 8, *body.position)
     struct.pack_into('<3f', data, 0x14, *body.linear_velocity)
@@ -30,6 +32,7 @@ def body_image(body):
     struct.pack_into('<9f', data, 0x9c, *body.inertia.world_to_body)
     struct.pack_into('<3f', data, 0x2fc, *body.inertia.inverse_inertia)
     struct.pack_into('<f', data, 0x3c0, body.peer_gate)
+    struct.pack_into('<I', data, 0x404, body.embedded_contact_pointer & 0xffffffff)
     return bytes(data)
 
 

@@ -192,4 +192,68 @@ CollisionImpactResult resolve_pair_impulse(
     }
     return {samples != 0, owner, target, samples, status, effective_mass};
 }
+
+CollisionSurfaceImpactResult resolve_surface_impulse(
+    const CollisionImpactBody& body_input,
+    const std::array<float, 3>& contact_input,
+    const std::array<float, 3>& normal_input,
+    float threshold_coefficient,
+    float sliding_coefficient) {
+    CollisionImpactBody body = body_input;
+    const V3 contact = contact_input, normal = normal_input;
+    V3 radial{};
+    const V3 lever = lever_for(body, contact, radial);
+    const float mass = body.mass;
+    const float response_weight = f32(static_cast<double>(body.response_coefficient) + 1.0);
+    V3 linear_sum{}, angular_sum{};
+    V3 current_linear = body.linear_velocity, current_angular{};
+    for (std::size_t i = 0; i < 3; ++i)
+        current_angular[i] = f32(static_cast<double>(body.angular_turn_velocity[i]) * 6.2831855);
+    unsigned samples = 0;
+    int status = 0;
+    for (unsigned step = 0; step < 32; ++step) {
+        const float time = f32(static_cast<double>(step) * .03125);
+        const V3 point_velocity = add(current_linear, cross(current_angular, lever));
+        const V3 relative = scale(point_velocity, mass);
+        const float approach = dot(relative, normal);
+        if (approach >= 0.f) break;
+        const V3 normal_impulse = scale(normal, f32(-approach));
+        const auto response = tangential_response(widen(relative), widen(normal),
+                                                  threshold_coefficient, sliding_coefficient);
+        status = response.status;
+        const V3 tangent_impulse = response.vector;
+        if (step == 0) {
+            put_u32(body.contact_record, 0x3c4, 0);
+            put_f32(body.contact_record, 0x3c8, std::abs(approach));
+            for (std::size_t i = 0; i < 3; ++i) {
+                put_f32(body.contact_record, 0x3cc + 4 * i, normal_impulse[i]);
+                put_f32(body.contact_record, 0x3d8 + 4 * i, tangent_impulse[i]);
+                put_f32(body.contact_record, 0x3e8 + 4 * i, contact[i]);
+            }
+            put_u32(body.contact_record, 0x3e4, static_cast<std::uint32_t>(status));
+            put_u32(body.contact_record, 0x3f4, 2);
+            put_u32(body.contact_record, 0x3f8, body.embedded_contact_pointer);
+            put_f32(body.contact_record, 0x3fc, mass);
+        }
+        const auto normal_motion = impulse_motion(body.inertia,
+            widen(scale(normal_impulse, time)), widen(lever), widen(radial));
+        const auto tangent_motion = impulse_motion(body.inertia,
+            widen(scale(tangent_impulse, time)), widen(lever), widen(radial));
+        current_linear = add(add(current_linear, tangent_motion.linear), normal_motion.linear);
+        current_angular = add(add(current_angular, tangent_motion.angular), normal_motion.angular);
+        for (std::size_t i = 0; i < 3; ++i) {
+            linear_sum[i] = f32(static_cast<double>(normal_motion.linear[i]) * response_weight + linear_sum[i]);
+            linear_sum[i] = f32(static_cast<double>(linear_sum[i]) + tangent_motion.linear[i]);
+            angular_sum[i] = f32(static_cast<double>(normal_motion.angular[i]) * response_weight + angular_sum[i]);
+            angular_sum[i] = f32(static_cast<double>(angular_sum[i]) + tangent_motion.angular[i]);
+        }
+        ++samples;
+    }
+    if (samples != 0) {
+        body.linear_velocity = add(body_input.linear_velocity, linear_sum);
+        body.angular_turn_velocity = add(body_input.angular_turn_velocity,
+                                         scale(angular_sum, .15915494f));
+    }
+    return {samples != 0, body, samples, status};
+}
 } // namespace mco

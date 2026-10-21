@@ -139,6 +139,12 @@ terrain query and full support/contact producer chain remain open.
 Until those steps pass, the playable driving mode's prototype collision
 behavior and all original collision acceptance gates remain open.
 
+The single-body support impulse helper called by `0x459150` is also translated
+in Python and C++ at `0x457df0`. It covers impulse accumulation and its support
+contact record from supplied body, point and normal data; 128 direct original
+cases and the matching native/Python corpus pass. The terrain query, support
+point correction and complete `0x459150` caller remain unresolved.
+
 The observed dispatcher order now has a bounded Python source translation in
 [`client/collision_dispatch.py`](../client/collision_dispatch.py), documented
 with its explicit child and global-state boundaries in

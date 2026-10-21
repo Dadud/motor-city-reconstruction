@@ -1,5 +1,6 @@
 #include "mco/collision_pair_response.hpp"
 #include <array>
+#include <cmath>
 #include <stdexcept>
 
 namespace {
@@ -33,6 +34,24 @@ int main() {
     check(impact.owner.contact_record[0x3e4] == 2);
     check(impact.owner.contact_record[0x3f4] == 4 &&
           impact.owner.contact_record[0x3f8] == 6);
+
+    mco::CollisionImpactBody support{};
+    support.address = 0x3000;
+    support.linear_velocity = {1,0,0};
+    support.mass = 1;
+    support.inertia = {1,{1,1,1},identity,identity};
+    support.embedded_contact_pointer = 0x12345678;
+    const auto surface = mco::resolve_surface_impulse(support, {.5f,0,0},
+                                                      {-1.f,0,0}, .45f, .2f);
+    check(surface.collided && surface.samples == 28 && surface.impact_status == 2);
+    check(std::abs(surface.body.linear_velocity[0]) < 1e-6f &&
+          surface.body.linear_velocity[1] == 0.f && surface.body.linear_velocity[2] == 0.f);
+    check(surface.body.contact_record[0x3e4] == 2 &&
+          surface.body.contact_record[0x3f4] == 2 &&
+          surface.body.contact_record[0x3f8] == 0x78 &&
+          surface.body.contact_record[0x3f9] == 0x56 &&
+          surface.body.contact_record[0x3fa] == 0x34 &&
+          surface.body.contact_record[0x3fb] == 0x12);
 
     owner.linear_velocity = {-1,0,0};
     owner.contact_record.fill(0xa5);

@@ -18,6 +18,7 @@ struct CollisionImpactBody {
     float gate{};
     float peer_gate{};
     std::array<std::uint8_t, 0x400> contact_record{};
+    std::uint32_t embedded_contact_pointer{};
 };
 
 struct CollisionImpactResult {
@@ -29,10 +30,25 @@ struct CollisionImpactResult {
     float effective_mass{};
 };
 
+struct CollisionSurfaceImpactResult {
+    bool collided{};
+    CollisionImpactBody body;
+    unsigned samples{};
+    int impact_status{};
+};
+
 // Supplied-state translation of the sampled impact response at 0x458530.
 CollisionImpactResult resolve_pair_impulse(
     const CollisionImpactBody& owner,
     const CollisionImpactBody& target,
+    const std::array<float, 3>& contact_point,
+    const std::array<float, 3>& normal,
+    float threshold_coefficient,
+    float sliding_coefficient);
+
+// Supplied-state single-body support response at original 0x457df0.
+CollisionSurfaceImpactResult resolve_surface_impulse(
+    const CollisionImpactBody& body,
     const std::array<float, 3>& contact_point,
     const std::array<float, 3>& normal,
     float threshold_coefficient,

@@ -1,6 +1,6 @@
 # Original collision calculation helpers
 
-Three bounded helpers now have authored Python/C++ implementations. They consume
+Four bounded helpers now have authored Python/C++ implementations. They consume
 supplied contact/body data. The original caller order and object-pair contact
 response have now been traced in [the collision update](../collision-world.md),
 but that enclosing path has no portable implementation or trajectory comparison
@@ -108,6 +108,25 @@ Python across the same 256 cases, with maximum absolute output error below
 `5.1e-6`, using `tools/native_collision_pair_response_compare.py` and the
 `mco_collision_pair_response_compare` runner. Neither comparison establishes
 live-game behavior.
+
+## Single-body support impulse
+
+`resolve_surface_impulse` translates the supplied-state body path at `0x457df0`,
+which `0x459150` calls after correcting support points. It derives the center-of-
+mass lever and radial direction, samples the body's current point velocity for
+up to 32 steps, computes normal and tangential response, applies time-scaled
+impulses through `0x457780`, and writes the support contact record on the first
+inward sample. The embedded pointer stored at body `+0x404` is represented as
+input state; contact discovery and the caller's terrain correction are not part
+of this helper.
+
+The direct original-execution comparison in `tools/surface_impulse_oracle.py`
+passes 128 deterministic supplied-state cases. Discrete decisions and contact
+record integers match; floats use a tolerance of `max(2e-4, 1e-6 relative)`,
+with maximum absolute output error `0.000244140625`. The native translation
+matches Python across the same corpus with maximum absolute output error
+`4.921875188301783e-6`. These bounded checks do not establish full terrain
+support, contact discovery, or complete `0x459150` behavior.
 
 ## Verification and remaining collision work
 

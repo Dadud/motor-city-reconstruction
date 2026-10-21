@@ -21,6 +21,7 @@ class CollisionImpactBody:
     gate: float = 0.0
     peer_gate: float = 0.0
     contact_record: bytes = bytes(0x400)
+    embedded_contact_pointer: int = 0
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,14 @@ class CollisionImpactResult:
     samples: int
     impact_status: int
     effective_mass: float
+
+
+@dataclass(frozen=True)
+class CollisionSurfaceImpactResult:
+    collided: bool
+    body: CollisionImpactBody
+    samples: int
+    impact_status: int
 
 
 def _v3(values):
@@ -213,3 +222,69 @@ def resolve_pair_impulse(owner, target, contact_point, normal,
                 tuple(f32(value * .15915494) for value in angular_b)),
             contact_record=record_b)
     return CollisionImpactResult(samples != 0, owner, target, samples, status, effective_mass)
+
+
+def resolve_surface_impulse(body, contact_point, normal,
+                            threshold_coefficient, sliding_coefficient,
+                            max_samples=32):
+    """Translate the supplied-state support impulse path at original 0x457df0."""
+    if not isinstance(body, CollisionImpactBody):
+        raise ValueError('a collision impact body is required')
+    if type(max_samples) is not int or not 1 <= max_samples <= 32:
+        raise ValueError('sample limit must be between 1 and 32')
+    contact, normal = _v3(contact_point), _v3(normal)
+    if len(body.contact_record) < 0x400 or body.address < 0 or body.address > 0xffffffff:
+        raise ValueError('collision body address and contact image are invalid')
+    lever, radial = _lever(body, contact)
+    mass = f32(body.mass)
+    response_weight = f32(body.response_coefficient + 1.)
+    linear_sum = [0., 0., 0.]
+    angular_sum = [0., 0., 0.]
+    current_linear = body.linear_velocity
+    current_angular = tuple(f32(value * 6.2831855)
+                            for value in body.angular_turn_velocity)
+    record = body.contact_record
+    samples = 0
+    status = 0
+    for step in range(max_samples):
+        time = f32(step * .03125)
+        point_velocity = _add(current_linear, _cross(current_angular, lever))
+        relative = _scale(point_velocity, mass)
+        approach = _dot(relative, normal)
+        if approach >= 0:
+            break
+        normal_impulse = _scale(normal, f32(-approach))
+        response = tangential_response(relative, normal,
+                                       threshold_coefficient, sliding_coefficient)
+        tangent_impulse = response.vector
+        status = response.status
+        if step == 0:
+            data = bytearray(record)
+            import struct
+            struct.pack_into('<I', data, 0x3c4, 0)
+            struct.pack_into('<f', data, 0x3c8, abs(approach))
+            struct.pack_into('<3f', data, 0x3cc, *normal_impulse)
+            struct.pack_into('<3f', data, 0x3d8, *tangent_impulse)
+            struct.pack_into('<I', data, 0x3e4, status)
+            struct.pack_into('<3f', data, 0x3e8, *contact)
+            struct.pack_into('<II', data, 0x3f4, 2, 0)
+            struct.pack_into('<I', data, 0x3f8, body.embedded_contact_pointer & 0xffffffff)
+            struct.pack_into('<f', data, 0x3fc, mass)
+            record = bytes(data)
+        normal_motion = impulse_motion(body.inertia, _scale(normal_impulse, time), lever, radial)
+        tangent_motion = impulse_motion(body.inertia, _scale(tangent_impulse, time), lever, radial)
+        current_linear = _add(_add(current_linear, tangent_motion.linear), normal_motion.linear)
+        current_angular = _add(_add(current_angular, tangent_motion.angular), normal_motion.angular)
+        for i in range(3):
+            linear_sum[i] = f32(f32(normal_motion.linear[i] * response_weight) + linear_sum[i])
+            linear_sum[i] = f32(linear_sum[i] + tangent_motion.linear[i])
+            angular_sum[i] = f32(f32(normal_motion.angular[i] * response_weight) + angular_sum[i])
+            angular_sum[i] = f32(angular_sum[i] + tangent_motion.angular[i])
+        samples += 1
+    if samples:
+        body = replace(body,
+            linear_velocity=_add(body.linear_velocity, linear_sum),
+            angular_turn_velocity=_add(body.angular_turn_velocity,
+                tuple(f32(value * .15915494) for value in angular_sum)),
+            contact_record=record)
+    return CollisionSurfaceImpactResult(samples != 0, body, samples, status)

@@ -106,7 +106,7 @@
   "0x46d1d0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The ordinary unboosted engine finalizer matches eight installed catalogue engines (101\u00e2\u20ac\u201c108) on complete configuration bytes. Carburetor-kind-six behavior is additionally compared after changing only the carburetor-kind field on those same eight engine inputs: the original builder inputs, both solver-call records, and final 2,080-byte configurations match exactly. Five additional configured-capacity values on vehicle 101 verify the initial helper cap and second-pass ceiling. This covers the rerun and reuse of first-pass solver outputs as second-pass input. Boost and additional induction branches, native/C++ curve implementation, full component assembly and integrated driving remain unresolved.",
+    "scope": "The ordinary unboosted engine finalizer matches eight installed catalogue engines (101–108) on complete configuration bytes. Carburetor-kind-six behavior is additionally compared after changing only the carburetor-kind field on those same eight engine inputs: the original builder inputs, both solver-call records, and final 2,080-byte configurations match exactly. Five additional configured-capacity values on vehicle 101 verify the initial helper cap and second-pass ceiling. This covers the rerun and reuse of first-pass solver outputs as second-pass input. Boost and additional induction branches, native/C++ curve implementation, full component assembly and integrated driving remain unresolved.",
     "sources": [
       "client/engine_curve.py",
       "client/cylinder_solver.py",
@@ -565,7 +565,7 @@
   "0x52df00": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "Driver and driver-head selection/render records match 33 original calls over the 33 selector archives, including complete modified FCE origins. The special rear-suspension marker branch matches five direct calls across all four LODs and a missing-part case. The generic :PP branch matches four direct calls, and a two-level L/R component graph matches through original 0x52df00 recursion and 0x52dd70 final sorting/linking, including both complete mutated synthetic component FCE images and render records. The composed driver/head, engine gate, rear suspension and wheel branches have graph unit coverage. A direct wheel-marker comparison covers all four corners and four LODs (32 records). Installed stock owners for all eight catalogue vehicles 101\u00e2\u20ac\u201c108 match their available installed component FCEs, body records and links at five LOD requests (837 records and 3,950 component-origin checks). Other special branches, runtime vertex-stream equivalence, full-call equivalence and actual allocation/resource lifetime remain open.",
+    "scope": "Driver and driver-head selection/render records match 33 original calls over the 33 selector archives, including complete modified FCE origins. The special rear-suspension marker branch matches five direct calls across all four LODs and a missing-part case. The generic :PP branch matches four direct calls, and a two-level L/R component graph matches through original 0x52df00 recursion and 0x52dd70 final sorting/linking, including both complete mutated synthetic component FCE images and render records. The composed driver/head, engine gate, rear suspension and wheel branches have graph unit coverage. A direct wheel-marker comparison covers all four corners and four LODs (32 records). Installed stock owners for all eight catalogue vehicles 101–108 match their available installed component FCEs, body records and links at five LOD requests (837 records and 3,950 component-origin checks). Other special branches, runtime vertex-stream equivalence, full-call equivalence and actual allocation/resource lifetime remain open.",
     "sources": [
       "client/scene.py",
       "tests/test_scene.py",
@@ -1745,6 +1745,65 @@
     "doc_refs": [
       "docs/calculations/collision-helpers.md",
       "docs/collision-world.md"
+    ]
+  },
+  "0x457df0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Single-body supplied-state support impulse accumulation is translated in Python and C++. 128 direct original-instruction cases cover support contact decisions, velocity updates and contact-record fields; discrete values match and float fields use max(2e-4, 1e-6 relative) tolerance, with maximum absolute output error 0.000244140625. Native/Python parity covers the same 128 cases with maximum absolute output error 4.921875188301783e-6. This does not recover terrain/contact discovery or the complete 0x459150 caller.",
+    "sources": [
+      "client/collision_pair_response.py",
+      "native/include/mco/collision_pair_response.hpp",
+      "native/src/collision_pair_response.cpp",
+      "tools/surface_impulse_oracle.py",
+      "tools/native_surface_impulse_compare.py",
+      "native/tests/surface_impulse_compare.cpp",
+      "native/tests/collision_pair_response_test.cpp",
+      "tests/test_collision_pair_response.py",
+      "CMakeLists.txt",
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_c330242ba999ce0ec8685a78379ea93646e8de10800f3fa78e0239490c667c6b"
+    ],
+    "verification_refs": [
+      "tools/surface_impulse_oracle.py",
+      "tools/native_surface_impulse_compare.py",
+      "native/tests/surface_impulse_compare.cpp",
+      "native/tests/collision_pair_response_test.cpp",
+      "tests/test_collision_pair_response.py"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
+    ]
+  },
+  "0x459150": {
+    "translation": "partial",
+    "verification": "original-comparison-pending",
+    "scope": "Support correction path is only partially recovered: a supplied-state vector-array helper and the called single-body support-impulse helper are translated and checked, but 0x459150 itself still performs 22-point support geometry and terrain-plane correction without a complete portable implementation or direct caller-level original comparison. The terrain candidate query and 0x42e760 dependency remain unresolved.",
+    "sources": [
+      "client/geometry_transform.py",
+      "native/src/geometry_transform.cpp",
+      "client/collision_pair_response.py",
+      "native/src/collision_pair_response.cpp",
+      "tools/vector_array_oracle.py",
+      "tools/surface_impulse_oracle.py",
+      "docs/collision-world.md",
+      "docs/calculations/collision-helpers.md"
+    ],
+    "evidence_ids": [
+      "ev_c3f3b262fb8913fa5ff557be4a24aaafac22d2ca4509199dbb425410887d4565",
+      "ev_80d1d52723145fbcdedd1f6dd115dc7233a64423af5180920d0ead2fd25e40e1"
+    ],
+    "verification_refs": [
+      "tools/vector_array_oracle.py",
+      "tools/surface_impulse_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md",
+      "docs/calculations/collision-helpers.md"
     ]
   }
 }
