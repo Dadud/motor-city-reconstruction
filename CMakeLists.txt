@@ -68,7 +68,7 @@ if(BUILD_TESTING)
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update engine_torque_update engine_pipeline
       body_vertical_load body_resistance air_density vehicle_preparation
       wind drafting body_environment control_update drivetrain_links
-      scheduler world_object_damping world_object_maintenance world_object_array matrix_math body_moments collision_response collision_impulse)
+      scheduler world_object_damping world_object_maintenance world_object_array matrix_math body_moments collision_response collision_impulse collision_pair_geometry)
     add_executable(mco_${recovered}_test native/tests/${recovered}_test.cpp)
     target_link_libraries(mco_${recovered}_test PRIVATE mco_core)
     add_test(NAME ${recovered} COMMAND mco_${recovered}_test)

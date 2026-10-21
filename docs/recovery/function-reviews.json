@@ -19,6 +19,34 @@
       "docs/calculations/collision-dispatch.md"
     ]
   },
+  "0x45b8e0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Complete bounded oriented-box point-test helper translated in Python and C++. 192 original executions cover 106 hits and 86 rejections; the original decision and compared projection/contact/direction outputs match the translation with maximum absolute float difference 3.814697265625e-6. Caller-prepared axis/center scratch is supplied from explicit synthetic box records, so this does not verify the enclosing 0x45af30 setup or live collision behavior.",
+    "sources": [
+      "client/collision_pair_geometry.py",
+      "native/include/mco/collision_pair_geometry.hpp",
+      "native/src/collision_pair_geometry.cpp",
+      "native/tests/collision_pair_geometry_test.cpp",
+      "native/tests/collision_pair_geometry_compare.cpp",
+      "tools/collision_pair_geometry_oracle.py",
+      "tools/native_collision_pair_geometry_compare.py",
+      "docs/calculations/collision-pair-geometry.md"
+    ],
+    "evidence_ids": [
+      "ev_26113124fa0ff4884dea8c874ee9f2b2bad4eba3092f7d0b11a3bf056c17cf97",
+      "ev_d07c6168165f0bef8d76f4b3aec6b75e67eb1682d94daf5a5a4b9c263e650fde"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_geometry_oracle.py",
+      "tools/native_collision_pair_geometry_compare.py",
+      "native/tests/collision_pair_geometry_test.cpp"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-pair-geometry.md",
+      "docs/collision-world.md"
+    ]
+  },
   "0x46d1d0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
