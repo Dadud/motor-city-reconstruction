@@ -68,6 +68,11 @@ if(BUILD_TESTING)
   target_link_libraries(mco_collision_pair_reverse_compare PRIVATE mco_core)
   add_executable(mco_collision_pair_solver_compare native/tests/collision_pair_solver_compare.cpp)
   target_link_libraries(mco_collision_pair_solver_compare PRIVATE mco_core)
+  add_executable(mco_collision_pair_response_test native/tests/collision_pair_response_test.cpp)
+  target_link_libraries(mco_collision_pair_response_test PRIVATE mco_core)
+  add_test(NAME collision_pair_response COMMAND mco_collision_pair_response_test)
+  add_executable(mco_collision_pair_response_compare native/tests/collision_pair_response_compare.cpp)
+  target_link_libraries(mco_collision_pair_response_compare PRIVATE mco_core)
   foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding assembly_weight mechanical_loaders owner_wheel_setup model_bounds body_constructor body_startup owner_binding startup_balance startup_resistance acceleration_table gear_force_table model_preparation wheel_force_correction startup_record
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update engine_torque_update engine_pipeline
       body_vertical_load body_resistance air_density vehicle_preparation

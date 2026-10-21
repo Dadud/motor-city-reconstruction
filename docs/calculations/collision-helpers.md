@@ -91,8 +91,11 @@ record fields use a tolerance of `max(2e-4, 1e-6 relative)`. Maximum absolute
 final-velocity error is `9.5367431640625e-7` in this corpus. This bounds the
 supplied-state response routine only. Its callers,
 contact discovery, terrain response, persistence, event delivery, and complete
-game collision tick remain unresolved. It is implemented in Python; no native
-C++ translation or live-game behavior is claimed.
+game collision tick remain unresolved. The native C++ translation also matches
+Python across the same 256 cases, with maximum absolute output error below
+`5.1e-6`, using `tools/native_collision_pair_response_compare.py` and the
+`mco_collision_pair_response_compare` runner. Neither comparison establishes
+live-game behavior.
 
 ## Verification and remaining collision work
 

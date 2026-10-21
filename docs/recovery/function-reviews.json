@@ -1684,13 +1684,19 @@
     ]
   },
   "0x458530": {
-    "translation": "python-bounded",
+    "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "Sampled pairwise impact response is translated in Python. 256 deterministic original-instruction calls cover aligned and rotated bases, angular and linear velocity, movement modes, response gates, contact records and final velocity. Impact decisions and discrete record fields match; float record fields use the harness tolerance of max(2e-4, 1e-6 relative). Maximum absolute final-velocity error was 9.5367431640625e-7. This does not implement native C++, contact discovery, caller sample geometry, terrain response, damage, event delivery, pair ordering or the complete collision tick.",
+    "scope": "Sampled pairwise impact response is translated in Python and C++. 256 deterministic original-instruction calls cover aligned and rotated bases, angular and linear velocity, movement modes, response gates, contact records and final velocity. Python impact decisions and discrete record fields match; float record fields use harness tolerance max(2e-4, 1e-6 relative), with maximum absolute final-velocity error 9.5367431640625e-7. Native/Python comparisons cover the same 256 cases with maximum absolute output error 5.000000101063051e-6. This does not implement contact discovery, caller sample geometry, terrain response, damage, event delivery, pair ordering or the complete collision tick.",
     "sources": [
       "client/collision_pair_response.py",
+      "native/include/mco/collision_pair_response.hpp",
+      "native/src/collision_pair_response.cpp",
       "tools/collision_pair_response_oracle.py",
+      "tools/native_collision_pair_response_compare.py",
+      "native/tests/collision_pair_response_test.cpp",
+      "native/tests/collision_pair_response_compare.cpp",
       "tests/test_collision_pair_response.py",
+      "CMakeLists.txt",
       "docs/calculations/collision-helpers.md",
       "docs/collision-world.md"
     ],
@@ -1700,6 +1706,9 @@
     ],
     "verification_refs": [
       "tools/collision_pair_response_oracle.py",
+      "tools/native_collision_pair_response_compare.py",
+      "native/tests/collision_pair_response_test.cpp",
+      "native/tests/collision_pair_response_compare.cpp",
       "tests/test_collision_pair_response.py"
     ],
     "doc_refs": [

@@ -105,13 +105,15 @@ velocity accumulators, and clears response gates on affected bodies.
 
 The supplied-state response is translated in Python at
 [`client/collision_pair_response.py`](../client/collision_pair_response.py) and
-compared directly with the original in
+in C++ at [`native/src/collision_pair_response.cpp`](../native/src/collision_pair_response.cpp).
+The Python version is compared directly with the original in
 [`collision-helper comparison`](calculations/collision-helpers.md): 256
 deterministic cases cover rotated bases, angular motion, movement modes and gate
 states, with maximum final-velocity error below `1e-6`. This does not recover
 the contact producer or caller's shape sampling, nor does it complete terrain
 collision, damage, event delivery, pair ordering or the integrated collision
-tick. There is no native C++ translation or live-game collision claim yet.
+tick. Native/Python output parity is separately checked over the same corpus;
+neither comparison establishes live-game collision behavior.
 
 The oriented-box resolver at `0x45af30` is now translated in Python and C++.
 Its four geometry helpers, ordered point sampling, movement gates,
