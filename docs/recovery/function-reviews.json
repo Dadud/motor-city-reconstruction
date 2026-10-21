@@ -565,7 +565,7 @@
   "0x52df00": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "Driver and driver-head selection/render records match 33 original calls over the 33 selector archives, including complete modified FCE origins. The special rear-suspension marker branch matches five direct calls across all four LODs and a missing-part case. The generic :PP branch matches four direct calls, and a two-level L/R component graph matches through original 0x52df00 recursion and 0x52dd70 final sorting/linking, including both complete mutated synthetic component FCE images and render records. The composed driver/head, engine gate, rear suspension and wheel branches have graph unit coverage. A direct wheel-marker comparison covers all four corners and four LODs (32 records). Installed stock owners for all eight catalogue vehicles 101–108 match their available installed component FCEs, body records and links at five LOD requests (837 records and 3,950 component-origin checks). Other special branches, runtime vertex-stream equivalence, full-call equivalence and actual allocation/resource lifetime remain open.",
+    "scope": "Driver and driver-head selection/render records match 33 original calls over the 33 selector archives, including complete modified FCE origins. The special rear-suspension marker branch matches five direct calls across all four LODs and a missing-part case. The generic :PP branch matches four direct calls, and a two-level L/R component graph matches through original 0x52df00 recursion and 0x52dd70 final sorting/linking, including both complete mutated synthetic component FCE images and render records. The composed driver/head, engine gate, rear suspension and wheel branches have graph unit coverage. A direct wheel-marker comparison covers all four corners and four LODs (32 records). Installed stock owners for all eight catalogue vehicles 101\u00e2\u20ac\u201c108 match their available installed component FCEs, body records and links at five LOD requests (837 records and 3,950 component-origin checks). Other special branches, runtime vertex-stream equivalence, full-call equivalence and actual allocation/resource lifetime remain open.",
     "sources": [
       "client/scene.py",
       "tests/test_scene.py",
@@ -1629,6 +1629,30 @@
     ],
     "doc_refs": [
       "docs/calculations/cylinder-cycle.md"
+    ]
+  },
+  "0x45bfe0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Contact normal selection translated in Python and C++. 1,024 controlled original calls covered the near-center minimum-penetration and far-center axis-projection branches (523 and 501 cases); all three output normal components matched exactly in this corpus. Inputs include synthetic boxes and explicit caller projection scratch; this does not establish full 0x45af30 collision response or live-game behavior.",
+    "sources": [
+      "client/collision_pair_geometry.py",
+      "native/include/mco/collision_pair_geometry.hpp",
+      "native/src/collision_pair_geometry.cpp",
+      "native/tests/collision_pair_geometry_test.cpp",
+      "tools/collision_pair_normal_oracle.py",
+      "docs/calculations/collision-pair-geometry.md"
+    ],
+    "evidence_ids": [
+      "ev_fabac5a8733a82a30d1cb60d4037a4d1da74270fa972edbff9cbcfea8748fee6"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_normal_oracle.py",
+      "native/tests/collision_pair_geometry_test.cpp"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-pair-geometry.md",
+      "docs/collision-world.md"
     ]
   }
 }

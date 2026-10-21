@@ -110,8 +110,9 @@ This pair routine depends on the two recovered numerical helpers, but its
 sample geometry, iteration order, per-body gating, contact-record layout,
 accumulation and coupled body mutations have not yet been reproduced in a
 comparison harness. All three oriented-box point-test leaves (`0x45b8e0`,
-`0x45bb70`, and `0x45be10`) are now translated to Python and C++; each matches
-192 direct original calls with the documented tolerances. The enclosing pair
+`0x45bb70`, and `0x45be10`) and the normal selector (`0x45bfe0`) are now
+translated to Python and C++; the point tests match 192 direct original calls
+each and the selector matches 1,024, as documented. The enclosing pair
 routine remains open. `0x459150` likewise transforms an array of support points
 and applies terrain-plane corrections, but its complete terrain and contact
 producer chain remains open.

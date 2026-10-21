@@ -23,6 +23,12 @@ struct OwnerBoxPointResult {
     std::array<float, 3> owner_direction;
 };
 
+struct PairContactNormalResult {
+    std::array<float, 3> normal;
+    unsigned selected_axis;
+    bool near_center_branch;
+};
+
 // Complete bounded translation of original helper 0x45b8e0.
 OrientedBoxPointResult oriented_box_point_test(
     const OrientedCollisionBox& owner,
@@ -38,4 +44,11 @@ OwnerBoxPointResult owner_point_contact_test(
     const OrientedCollisionBox& owner,
     const OrientedCollisionBox& target,
     const std::array<double, 3>& normalized_owner_point);
+
+// Complete bounded translation of original helper 0x45bfe0.
+PairContactNormalResult select_pair_contact_normal(
+    const OrientedCollisionBox& owner,
+    const OrientedCollisionBox& target,
+    const std::array<double, 3>& projected_center,
+    bool side);
 } // namespace mco

@@ -32,4 +32,13 @@ int main() {
     const auto reversed_miss = owner_point_contact_test(
         small_owner, large_target, {3, 0, 0});
     assert(!reversed_miss.inside);
+
+    const auto normal_x = select_pair_contact_normal(owner, target, {0.5, 0.25, 0.1}, false);
+    assert(normal_x.near_center_branch);
+    assert(normal_x.selected_axis == 0);
+    assert(normal_x.normal == (std::array<float, 3>{1, 0, 0}));
+    const OrientedCollisionBox distant{{30, 0, 0},
+        {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}, {1, 1, 1}};
+    const auto normal_far = select_pair_contact_normal(owner, distant, {1, -1, 1}, false);
+    assert(!normal_far.near_center_branch);
 }

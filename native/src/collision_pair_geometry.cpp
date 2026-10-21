@@ -1,4 +1,5 @@
 #include "mco/collision_pair_geometry.hpp"
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
@@ -161,5 +162,66 @@ OwnerBoxPointResult owner_point_contact_test(
     const OrientedCollisionBox& owner, const OrientedCollisionBox& target,
     const std::array<double, 3>& point) {
     return owner_point_test(owner, target, point, false);
+}
+
+PairContactNormalResult select_pair_contact_normal(
+    const OrientedCollisionBox& owner, const OrientedCollisionBox& target,
+    const std::array<double, 3>& projected_center, bool side) {
+    validate(owner);
+    validate(target);
+    std::array<float, 3> projection{};
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (!std::isfinite(projected_center[i]))
+            throw std::invalid_argument("finite projected collision center required");
+        projection[i] = stored(projected_center[i]);
+    }
+    const auto& basis = side ? target : owner;
+    const auto& other = side ? owner : target;
+    std::array<float, 3> center_delta{};
+    float maximum = 0;
+    for (std::size_t i = 0; i < 3; ++i) {
+        center_delta[i] = std::abs(stored(static_cast<double>(owner.center[i]) - target.center[i]));
+        maximum = std::max(maximum, center_delta[i]);
+    }
+
+    unsigned axis = 0;
+    bool flip = false;
+    const bool near = maximum <= 15.0f;
+    if (near) {
+        std::array<float, 3> penetration{};
+        for (std::size_t i = 0; i < 3; ++i)
+            penetration[i] = stored(static_cast<double>(basis.half_extents[i]) - std::abs(projection[i]));
+        if (!(penetration[1] <= penetration[0] || penetration[2] <= penetration[0]))
+            axis = 0;
+        else if (penetration[2] <= penetration[1])
+            axis = 2;
+        else
+            axis = 1;
+        flip = side ? projection[axis] > 0 : projection[axis] < 0;
+    } else {
+        std::array<std::array<float, 3>, 3> axes = basis.axes;
+        const std::array<bool, 3> flips = side
+            ? std::array<bool, 3>{projection[0] > 0, projection[1] > 0, projection[2] > 0}
+            : std::array<bool, 3>{projection[0] >= 0, projection[1] < 0, projection[2] < 0};
+        for (std::size_t i = 0; i < 3; ++i)
+            if (flips[i]) for (auto& value : axes[i]) value = -value;
+        std::array<float, 3> dots{};
+        for (std::size_t i = 0; i < 3; ++i) {
+            double dot = 0;
+            for (std::size_t k = 0; k < 3; ++k)
+                dot += static_cast<double>(axes[i][k]) * other.center[k];
+            dots[i] = stored(dot);
+        }
+        if (std::abs(dots[1]) < std::abs(dots[0]) && std::abs(dots[2]) < std::abs(dots[0]))
+            axis = 0;
+        else if (std::abs(dots[1]) <= std::abs(dots[2]))
+            axis = 2;
+        else
+            axis = 1;
+        return {axes[axis], axis, false};
+    }
+    auto normal = basis.axes[axis];
+    if (flip) for (auto& value : normal) value = -value;
+    return {normal, axis, true};
 }
 } // namespace mco

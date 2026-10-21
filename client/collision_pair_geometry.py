@@ -43,6 +43,13 @@ class OwnerBoxPointResult:
     owner_direction: tuple | None
 
 
+@dataclass(frozen=True)
+class PairContactNormalResult:
+    normal: tuple
+    selected_axis: int
+    near_center_branch: bool
+
+
 def oriented_box_point_test(owner, target, local_point):
     """Translate original helper 0x45b8e0 for a normalized target-local point.
 
@@ -129,3 +136,45 @@ def owner_point_direction_test(owner, target, local_point):
 def owner_point_contact_test(owner, target, local_point):
     """Translate original 0x45be10: test an owner point and publish contact point."""
     return _owner_point_test(owner, target, local_point, False)
+
+
+def select_pair_contact_normal(owner, target, projected_center, side):
+    """Translate original 0x45bfe0 using the caller's three projection scratch values."""
+    if not isinstance(owner, OrientedCollisionBox) or not isinstance(target, OrientedCollisionBox):
+        raise ValueError('owner and target collision boxes are required')
+    if len(projected_center) != 3 or any(not math.isfinite(float(x)) for x in projected_center):
+        raise ValueError('three finite projected center values are required')
+    if side not in (0, 1, False, True):
+        raise ValueError('side must be zero or one')
+    projections = tuple(_f32(x) for x in projected_center)
+    side = int(side)
+    first, second = (owner, target) if side == 0 else (target, owner)
+    center_delta = tuple(abs(_f32(first.center[i] - second.center[i])) for i in range(3))
+    near = max(center_delta) <= 15.0
+    if near:
+        penetration = tuple(_f32(first.half_extents[i] - abs(projections[i])) for i in range(3))
+        if not (penetration[1] <= penetration[0] or penetration[2] <= penetration[0]):
+            axis = 0
+        elif penetration[2] <= penetration[1]:
+            axis = 2
+        else:
+            axis = 1
+        flip = ((projections[axis] < 0) if side == 0 else (projections[axis] > 0))
+    else:
+        axes = [list(axis) for axis in first.axes]
+        if side == 0:
+            flips = (projections[0] >= 0, projections[1] < 0, projections[2] < 0)
+        else:
+            flips = (projections[0] > 0, projections[1] > 0, projections[2] > 0)
+        axes = [[-v if flips[i] else v for v in axes[i]] for i in range(3)]
+        delta = tuple(second.center[i] for i in range(3))
+        dots = tuple(_f32(sum(axes[i][k] * delta[k] for k in range(3))) for i in range(3))
+        if abs(dots[1]) < abs(dots[0]) and abs(dots[2]) < abs(dots[0]):
+            axis = 0
+        elif abs(dots[1]) <= abs(dots[2]):
+            axis = 2
+        else:
+            axis = 1
+        return PairContactNormalResult(tuple(_f32(v) for v in axes[axis]), axis, False)
+    normal = tuple(_f32(-v if flip else v) for v in first.axes[axis])
+    return PairContactNormalResult(normal, axis, True)
