@@ -25,7 +25,11 @@ class Assets:
                       if key.startswith('data/models/') and key.endswith('.viv'))
 
     def load_vehicle(self, path):
-        return decode(read_member(path, 'part.fce'))
+        return decode(self.load_vehicle_bytes(path))
+
+    def load_vehicle_bytes(self, path):
+        """Return the original complete FCE image for verified preparation."""
+        return read_member(path, 'part.fce')
 
     def load_textures(self, path, skin=None):
         if skin:

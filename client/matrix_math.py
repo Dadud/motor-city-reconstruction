@@ -1,0 +1,105 @@
+"""Bit-preserving matrix helpers recovered from the client math library."""
+from math import cos, sin
+
+from .tire_response import f32
+
+
+def transpose_3x3_words(values):
+    """Translate 0x6f12a0: transpose nine row-major 32-bit matrix words."""
+    values = tuple(values)
+    if len(values) != 9:
+        raise ValueError('3x3 transpose requires exactly nine words')
+    if any(type(value) is not int or not 0 <= value <= 0xffffffff for value in values):
+        raise ValueError('matrix entries must be uint32 words')
+    return (values[0], values[3], values[6],
+            values[1], values[4], values[7],
+            values[2], values[5], values[8])
+
+
+def dot_3_f32(left, right):
+    """Translate 0x6f1140/0x6f3b51 and round the x87 result on float storage."""
+    left, right = tuple(left), tuple(right)
+    if len(left) != 3 or len(right) != 3:
+        raise ValueError('three-component vectors required')
+    left = tuple(f32(value) for value in left)
+    right = tuple(f32(value) for value in right)
+    return f32(left[0] * right[0] + left[1] * right[1] + left[2] * right[2])
+
+
+def _multiply_3x3(left, right):
+    return tuple(f32(sum(left[row * 3 + k] * right[k * 3 + col]
+                         for k in range(3)))
+                 for row in range(3) for col in range(3))
+
+
+def multiply_3x3(matrix_a, matrix_b):
+    """Translate the alias-safe matrix product used by 0x6f2a60."""
+    a, b = tuple(f32(x) for x in matrix_a), tuple(f32(x) for x in matrix_b)
+    if len(a) != 9 or len(b) != 9:
+        raise ValueError('matrix multiplication requires two 3x3 matrices')
+    orders = ((0, 2, 1), (0, 1, 2), (0, 1, 2),
+              (0, 1, 2), (0, 1, 2), (0, 1, 2),
+              (0, 1, 2), (0, 1, 2), (0, 1, 2))
+    result = []
+    for index, order in enumerate(orders):
+        row, col = divmod(index, 3)
+        terms = [a[row * 3 + k] * b[k * 3 + col] for k in order]
+        result.append(f32(terms[0] + terms[1] + terms[2]))
+    return tuple(result)
+
+
+_MATRIX_REPAIR_COEFFICIENTS = (
+    -0.5, 0.375, -0.3125, 0.2734375, -0.24609375,
+    0.2255859375, -0.20947265625, 0.196380615234375,
+    -0.1854705810546875,
+)
+
+
+def repair_rotation_matrix(matrix, iterations=10):
+    """Translate 0x5538a0's ten-term inverse-square-root correction."""
+    matrix = tuple(f32(value) for value in matrix)
+    if len(matrix) != 9:
+        raise ValueError('matrix repair requires a 3x3 matrix')
+    if type(iterations) is not int or iterations != 10:
+        raise ValueError('the recovered repair path supports its observed 10 iterations')
+    transpose = transpose_3x3_words(tuple(float_to_word(v) for v in matrix))
+    gram = multiply_3x3(tuple(word_to_float(v) for v in transpose), matrix)
+    error = tuple(f32(gram[i] - (1.0 if i in (0, 4, 8) else 0.0))
+                  for i in range(9))
+    power = (1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+    correction = list(power)
+    for coefficient in _MATRIX_REPAIR_COEFFICIENTS:
+        power = multiply_3x3(power, error)
+        scaled = tuple(f32(value * coefficient) for value in power)
+        correction = [f32(correction[i] + scaled[i]) for i in range(9)]
+    return multiply_3x3(matrix, correction)
+
+
+def float_to_word(value):
+    import struct
+    return struct.unpack('<I', struct.pack('<f', value))[0]
+
+
+def word_to_float(value):
+    import struct
+    return struct.unpack('<f', struct.pack('<I', value))[0]
+
+
+def integrate_rotation_matrix(matrix, delta_turns):
+    """Translate 0x4b7430: compose X/Y/Z increments expressed in turns."""
+    matrix = tuple(f32(value) for value in matrix)
+    turns = tuple(f32(value) for value in delta_turns)
+    if len(matrix) != 9 or len(turns) != 3:
+        raise ValueError('rotation update requires a 3x3 matrix and three increments')
+    tau = f32(6.2831854820251465)
+    rotations = []
+    for value in turns:
+        radians = value * tau
+        s, c = f32(sin(radians)), f32(cos(radians))
+        rotations.append((s, c))
+    (sx,cx),(sy,cy),(sz,cz)=rotations
+    rx=(1.0,0.0,0.0, 0.0,cx,sx, 0.0,-sx,cx)
+    ry=(cy,0.0,-sy, 0.0,1.0,0.0, sy,0.0,cy)
+    rz=(cz,sz,0.0, -sz,cz,0.0, 0.0,0.0,1.0)
+    increment=_multiply_3x3(_multiply_3x3(rx,ry),rz)
+    return _multiply_3x3(matrix,increment)

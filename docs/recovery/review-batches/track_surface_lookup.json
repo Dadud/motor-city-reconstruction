@@ -2,12 +2,12 @@
   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
   "functions": {
     "0x42e760": {
-      "translation": "native-bounded",
+      "translation": "python-and-native-bounded",
       "verification": "original-comparison-bounded",
       "subsystem": "track-spatial",
       "owner": "camera-recovery",
       "status": "implemented",
-      "scope": "Complete track surface controller on supplied bounded mapped world.",
+    "scope": "Complete track surface controller translated in Python and C++ over supplied bounded mapped worlds; the isolated query verifier matches 1,200 complete original records in each implementation. The Python source is integrated into 0x51e940, whose wider 1,200-case full-owner environment sweep now also matches byte-for-byte after preserving the x87 plane-height return through contact-clearance subtraction.",
       "supported_domain": "Distinct record/position/world images with valid geometry, block and path mappings; invalid original pointer faults not emulated.",
       "acceptance": "1200 complete-body original observations match MSVC and Zig exactly with actual grid and path children; native cached-hit/fallback/bounds checks pass.",
       "comparison_cases": 1200,
@@ -21,6 +21,7 @@
         "native/include/mco/track_surface_lookup.hpp",
         "native/include/mco/track_surface_world.hpp",
         "native/src/track_surface_lookup.cpp",
+        "client/track_surface_lookup.py",
         "native/tests/cell_io.hpp",
         "native/tests/track_surface_cases.hpp",
         "native/tests/track_surface_lookup_compare.cpp",
@@ -28,6 +29,8 @@
         "tools/cell_corpus.py",
         "tools/native_track_surface_lookup_compare.py",
         "tools/track_surface_cases.py",
+        "tools/verify_track_surface_lookup_python.py",
+        "tools/verify_world_object_environment.py",
         "tools/w0_cell_corpus.py"
       ],
       "dependencies": [

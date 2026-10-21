@@ -10,6 +10,8 @@ the cylinder state and vehicle geometry articles.
 | [Cylinder state and gas exchange](cylinder-cycle.md) | Intake/exhaust boundaries, directional mass transfer, feedback and energy terms |
 | [Vehicle motion and road contact](vehicle-motion.md) | Tire dimensions, spring parameters, wheel velocity, body motion and road height |
 | [Tire and suspension parameters](tire-suspension.md) | Tire radius, stance allowance, spring/shock validation and axle roll contribution |
+| [Stock body render flags](body-render-flags.md) | Original body-group availability and the hash-checked component option table |
+| [World-object array and maintenance](world-object-update.md) | Original 0x4f8-byte owner layout, active-row order, 0x520250 update and 0x4265f0 maintenance |
 
 Each article distinguishes recovered arithmetic from inferred physical meaning
 and reconstruction choices. An equation can be established even when the name

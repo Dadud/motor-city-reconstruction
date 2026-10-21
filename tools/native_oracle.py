@@ -74,7 +74,7 @@ class DynoOracle:
         is what cdecl requires.
 
         `instruction_limit` keeps each emulated call bounded; complex routines
-        may explicitly request up to one million instructions instead of 4096.
+        may explicitly request up to ten million instructions instead of 4096.
 
         Verified against the original for integer results: `call(0x405900)`
         reproduces both branches of the global singleton accessor exactly.
@@ -86,8 +86,8 @@ class DynoOracle:
         does, or no oracle at all. Capture integers here and leave floats to
         the routine's own memory writes.
         """
-        if type(instruction_limit) is not int or not 1 <= instruction_limit <= 1_000_000:
-            raise ValueError('oracle instruction limit must be between 1 and 1000000')
+        if type(instruction_limit) is not int or not 1 <= instruction_limit <= 10_000_000:
+            raise ValueError('oracle instruction limit must be between 1 and 10000000')
         self._reset()
         # The stop address is planted below the pushed arguments: after cdecl
         # cleanup drops them, ESP is back to `stack` and the stub's final RET

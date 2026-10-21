@@ -1,0 +1,39 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "callbacks": [
+    {
+      "entry": "0x426730",
+      "classification": "callback-code-range-without-function-manager-entry",
+      "range_inclusive": ["0x426730", "0x426764"],
+      "body_bytes": 53,
+      "behavior": "Load count from 0x97c180; if positive, iterate from 0x92c478 in 0x4f8-byte strides; for each row whose byte at +4 is nonzero call 0x520250(row); return.",
+      "evidence_ids": [
+        "ev_e52a39ca05d384d051340391cd66f5eab22afaa297c434ac23964ec0cadd96c0",
+        "ev_7628cf4d9b98eefc1c2a7c010162de56fddd08bd796253466b1c999bd084bf40",
+        "ev_f3585a3922b34b09e77b75aaf86d3822a433907516f7598b7ba923aae24bb199",
+        "ev_5eded29416163aa68e516165bedec23c7f1225066132ab845f26cbd07fc1a3f9",
+        "ev_3e0bbcd0f53b3daf955afce201ee754f8037f7e3f5a311b21374dfe6001fb12a",
+        "ev_49cb5e65b85563d206731929de209cf632b138211ce31e31f6da6b0fb57f01a8",
+        "ev_708fa78dd9035fd03f550c980fef94b1574dc74cbc9e8f2c9825105c8487066a",
+        "ev_1c26dc89ee39ff1fc712aa2a7beb943357bc0a96da37ab87415aa7ffb6af79dc",
+        "ev_454035189a04303e7724506417101adab36524c96760de27d7405ead47081f1d",
+        "ev_39475ebd1beaa83e9cf93381a5191c2f845750f2afce80be391361520b69a5f6",
+        "ev_146de3d262de099129fe16bd86b5711dbbce81c5252f64c44baf28a41c18ac4a",
+        "ev_07ee5cb52fed1cf67525be2bd7d3c1ddd56559e032bef2df6ece5cc896d47937",
+        "ev_d78e919eff583653aaf385b3573159161778ec60aea3c558de498e4655fd8722",
+        "ev_45123e27a546a47fba4999da17648387b7eef81ffa18a37a2a2784e933de46d7",
+        "ev_f31fb7976d830bc1676ed2d232f40a1d120f3891aed7a5a7c4a2e8262211b853",
+        "ev_d239179cf79e34ecf46e52e852106b4462c4e2b6f00c419ec30ff2f3f8b206ef",
+        "ev_fb1f0ea3cf6d6623b30334451eb3fc9a71b1f9a8de1d89ff0ea42dc88dfd6f52",
+        "ev_92eeb662cc10e48bfefab3f289c8a0605e77caac98f5bf0e565d2f3e1a7ccb1b",
+        "ev_0555bd3da10691ebd296b405261b90c2fa38fef4249ef899e729d97c8a4e8f24",
+        "ev_1056370f162664bc6805a63b599607fb314584bc431875b46d8cc50d3a0e0b99",
+        "ev_6d68bef8ae6c29e82240ef0cd45dbc25c37ff3bcdbe0dee2019c6528a25de0d4",
+        "ev_0daea1163207fabb22f02508ed5599958e24300859664a014faaf2a8b89f2745"
+      ],
+      "verification": "tools/verify_world_object_array.py; four pointer-dispatch cases plus four composed original-executable cases compare complete active and inactive owner bytes through the live 0x520250 child.",
+      "python_source": "client/world_object_array.py",
+      "native_source": "native/src/world_object_array.cpp"
+    }
+  ]
+}

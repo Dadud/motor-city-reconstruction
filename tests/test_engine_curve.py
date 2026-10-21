@@ -43,10 +43,26 @@ class EngineCurveTests(unittest.TestCase):
     def test_incomplete_and_unsupported_modes_fail_explicitly(self):
         with self.assertRaisesRegex(ValueError,'complete engine'):
             finalize_engine_configuration(configuration(),{},engine_components_loaded=False)
-        for offset,value in ((0x378,1),(0x3d8,1),(0x3c8,6)):
+        for offset,value in ((0x378,1),(0x3d8,1)):
             image=bytearray(configuration());struct.pack_into('<i',image,offset,value)
             with self.assertRaisesRegex(ValueError,'not recovered'):
                 build_assembled_core_record(image,{})
+        image=bytearray(configuration());struct.pack_into('<i',image,0x3c8,7)
+        with self.assertRaisesRegex(ValueError,'unsupported carburetor'):
+            build_assembled_core_record(image,{})
+
+    def test_special_carburetor_reuses_solver_output_for_capacity_rerun(self):
+        image=bytearray(configuration());struct.pack_into('<i',image,0x3c8,6)
+        calls=[]
+        def solver(record):
+            calls.append(record)
+            return authored_core(record)
+        with patch('client.engine_curve.build_assembled_core_record',return_value=bytes(1004)):
+            finalize_engine_configuration(bytes(image),{},engine_components_loaded=True,solver=solver)
+        self.assertEqual(len(calls),2)
+        self.assertEqual(struct.unpack_from('<h',calls[1],0xa4)[0],0)
+        self.assertEqual(calls[1][:0xa4],authored_core(calls[0])[:0xa4])
+        self.assertEqual(calls[1][0xa6:],authored_core(calls[0])[0xa6:])
 
     def test_curve_without_idle_crossing_is_rejected(self):
         with patch('client.engine_curve.build_assembled_core_record',return_value=bytes(1004)):

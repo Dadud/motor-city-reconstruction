@@ -21,7 +21,10 @@ def masks(seed):
             (0,1<<2,(1<<5)|(1<<25),0x3ffffff)[(seed//32)%4])
 
 class CheckOracle:
-    def __init__(self, oracle): self.oracle = oracle
+    def __init__(self, oracle, installation_root=None, real_formatter=False):
+        self.oracle = oracle
+        self.installation_root = installation_root
+        self.real_formatter = bool(real_formatter)
     def word(self, address):
         return struct.unpack('<I', self.oracle.cpu.mem_read(address,4))[0]
     def put(self, address, value):
@@ -53,6 +56,8 @@ class CheckOracle:
         if ident==2: result=int(config!=0)
         elif ident==3:
             text=(b'C:\\ROOT\\',b'C:\\ROOT\\\\',b'ROOT',b'C:\\')[self.seed%4]
+            if self.installation_root is not None:
+                text=str(self.installation_root).encode('cp1252').rstrip(b'\\')
             write(arg(1),text); result=self.seed%2
         elif ident==4: result=int(config!=1)
         elif ident==5:
@@ -106,9 +111,13 @@ class CheckOracle:
             cpu.mem_map(0x7000e000,0x1000)
         old_exception=self.word(0);self.put(0,0)
         try:
-            for a,(_,n) in HELPERS.items():cpu.mem_write(a,b'\xc2'+struct.pack('<H',n))
+            for a,(_,n) in HELPERS.items():
+                if self.real_formatter and a==0x699330:continue
+                cpu.mem_write(a,b'\xc2'+struct.pack('<H',n))
             self.put(0x83b284,0x7000e100)
-            for a in HELPERS:hooks.append(cpu.hook_add(UC_HOOK_CODE,self.observe,begin=a,end=a))
+            for a in HELPERS:
+                if self.real_formatter and a==0x699330:continue
+                hooks.append(cpu.hook_add(UC_HOOK_CODE,self.observe,begin=a,end=a))
             if hasattr(cpu,'ctl_flush_tb'):cpu.ctl_flush_tb()
             yield
         finally:

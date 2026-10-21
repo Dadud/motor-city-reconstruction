@@ -138,7 +138,7 @@ class CyclePreparationTests(unittest.TestCase):
 
     def test_invalid_intake_boundary(self):
         geometry = cylinder_geometry(4, 3.5, 9, 8)
-        for inputs in ((geometry, 0, 300, 2, 1), (geometry, 2000, 299, 2, 1),
+        for inputs in ((geometry, 0, 300, 2, 1), (geometry, 2000, 0, 2, 1),
                        (geometry, 2000, 300, 3, 1), (geometry, 2000, 300, 2, 0),
                        (None, 2000, 300, 2, 1)):
             with self.assertRaises(ValueError):

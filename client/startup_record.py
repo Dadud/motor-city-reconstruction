@@ -91,13 +91,23 @@ def _wheel_radius(diameter, aspect, rim):
     return f32(float(_round_mant64(exact)/2))
 
 
-def construct_startup_record(owner, configuration, model, area_query):
+def construct_startup_record(owner, configuration, model, area_query=None, *,
+                             scene_nodes=None):
     """Whole original function. owner is read for dimensions and mass;
     configuration must be the finalized 0x820-byte assembly. model may be
     None (authored half-wheelbase axle defaults) or a model image containing
-    the PPL wheel markers. area_query is the supplied FUN_00483450 binary32
-    result. Returns (record bytes, 1) or (None, 0) on the original failure.
+    the PPL wheel markers. Provide either the original FUN_00483450 binary32
+    result or decoded scene nodes for its recovered geometry calculation.
+    Returns (record bytes, 1) or (None, 0) on the original failure.
     """
+    if area_query is not None and scene_nodes is not None:
+        raise ValueError('provide area_query or scene_nodes, not both')
+    if scene_nodes is not None:
+        from client.scene_area_measure import scene_area_from_nodes
+        area_query = scene_area_from_nodes(scene_nodes)
+    if area_query is None:
+        raise ValueError('scene-area result or decoded scene nodes required')
+
     def integer(offset):
         return struct.unpack_from('<i', configuration, offset)[0]
 

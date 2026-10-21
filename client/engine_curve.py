@@ -1,8 +1,8 @@
-"""Recovered unboosted 0x46d1d0 path for ordinary carburetors.
+"""Recovered unboosted 0x46d1d0 path for ordinary and carburetor-six cases.
 
 Complete mechanical assembly is a separate responsibility. This internal adapter
 requires loaded engine inputs, external flow templates and the recovered core.
-Special carburetor six and boost remain explicit unsupported branches.
+Boost and additional induction remain explicit unsupported branches.
 """
 import math
 import struct
@@ -27,7 +27,7 @@ def build_assembled_core_record(configuration,templates):
     i=lambda offset:_integer(configuration,offset)
     if n(0x378)!=0 or n(0x3d8)!=0:
         raise ValueError('boosted engine finalization is not recovered')
-    if not 0<=i(0x3c8)<=5:raise ValueError('special carburetor finalization is not recovered')
+    if not 0<=i(0x3c8)<=6:raise ValueError('unsupported carburetor finalization')
     block=EngineBlock(n(0x430),n(0x434),n(0x438),i(0x43c),n(0x428))
     head=CylinderHead(i(0x50c),i(0x514),i(0x510),n(0x518),n(0x54),n(0x524),n(0x528),n(0x504))
     cam=Camshaft(i(0x534),i(0x538),n(0x53c),n(0x544),n(0x548),
@@ -37,8 +37,11 @@ def build_assembled_core_record(configuration,templates):
     modifier=n(0x518)-n(0x3f4)+n(0x5b0)+n(0x400)
     template=template.scaled(modifier)
     kind=i(0x57c)
+    carburetor_kind=i(0x3c8)
     exhaust=(1,2,3 if n(0x5a0)!=0 else 4,5 if n(0x5a0)!=0 else 6)[kind] if 0<=kind<4 else 1
     capacity=math.trunc(n(0x3d0)*n(0x3cc))
+    if carburetor_kind==6:
+        capacity=min(capacity,math.trunc(_capacity(configuration)))
     return build_dyno_record(block,head,cam,train,template,
         intake_mode=i(0x3ac)+1,intake_flow=n(0x3b4),exhaust_mode=exhaust,
         exhaust_flow=n(0x584),carb_capacity=capacity,carb_code=2 if i(0x3c8) in (0,1) else 4)
@@ -92,6 +95,7 @@ def finalize_engine_configuration(configuration,templates,*,engine_components_lo
     assembly. A supplied solver is an explicit comparison seam, not a fallback.
     """
     if engine_components_loaded is not True:raise ValueError('load complete engine components first')
+    carburetor_kind=struct.unpack_from('<i',configuration,0x3c8)[0]
     core=solver(build_assembled_core_record(configuration,templates))
     image=bytearray(configuration)
     n=lambda offset:_number(image,offset)
@@ -102,7 +106,7 @@ def finalize_engine_configuration(configuration,templates,*,engine_components_lo
         delta=n(0x54)-6
         compression=min(0.,max(f32(-.2),f32(delta*f32(.0675)-delta*delta*f32(.005))))
     carb=0.
-    if n(0x3cc)<300:
+    if n(0x3cc)<300 and carburetor_kind!=6:
         carb=min(0.,max(f32(-.3),f32((n(0x3cc)-300)*f32(.0015))))
     factor=f32(carb+compression+1.)
     curve=[0.]*25
@@ -126,9 +130,37 @@ def finalize_engine_configuration(configuration,templates,*,engine_components_lo
     for k,pressure in enumerate(pressures):
         if pressure<=minimum:minimum=pressure;maximum_index=k+4
     maximum_index+=1;integer(0x70,maximum_index*500)
+    if carburetor_kind==6:
+        # The original reruns the core after deriving its maximum RPM from the
+        # first fill series. Unlike the initial builder record, this rerun can
+        # use the configured carburetor capacity below 300.
+        required=_capacity(image,f32(.98))
+        configured=math.trunc(n(0x3d0)*n(0x3cc))
+        capacity=max(0,min(configured,math.trunc(required)))
+        # The original reuses its solver buffer; fields outside the result
+        # series retain the first pass when the second pass begins.
+        altered=bytearray(core)
+        struct.pack_into('<h',altered,0xa4,min(32767,capacity))
+        core=solver(bytes(altered))
+        curve=[0.]*25
+        for k,torque in enumerate(struct.unpack_from('<19f',core,0x110)):
+            curve[k+4]=max(0.,f32(torque*f32(1.3558)*factor))
+        power=f32(2000*curve[4]*f32(.00010471976))
+        curve[2]=f32(f32(power*f32(.33333334))*f32(9.549296))
+        curve[3]=f32(power*f32(.6666667)*f32(6.3661976))
+        curve[24]=0.
+        curve=correct_curve_limits(image,curve)
+        threshold=min(180.,max(90.,f32(max(0.,*curve[4:])*f32(.35))))
+        crossing=next((k for k in range(1,25) if curve[k]>=threshold),None)
+        if crossing is None or curve[crossing]==curve[crossing-1]:
+            raise ValueError('engine curve has no safe original idle crossing')
+        left=curve[crossing-1]
+        rpm=f32(crossing*500-500+((threshold-left)*500)/(curve[crossing]-left))
+        idle=min(3000,max(500,math.trunc(round(rpm)/25)*25))+150
+        integer(0x6c,idle)
     curve=tuple(t if k<maximum_index else 0. for k,t in enumerate(curve))
     required=_capacity(image)
-    if required<n(0x3cc):
+    if required<n(0x3cc) and carburetor_kind!=6:
         ratio=max(f32(.6),f32(required/n(0x3cc)))
         altered=bytearray(core);struct.pack_into('<h',altered,0xa4,math.trunc(ratio*n(0x3cc)))
         core=solver(bytes(altered))

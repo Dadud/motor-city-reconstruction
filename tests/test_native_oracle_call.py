@@ -77,9 +77,11 @@ class CallStubTests(unittest.TestCase):
     def test_instruction_budget_is_explicit_and_bounded(self):
         _, default=self.stub(0x405900)
         _, longer=self.stub(0x582e40,(1,2),cleanup=b'',instruction_limit=1_000_000)
+        _, raster=self.stub(0x582e40,(1,2),cleanup=b'',instruction_limit=10_000_000)
         self.assertEqual(default['run_options']['count'],4096)
         self.assertEqual(longer['run_options']['count'],1_000_000)
-        for limit in (0,-1,True,1_000_001,1.5):
+        self.assertEqual(raster['run_options']['count'],10_000_000)
+        for limit in (0,-1,True,10_000_001,1.5):
             with self.subTest(limit=limit),self.assertRaises(ValueError):
                 DynoOracle.__new__(DynoOracle).call(0x405900,instruction_limit=limit)
 

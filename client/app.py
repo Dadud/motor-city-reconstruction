@@ -54,6 +54,8 @@ def main():
     parser.add_argument('--track-textures', action='store_true', help='apply original track UVs and day texture pages')
     parser.add_argument('--track-view', choices=('overview','start'), default='overview', help='initial track camera')
     parser.add_argument('--vehicle', type=int, help='stock branded vehicle ID, e.g. 101')
+    parser.add_argument('--driver-variant', type=int, choices=range(33), default=0,
+                        help='native driver-model selector (0-32; default 0)')
     parser.add_argument('--list-vehicles', action='store_true', help='list stock vehicle identities and exit')
     parser.add_argument('--stock-parts', action='store_true', help='print --vehicle stock component recipe and exit')
     parser.add_argument('--contact-report', action='store_true', help='report stock wheel contacts and spawn pose for --vehicle and --track')
@@ -61,10 +63,20 @@ def main():
     parser.add_argument('--body-style', choices=('stock', *PROFILES), help='stock selection or body configuration preview')
     parser.add_argument('--screenshot', type=Path, help='render once to PNG, then exit')
     parser.add_argument('--verify-controls', action='store_true', help='exercise controls before screenshot')
-    parser.add_argument('--drive', action='store_true', help='offline driving with authored prototype physics; requires --vehicle and --track')
+    parser.add_argument('--drive', action='store_true', help='run prototype driving physics; requires --vehicle and --track')
+    parser.add_argument('--recovered-driving-report', action='store_true', help='write recovered driving startup evidence and unresolved original inputs to JSON, then exit')
+    parser.add_argument('--recovered-driving-output', type=Path, help='external JSON path for --recovered-driving-report')
+    parser.add_argument('--recovered-driving-summary', action='store_true', help='print only the recovered startup verdict and unresolved groups')
     parser.add_argument('--verify-driving', action='store_true', help='exercise driving, braking and reset before screenshot')
     parser.add_argument('--verify-race', action='store_true', help='complete a Drag sprint through input/update/render before screenshot')
     args = parser.parse_args()
+    if args.recovered_driving_output and not args.recovered_driving_report:
+        parser.error('--recovered-driving-output requires --recovered-driving-report')
+    if args.recovered_driving_report and (args.vehicle is None or not args.track):
+        parser.error('--recovered-driving-report requires --vehicle and --track')
+    if args.recovered_driving_report and any((args.drive, args.screenshot, args.contact_report,
+            args.list_vehicles, args.stock_parts, args.model)):
+        parser.error('--recovered-driving-report is an inspection mode; remove conflicting display or report options')
     if args.track_mesh and not args.track:
         parser.error('--track-mesh requires --track')
     if args.track_textures and not args.track_mesh:
@@ -161,6 +173,38 @@ def main():
             raise ValueError(f'stock body archive missing: {chosen_model}')
     except (OSError, ValueError) as error:
         parser.exit(1, f'{error}\n')
+    if args.recovered_driving_report:
+        from .stock_driving_state import build_stock_driving_bindings
+        from .body_configuration import stock_body_configuration
+        from .dyno import load_flow_templates
+        from .tire_templates import load_tire_templates
+        from .mechanical_assembly import assemble_stock_vehicle
+        from .world import load_world_vehicle
+        track_bytes = assets.paths[f'data/tracks/{args.track}/tr.frd'.casefold()].read_bytes()
+        world = load_world_vehicle(assets, catalogue, selected_vehicle, track_bytes, args.skin)
+        assembly = assemble_stock_vehicle(catalogue, selected_vehicle.branded_id,
+            load_flow_templates(assets.paths['mcity.exe']),
+            tire_templates=load_tire_templates(assets.paths['data/db/online.mdb']),
+            percent_damage=0, item_wear=0)
+        bindings = build_stock_driving_bindings(catalogue, selected_vehicle, world,
+            stock_body_configuration(catalogue, selected_vehicle.branded_id), assembly)
+        report = bindings.report()
+        report['scope'] = 'Recovered stock input inventory only; this does not run recovered driving.'
+        report['prototype_driving_is_separate'] = True
+        if args.recovered_driving_output:
+            destination = args.recovered_driving_output.resolve()
+            if destination.is_relative_to(assets.root.resolve()):
+                parser.error('write the report outside the original game installation')
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
+        if args.recovered_driving_summary:
+            verdict = 'READY' if bindings.ready_for_recovered_driving else 'BLOCKED'
+            print(f'{bindings.vehicle_name} ({bindings.vehicle_id}) on {args.track}: recovered driving {verdict}')
+            for group, reason in bindings.unresolved.items():
+                print(f'{group}: {reason}')
+        else:
+            print(json.dumps(report, indent=2))
+        return
     # Import graphics only after data validation, so missing data reports clearly.
     import pyglet
     from pyglet import gl
@@ -218,7 +262,7 @@ def main():
                 self.labels[5].text = 'Drag: orbit   Scroll: zoom   Left / Right: track   W: wireframe   Home: car   End: overview'
             if args.drive:
                 self.set_caption('Motor City | Offline driving')
-                self.labels[5].text = 'Arrows: drive / brake / steer   Shift + Up: reverse   R: reset   P: pause   PgUp / PgDn: track   Home / End: camera'
+                self.labels[5].text = 'PROTOTYPE · Arrows: drive / brake / steer   Shift + Up: reverse   R: reset   P: pause   PgUp / PgDn: track   Home / End: camera'
             self.load_model()
             if args.drive and not args.screenshot:
                 pyglet.clock.schedule_interval(self.update_driving, 1/60)
@@ -262,7 +306,8 @@ def main():
                     if world_view:
                         from .world import load_world_vehicle
                         self.world_vehicle = load_world_vehicle(assets, catalogue,
-                            selected_vehicle, track_bytes, args.skin)
+                            selected_vehicle, track_bytes, args.skin,
+                            args.driver_variant)
                         if args.drive:
                             from .driving import Drive
                             from .racing import TimeTrial
@@ -275,7 +320,9 @@ def main():
                 if self.body_style == 'stock':
                     if paths[self.index].name.casefold() == chosen_model.casefold():
                         model, prepared_textures, self.body_flags, self.assembly_notes = stock_scene(
-                            assets, paths[self.index], selected_vehicle, args.skin)
+                            assets, paths[self.index], selected_vehicle, args.skin,
+                            catalogue.tire_dimensions(selected_vehicle),
+                            args.driver_variant)
                 elif self.body_style:
                     model = select_body(model, PROFILES[self.body_style])
             except (OSError, KeyError, ValueError) as error:
@@ -367,7 +414,7 @@ def main():
             self.drive.update(dt, controls)
             if self.follow_car:
                 self.center = Vec3(*self.drive.pose.position)
-            state = 'Terrain edge — steer or reset' if self.drive.blocked else 'Offline driving · Prototype physics'
+            state = 'Terrain edge — steer or reset' if self.drive.blocked else 'PROTOTYPE PHYSICS'
             self.labels[4].text = f'{abs(self.drive.speed)*3.6:.0f} km/h   ·   {self.drive.distance:.0f} m   ·   {state}'
             self.labels[3].text = self.drive.trial.label()
             gate = self.drive.trial.gates[self.drive.trial.next_gate]

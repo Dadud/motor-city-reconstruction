@@ -8,7 +8,16 @@ struct ScheduledCall {
     std::int32_t priority{};
     std::uint32_t callback{}, payload{};
 };
+struct GameTaskLists {
+    std::vector<ScheduledCall> primary, secondary;
+    std::int32_t primary_capacity{}, secondary_capacity{};
+};
 void insert_callback(std::vector<ScheduledCall>& entries, ScheduledCall entry);
+GameTaskLists build_game_task_lists(const std::vector<std::uint32_t>& vehicles,
+                                    const std::vector<std::uint32_t>& world_objects,
+                                    const std::vector<std::uint32_t>& vehicle_flags,
+                                    std::uint32_t dynamic_service_payload,
+                                    std::int32_t capacity_source_count);
 void execute_callbacks(std::vector<ScheduledCall>& entries,
                        const std::function<void(std::uint32_t, std::uint32_t)>& dispatch);
 int selected_iterations(bool adjustment_enabled, std::int32_t adjustment_mode,

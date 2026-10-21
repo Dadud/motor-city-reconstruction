@@ -26,14 +26,16 @@ class WorldVehicle:
     simulation: VehicleSimulationInputs
 
 
-def load_world_vehicle(assets, catalogue, vehicle, track_bytes, skin=None):
+def load_world_vehicle(assets, catalogue, vehicle, track_bytes, skin=None,
+                      driver_variant=0):
     path = assets.paths.get(f'data/models/{vehicle.body_filename}.viv'.casefold())
     if path is None:
         raise ValueError(f'stock body archive missing: {vehicle.body_filename}')
     body = assets.load_vehicle(path)
     rig = WheelRig.from_model(body)
-    model, textures, flags, notes = stock_scene(assets, path, vehicle, skin)
     dimensions = catalogue.tire_dimensions(vehicle)
+    model, textures, flags, notes = stock_scene(
+        assets, path, vehicle, skin, dimensions, driver_variant)
     radii = {key: tire.radius for key, tire in dimensions.items()}
     terrain = decode_surface(track_bytes)
     road = decode_track(track_bytes).slices[0]

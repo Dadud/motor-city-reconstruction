@@ -264,13 +264,28 @@ knots. These behaviors follow the original stores rather than a physical model's
 preferred reset policy.
 
 The boost helper `0x586730` performs no boost-state updates when raw boost mode
-at record `+0x3c4` is zero. The standalone driver explicitly requires that mode.
-Evidence for the boost exclusion is REA
-`ev_c702030f77441ef2960b952c2a5920ede225a5f264571955de64e285b5bb2a88`.
-Modes 1–3, time-based native abort behavior and final curve corrections remain
-unimplemented. Invalid positive-gas-domain inputs raise an error rather than
-imitating the native zero-first-output abort. The driver is a recovered numerical
-core, not verified vehicle-driving forces.
+at record `+0x3c4` is zero. For modes 1–3, `client/engine_boost.py` now models its
+per-RPM scratch updates. The first three modes (0–2) compare byte-for-byte with
+the original on one synthetic state, but a nine-case RPM sweep found one-ULP
+differences in mode 1 charge at 2000 RPM and mode 2 work at 10000 RPM. Mode 3
+differs in one or more boost/work fields at all three sampled RPMs. These
+results are consistent with x87 intermediate precision and power rounding, but
+the exact mismatch cause has not been isolated. Static inspection shows the
+power path at `0x69ba30` executes `FYL2X` and calls `0x6a5120`, whose body uses
+`FRNDINT`, `F2XM1`, and `FSCALE`; `0x6a5209` handles exceptional results. This
+confirms the target's x87 power sequence, but does not by itself explain every
+different stored byte. The repeatable bounded sweep is
+`tools/verify_engine_boost.py`. REA helper evidence is
+`ev_5e018651d07e8334f54a4f391646402acb352dcebaa66b8caf02fb467e547c14`;
+the x87 helper inspection is retained in the ignored
+`evidence/engine-x87-power-ghidra.snapshot.json`.
+The helper has not yet been composed into the cylinder driver: boost-dependent
+intake timing/pressure, charge initialization, work output and multi-knot state
+carryover still need integration and complete-record comparisons. Time-based
+native abort behavior and final curve corrections also remain unimplemented.
+Invalid positive-gas-domain inputs raise an error rather than imitating the
+native zero-first-output abort. The driver is a recovered numerical core, not
+verified vehicle-driving forces.
 
 The initial comparisons cover fifteen distinct stock-derived records and the
 five integration records above. Every complete 1004-byte result matches bounded

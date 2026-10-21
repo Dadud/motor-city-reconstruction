@@ -66,7 +66,7 @@ def records(value):
     if isinstance(value, dict):
         if 'operation' in value and 'normalized_result' in value:
             yield value
-        for key in ('structuredContent', 'content', 'result'):
+        for key in ('structuredContent', 'content', 'result', 'records'):
             if key in value:
                 yield from records(value[key])
         if value.get('type') == 'text':

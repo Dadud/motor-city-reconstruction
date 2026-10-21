@@ -1,0 +1,47 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x403000": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Complete table-backed byte selector and null-table fallback with explicit bounded table bytes. 256 randomized rows match the original, plus the null-table global default. The x87 result is captured by storing ST0 immediately in the original caller tail.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_reset_track_attribute.py"]
+    },
+    "0x4033b0": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Collision-search slot selection translated with the original side-specific spacing, float-stored quotient, x87 nearest-even integer conversion, and slot clamp. 512 direct original calls match.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_track_topology.py"]
+    },
+    "0x405930": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Complete path coordinate mapping with both count globals, both origin globals, wrap/reverse modes, signed offsets, x86 32-bit arithmetic and C signed-remainder behavior. 10,000 randomized original calls cover every branch.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_reset_path_index.py"]
+    },
+    "0x406840": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Track-path ordering predicate translated with native 32-bit signed/wrapped arithmetic. 512 direct original calls cover wrapped and nonwrapped ordering modes.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_track_topology.py"]
+    },
+    "0x4066f0": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Single-step track-path index update translated. 512 direct wrap-mode calls and 512 clamped-mode calls with the actual 0x406960 predicate match original EAX results.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_track_topology.py"]
+    },
+    "0x406960": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Track-path index rejection predicate translated with the observed range and boundary conditions. 512 direct original calls match the low-byte boolean result.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_track_topology.py"]
+    },
+    "0x406770": {
+      "translation": "python-bounded",
+      "verification": "original-comparison-bounded",
+      "scope": "Alternate track-path index update translated with native single-adjustment wrap and clamp behavior. 512 direct original calls match.",
+      "sources": ["client/track_topology.py", "tests/test_track_topology.py", "tools/verify_track_topology.py"]
+    }
+  }
+}

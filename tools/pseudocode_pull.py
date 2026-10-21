@@ -4,11 +4,11 @@ The private export carries one C file per function for every routine the
 static pass decompiled. Reading it turns the slowest step of a recovery cell -
 deriving semantics from disassembly - into reading C.
 
-Two caveats keep this honest. The decompiler is wrong in documented ways: it
-reconstructed the five-argument cdecl routine 0x483450 as two arguments, and
-calling conventions need checking against the epilogue. And pseudocode is a
-draft for the implementation, never the verification: the oracle against the
-original remains the only judge.
+Two caveats keep this honest. Pseudocode is a provider-specific reconstruction;
+verify signatures against call sites and epilogues. For 0x483450, both Ghidra's
+parameter use and the direct call site establish two cdecl arguments. And
+pseudocode is a draft for the implementation, never the verification: the
+oracle against the original remains the only judge.
 """
 import argparse
 import json

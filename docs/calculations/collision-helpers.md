@@ -1,8 +1,11 @@
 # Original collision calculation helpers
 
 Three bounded helpers now have authored Python/C++ implementations. They consume
-supplied contact/body data. Contact discovery, complete terrain/object response,
-damage, recovery and the integrated collision tick remain unfinished.
+supplied contact/body data. The original caller order and object-pair contact
+response have now been traced in [the collision update](../collision-world.md),
+but that enclosing path has no portable implementation or trajectory comparison
+yet. Contact discovery, complete terrain/object response, damage, recovery and
+the integrated collision tick remain unfinished.
 
 Source: x86 `mcity.exe`, SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
@@ -63,6 +66,11 @@ For normal `(0,1,0)` and plane point height 20, every query returns 20. The
 comparison stores the original x87 result to float32 like the authored API.
 The original divides directly; the public helper rejects `ny=0` because a
 vertical plane has no unique height. That rejection is an authored boundary.
+Callers can retain the x87 return in the FPU stack instead of storing it to a
+float. The `0x51e940` contact-clearance loop does exactly that through its
+subtraction, rounding only the final clearance. The integrated implementation
+uses `track_plane.surface_height` for this path and keeps the float-stored
+`collision_impulse.plane_height` API for callers that store the height first.
 
 ## Verification and remaining collision work
 

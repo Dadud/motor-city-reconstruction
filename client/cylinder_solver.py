@@ -20,8 +20,9 @@ from .cylinder_integration import (IntegrationInputs, IntegrationState,
 def solve_core_record(record):
     """Return a mutated 1004-byte core record with all seven nineteen-knot series.
 
-    Boost modes are explicitly unsupported; their helper is not substituted by
-    a guessed model. Valid assembled inputs must satisfy the recovered stages.
+    Boost modes are explicitly unsupported; their per-RPM helper has been
+    recovered, but the complete downstream cylinder-loop integration is not.
+    Valid assembled inputs must satisfy the recovered stages.
     """
     if not isinstance(record, bytes) or len(record) != 1004:
         raise ValueError('expected a 1004-byte assembled dyno record')

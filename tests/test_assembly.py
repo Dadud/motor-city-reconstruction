@@ -1,5 +1,7 @@
 import unittest
-from client.assembly import PROFILES, body_groups, select_body, stock_body_flags
+from client.assembly import (BodyComponentNameNode, PROFILES, body_groups,
+                             normalize_body_component_names, select_body,
+                             stock_body_flags)
 from client.fce import Model, Part
 from client.catalogue import StockPart
 
@@ -13,6 +15,36 @@ def component(kind, filename='', attachment=0):
 
 
 class AssemblyTests(unittest.TestCase):
+    def test_component_name_rewrites_follow_first_owner_node_rules(self):
+        nodes = (BodyComponentNameNode(40001, '.large'),
+                 BodyComponentNameNode(340333, 'blower'),
+                 BodyComponentNameNode(1001, 'suspension'),
+                 BodyComponentNameNode(1001, 'second'))
+        self.assertEqual(normalize_body_component_names(nodes),
+            (BodyComponentNameNode(40001, '.hole'),
+             BodyComponentNameNode(340333, 'blower'),
+             BodyComponentNameNode(1001, 'SUSP'),
+             BodyComponentNameNode(1001, 'second')))
+
+    def test_scoop_fallback_only_runs_when_scoop_component_exists(self):
+        unsupported = (BodyComponentNameNode(40001, '.bodymod'),
+                      BodyComponentNameNode(350001, 'scoop'))
+        accepted = (BodyComponentNameNode(40001, '.small'),
+                    BodyComponentNameNode(350001, 'scoop'))
+        absent = (BodyComponentNameNode(40001, '.bodymod'),)
+        self.assertEqual(normalize_body_component_names(unsupported)[0].name,
+                         '.hole')
+        self.assertEqual(normalize_body_component_names(accepted)[0].name,
+                         '.small')
+        self.assertEqual(normalize_body_component_names(absent)[0].name,
+                         '.bodymod')
+
+    def test_component_name_rewrite_validates_native_strings_and_classes(self):
+        with self.assertRaises(ValueError):
+            normalize_body_component_names((BodyComponentNameNode(-1, 'x'),))
+        with self.assertRaises(ValueError):
+            normalize_body_component_names((BodyComponentNameNode(1, 'x\0y'),))
+
     def test_stock_top_and_axle_components_use_installed_identities(self):
         source = model(':Hbody', ':Hhood', ':Htop', ':Htopchop', ':Hconvertible',
                        ':Hffender', ':Hrfender', ':Hrmirror')
@@ -20,6 +52,14 @@ class AssemblyTests(unittest.TestCase):
         flags = stock_body_flags(source, parts)
         self.assertEqual(flags, 0x40000 | 0x40 | 0x2000 | 0x100 | 0x10000)
         self.assertNotIn(':Htop', [p.name for p in select_body(source, flags).parts])
+
+    def test_stock_flags_accept_native_owner_class_name_attachment_views(self):
+        source = model(':Hbody', ':Hbumper', ':Hffender', ':Hrfender')
+        nodes = (BodyComponentNameNode(0x4e21, 'body'),
+                 BodyComponentNameNode(34001, 'leftMirror', 10),
+                 BodyComponentNameNode(34001, 'rightMirror', 11))
+        self.assertEqual(stock_body_flags(source, nodes),
+                         0x40000 | 0x1000 | 0x2000 | 0x10000)
 
     def test_scoop_choice_uses_first_supported_combination(self):
         parts = [component(40001, '.large')]

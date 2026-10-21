@@ -2,26 +2,50 @@
   "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
   "functions": {
     "0x483450": {
-      "translation": "missing",
-      "verification": "static-analysis-only",
+      "translation": "partial",
+      "verification": "original-comparison-bounded",
+      "evidence_ids": [
+        "ev_5f71936995291f2737100f5c928b899f4d5c706eb396b491aa8139b66c6c758b",
+        "ev_606d12b302b020bfade9e4adebf8da4c054e59d0f57bd9fb41628dfc455b3283",
+        "ev_43de56371f407bf7673fd9573ffa5ac13d9c49959fbccf8854feb20d734480e3",
+        "ev_d39aedf1695c9c7d655e57f731116d2f1f0c22ce2c093fff8e14d1a77fa4f1cd",
+        "ev_f2c7b991b97afe3d668686c2ed6662e5ecad60ebb1b5227fa39d6616f8bcdb40",
+        "ev_f8dc2705d65a1f9634ba527263776ce57f8a7902a85235cdff48cdb30eef0946",
+        "ev_4fa1719f9a5fa3ec6e32f8de23de24474dda1e62f3a1d14dc35fb46a3fa6742f"
+      ],
       "subsystem": "vehicle-startup-area",
       "owner": "scene-area-translation",
-      "scope": "ABI and body shape only. Five cdecl dword arguments and a binary32 return are proven from the call site at 0x53a7fa and the plain RET at 0x4836cd. The body is characterized as a per-surface geometry area accumulator reading an 8.9 MB scene singleton. No behavior is translated, so the caller still uses the geometric fallback.",
-      "supported_domain": "None. The routine throws until translated.",
+      "scope": "scene_area_from_geometry translates the decoded-geometry path: transformed XY extrema, projected 321x241 occupancy, occupied-pixel bounds, and the decompiled world-area/pixel-density formula. Decoded FCE models, scene-node metadata, and recovered RenderList records adapt into the calculation in Python and C++. Both geometry results match 19 direct executions of original 0x483450 using its exact two-argument ABI; only raster allocation/free are intercepted. The startup-record constructor consumes those nodes and stores the derived area. The raw entry still depends on the real selected render-list producer, resource lifetime, allocator semantics, and installed-asset validation.",
+      "supported_domain": "Finite decoded FCE models selected by RenderList model/surface/type records; 19 original-comparison scenes across supported mesh types, mirror types, multiple nodes/faces and nonzero surface/vertex/face bases. Startup integration verifies the derived area is stored in the complete record. Allocation/free are intercepted in the original area oracle.",
       "unresolved": [
-        "Argument semantics for arguments three through five.",
-        "The scene singleton layout at 0x890238 bytes and its population order.",
-        "The geometry fields behind the area accumulation, and when the result is nonzero.",
-        "An original-comparison oracle, which needs scene and terrain state to exist first."
+        "Native render-list production and selection from initialized owner state.",
+        "Runtime ownership/lifetime of resource object +0x21c scene-node list.",
+        "Real allocator/free semantics for the 0x12e32-byte raster buffer.",
+        "Complete model-loader-to-node integration and installed-asset comparison."
       ],
-      "acceptance": "Build scene state, translate the body, reproduce the binary32 return against the original through an oracle, then let the startup record consume it instead of an injected area query.",
+      "acceptance": "Connect the real owner render-list/model graph and allocator/resource lifetime, then compare startup area and record across installed vehicles.",
       "sources": [
-        "native/cmds/scene_area.cmake",
+        "CMakeLists.txt",
+        "client/fce.py",
+        "client/raster_bounds.py",
+        "client/raster_fill.py",
+        "client/raster_scene.py",
+        "client/scene_area_measure.py",
+        "docs/calculations/stock-driving-startup.md",
+        "docs/recovery/cells/scene_area.json",
         "native/include/mco/scene_area.hpp",
+        "native/include/mco/raster_scene.hpp",
+        "native/include/mco/fce.hpp",
         "native/src/scene_area.cpp",
-        "native/tests/scene_area_compare.cpp",
+        "native/src/raster_scene.cpp",
+        "native/src/fce.cpp",
+        "native/tests/scene_area_measure_compare.cpp",
         "native/tests/scene_area_test.cpp",
-        "tools/native_scene_area_compare.py"
+        "tests/test_scene_area_measure.py",
+        "tests/test_raster_scene.py",
+        "tools/verify_scene_area_measure.py",
+        "client/startup_record.py",
+        "tests/test_startup_record.py"
       ],
       "dependencies": []
     }

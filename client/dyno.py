@@ -19,8 +19,9 @@ def build_dyno_record(block, head, camshaft, valve_train, template, *,
     """Serialize the recovered naturally aspirated 0x46d1d0 core input.
 
     Intake/exhaust modes are already transformed dyno codes. Additional stock
-    fuel/boost branches are not represented; this is not a complete stock
-    engine assembler. Template flow must already include assembled modifiers.
+    Boost branches are not represented; the carburetor-six finalizer reuses
+    this record with its own second-pass capacity. Template flow must already
+    include assembled modifiers; this is not a complete stock engine assembler.
     Evidence: REA 198/221; 1004-byte buffer, cam field permutation and flow
     series placement. Unwritten fields keep the builder's zero initialization.
     """

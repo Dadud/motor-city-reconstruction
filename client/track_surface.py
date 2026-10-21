@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import math
 from .track_mesh import decode_mesh
 from .track_spatial import decode_spatial
+from .track_plane import surface_height, track_plane
 
 
 @dataclass(frozen=True)
@@ -20,21 +21,10 @@ class SurfaceHit:
         if not math.isfinite(x) or not math.isfinite(z):
             raise ValueError('non-finite surface sample')
         a,b,c,d = self.vertices
-        triangle=(a,b,d)
-        first=all((p[0]-q[0])*(z-q[2]) <= (x-q[0])*(p[2]-q[2])
-                  for p,q in zip(triangle,triangle[1:]+triangle[:1]))
-        def cross(u,v):
-            return (u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0])
-        def delta(p,q):
-            return tuple(p[i]-q[i] for i in range(3))
-        normal=cross(delta(a,b),delta(d,b)) if first else (0,0,0)
-        if not any(normal):
-            normal=cross(delta(c,d),delta(b,d))
-        length=math.sqrt(sum(v*v for v in normal))
-        if length == 0 or abs(normal[1]) <= length*1e-12:
+        reference, normal = track_plane(x, z, (a, b, c, d))
+        if not any(normal) or abs(normal[1]) <= 1e-12:
             raise ValueError('degenerate or vertical surface plane')
-        normal=tuple(v/length for v in normal)
-        height=b[1]-((x-b[0])*normal[0]+(z-b[2])*normal[2])/normal[1]
+        height=surface_height(normal, reference, (x, 0.0, z))
         return height,normal
 
 

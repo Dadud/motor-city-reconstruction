@@ -1,10 +1,32 @@
 import struct
 import unittest
-from client.mechanical_parts import expand_mechanical_parts,transfer_mechanical_physics
+from client.mechanical_parts import (expand_mechanical_parts,
+    create_mechanical_slot_buffer, transfer_mechanical_physics,
+    transfer_mechanical_presentation)
 from client.tire_response import f32
 
 
 class MechanicalPartsTests(unittest.TestCase):
+    def test_slot_buffer_allocation_is_zeroed_and_has_two_records_per_slot(self):
+        calls=[]
+        def allocate(tag,size,pool):
+            calls.append((tag,size,pool))
+            return bytearray([0xa5])*size
+        result=create_mechanical_slot_buffer(3,allocate,pool=7)
+        self.assertEqual(calls,[(b'PARTS',3*0x1308,7)])
+        self.assertEqual(len(result),3*0x1308)
+        self.assertFalse(any(result))
+        self.assertIsNone(create_mechanical_slot_buffer(0,allocate,pool=7))
+        self.assertEqual(len(calls),1)
+
+    def test_slot_buffer_preserves_allocation_failure_and_bounds_inputs(self):
+        self.assertIsNone(create_mechanical_slot_buffer(2,lambda *_:None,pool=0))
+        for count in (-1,10001,True):
+            with self.subTest(count=count),self.assertRaises(ValueError):
+                create_mechanical_slot_buffer(count,lambda *_:bytearray(),pool=0)
+        with self.assertRaises(ValueError):
+            create_mechanical_slot_buffer(1,lambda *_:bytearray(4),pool=0)
+
     def slot(self,attachment=10,paired=1,branded=100):
         out=bytearray(1596)
         struct.pack_into('<I',out,0x1e3,branded)
@@ -43,6 +65,48 @@ class MechanicalPartsTests(unittest.TestCase):
         self.assertEqual(out[0x141:0x144],b'\xa5'*3)
         self.assertEqual(out[0x160:0x164],b'\xa5'*4)
         self.assertEqual(out[0x220:0x224],b'\xa5'*4)
+
+    def test_presentation_builds_literal_and_prefixed_model_paths(self):
+        slot=self.slot();slot[0x387:0x38f]=b'.factory';slot[0x390:0x394]=b'Ford'
+        slot[0x2c7:0x2ca]=b'EA\0'
+        display_name=b'Generic Part\0'
+        slot[0x307:0x307+len(display_name)]=display_name
+        initial=b'\xa5'*0x984
+        out=transfer_mechanical_presentation(bytes(slot),model_prefix='data/models/',
+                                             initial_image=initial)
+        self.assertEqual(out[0x220:0x229],b'.factory\0')
+        self.assertEqual(out[0x22c:0x235],b'.factory\0')
+        self.assertEqual(out[0x32c:0x335],b'Ford\0\0\0\0\0')
+        self.assertEqual(out[0x53f:0x53f+len(b'EA Generic Part\0')],
+                         b'EA Generic Part\0')
+        self.assertEqual(out[0x600:],initial[0x600:])
+
+        slot[0x387:0x390]=b'32ford\0\0\0'
+        out=transfer_mechanical_presentation(bytes(slot),model_prefix='data/models/',
+                                             initial_image=initial)
+        self.assertEqual(out[0x220:0x229],b'32ford\0\0\0')
+        path=b'data/models/32ford.viv\0'
+        self.assertEqual(out[0x22c:0x22c+len(path)],path)
+
+    def test_presentation_truncates_display_at_original_64_byte_buffer(self):
+        slot=self.slot();slot[0x2c7:0x307]=b'A'*63+b'\0'
+        slot[0x307:0x348]=b'B'*64+b'\0'
+        out=transfer_mechanical_presentation(bytes(slot),model_prefix=b'',
+                                             initial_image=b'\xa5'*0x984)
+        self.assertEqual(out[0x53f:0x57f],b'A'*63+b'\0')
+
+    def test_presentation_rejects_unterminated_fields_and_invalid_prefix(self):
+        slot=self.slot();slot[0x387:0x390]=b'123456789'
+        with self.assertRaisesRegex(ValueError,'model-source'):
+            transfer_mechanical_presentation(bytes(slot),model_prefix='',
+                                             initial_image=b'\0'*0x984)
+        slot=self.slot()
+        with self.assertRaisesRegex(ValueError,'display brand'):
+            transfer_mechanical_presentation(bytes(slot[:0x2c7])+b'A'*64+bytes(0x63c-0x307),
+                                             model_prefix='',initial_image=b'\0'*0x984)
+        with self.assertRaisesRegex(ValueError,'NUL-free'):
+            transfer_mechanical_presentation(bytes(slot),model_prefix=b'x\0',
+                                             initial_image=b'\0'*0x984)
 
     def test_malformed_input_is_bounded(self):
         with self.assertRaises(ValueError):transfer_mechanical_physics(b'',1)

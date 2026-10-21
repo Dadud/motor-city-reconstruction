@@ -1,10 +1,15 @@
 # Assembled engine curves
 
-The Python research runtime now reproduces the ordinary, unboosted engine curve
+The Python research runtime reproduces the ordinary unboosted engine curve
 finalizer, including its actual cylinder solver. Eight installed stock engines
 (vehicle IDs 101–108) match the original complete 2,080-byte configuration exactly.
-This is an engine producer; complete car assembly and native driving remain open.
-Special carburetor kind six, boost and additional induction parts are unsupported.
+The special carburetor-kind-six branch is also reconstructed: each of those eight
+engine configurations, modified only at the carburetor-kind field, matches the
+original complete output and both solver inputs byte-for-byte; five additional
+capacity values on vehicle 101 cover the initial-capacity clamp and the rerun
+capacity ceiling. This is an engine
+producer; complete car assembly and native driving remain open. Boost and
+additional induction parts are still unsupported.
 
 ## Evidence and verification
 
@@ -21,6 +26,9 @@ REA/Ghidra 12.1.4 dossiers identify these original functions:
 | `0x549fe0` | Power peak scan | `ev_c8e7afe1851ab92c4fe2834dbcdb9bd0cdbeb53498566b24c71e14c427d799f1` |
 | `0x54b1a0` | Carburetor capacity requirement | `ev_8d56761243b8c6833687f507364571b199be0642c0f8ef4a5c8fc567a732c627` |
 
+The finalizer's carburetor-six branch is independently visible in Ghidra
+Evidence `ev_f54179b58dee485f395481712d72b6f411e0c6db8174667e15ca21f042d3070f`.
+
 Comparisons use bounded x86 emulation with x87 control word `0x27f`, on Windows.
 The eight stock cases execute the full original finalizer and solver without
 substituted callees. A further 35 branch cases substitute only cylinder solver
@@ -30,6 +38,7 @@ original-client runtime traces. Private original data is not distributed.
 
 ```powershell
 python -m tools.engine_curve_oracle '<game>/mcity.exe' '<game>/data/db/Online.mdb' --vehicles 101 102 103 104 105 106 107 108
+python tools/verify_special_carburetor_curve.py '<game>/mcity.exe' '<game>/data/db/Online.mdb'
 python -m tools.engine_curve_tail_oracle '<game>/mcity.exe' '<game>/data/db/Online.mdb'
 python -m tools.inspect_stock_engine '<game>/data/db/Online.mdb' '<game>/mcity.exe' --vehicle 101
 ```

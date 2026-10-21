@@ -1,9 +1,9 @@
 # Source recovery and build status
 
-Current priority (2026-10-15): recover and organize original behavior as readable
-source with a repeatable build. New gameplay, presentation, mod APIs and fan-server
-integration are deferred while this is the active scope. Existing prototypes are
-retained as reference work.
+Current priority: turn the analyzed Motor City Online executable into a coherent,
+portable source reconstruction, then connect it into a runnable client. The
+interactive prototype, mod APIs and fan-server tester are supporting tools; they
+are not the project deliverable and must not be counted as reconstructed gameplay.
 
 ## What is here
 
@@ -19,7 +19,9 @@ retained as reference work.
 | `examples/` | Existing example mods; outside the current recovery priority |
 
 This is a partial source reconstruction, not the original game's extracted source
-or a complete rebuildable game. Recovery checkpoint `35df8de` established complete
+or a complete rebuildable game. The repository has many verified source fragments
+and subsystems, but they are not yet assembled into the complete game runtime.
+Recovery checkpoint `35df8de` established complete
 supported stock mechanical assembly. Subsequent
 bounded recovery includes [wheel initialization](calculations/owner-wheel-setup.md)
 and [part bounds](calculations/model-bounds.md), with complete-original-function
@@ -85,5 +87,7 @@ garage remain documented in the README.
 
 Preserve original files as external read-only inputs. Do not publish original
 assets, credentials, captures or raw decompiler output. REA and Ghidra remain
-research tools only. Existing broad game milestones remain in the roadmap for
-later work; they are not the current build deliverable.
+research tools only. The actual game remains the deliverable. Function recovery,
+state/data layouts, startup, frame scheduling, simulation, rendering, audio, UI,
+persistence and online services must be connected and verified before the project
+can be called complete.

@@ -1,7 +1,9 @@
 # Roadmap
 
-**Current priority:** [source recovery, organization and build scripts](source-recovery.md).
-The full game and mod milestones below are retained for later work.
+**Current priority:** reconstruct the actual Motor City Online client as coherent,
+buildable source. [Source recovery](source-recovery.md) is the route to that game,
+not a substitute deliverable. The playable prototype is a temporary comparison
+harness and is not game completion.
 
 The intended result is a playable, open-source Windows/Linux game client with modern OS compatibility. A renderer alone does not meet that goal.
 
@@ -21,13 +23,17 @@ harness and does not define the intended handling or game rules.
 - Asset-free tests and Windows/Ubuntu CI configuration.
 - Actual Linux OpenGL garage smoke check with generated geometry under Xvfb/Mesa.
 
-## Work to reach driving
+## Immediate game reconstruction gates
 
 1. Complete cylinder-state/thermodynamic integration and final engine-curve corrections, including unsupported fuel/boost branches.
 2. Implement recovered tire forces, suspension forces, steering, drivetrain, braking and collision response.
-3. Replace prototype driving parameters with verified forces; retain the working input, fixed-step scheduling, scene pose, pause/reset and race UI.
-4. Finish tire sizing, suspension stance and nested component assembly.
-5. Broaden controllable driving and stability checks beyond the verified Drag sprint and Boothill start.
+3. Complete original owner startup and per-tick shared-state wiring; eliminate mandatory placeholder callbacks from the actual playable path.
+4. Connect recovered force, collision and world-object updates using original input/configuration and terrain producers; replace bicycle dynamics. The `0x426730` active-object array plus live `0x520250` motion/vertex child now match full owner bytes in composed executable comparisons; `0x4265f0` now has a full-record adapter around its required `0x520c20` child. Scheduler, force, collision and playable-path integration remain open.
+5. Reconstruct original game startup, screens, event/race state, audio and persistence, then exercise a complete offline game loop on installed assets.
+
+These gates are substantial unfinished engineering. The prototype sprint is only
+a geometry/input smoke harness; it is not evidence that the game has been
+reconstructed.
 
 ## Work to reach a complete client
 

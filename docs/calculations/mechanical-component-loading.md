@@ -10,6 +10,37 @@ and component quality. The Python [complete assembly](mechanical-assembly.md)
 matches eight stock configurations. Other engine/auxiliary/cosmetic families,
 geometry/display preparation, native orchestration and driving remain open.
 
+The upstream `0x52c6b0` scratch-buffer allocation is also translated in
+`create_mechanical_slot_buffer`. For `n` slots it requests `n * 0x1308` bytes,
+which holds two `0x984` records per slot; the original per-record initialization
+writes are fully overwritten by its final clear. Five original calls cover
+empty input, successful sizes, and a stubbed allocation failure. The pool
+allocator itself remains a platform service. Reproduce with
+`tools/verify_mechanical_slot_buffer.py <mcity.exe>`.
+
+The presentation pass of `0x52c2e0` is now translated separately by
+`transfer_mechanical_presentation`. It copies the eight-byte model key, formats
+literal dotted names or a prefixed `.viv` path, transfers the fixed-width
+manufacturer field, and forms the bounded `brand name` display text. The path
+prefix comes from row 15 of the table initialized by `0x530790`, using the
+shipped pointer/type rows and original formatter with synthetic registry
+services. Four controlled complete-original calls and all 57 expanded
+mechanical records from installed stock vehicle 101 match the complete
+0x984-byte destination image. Actual Windows registry results and drive scans
+remain platform services. Reproduce the comparisons with
+`tools/verify_mechanical_presentation.py <mcity.exe> --data-root <game-root>`.
+
+The integrated stock-owner verifier then feeds those results through original
+`0x52c550`, `0x52add0` and the worker's missing-driver fallback `0x52c190`:
+installed vehicle 101's 45 DBAPT slots expand into 57 complete `tPartInfo`
+records, 57 linked mechanical nodes and one default Driver node. All 58 owner
+nodes and owner head/count writes match byte-for-byte. Allocation and
+class/attachment resource lookup remain deterministic stubs.
+Run `tools/verify_stock_component_owner.py <mcity.exe> --game-root <game-root>`.
+The ready-success orchestration `0x52c790` also matches two full original
+executions, including the unmatched-stock label and a selected vehicle
+identity branch, using `tools/verify_stock_owner_worker.py`.
+
 ## Source and scope
 
 Separately supplied `mcity.exe`, SHA-256

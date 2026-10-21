@@ -183,14 +183,14 @@ def exhaust_mass_transfer(cylinder_pressure, cylinder_temperature, exhaust_press
 def intake_boundary(geometry, rpm, carb_capacity, carb_code, intake_mode, boost=0):
     """Couple 0x479025/0x47903a, 0x479b29 and 0x47a05b–0x47a0b0.
 
-    Requires an assembled core capacity (builder minimum 300), not an unbound
-    catalogue value. Native intermediate stores/order are retained, including
+    Accepts the builder's ordinary minimum-300 capacity and the special
+    carburetor-six rerun capacity (which can be lower). Native intermediate stores/order are retained, including
     unrounded displacement-rate use and boost addition after the pressure store.
     Negative boundary values are preserved; no new physical clamp is applied.
     """
     if not isinstance(geometry, CylinderGeometry):
         raise ValueError('expected recovered cylinder geometry')
-    if (type(carb_capacity) is not int or not 300 <= carb_capacity <= 32767 or
+    if (type(carb_capacity) is not int or not 1 <= carb_capacity <= 32767 or
             type(carb_code) is not int or carb_code not in (2, 4) or
             type(intake_mode) is not int or not 1 <= intake_mode <= 6):
         raise ValueError('invalid assembled intake capacity/mode')

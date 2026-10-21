@@ -55,12 +55,33 @@ sample customization](calculations/body-construction.md), native owner-binding
 producers, and a connected startup-body phase matching 320 original scenarios.
 The main owner initializer and upstream model assembly remain partial; this does
 not close the original driving acceptance gate.
+The projected-area query `0x483450`'s final 321x241 occupancy count/bounds helper
+`0x483f60` is now translated in Python and C++ and matches seven direct masks
+against the installed executable. Mesh traversal, projection rasterization and
+the full projected-area result remain unimplemented. Its scanline numeric leaves
+`0x483f00`/`0x483f30` (float ceiling/floor conversions) also match 256 direct
+original inputs each in Python and C++; the triangle-edge and pixel-fill stages
+remain unimplemented.
 The main initializer's [load, balance and brake producers](calculations/startup-balance.md)
 are now also translated in Python/C++; their complete original calls match on
 authored configurations and all eight supported stock configurations.
 Its [135-entry resistance table and surface helper](calculations/startup-resistance.md)
 also match complete original calls; the projected-area producer and integrated
 shift-curve publication remain unresolved.
+The downstream [four-wheel owner setup](calculations/owner-wheel-setup.md)
+`0x53b8a0` and stance-adjustment child `0x53b3c0` match 56 varied complete
+synthetic owner images and 16 supported assembled stock configurations
+byte-for-byte. They consume finalized configuration and prior owner geometry;
+upstream owner startup and live geometry/resource acquisition remain open.
+The prepared-model bounds/centering entry `0x52be40` now consumes recovered
+stock body flags and collector records for eight installed vehicles; complete
+FCE bytes and output extents match the original exactly. This extends stock-body
+surface selection coverage without closing component loading or owner-list
+construction.
+`client.owner_startup.initialize_owner_startup` composes recovered body setup,
+record publication and final wheel initialization with explicit model/scene
+inputs. Tests cover this stage handoff; the original resource-selection wrapper
+and full `0x43a990` execution remain untranslated.
 The [startup force helper and 112-sample acceleration tables](calculations/acceleration-table.md)
 match 720 helper calls and 36 complete producer calls (8,064 stored samples)
 bit-exactly with real original torque-lookup children and surrounding-sentinel
@@ -78,7 +99,8 @@ marker-missing and NULL-model inputs, four supplied scene-area returns)
 compare the whole record bit-exactly and confirm the missing-marker failure
 returns 0 with an unmutated owner; the native port matches the translation
 bit-for-bit over the same corpus. The `FUN_00483450` scene-area query itself
-remains untranslated and is supplied as an explicit input.
+has a bounded decoded-geometry translation and synthetic original comparisons;
+the live registry/allocator integration is still supplied as an explicit input.
 
 | Feature | Current status and evidence | Remaining recovery path | Acceptance scenario |
 | --- | --- | --- | --- |
@@ -90,7 +112,7 @@ remains untranslated and is supplied as an explicit input.
 | Engine calculations | Partial: standalone unboosted nineteen-knot core matches 46 complete original records; integration matches 44,635 original steps; ordinary final curves match eight stock engines and 35 isolated branch cases; [finalization](calculations/engine-curve-finalization.md), [engine](calculations/engine-dyno.md), [cycle](calculations/cylinder-cycle.md) | Boost, special carburetor mode, native finalizer port, native abort semantics and wider domain coverage | Compare full engine curves and intermediate state for supported stock and modified engines, including boundary modes |
 | Motion and support geometry | Recovered bounded calculations: pose updates and contact geometry; [motion](calculations/vehicle-motion.md) | Confirm full call ordering, units, wheel sizing and stance in the integrated simulation | Original versus reconstruction pose/contact traces agree under documented tolerances and identical inputs |
 | Tire/suspension/drivetrain/brake forces | Partial: recovered tire dimensions, spring/shock validation, [combined steering/tire update](calculations/tire-update.md), [wheel curve consumers](calculations/tire-response-curves.md), [resistance contribution](calculations/rolling-resistance.md) and stock input bridge; full integrated force model unknown | Follow [driving recovery map](driving-recovery-map.md): input and curve producers, integrated load sequence, gears/clutch, differential, brakes, surfaces and aero | Match original acceleration, gear changes, braking, skid and cornering scenarios for multiple configurations |
-| Collisions | Partial: [response, impulse-to-motion and plane-height helpers](calculations/collision-helpers.md) match original execution; complete object/vehicle response remains unknown | Recover broad/narrow phase, contact/impulse creation, damage, recovery and update order | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
+| Collisions | Partial: [response, impulse-to-motion and plane-height helpers](calculations/collision-helpers.md) match original execution; [game task registration](../client/game_schedule.py) is ported; [dispatcher, terrain query and object-pair call order](collision-world.md) traced statically | Recover broad/narrow phase, contact/impulse creation, damage, recovery and update order; port and compare enclosing routines | Compare track-object and vehicle collisions, resting contacts and post-impact behavior |
 | Offline driving | Prototype: authored 120 Hz terrain-following bicycle model; `driving.py` | Replace forces only after original calculations are verified; retain harness for comparison | Recovered model passes repeated original driving scenarios with reproducible outcomes |
 | Race rules and results | Prototype: inferred course closure and ordered gates; `racing.py` | Recover actual event definitions, start/finish rules, penalties, standings and result consumers | Original-equivalent starts, checkpoints, finish classification and timing across event types |
 | Garage and customization UI | Partial garage preview and body/component presentation | Recover menus, part installation/removal, paint/material changes, validation and state transitions | Complete garage editing flow renders and persists the selected configuration correctly |
@@ -437,3 +459,116 @@ stated instruction range and supplied preconditions.
 Completion requires all required rows to lose their prototype/unknown gaps and
 pass their acceptance scenarios. Record remaining mismatches rather than adjusting
 reference outputs to fit the reconstruction.
+
+## Source translation: world-object motion callback
+
+The scheduled callback at `0x5779d0` now has a typed Python translation and a
+native C++ translation. The original mutates linear velocity at owner offsets
+`+0x14/+0x18/+0x1c` and angular velocity at `+0x38/+0x3c/+0x40`. A nonzero signed
+short at `+0x3bc` multiplies all three angular-velocity components by `0.9`;
+otherwise linear-velocity components strictly below `0.5` in magnitude are
+zeroed. Each of the three angular-velocity checks strictly below `0.05` writes
+zero to the middle component, matching the actual binary even when the check
+reads one of the other components. No claim is made about
+the surrounding object layout or other callbacks.
+
+Evidence `ev_e9405a05e3888c4f9d1d107eefc302d11a9cc9dd6dd8abf9509a3e42fcd6a6f1`
+records the decompilation. `tools/verify_world_object_damping.py` compares five
+branch and threshold cases against the exact SHA-verified installed executable.
+The focused Python tests pass, and the native suite passes 194/194 tests. This is
+one recovered game callback, not a complete world simulation.
+
+## Source translation: world-object maintenance pass
+
+The primary schedule's `0x4265f0` pass is also translated for its observed
+active-object logic. For each active record it calls `0x520c20`, computes the
+angular-velocity magnitude, damps linear and angular velocity when owner `+0x350`
+is below owner `+0xd8`, caps angular-velocity magnitude at 10, and adds `0.01` to
+the first angular-velocity component when the unsigned counter at `+0x3bc`
+exceeds 32 while the maintenance value and angular-velocity magnitude are zero.
+The typed record aliases that counter with the signed view used by `0x5779d0`,
+preserving the underlying two bytes.
+
+`tools/verify_world_object_maintenance.py` runs six cases through the original
+callback and `0x6f1210` magnitude helper with `0x520c20` isolated; the byte-image
+adapter now matches the complete `0x4f8` owner record for all six cases. The owned
+`0x520c20` physics step is now separately translated in Python and C++. It
+executes gravity projection, velocity integration or stop behavior, scheduler
+force gating, and the stored kinetic-energy metric. Python and C++ each match
+all 135 deterministic full-record original comparisons while isolating only
+the step's `0x51e940` environment stage. A widened native run first exposed
+ULP differences in zero-contact gravity projection: the C++ port retained
+double products where the original stores each local gravity product before
+its matrix sum. Those float32 product stores are now explicit. The `0x51e940` active success, empty-map, and correction-wrapper paths match 128 complete owner records using the translated `0x42e760` query with bounded grid, block, path, and geometry data. The original frame selector, side selector, geometry transform and plane math execute; only correction children `0x43ba40`/`0x43b750` remain isolated on that branch. A broader 1,200-case integration sweep now matches every owner byte exactly. Case 547 resolved an x87 precision boundary: the clearance caller subtracts the extended plane-height return before rounding the final store, unlike the separate `+0x34c` helper-result store. The translated `0x51fc00` six-contact pass and its
+`0x457780` per-contact response execute in the Python and native paths. Direct
+original comparisons cover 134 per-contact cases and 36 six-contact records;
+the parent has 135 Python and seven curated native comparisons. This closes the
+contact-force child boundary, while full collision/terrain behavior still
+depends on unresolved correction children despite the now exact 1,200-case `0x51e940` bounded environment corpus. Its translated helpers `0x42df00`, `0x42e230`, `0x42e760` and fallback wrapper `0x43bfd0` now have bounded original comparisons; `0x43ba40`/`0x43b750` remain open. See
+`client/world_object_physics_step.py` and
+`tools/verify_world_object_physics_step.py`. Python and C++ each match all 135
+deterministic cases; contact force is translated in both implementations. The
+the correction-child and real-track coverage gaps remain open.
+
+The adjacent scheduled entry `0x426730` has no Ghidra FunctionManager record, so
+its complete 53-byte instruction range is retained separately in
+`docs/recovery/supplemental-callbacks.json`. Its Python and C++ ports reproduce
+the global array count, `0x4f8` row stride, active-byte test at `+4`, and ordered
+dispatch to the required `0x520250` handler. Four original-executable cases
+verify which rows dispatch. Four additional end-to-end cases run the live
+`0x520250` child through the original dispatcher and compare all bytes of active
+and inactive rows against `update_object_array`; the call site's provider
+procedure identity is unknown, so it remains a supplemental bounded dispatch
+observation rather than a Ghidra function entry.
+After adding the matrix helper, the native suite passed 197/197 tests and the
+full Python suite passed 1018 tests (7 skipped). Current totals are recorded
+after the per-object update translation below.
+
+## Math-library equivalent: 3x3 transpose
+
+The per-object world update calls `0x6f12a0` to transpose a 3x3 matrix. Its
+complete 61-byte body copies nine 32-bit words into transposed row-major order.
+`client/matrix_math.py` and `native/src/matrix_math.cpp` preserve the words
+without interpreting them as floats, including signed zero, infinities, NaNs and
+other bit patterns. Three exact original-executable cases pass through the
+bounded x86 oracle.
+
+The same module implements the three-component dot product called by the object
+update (`0x6f1140`/`0x6f3b51`). Four exact x87-result comparisons against the
+original pass, including mixed signs and cancellation.
+
+The original's periodic `0x5538a0` correction is now translated too. Its
+ten-step call forms the Gram error matrix, evaluates the nine-term polynomial
+with the client's coefficients, and applies the correction to the input
+rotation. `0x6f2a60` is implemented as the alias-safe 3x3 product used by that
+routine. Four exact matrix comparisons pass against the executable.
+
+The `0x6f1320` geometry wrapper saves and restores its current matrix,
+position, and vertex-count state around the mode-6 transform. Its state setters
+also reproduce the observed dirty flags and cache invalidation. Mode 6 selects
+the x87 vertex-transform path at `0x83a290`, which transforms 22 local vertices
+into the object's world-vertex buffer with 12-byte input and output strides.
+The exact matrix and position convention is translated in Python and C++.
+Other `0x6f28f0` dispatch modes, CPU-optimized variants, and later GPU
+presentation remain outside this bounded translation.
+
+## Source translation: per-object motion and transform update
+
+`0x520250` is now translated in Python and C++ for an active object record. It
+preserves the object's world-space center of mass while integrating linear
+velocity and turn-based angular velocity at 1/32-second steps, updates its
+3x3 rotation, writes the transposed matrix and three projected values, then
+transforms all 22 local vertices into the world-vertex buffer. Its recovered
+input offsets are represented as named fields in `WorldObjectUpdate`.
+
+`tools/verify_world_object_update.py` compares position, rotation, transpose,
+projection outputs, and all 66 world-vertex floats against the installed
+SHA-verified executable. Eight cases exercise both the ordinary path and the
+periodic matrix-repair branch, including the original mode-6 transform. The
+Python and native implementations match every checked output. The later GPU
+presentation path remains an explicit boundary. The native suite passes 200
+tests. The comparison was rerun against the installed executable during this
+recovery pass and all eight cases passed. `0x520250` is now explicitly reviewed
+in the generated function inventory; the 1,139-case Python suite was also run
+at that checkpoint (seven skipped). Neither check validates rendering modes
+other than the tested mode-6 transform or whole-game integration.

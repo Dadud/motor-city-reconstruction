@@ -51,6 +51,10 @@ class FunctionInventoryTests(unittest.TestCase):
         self.assertEqual(list(records(wrapper)), [item])
         self.assertEqual(list(records(dict(content=[dict(type='text', text='bad json')]))), [])
 
+    def test_exported_evidence_bundle_records_are_indexable(self):
+        item = dict(operation='analyze_function', normalized_result={'pseudocode': 'void f(){}'})
+        self.assertEqual(list(records({'records': [item]})), [item])
+
 
 if __name__ == '__main__':
     unittest.main()
