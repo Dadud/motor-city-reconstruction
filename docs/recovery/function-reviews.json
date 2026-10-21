@@ -1779,6 +1779,17 @@
       "docs/collision-world.md"
     ]
   },
+  "0x45a320": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The shape-0 early candidate gates are translated in Python: three float32 signed XZ edge inequalities followed by three nonzero 3D edge checks matching 0x6f14f0. Five rejected cases (four projected-edge rejects and one degenerate-edge case) execute the actual 0x45a320 entry with a synthetic shape-0 table; each returns false and leaves the supplied object image unchanged. This verifies only early rejection and does not translate shape tables, candidate height queries, response construction, the specialized byte +6 path, or live terrain behavior.",
+    "sources": [
+      "client/collision_terrain.py",
+      "tests/test_collision_terrain.py",
+      "tools/collision_terrain_gate_oracle.py",
+      "docs/collision-world.md"
+    ]
+  },
   "0x459150": {
     "translation": "partial",
     "verification": "original-comparison-bounded",

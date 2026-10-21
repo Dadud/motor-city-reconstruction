@@ -118,6 +118,20 @@ coverage. The separate support-correction caller `0x459150` is translated and
 validated below; its terrain producer and the complete `0x45a320` query remain
 unported.
 
+The first early candidate gate is translated in
+[`client/collision_terrain.py`](../client/collision_terrain.py): it applies the
+three float32 signed XZ inequalities and rejects a zero-length consecutive 3D
+edge, matching `0x6f14f0` (`ev_3085534cf4a25e13bc6d0962322d24f2d08c453f2348dea191ade8bb4a3b53a0`).
+Five rejected shape-0 cases execute the actual `0x45a320` entry and return
+false without mutating the supplied object image: four bypass both the edge
+helper and terrain query; the degenerate shared-edge case reaches the
+zero-length helper once for each of 12 candidates and never queries terrain.
+Run
+`python -m tools.collision_terrain_gate_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
+This narrow harness does not execute accepted candidates or establish any
+terrain-height, response, specialized-object or live-world behavior. The
+current caller dossier is `ev_9cf820fb1aeb7a29be3792227239586b1772b50c8b982c9a3745c5178c6bd6ca`.
+
 `0x458530` constructs center-of-mass contact levers and radial directions from
 the supplied world-space point. It samples for up to 32 steps and stops when
 relative point motion ceases to approach the supplied normal. Each accepted
