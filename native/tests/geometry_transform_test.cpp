@@ -5,6 +5,20 @@
 #include <cassert>
 
 int main() {
+    std::array<float, 66> translated{};
+    for (std::size_t i=0;i<22;++i) {
+        translated[i*3]=static_cast<float>(i);
+        translated[i*3+1]=static_cast<float>(i*2);
+        translated[i*3+2]=static_cast<float>(-static_cast<int>(i));
+    }
+    mco::add_vector_to_points(translated.data(), {1.5f,-2.f,.25f},
+                              translated.data(), 22);
+    for (std::size_t i=0;i<22;++i) {
+        assert(translated[i*3]==static_cast<float>(i)+1.5f);
+        assert(translated[i*3+1]==static_cast<float>(i*2)-2.f);
+        assert(translated[i*3+2]==-static_cast<float>(i)+.25f);
+    }
+    mco::add_vector_to_points(nullptr, {0,0,0}, nullptr, 0);
     std::array<float,66> input{};
     for(std::size_t i=0;i<22;++i) {
         input[i*3]=1; input[i*3+1]=2; input[i*3+2]=3;

@@ -1,4 +1,5 @@
 #include "mco/geometry_transform.hpp"
+#include <stdexcept>
 
 namespace mco {
 std::array<float,66> transform_world_vertices_22(
@@ -17,5 +18,20 @@ std::array<float,66> transform_world_vertices_22(
         output[offset+2]=z2+position[2];
     }
     return output;
+}
+
+void add_vector_to_points(const float* source,
+                          const std::array<float,3>& translation,
+                          float* destination,
+                          std::size_t count) {
+    if (count != 0 && (source == nullptr || destination == nullptr))
+        throw std::invalid_argument("nonempty point translation requires valid buffers");
+    for (std::size_t i = 0; i < count; ++i) {
+        const auto offset = i * 3;
+        const float x = source[offset], y = source[offset + 1], z = source[offset + 2];
+        destination[offset] = x + translation[0];
+        destination[offset + 1] = y + translation[1];
+        destination[offset + 2] = z + translation[2];
+    }
 }
 }

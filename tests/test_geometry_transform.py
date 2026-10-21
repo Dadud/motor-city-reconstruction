@@ -1,6 +1,6 @@
 import unittest
 
-from client.geometry_transform import transform_vertices
+from client.geometry_transform import add_vector_to_points, transform_vertices
 
 
 class GeometryTransformTests(unittest.TestCase):
@@ -15,6 +15,18 @@ class GeometryTransformTests(unittest.TestCase):
             transform_vertices((0.0,) * 66, (1,0,0,0,1,0,0,0,1), (0,0,0), count=12)
         with self.assertRaises(ValueError):
             transform_vertices((0.0,) * 3, (1,0,0,0,1,0,0,0,1), (0,0,0))
+
+    def test_adds_translation_to_contiguous_points(self):
+        self.assertEqual(add_vector_to_points((1, 2, 3, -1, -2, -3),
+                                              (.5, 1, 1.5), count=2),
+                         (1.5, 3, 4.5, -.5, -1, -1.5))
+
+    def test_translation_accepts_empty_and_rejects_short_or_invalid_input(self):
+        self.assertEqual(add_vector_to_points((), (1, 2, 3), count=0), ())
+        with self.assertRaises(ValueError):
+            add_vector_to_points((0, 1, 2), (1, 2, 3), count=2)
+        with self.assertRaises(ValueError):
+            add_vector_to_points((0, 1, 2), (1, 2), count=1)
 
 
 if __name__ == '__main__':

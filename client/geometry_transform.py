@@ -37,3 +37,25 @@ def transform_vertices(vertices, matrix, position, *, count=22,
         target = index * output_stride
         output[target:target + 3] = transformed
     return tuple(output)
+
+
+def add_vector_to_points(points, vector, *, count=22):
+    """Translate contiguous 3-float points as done by the helper at 0x6f1450.
+
+    The original routine permits overlapping source and destination buffers;
+    this value-oriented API returns the translated point sequence.
+    """
+    points = tuple(float32_ieee(value) for value in points)
+    vector = tuple(float32_ieee(value) for value in vector)
+    if len(vector) != 3:
+        raise ValueError('translation requires three components')
+    if type(count) is not int or count < 0:
+        raise ValueError('point count must be a nonnegative integer')
+    if len(points) < count * 3:
+        raise ValueError('point buffer is shorter than the requested count')
+    output = list(points)
+    for index in range(count):
+        offset = index * 3
+        for axis in range(3):
+            output[offset + axis] = float32_ieee(points[offset + axis] + vector[axis])
+    return tuple(output)

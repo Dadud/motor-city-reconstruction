@@ -72,6 +72,18 @@ subtraction, rounding only the final clearance. The integrated implementation
 uses `track_plane.surface_height` for this path and keeps the float-stored
 `collision_impulse.plane_height` API for callers that store the height first.
 
+## Support-point array translation
+
+`client.geometry_transform.add_vector_to_points` translates contiguous
+three-float points using the helper at `0x6f1450`; the native counterpart is
+`mco::add_vector_to_points`. The original loops the requested count, adds one
+shared vector to each point, and supports the in-place source/destination
+alias used by its caller. Across 128 direct original calls, counts 0, 1, 2, 22
+and 47 and alternating alias/out-of-place buffers matched float-for-float.
+The native implementation matches Python across the same corpus, and its
+in-place 22-point test passes. This recovers the array operation only; it does
+not recover the terrain candidate query or the full `0x459150` support routine.
+
 ## Sampled pair impact
 
 `client/collision_pair_response.py` translates the bounded response body at

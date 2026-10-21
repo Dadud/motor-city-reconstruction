@@ -1715,5 +1715,36 @@
       "docs/calculations/collision-helpers.md",
       "docs/collision-world.md"
     ]
+  },
+  "0x6f1450": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Three-float point-array translation is implemented in Python and C++. 128 original calls covered counts 0, 1, 2, 22 and 47, alternating in-place and separate output buffers; every translated float matched exactly. Native/Python output matches exactly across the same deterministic corpus; native unit coverage includes an in-place 22-point batch. This establishes only the array helper, not the full 0x459150 terrain/support caller.",
+    "sources": [
+      "client/geometry_transform.py",
+      "native/include/mco/geometry_transform.hpp",
+      "native/src/geometry_transform.cpp",
+      "tools/vector_array_oracle.py",
+      "tools/native_vector_array_compare.py",
+      "native/tests/vector_array_compare.cpp",
+      "native/tests/geometry_transform_test.cpp",
+      "tests/test_geometry_transform.py",
+      "CMakeLists.txt",
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_4652ff8106e53f79200bffc0355ed7607fc9eb886a7db829409a8d1f167f62ae"
+    ],
+    "verification_refs": [
+      "tools/vector_array_oracle.py",
+      "tools/native_vector_array_compare.py",
+      "native/tests/geometry_transform_test.cpp",
+      "tests/test_geometry_transform.py"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
+    ]
   }
 }
