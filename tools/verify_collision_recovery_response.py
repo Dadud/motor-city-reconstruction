@@ -9,6 +9,7 @@ from client.collision_geometry import (probe_collision_candidate,
 from client.collision_recovery import search_surface_correction
 from client.track_surface_lookup import TrackSurfaceMemory, TrackSurfaceWorld
 from client.track_topology import track_index_is_rejected
+from client.track_topology import collision_search_slot
 from client.world_object_contact import apply_contact_frame
 from client.world_object_environment import EnvironmentCallbacks
 from tools.native_oracle import DynoOracle
@@ -27,19 +28,22 @@ def _f32(value):
     return struct.unpack('<f', struct.pack('<f', value))[0]
 
 
-def verify(executable, cases=24):
+def verify(executable, cases=96):
     from unicorn import UC_HOOK_CODE
 
     oracle = DynoOracle(executable)
     cpu, reg = oracle.cpu, oracle.reg
     rng = random.Random(0x43BA4051E460)
     max_float_error = 0.0
+    response_cases = 0
     float_offsets = (set(range(8, 20, 4)) | set(range(0x78, 0xcc, 4))
                      | set(range(0x1e8, 0x2f0, 4))
                      | set(range(0x31c, 0x364, 4)) | {0x350, 0x3b4, 0x3b8})
 
     for case in range(cases):
         arena, root, _query = fixture(2, 0, 0, 0, 7, 8, 8, case * 17)
+        surface_flags = (1, 2, 0, 0x0E, 0x40)[case % 5]
+        normal_short = (32767, 26214, 20000)[(case // 5) % 3]
         quad = ((0.0, 0.0, 0.0), (16.0, 0.0, 0.0),
                 (16.0, 0.0, 16.0), (0.0, 0.0, 16.0))
         for block in range(3):
@@ -48,11 +52,30 @@ def verify(executable, cases=24):
                 struct.pack_into('<3f', arena, geometry_offset + vertex_index * 12,
                                  *vertex)
             descriptor = geometry_offset + 0xC0
-            struct.pack_into('<H', arena, descriptor + 4, 1)
-            struct.pack_into('<h', arena, descriptor + 10, 32767)
+            struct.pack_into('<H', arena, descriptor + 4, surface_flags)
+            struct.pack_into('<h', arena, descriptor + 10, normal_short)
 
         rows = []
         search_rows = []
+        target_row = case % 24
+        candidate_kind = case % 4
+        negative_spacing = _f32(rng.uniform(1.5, 2.5))
+        positive_spacing = _f32(rng.uniform(1.5, 2.5))
+        if candidate_kind == 0:
+            negative_count, positive_count = 0, 1
+            target_offset = _f32(positive_spacing * 0.5)
+        elif candidate_kind == 1:
+            negative_count, positive_count = 1, 0
+            target_offset = _f32(-negative_spacing * 0.5)
+        elif candidate_kind == 2:
+            negative_count, positive_count = 0, 2
+            target_offset = _f32(positive_spacing * 1.5)
+        else:
+            negative_count, positive_count = 2, 0
+            target_offset = _f32(-negative_spacing * 1.5)
+        target_slot = collision_search_slot(
+            negative_spacing, positive_spacing, target_offset)
+        target_mask = 1 << (15 - min(max(target_slot + 1, 0), 15))
         for index in range(24):
             offset = PATH - BASE + index * 0x54
             row = bytearray(arena[offset:offset + 0x54])
@@ -60,10 +83,13 @@ def verify(executable, cases=24):
             struct.pack_into('<3f', row, 0x0C, 0.0, 1.0, 0.0)
             struct.pack_into('<3f', row, 0x18, 0.0, 0.0, 1.0)
             struct.pack_into('<3f', row, 0x24, 1.0, 0.0, 0.0)
+            row_negative_count = negative_count if index == target_row else 0
+            row_positive_count = positive_count if index == target_row else 0
             struct.pack_into('<3f3I', row, 0x38,
-                             2.0, 2.0, 0.0, 0,
-                             1 if index == 0 else 0,
-                             0x80 if index == 0 else 0)
+                             negative_spacing if index == target_row else 2.0,
+                             positive_spacing if index == target_row else 2.0,
+                             0.0, row_negative_count, row_positive_count,
+                             target_mask if index == target_row else 0)
             rows.append(bytes(row))
             search_rows.append((
                 struct.unpack_from('<2f', row, 0x38) +
@@ -132,9 +158,15 @@ def verify(executable, cases=24):
         finally:
             cpu.hook_del(hook)
         original = bytes(cpu.mem_read(OWNER, len(record)))
-        if (0x0043BD30 not in native_calls or 0x0051E460 not in native_calls
-                or 0x0042E010 not in native_calls):
-            raise AssertionError(f'case {case} missed a probe/response: {native_calls}')
+        accepted = (surface_flags & 0x40) == 0 and (surface_flags & 0x1f) not in (0, 0x0E) and normal_short / 32768.0 >= 0.8
+        native_response = 0x0051E460 in native_calls
+        if (0x0043BD30 not in native_calls or 0x0042E010 not in native_calls
+                or native_response != accepted):
+            raise AssertionError(
+                f'case {case} expected surface acceptance={accepted} '
+                f'but response={native_response}; flags={surface_flags:#x} '
+                f'normal={normal_short}/32768 calls={native_calls}')
+        response_cases += int(native_response)
 
         translated = bytearray(record)
         translated_responses = []
@@ -166,6 +198,11 @@ def verify(executable, cases=24):
                 index, range_start=0, range_end=0,
                 lower_limit=0, upper_limit=0))
 
+        if len(translated_responses) != int(accepted):
+            raise AssertionError(
+                f'case {case} translated surface gate produced '
+                f'{len(translated_responses)} responses; expected {int(accepted)}')
+
         for offset in range(0, len(record), 4):
             actual_word, expected_word = original[offset:offset + 4], translated[offset:offset + 4]
             if actual_word == expected_word:
@@ -183,18 +220,18 @@ def verify(executable, cases=24):
                 f'calls={native_calls} native_responses={native_responses} '
                 f'translated_responses={translated_responses} '
                 f'first_rows={track_rows[:1]}')
-    return cases, max_float_error
+    return cases, response_cases, max_float_error
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable', type=Path)
-    parser.add_argument('--cases', type=int, default=24)
+    parser.add_argument('--cases', type=int, default=96)
     args = parser.parse_args()
-    cases, error = verify(args.executable, args.cases)
-    print(f'0x43ba40 successful collision response matches {cases} original '
-          f'complete owner records through 0x51e460; maximum compared float '
-          f'error {error:.9g}')
+    cases, responses, error = verify(args.executable, args.cases)
+    print(f'0x43ba40 collision probe/search matches {cases} original complete '
+          f'owner records across varied rows, offsets, and surface gates; '
+          f'{responses} reach 0x51e460; maximum compared float error {error:.9g}')
 
 
 if __name__ == '__main__':
