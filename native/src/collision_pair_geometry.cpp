@@ -1,4 +1,5 @@
 #include "mco/collision_pair_geometry.hpp"
+#include "mco/geometry_transform.hpp"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -280,8 +281,6 @@ CollisionPairResult resolve_collision_pair(
     if (owner_gate && target_gate) owner_gate = target_gate = false;
     const float total_mass = stored(static_cast<double>(owner.mass) + target.mass);
     CollisionPairResult result{};
-    result.owner = owner;
-    result.target = target;
 
     for (unsigned step = 0; step < max_corrections; ++step) {
         auto candidate = first_hit(oriented_box_point_test, owner.box, target.box, axes);
@@ -349,6 +348,19 @@ CollisionPairResult resolve_collision_pair(
         result.has_normal = candidate->has_normal;
         result.last_normal = candidate->normal;
         result.correction_steps = step + 1;
+    }
+    if (result.collided) {
+        std::array<float, 9> owner_matrix{};
+        std::array<float, 9> target_matrix{};
+        for (std::size_t axis = 0; axis < 3; ++axis)
+            for (std::size_t component = 0; component < 3; ++component) {
+                owner_matrix[axis * 3 + component] = owner.box.axes[axis][component];
+                target_matrix[axis * 3 + component] = target.box.axes[axis][component];
+            }
+        owner.world_vertices = transform_world_vertices_22(
+            owner.local_vertices, owner_matrix, owner.box.center);
+        target.world_vertices = transform_world_vertices_22(
+            target.local_vertices, target_matrix, target.box.center);
     }
     result.owner = owner;
     result.target = target;

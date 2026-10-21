@@ -34,9 +34,11 @@ For `0x45bfe0`, 1,024 direct original calls covered both center-distance
 branches (523 near, 501 far) and matched the selected normal exactly in the
 tested float components.
 For `0x45af30`, 128 direct calls covered axis-aligned and independently rotated
-boxes, mass differences, movement modes and threshold gates. Collision decisions
-matched; final positions differed by at most `7.62939453125e-6`. Native and
-Python pair solvers matched over the same corpus within `2.677530669958905e-7`.
+boxes, mass differences, movement modes, threshold gates and nonzero geometry
+buffers. Collision decisions, final positions and all 22 refreshed world
+vertices matched; maximum original/Python float difference was
+`6.67572021484375e-6`. Native and Python outputs matched over the same corpus
+within `9.559899902811253e-7`.
 
 ```powershell
 python -m tools.collision_pair_geometry_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 192
@@ -48,10 +50,11 @@ python -m tools.native_collision_pair_geometry_compare build/recovered-collision
 python -m tools.native_collision_pair_reverse_compare build/recovered-collision-pair/Release/mco_collision_pair_reverse_compare.exe
 ```
 
-The pair response translation does not yet reproduce the final `0x6f1320`
-derived-transform refresh and all of its callees, or establish live collision
-behavior in the game frame. The tests use explicit synthetic records and the
-original function call; they do not prove whole-game equivalence.
+The pair translation models the mode-6 vertex refresh output and separately
+recovered `0x6f1320` save/restore wrapper, but does not apply that wrapper's
+global render-cache side effects to the pair result or exercise all renderer
+dispatch variants in a live game frame. The tests use explicit synthetic
+records; they do not prove whole-game equivalence.
 
 Target SHA-256:
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.

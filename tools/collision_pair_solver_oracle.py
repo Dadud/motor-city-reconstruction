@@ -25,6 +25,7 @@ def body_image(body):
     struct.pack_into('<f', data, 0x6c, f32(body.gate))
     struct.pack_into('<3f', data, 0xcc, *box.half_extents)
     struct.pack_into('<f', data, 0x3c0, f32(body.peer_gate))
+    struct.pack_into('<66f', data, 0xe0, *body.local_vertices)
     return bytes(data)
 
 
@@ -45,7 +46,9 @@ def run_native(oracle, owner, target):
     oracle._run(call_at, oracle.stop, timeout=0, count=2_000_000)
     return (cpu.reg_read(reg.UC_X86_REG_EAX),
             struct.unpack('<3f', cpu.mem_read(OWNER + 8, 12)),
-            struct.unpack('<3f', cpu.mem_read(TARGET + 8, 12)))
+            struct.unpack('<3f', cpu.mem_read(TARGET + 8, 12)),
+            struct.unpack('<66f', cpu.mem_read(OWNER + 0x1e8, 264)),
+            struct.unpack('<66f', cpu.mem_read(TARGET + 0x1e8, 264)))
 
 
 def cases(count=64):
@@ -72,11 +75,13 @@ def cases(count=64):
         owner = CollisionPairBody(
             OrientedCollisionBox(owner_center, orientation, extents),
             mass=f32(rng.uniform(100, 2000)), mode=int(owner_mode),
-            gate=f32(rng.uniform(0, 1)), peer_gate=f32(rng.uniform(0, 1)))
+            gate=f32(rng.uniform(0, 1)), peer_gate=f32(rng.uniform(0, 1)),
+            local_vertices=tuple(f32(rng.uniform(-2, 2)) for _ in range(66)))
         target = CollisionPairBody(
             OrientedCollisionBox(target_center, target_orientation, target_extents),
             mass=f32(rng.uniform(100, 2000)), mode=int(target_mode),
-            gate=f32(rng.uniform(0, 1)), peer_gate=f32(rng.uniform(0, 1)))
+            gate=f32(rng.uniform(0, 1)), peer_gate=f32(rng.uniform(0, 1)),
+            local_vertices=tuple(f32(rng.uniform(-2, 2)) for _ in range(66)))
         yield owner, target
 
 
@@ -86,7 +91,8 @@ def compare(executable, count=64):
     collided = 0
     steps = 0
     for index, (owner, target) in enumerate(cases(count)):
-        native_hit, native_owner, native_target = run_native(oracle, owner, target)
+        native_hit, native_owner, native_target, native_owner_vertices, native_target_vertices = run_native(
+            oracle, owner, target)
         translated = resolve_collision_pair(owner, target)
         if native_hit != int(translated.collided):
             raise AssertionError(f'case {index} collision status differs: '
@@ -100,11 +106,22 @@ def compare(executable, count=64):
                 if error > max(3e-5, abs(a) * 4e-6):
                     raise AssertionError(f'case {index} {label}[{axis}] differs: '
                                          f'{a} != {b}; steps={translated.correction_steps}')
+        expected_owner_vertices = translated.owner.world_vertices or (0.0,) * 66
+        expected_target_vertices = translated.target.world_vertices or (0.0,) * 66
+        for label, actual, expected in (
+                ('owner world vertex', native_owner_vertices, expected_owner_vertices),
+                ('target world vertex', native_target_vertices, expected_target_vertices)):
+            for component, (a, b) in enumerate(zip(actual, expected)):
+                error = abs(a - b)
+                maximum = max(maximum, error)
+                if error > max(3e-5, abs(a) * 4e-6):
+                    raise AssertionError(f'case {index} {label}[{component}] differs: '
+                                         f'{a} != {b}; steps={translated.correction_steps}')
         collided += int(native_hit != 0)
         steps += translated.correction_steps
     return {'entry': '0x45af30', 'cases': count, 'collided': collided,
-            'python_correction_steps': steps, 'maximum_absolute_position_error': maximum,
-            'scope': 'collision decision and position response; post-call transform-refresh outputs excluded'}
+            'python_correction_steps': steps, 'maximum_absolute_float_error': maximum,
+            'scope': 'collision/position response and 22-vertex render refresh with mode-6 dispatcher inputs'}
 
 
 def main():

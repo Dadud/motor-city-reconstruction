@@ -13,15 +13,19 @@ int main() {
         unsigned mode = 0;
         std::cin >> owner.mass >> mode >> owner.gate >> owner.peer_gate;
         owner.mode = static_cast<std::uint8_t>(mode);
+        for (auto& value : owner.local_vertices) std::cin >> value;
         for (auto& value : target.box.center) std::cin >> value;
         for (auto& axis : target.box.axes) for (auto& value : axis) std::cin >> value;
         for (auto& value : target.box.half_extents) std::cin >> value;
         std::cin >> target.mass >> mode >> target.gate >> target.peer_gate;
         target.mode = static_cast<std::uint8_t>(mode);
+        for (auto& value : target.local_vertices) std::cin >> value;
         const auto result = mco::resolve_collision_pair(owner, target);
         std::cout << static_cast<int>(result.collided) << ' ' << result.correction_steps;
         for (float value : result.owner.box.center) std::cout << ' ' << value;
         for (float value : result.target.box.center) std::cout << ' ' << value;
+        for (float value : result.owner.world_vertices) std::cout << ' ' << value;
+        for (float value : result.target.world_vertices) std::cout << ' ' << value;
         std::cout << '\n';
     }
 }

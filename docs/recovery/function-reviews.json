@@ -1658,7 +1658,7 @@
   "0x45af30": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The oriented-box pair resolver is translated in Python and C++ through its 32-step sampled contact search, forward and reverse axis/grid probes, movement gates, contact-normal selection and mass-weighted center-line position correction. 128 direct original calls matched collision decisions and final positions within 7.62939453125e-6, covering rotated boxes, unequal masses, mode bytes and threshold gates. The final 0x6f1320 derived-transform refresh and its callees are not yet translated; the fixture does not establish live game-frame behavior.",
+    "scope": "The oriented-box pair resolver is translated in Python and C++ through its 32-step sampled contact search, forward and reverse axis/grid probes, movement gates, contact-normal selection, mass-weighted center-line position correction and 22-vertex mode-6 transform refresh. 128 direct original calls matched collision decisions, final positions and refreshed world vertices within 6.67572021484375e-6, covering rotated boxes, unequal masses, mode bytes, threshold gates and nonzero local geometry buffers. Render-cache global side effects and other dispatch variants remain outside the pair result; the fixture does not establish live game-frame behavior.",
     "sources": [
       "client/collision_pair_solver.py",
       "client/collision_pair_geometry.py",

@@ -11,6 +11,7 @@ from client.collision_pair_geometry import (
     owner_point_direction_test,
     select_pair_contact_normal,
 )
+from client.geometry_transform import transform_vertices
 
 
 def _f32(value):
@@ -24,6 +25,8 @@ class CollisionPairBody:
     mode: int = 0
     gate: float = 0.0
     peer_gate: float = 0.0
+    local_vertices: tuple = (0.0,) * 66
+    world_vertices: tuple | None = None
 
 
 @dataclass(frozen=True)
@@ -86,13 +89,18 @@ def _response_gates(owner, target):
 def resolve_collision_pair(owner, target, max_corrections=32):
     """Apply the original 1/32 center-line correction while sampled contacts remain.
 
-    The result describes the recovered pair routine over explicit box records.
-    It does not model the separate 0x6f1320 derived-transform refresh call.
+    The result includes final positions and the mode-6 transform of each body's
+    22 local vertices. The separate renderer cache and global state effects of
+    0x6f1320 are not part of the returned pair state.
     """
     if not isinstance(owner, CollisionPairBody) or not isinstance(target, CollisionPairBody):
         raise ValueError('collision pair bodies are required')
     if not isinstance(owner.box, OrientedCollisionBox) or not isinstance(target.box, OrientedCollisionBox):
         raise ValueError('each body must contain an oriented collision box')
+    for body in (owner, target):
+        if len(body.local_vertices) != 66 or any(
+                not math.isfinite(float(value)) for value in body.local_vertices):
+            raise ValueError('each body requires 22 finite local geometry vertices')
     if type(max_corrections) is not int or not 1 <= max_corrections <= 32:
         raise ValueError('correction limit must be between 1 and 32')
     masses = (_f32(owner.mass), _f32(target.mass))
@@ -137,5 +145,14 @@ def resolve_collision_pair(owner, target, max_corrections=32):
         current_owner = replace(current_owner, box=replace(current_owner.box, center=owner_center))
         current_target = replace(current_target, box=replace(current_target.box, center=target_center))
         steps += 1
+    if steps:
+        for body in (current_owner, current_target):
+            matrix = tuple(value for axis in body.box.axes for value in axis)
+            world = transform_vertices(body.local_vertices, matrix, body.box.center)
+            updated = replace(body, world_vertices=world)
+            if body is current_owner:
+                current_owner = updated
+            else:
+                current_target = updated
     return CollisionPairResult(steps != 0, current_owner, current_target,
                                steps, contact, normal)

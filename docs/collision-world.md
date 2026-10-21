@@ -110,10 +110,11 @@ The separate impulse-producing path above still lacks a comparison harness for
 its sample geometry, contact records, accumulation and coupled body mutations.
 
 The oriented-box resolver at `0x45af30` is now translated in Python and C++.
-Its four geometry helpers, ordered point sampling, movement gates, and
-mass-weighted 32-step center-line correction were checked against 128 direct
-original calls; position error stayed below `7.7e-6`. Its final `0x6f1320`
-derived-transform refresh is still unresolved. `0x459150` likewise transforms an array of support points
+Its four geometry helpers, ordered point sampling, movement gates,
+mass-weighted 32-step center-line correction and 22-vertex mode-6 refresh were
+checked against 128 direct original calls; position and vertex error stayed
+below `6.7e-6`. Render-cache global side effects and other dispatch variants
+remain outside the pair result. `0x459150` likewise transforms an array of support points
 and applies terrain-plane corrections, but its complete terrain and contact
 producer chain remains open.
 

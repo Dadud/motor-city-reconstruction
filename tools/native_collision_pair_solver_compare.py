@@ -10,7 +10,8 @@ from client.collision_pair_solver import resolve_collision_pair
 def body_values(body):
     box = body.box
     return (*box.center, *(value for axis in box.axes for value in axis),
-            *box.half_extents, body.mass, body.mode, body.gate, body.peer_gate)
+            *box.half_extents, body.mass, body.mode, body.gate, body.peer_gate,
+            *body.local_vertices)
 
 
 def verify(runner, case_count=128):
@@ -27,22 +28,30 @@ def verify(runner, case_count=128):
     total_steps = 0
     for index, (line, (owner, target)) in enumerate(zip(rows, corpus)):
         fields = line.split()
-        if len(fields) != 8:
+        if len(fields) != 140:
             raise AssertionError(f'case {index} has malformed output: {line}')
         result = resolve_collision_pair(owner, target)
         hit, steps = map(int, fields[:2])
         if hit != int(result.collided) or steps != result.correction_steps:
             raise AssertionError(f'case {index} hit/step mismatch')
-        actual = tuple(float(value) for value in fields[2:])
+        actual = tuple(float(value) for value in fields[2:8])
         expected = result.owner.box.center + result.target.box.center
         for component, (a, b) in enumerate(zip(actual, expected)):
             error = abs(a - b)
             maximum = max(maximum, error)
             if error > max(2e-6, abs(b) * 2e-7):
                 raise AssertionError(f'case {index} position[{component}] differs: {a} != {b}')
+        actual_vertices = tuple(float(value) for value in fields[8:])
+        expected_vertices = ((result.owner.world_vertices or (0.0,) * 66) +
+                             (result.target.world_vertices or (0.0,) * 66))
+        for component, (a, b) in enumerate(zip(actual_vertices, expected_vertices)):
+            error = abs(a - b)
+            maximum = max(maximum, error)
+            if error > max(2e-6, abs(b) * 2e-7):
+                raise AssertionError(f'case {index} world vertex[{component}] differs: {a} != {b}')
         total_steps += steps
     return {'cases': len(corpus), 'total_correction_steps': total_steps,
-            'maximum_absolute_position_error': maximum,
+            'maximum_absolute_float_error': maximum,
             'scope': 'native/Python 0x45af30 pair solver translation'}
 
 

@@ -36,6 +36,8 @@ struct CollisionPairBody {
     std::uint8_t mode;
     float gate;
     float peer_gate;
+    std::array<float, 66> local_vertices{};
+    std::array<float, 66> world_vertices{};
 };
 
 struct CollisionPairResult {
