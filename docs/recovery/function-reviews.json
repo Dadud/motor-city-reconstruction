@@ -1053,7 +1053,7 @@
   "0x51e940": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Partial environment routine verified across active success, empty-map and correction-wrapper branches. The integration corpus and a 2,400-case sweep match every owner byte with the actual Python 0x42e760 lookup, mapped grid, blocks, paths and geometry. A further 128-case active-object composition runs the real track environment stage through 0x4265f0/0x520c20 with 0x51fc00 contact forces and matches all owner bytes on valid-surface fixtures. Correction children 0x43ba40 and 0x43b750 remain isolated in the broad environment harness and are avoided in that composed corpus. Case 547 resolved the caller's x87 boundary: contact clearance subtracts the extended plane-height result before its final float store; the separate +0x34c store rounds the helper result. See docs/recovery/spatial-query-progress.md.",
+    "scope": "Partial environment routine verified across active success, empty-map and correction-wrapper branches. The integration corpus and a 2,400-case sweep match every owner byte with the actual Python 0x42e760 lookup, mapped grid, blocks, paths and geometry. A further 128-case active-object composition runs the real track environment stage through 0x4265f0/0x520c20 with 0x51fc00 contact forces and matches all owner bytes on valid-surface fixtures. A 128-case failed-lookup composition also matches complete owner images through translated 0x43bfd0 and 0x43ba40 search orchestration; the original 0x43ba40 and its 0x43bd30 empty-mask gate execute, while the stateful 0x43b750 reset remains intercepted. The response-hit and full reset composition remain open. Case 547 resolved the caller's x87 boundary: contact clearance subtracts the extended plane-height result before its final float store; the separate +0x34c store rounds the helper result. See docs/recovery/spatial-query-progress.md and docs/recovery/world-object-environment-composition.md.",
     "sources": [
       "client/world_object_environment.py",
       "client/track_surface_lookup.py",
@@ -1067,6 +1067,7 @@
       "tools/verify_environment_correction.py",
       "tools/verify_world_object_environment.py",
       "tools/verify_world_object_maintenance_environment.py",
+      "tools/verify_world_object_environment_correction.py",
       "docs/recovery/world-object-environment-composition.md",
       "tools/verify_track_surface_lookup_python.py"
     ],
@@ -1138,12 +1139,13 @@
   "0x43ba40": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Partial surface-correction search translation covers fast retries, side-specific path offsets, per-row positive/negative search ordering, topology-direction and index stepping, and the terminal fallback probe. The 0x403070 fallback child reads bounded 0x1c-byte rows at +0x10/+0x14 and returns zero for a null table. 128 original executions match all probe arguments and response calls with populated fallback rows and geometric child 0x43bd30 plus response child 0x51e460 intercepted. Child 0x43bd30 has a separate bounded partial translation.",
+    "scope": "Partial surface-correction search translation covers the +0x5b4 probe-generation increment, fast retries, side-specific path offsets, per-row positive/negative search ordering, topology-direction and index stepping, and the terminal fallback probe. The 0x403070 fallback child reads bounded 0x1c-byte rows at +0x10/+0x14 and returns zero for a null table. 128 original executions match all probe arguments, response calls, and now the owner counter with populated fallback rows while geometric child 0x43bd30 and response child 0x51e460 are intercepted. A separate 128-case failed-lookup composition executes the original 0x43ba40/0x43bd30 empty-mask path and matches the translated search plus environment wrapper against complete owner records; 0x43b750 remains intercepted. Child 0x43bd30 has a separate bounded partial translation.",
     "sources": [
       "client/collision_recovery.py",
       "client/track_topology.py",
       "tests/test_track_topology.py",
       "tools/verify_collision_recovery.py",
+      "tools/verify_world_object_environment_correction.py",
       "tools/verify_track_topology.py"
     ]
   },
@@ -1263,14 +1265,15 @@
   "0x43bd30": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Collision prefilters, candidate construction, and surface acceptance are translated. The final filter checks descriptor flags and the vertical plane coefficient, not sampled height. 128 original executions match early returns and query points with the sampler intercepted; 96 additional executions run the original 0x42e010 and 0x437b20 and match successful-hit accept/reject behavior across descriptor flags, normal thresholds, and both virtual-filter outcomes. The helper's XOR AL,AL guarantees only its low byte is zero; the separate object-vtable method is an explicit required 32-bit input because its runtime target/state is unresolved. Full caller finalization 0x51e460 remains open, with its track-frame prefix separately translated.",
+    "scope": "Collision prefilters, candidate construction, and surface acceptance are translated. The final filter checks descriptor flags and the vertical plane coefficient, not sampled height. 128 original executions match early returns and query points with the sampler intercepted; 96 additional executions run the original 0x42e010 and 0x437b20 and match successful-hit accept/reject behavior across descriptor flags, normal thresholds, and both virtual-filter outcomes. The new 128-case failed-lookup composition runs the original early mask gate with empty masks while the translated 0x43ba40 caller matches complete owner records. The helper's XOR AL,AL guarantees only its low byte is zero; the separate object-vtable method is an explicit required 32-bit input because its runtime target/state is unresolved. Full caller finalization 0x51e460 remains open, with its track-frame prefix separately translated.",
     "sources": [
       "client/collision_geometry.py",
       "client/track_surface_sample.py",
       "client/track_topology.py",
       "tests/test_collision_geometry.py",
       "tools/verify_collision_surface_gate.py",
-      "tools/verify_collision_geometry.py"
+      "tools/verify_collision_geometry.py",
+      "tools/verify_world_object_environment_correction.py"
     ],
     "evidence_ids": [
       "ev_39614a1abd497c2fcfaffa4f43dbe6365f10ce25fbac9479a00b8cf0b690792b",
@@ -1281,11 +1284,12 @@
   "0x43bfd0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "Fallback correction wrapper translated: calls adjustment child, selects half/full configured vertical offset using the resulting owner status, adds it to Y, then calls vehicle reset. 96 direct original comparisons match complete owner records with 0x43ba40 and 0x43b750 isolated.",
+    "scope": "Fallback correction wrapper translated: calls adjustment child, selects half/full configured vertical offset using the resulting owner status, adds it to Y, then calls vehicle reset. 96 direct original comparisons match complete owner records with 0x43ba40 and 0x43b750 isolated. A 128-case failed-lookup caller composition matches complete owner images through 0x51e940 with translated 0x43ba40 search orchestration; the original geometry routine reaches its empty-mask return and 0x43b750 remains intercepted.",
     "sources": [
       "client/environment_correction.py",
       "tests/test_environment_correction.py",
-      "tools/verify_environment_correction.py"
+      "tools/verify_environment_correction.py",
+      "tools/verify_world_object_environment_correction.py"
     ],
     "evidence_ids": [
       "ev_e36b0aeb88bd5c49942b47ee7ffeace1b74e1ee8083b6ad8b2174c46c67deb87"

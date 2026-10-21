@@ -134,6 +134,12 @@ def verify(executable, cases=128):
                 index, range_start=0, range_end=1,
                 lower_limit=0, upper_limit=0))
 
+        native_counter = bytes(cpu.mem_read(owner + 0x5b4, 4))
+        translated_counter = bytes(translated[0x5b4:0x5b8])
+        if native_counter != translated_counter:
+            raise AssertionError(
+                f'0x43ba40 probe-generation counter mismatch case={case}: '
+                f'native={native_counter.hex()} translated={translated_counter.hex()}')
         if actual_probes != expected_probes or actual_responses != expected_responses:
             raise AssertionError(
                 f'0x43ba40 orchestration mismatch case {case}: '

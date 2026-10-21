@@ -1,4 +1,6 @@
 """Collision-offset search orchestration from the original 0x43ba40 routine."""
+import struct
+
 from .tire_response import f32
 from .track_topology import (collision_fallback_offset, path_index_is_forward,
                              step_path_index)
@@ -38,6 +40,8 @@ def search_surface_correction(owner, track_index, *, path_rows, path_count,
     query_index = int.from_bytes(owner[0x370:0x374], 'little')
     response_flag = 2 if response_mode else 0
     calls = 0
+    probe_generation = struct.unpack_from('<I', owner, 0x5b4)[0]
+    struct.pack_into('<I', owner, 0x5b4, (probe_generation + 1) & 0xffffffff)
 
     def try_offset(index, offset):
         nonlocal calls
