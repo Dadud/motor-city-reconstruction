@@ -16,13 +16,14 @@ branch.
 
 `tools/verify_world_object_environment_correction.py` adds 128 complete-owner
 comparisons for the failed-lookup branch. The original environment enters
-`0x43bfd0`, its original `0x43ba40` search reaches the original `0x43bd30`
-empty-mask return, and the reset boundary `0x43b750` is intercepted. In
-parallel, the translated search, correction wrapper, and environment stage run
-on the same bounded path table; every owner byte matches, including the
-`+0x5b4` probe-generation counter and status-dependent vertical-step selection.
-The successful geometric response path (`0x51e460`) and full reset integration
-remain open.
+`0x43bfd0`; its original `0x43ba40` search reaches `0x43bd30`'s empty-mask
+return, and the original `0x43b750` reset runs through final dispatch. Its
+`0x53d640` geometry/reset child is replaced with the translated implementation.
+The Python search, correction wrapper, and full translated reset run on the
+same bounded inputs and match every owner byte, including the `+0x5b4`
+probe-generation counter and path-wrap reset transitions. Successful surface
+response (`0x51e460`), nonempty collision masks, and live service effects remain
+open.
 
 Separately, `tools/verify_world_object_maintenance_full.py` checks 256 varied
 active/inactive maintenance records with `0x51e940` isolated, and
