@@ -1782,7 +1782,7 @@
   "0x459150": {
     "translation": "partial",
     "verification": "original-comparison-pending",
-    "scope": "Support correction path is only partially recovered: a supplied-state vector-array helper and the called single-body support-impulse helper are translated and checked, but 0x459150 itself still performs 22-point support geometry and terrain-plane correction without a complete portable implementation or direct caller-level original comparison. The terrain candidate query and 0x42e760 dependency remain unresolved.",
+    "scope": "Partial first-pass support correction is translated in Python in client/collision_support.py over a supplied bounded TrackSurfaceWorld, 22 local points, orientation, owner position/vertical velocity and 22 query-record seeds. It composes the existing point transform and 0x42e760 query translation, applies the traced local-height and signed-plane tests, and returns corrected object/world support positions plus mutated query records. Focused synthetic tests cover skipped upper points and penetration correction. The full 0x459150 entry has not been compared directly; the later impulse pass, exact query-record pointer behavior and complete owner-memory side effects remain unresolved.",
     "sources": [
       "client/geometry_transform.py",
       "native/src/geometry_transform.cpp",
@@ -1793,7 +1793,9 @@
       "docs/collision-world.md",
       "docs/calculations/collision-helpers.md",
       "native/include/mco/track_surface_lookup.hpp",
-      "client/track_surface_lookup.py"
+      "client/track_surface_lookup.py",
+      "client/collision_support.py",
+      "tests/test_collision_support.py"
     ],
     "evidence_ids": [
       "ev_c3f3b262fb8913fa5ff557be4a24aaafac22d2ca4509199dbb425410887d4565",
@@ -1802,11 +1804,13 @@
     ],
     "verification_refs": [
       "tools/vector_array_oracle.py",
-      "tools/surface_impulse_oracle.py"
+      "tools/surface_impulse_oracle.py",
+      "tests/test_collision_support.py"
     ],
     "doc_refs": [
       "docs/collision-world.md",
-      "docs/calculations/collision-helpers.md"
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
     ]
   }
 }

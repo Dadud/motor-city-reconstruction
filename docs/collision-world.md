@@ -158,6 +158,15 @@ control-flow recovery only: byte-for-byte query-seed semantics, the complete
 second-pass memory layout, and caller-level dynamic equivalence still need a
 portable implementation and direct original comparison.
 
+The first pass is now represented in Python by
+[`client/collision_support.py`](../client/collision_support.py). It composes
+the existing 22-point transform and `TrackSurfaceWorld` query, retains the
+mutated per-point query records, and applies the traced signed-plane correction
+to the object position. Its synthetic tests cover the local-height filter and
+penetration correction. It has not yet been compared at the `0x459150` entry;
+the later support-impulse pass and complete memory-image side effects remain
+outside this port.
+
 The observed dispatcher order now has a bounded Python source translation in
 [`client/collision_dispatch.py`](../client/collision_dispatch.py), documented
 with its explicit child and global-state boundaries in
