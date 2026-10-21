@@ -1682,5 +1682,29 @@
       "docs/calculations/collision-pair-geometry.md",
       "docs/collision-world.md"
     ]
+  },
+  "0x458530": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Sampled pairwise impact response is translated in Python. 256 deterministic original-instruction calls cover aligned and rotated bases, angular and linear velocity, movement modes, response gates, contact records and final velocity. Impact decisions and discrete record fields match; float record fields use the harness tolerance of max(2e-4, 1e-6 relative). Maximum absolute final-velocity error was 9.5367431640625e-7. This does not implement native C++, contact discovery, caller sample geometry, terrain response, damage, event delivery, pair ordering or the complete collision tick.",
+    "sources": [
+      "client/collision_pair_response.py",
+      "tools/collision_pair_response_oracle.py",
+      "tests/test_collision_pair_response.py",
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_68896493e178eddbaf295bf09ebb82c659ee5869655eeaa685680f27756fadac",
+      "ev_a0343dbd10bf7ff9e2ec30ba96b1fe8ff426a4e974a22bc026d11df85c53e010"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_response_oracle.py",
+      "tests/test_collision_pair_response.py"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-helpers.md",
+      "docs/collision-world.md"
+    ]
   }
 }

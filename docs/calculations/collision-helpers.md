@@ -72,6 +72,28 @@ subtraction, rounding only the final clearance. The integrated implementation
 uses `track_plane.surface_height` for this path and keeps the float-stored
 `collision_impulse.plane_height` API for callers that store the height first.
 
+## Sampled pair impact
+
+`client/collision_pair_response.py` translates the bounded response body at
+`0x458530`. It builds center-of-mass contact levers and radial directions,
+selects the effective mass and response gates, samples angular plus linear
+point velocity for up to 32 steps, obtains tangential response from
+`0x458390`, and applies time-scaled normal/friction impulses through
+`0x457780`. It updates both bodies and writes reciprocal first-contact records.
+The sample fraction scales the impulses; point velocity uses the current full
+angular rate, including changes from earlier samples.
+
+The direct original-execution harness in
+`tools/collision_pair_response_oracle.py` compares 256 deterministic synthetic
+body pairs, including rotated bases, angular motion, movement modes and gate
+states. Impact decisions and discrete reciprocal-record fields match; float
+record fields use a tolerance of `max(2e-4, 1e-6 relative)`. Maximum absolute
+final-velocity error is `9.5367431640625e-7` in this corpus. This bounds the
+supplied-state response routine only. Its callers,
+contact discovery, terrain response, persistence, event delivery, and complete
+game collision tick remain unresolved. It is implemented in Python; no native
+C++ translation or live-game behavior is claimed.
+
 ## Verification and remaining collision work
 
 ```powershell

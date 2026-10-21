@@ -94,20 +94,24 @@ projection/height calculations; `0x4b71a0` is the recovered plane-height helper.
 The scene/terrain query that supplies these records, exact edge conventions,
 and complete output mutation are not yet ported or compared.
 
-`0x458530` constructs world-space sample points from each object's center,
-orientation and dimensions. The observed code loops over 32 increments (`i/32`)
-and stops early when the relative sample motion is no longer approaching the
-supplied radial direction. For each accepted sample it calls `0x458390` to get
-the tangential response, writes paired contact records at `+0x3c4` on both
-objects (including reciprocal normal/response values and the other-object
-pointer), and invokes `0x457780` twice per affected body. Linear deltas are
-accumulated into positions; angular deltas are accumulated and scaled by
-`1/(2*pi)` into orientation fields. Contact flag `+0x6c` is cleared on each
-body that receives response. The routine returns one when its sample loop
-records a collision and applies accumulated deltas.
+`0x458530` constructs center-of-mass contact levers and radial directions from
+the supplied world-space point. It samples for up to 32 steps and stops when
+relative point motion ceases to approach the supplied normal. Each accepted
+step calls `0x458390` for tangential response and `0x457780` for normal and
+tangential body response. The step fraction scales the applied impulses, while
+point velocity uses the current full angular rate. It writes reciprocal contact
+records on the first accepted sample, updates both bodies' linear and angular
+velocity accumulators, and clears response gates on affected bodies.
 
-The separate impulse-producing path above still lacks a comparison harness for
-its sample geometry, contact records, accumulation and coupled body mutations.
+The supplied-state response is translated in Python at
+[`client/collision_pair_response.py`](../client/collision_pair_response.py) and
+compared directly with the original in
+[`collision-helper comparison`](calculations/collision-helpers.md): 256
+deterministic cases cover rotated bases, angular motion, movement modes and gate
+states, with maximum final-velocity error below `1e-6`. This does not recover
+the contact producer or caller's shape sampling, nor does it complete terrain
+collision, damage, event delivery, pair ordering or the integrated collision
+tick. There is no native C++ translation or live-game collision claim yet.
 
 The oriented-box resolver at `0x45af30` is now translated in Python and C++.
 Its four geometry helpers, ordered point sampling, movement gates,
