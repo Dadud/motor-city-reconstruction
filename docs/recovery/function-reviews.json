@@ -945,24 +945,28 @@
   "0x4265f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The active-object maintenance callback is connected to its translated 0x520c20 child, followed by the original 0x6f1210 magnitude helper and parent damping/cap/counter effects. 256 varied active/inactive full-record executions match byte-for-byte while only environment child 0x51e940 is isolated; the contact-force child 0x51fc00 executes through its translation. Broader environment and real-track integration remain open.",
+    "scope": "The active-object maintenance callback is connected to its translated 0x520c20 child, followed by the original 0x6f1210 magnitude helper and parent damping/cap/counter effects. 256 varied active/inactive full-record executions match byte-for-byte while environment child 0x51e940 is isolated. A second 128-case composition runs translated 0x51e940 over mapped track data and the 0x51fc00 contact-force stage, matching the original complete owner record; every Python fixture asserts a nonzero surface descriptor and the native trace confirms correction children 0x43ba40/0x43b750 are not called. The failed-lookup recovery branch remains uncomposed here.",
     "sources": [
       "client/world_object_maintenance.py",
       "client/world_object_record.py",
       "client/world_object_physics_step.py",
       "client/contact_force.py",
       "tools/verify_world_object_maintenance_full.py",
-      "docs/recovery-ledger.md"
+      "tools/verify_world_object_maintenance_environment.py",
+      "docs/recovery-ledger.md",
+      "docs/recovery/world-object-environment-composition.md"
     ],
     "evidence_ids": [
       "ev_c14ba8e33701ed5a1fc9c86790e3715a20d400b6cf40acc62edc8c2b0b601945"
     ],
     "verification_refs": [
       "tools/verify_world_object_maintenance_full.py",
+      "tools/verify_world_object_maintenance_environment.py",
       "tools/verify_world_object_maintenance.py"
     ],
     "doc_refs": [
-      "docs/recovery-ledger.md"
+      "docs/recovery-ledger.md",
+      "docs/recovery/world-object-environment-composition.md"
     ]
   },
   "0x520c20": {
@@ -1049,7 +1053,7 @@
   "0x51e940": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Partial environment routine verified across active success, empty-map and correction-wrapper branches. The 128-case integration corpus and a broader 1,200-case sweep match every owner byte with the actual Python 0x42e760 lookup, mapped grid, blocks, paths and geometry. Case 547 resolved the caller's x87 boundary: contact clearance subtracts the extended plane-height result before its final float store; the separate +0x34c store rounds the helper result. Correction children 0x43ba40 and 0x43b750 remain isolated in the broad harness. See docs/recovery/spatial-query-progress.md.",
+    "scope": "Partial environment routine verified across active success, empty-map and correction-wrapper branches. The integration corpus and a 2,400-case sweep match every owner byte with the actual Python 0x42e760 lookup, mapped grid, blocks, paths and geometry. A further 128-case active-object composition runs the real track environment stage through 0x4265f0/0x520c20 with 0x51fc00 contact forces and matches all owner bytes on valid-surface fixtures. Correction children 0x43ba40 and 0x43b750 remain isolated in the broad environment harness and are avoided in that composed corpus. Case 547 resolved the caller's x87 boundary: contact clearance subtracts the extended plane-height result before its final float store; the separate +0x34c store rounds the helper result. See docs/recovery/spatial-query-progress.md.",
     "sources": [
       "client/world_object_environment.py",
       "client/track_surface_lookup.py",
@@ -1062,6 +1066,8 @@
       "tests/test_environment_correction.py",
       "tools/verify_environment_correction.py",
       "tools/verify_world_object_environment.py",
+      "tools/verify_world_object_maintenance_environment.py",
+      "docs/recovery/world-object-environment-composition.md",
       "tools/verify_track_surface_lookup_python.py"
     ],
     "evidence_ids": [

@@ -1,5 +1,11 @@
 # Native spatial query recovery
 
+The second half of the bounded `0x51e940` fixture set has now been checked:
+`tools/verify_world_object_environment.py` passes cases 1200–2399, extending the
+complete-record environment comparison to 2,400 fixture configurations total.
+The cross-callback composition and its correction-branch limit are documented
+in [active-object environment composition](world-object-environment-composition.md).
+
 Grid lookup `0x552880` is recovered as `spatial_grid_lookup`. The API takes explicit grid/node memory views, coordinate origins/scales, and a diagnostic bridge. Original addresses are opaque node identities; host code never dereferences them.
 
 The function computes X/Z in double precision, stores each scaled coordinate as float, then converts to signed integers with nearest-even rounding. It indexes the 64-by-64 grid using 1024-unit cells and descends at most two quadrant levels. Child order is low-X/low-Z, high-X/low-Z, low-X/high-Z, high-X/high-Z. A `0xdeadbeef` first word marks a leaf. Null children return zero. Excess tree depth invokes the explicit diagnostic bridge with original message identity `0x89900c`, then returns zero. Invalid mapped pointers throw instead of emulating original access faults. Other floating-point rounding modes and exception status are outside the supported domain.
