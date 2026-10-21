@@ -126,3 +126,10 @@ producer chain remains open.
 
 Until those steps pass, the playable driving mode's prototype collision
 behavior and all original collision acceptance gates remain open.
+
+The observed dispatcher order now has a bounded Python source translation in
+[`client/collision_dispatch.py`](../client/collision_dispatch.py), documented
+with its explicit child and global-state boundaries in
+[`collision-dispatch.md`](calculations/collision-dispatch.md). It has focused
+unit coverage but no direct original-execution comparison yet; this does not
+complete the collision chain above.

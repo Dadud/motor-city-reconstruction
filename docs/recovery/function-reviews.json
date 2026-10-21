@@ -1,4 +1,24 @@
 {
+  "0x45abe0": {
+    "translation": "partial",
+    "verification": "static-analysis-only",
+    "scope": "The active-object world-collision dispatcher is translated through contact-record reset, signed countdown/contact-state changes, support and high-speed branches, collision eligibility, ordered radius-based candidate filtering, the 33-attempt pair-filter loop, fallback direction, shared-list count publication, bounded neighbor-index filtering, and final active-object callbacks. All child routines and global record producers remain explicit required inputs. Focused Python tests cover the source-level state machine; no direct original-execution comparison or playable-path integration is claimed.",
+    "sources": [
+      "client/collision_dispatch.py",
+      "tests/test_collision_dispatch.py",
+      "docs/calculations/collision-dispatch.md"
+    ],
+    "evidence_ids": [
+      "ev_a3e8c8ca580cb74b356cf4e6e8f29b089af96dc4324d4fa58da73616eac52e99"
+    ],
+    "verification_refs": [
+      "tests/test_collision_dispatch.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md",
+      "docs/calculations/collision-dispatch.md"
+    ]
+  },
   "0x46d1d0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",

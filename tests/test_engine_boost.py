@@ -64,5 +64,3 @@ class BoostHelperTests(unittest.TestCase):
         struct.pack_into('<h', invalid, 0x3c4, 4)
         with self.assertRaisesRegex(ValueError, 'mode'):
             update_boost_state(invalid, state)
-
-\n
