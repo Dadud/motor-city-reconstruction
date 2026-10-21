@@ -132,6 +132,17 @@ This narrow harness does not execute accepted candidates or establish any
 terrain-height, response, specialized-object or live-world behavior. The
 current caller dossier is `ev_9cf820fb1aeb7a29be3792227239586b1772b50c8b982c9a3745c5178c6bd6ca`.
 
+The same module translates the three-vertex height filter: each signed gap is
+`vertex_y - sampled_height`; gaps outside `[-0.5, 0.5]` use the object-plane
+height instead, and the candidate is rejected when the minimum gap is above
+`0.1016`. One flat supplied-world case exercises the actual caller with three
+`0x42e760` lookups and three `0x42dc50` plane queries, confirming rejection
+before `0x457550` and no object mutation. Its sampled and fallback heights are
+produced by the Python track lookup/plane composition and passed through the
+height filter. Run
+`python -m tools.terrain_candidate_height_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
+Accepted candidates and their response construction remain unverified.
+
 `0x458530` constructs center-of-mass contact levers and radial directions from
 the supplied world-space point. It samples for up to 32 steps and stops when
 relative point motion ceases to approach the supplied normal. Each accepted
