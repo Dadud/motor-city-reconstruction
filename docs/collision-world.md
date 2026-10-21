@@ -84,15 +84,39 @@ test, so both source runtimes now construct matching callback lists.
 
 ## Terrain query and object pair
 
-`0x45a320` immediately rejects an object with nonzero `+0x6c`; objects with
-byte `+0x6` use the specialized `0x54f0e0` path. Other objects select a fixed
-triangle-index table by shape value at `+0xdc`: 12 entries for shapes 0 and 2,
-6 for shape 1, and 40 for shapes 3 and 4. It checks projected triangle bounds
-and signed edge tests, then passes candidate triangle data to helper
-`0x6f14f0`. A candidate goes through copied object/contact data and further
-projection/height calculations; `0x4b71a0` is the recovered plane-height helper.
-The scene/terrain query that supplies these records, exact edge conventions,
-and complete output mutation are not yet ported or compared.
+`0x45a320` immediately accepts an object with nonzero `+0x6c`; objects with
+byte `+0x6` delegate to `0x54f0e0` and return whether it reports a hit. Other
+objects select a fixed triangle-index table by shape value at `+0xdc`: 12
+entries for shapes 0 and 2, 6 for shape 1, and 40 for shapes 3 and 4. For each
+triangle, the routine applies three signed projected-edge tests against the
+object's `+8/+0x10` coordinates, then calls `0x6f14f0` on the triangle edges.
+When all three edge queries pass, it copies the triangle into a per-candidate
+buffer, clones the object's 0x44-byte surface-query seed at `+0x370`, and
+queries each of the triangle's three vertices through `0x42e760`. A zero query
+result takes the object's plane at `+0x328/+0x340`; otherwise `0x42dc50`
+supplies a vertex plane. Heights are evaluated by `0x4b71a0`; deviations over
+0.5 are replaced with the object plane. The candidate is discarded when the
+minimum of the three signed distances exceeds 0.1016.
+
+For retained candidates, the routine constructs a contact normal from object
+rotation/rate fields, candidate geometry and object velocity using vector
+helpers `0x6f3b75` and `0x6f1140`. It accepts up to three vertices whose computed
+speed-like value is below 0.1016 (and caps the stack collection at 36 bytes),
+then passes the accepted point arrays to `0x459e30` to derive response vectors.
+The routine updates response accumulators at `+0x408/+0x40c`; when the height
+minimum is nonpositive, it translates position and the object's plane origin,
+clears `+0x350`, and may further correct position along the object plane.
+Finally it scales the two coefficients at `0x89c0a8/0x89c0ac` by `+0x318`
+and response mode `+0x354`, calls `0x457550`, and returns true. Unknown shape
+values log an error; the decompiled default branch's later table use is not a
+safe portable behavior.
+
+This is static evidence, not a source translation: triangle-index data,
+triangle-boundary behavior on degenerate geometry, helper conventions, global
+coefficient values, `0x54f0e0`, and output mutations require bounded direct-call
+coverage. The separate support-correction caller `0x459150` is translated and
+validated below; its terrain producer and the complete `0x45a320` query remain
+unported.
 
 `0x458530` constructs center-of-mass contact levers and radial directions from
 the supplied world-space point. It samples for up to 32 steps and stops when
@@ -122,8 +146,8 @@ checked against 128 direct original calls; position and vertex error stayed
 below `6.7e-6`. Render-cache global side effects and other dispatch variants
 remain outside the pair result. Its support-point caller `0x459150` transforms
 22 local points and applies terrain-plane corrections. The shared vector-array
-translation helper `0x6f1450` is now recovered and checked directly, but the
-terrain query and full support/contact producer chain remain open.
+translation helper `0x6f1450` is now recovered and checked directly, while the
+terrain query and full collision contact-producer chain remain open.
 
 ## Remaining work
 
@@ -142,8 +166,7 @@ behavior and all original collision acceptance gates remain open.
 The single-body support impulse helper called by `0x459150` is also translated
 in Python and C++ at `0x457df0`. It covers impulse accumulation and its support
 contact record from supplied body, point and normal data; 128 direct original
-cases and the matching native/Python corpus pass. The terrain query, support
-point correction and complete `0x459150` caller remain unresolved.
+cases and the matching native/Python corpus pass. The terrain collision producer `0x45a320` and complete collision integration remain unresolved.
 
 `0x459150` transforms 22 local points by the object's 3x3 orientation, selects
 points whose transformed local Y is nonpositive, and copies the 0x44-byte query
