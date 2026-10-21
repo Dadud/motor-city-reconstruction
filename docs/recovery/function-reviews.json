@@ -1034,13 +1034,14 @@
   "0x51e460": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The owner contact/environment finalizer is translated through track-query initialization, normalized row basis, flag-controlled position conversion, orientation plus transpose, and post-environment finalization. The setup prefix matches 96 original executions with integer and untouched bytes exact and written float fields within 1e-5 absolute (observed maximum 3.8147e-6). The suffix implements the 22-point surface clearance minimum and owner-Y correction, surface type fields, three matrix projections, and final 22-vertex world transform. Its isolated suffix and composed entry point including translated 0x51e940 now each match 96 uninterrupted original executions; all compared float fields are exact. Broader cases corrected the reference-vector field at query +0x10 and the post-child +0x34c path-height store. These bounded synthetic checks do not establish full Windows runtime behavior or broad real-track coverage.",
+    "scope": "The owner contact/environment finalizer is translated through track-query initialization, normalized row basis, flag-controlled position conversion, orientation plus transpose, and post-environment finalization. The setup prefix matches 96 original executions with integer and untouched bytes exact and written float fields within 1e-5 absolute (observed maximum 3.8147e-6). The suffix implements the 22-point surface clearance minimum and owner-Y correction, surface type fields, three matrix projections, and final 22-vertex world transform. Its isolated suffix and composed entry point including translated 0x51e940 now each match 96 uninterrupted original executions; all compared float fields are exact. A new successful 0x43ba40 correction-probe composition also executes original 0x51e460 and 0x42e010, matching all owner bytes against the translated frame/environment/finalizer across 24 cases (maximum compared float error 1.4013e-45). Broader cases corrected the reference-vector field at query +0x10 and the post-child +0x34c path-height store. These bounded synthetic checks do not establish full Windows runtime behavior or broad real-track coverage.",
     "sources": [
       "client/world_object_contact.py",
       "client/matrix_math.py",
       "tests/test_world_object_contact.py",
       "tools/verify_world_object_contact.py",
-      "tools/verify_world_object_contact_full.py"
+      "tools/verify_world_object_contact_full.py",
+      "tools/verify_collision_recovery_response.py"
     ],
     "evidence_ids": [
       "ev_1820b8aa29ac1f8c74d116f14b188052986d696ae93691c7c3b2fab8a807ff64",
@@ -1139,13 +1140,14 @@
   "0x43ba40": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Partial surface-correction search translation covers the +0x5b4 probe-generation increment, fast retries, side-specific path offsets, per-row positive/negative search ordering, topology-direction and index stepping, and the terminal fallback probe. The 0x403070 fallback child reads bounded 0x1c-byte rows at +0x10/+0x14 and returns zero for a null table. 128 original executions match all probe arguments, response calls, and the owner counter with populated fallback rows while geometric child 0x43bd30 and response child 0x51e460 are intercepted. A separate 128-case failed-lookup composition matches translated search, wrapper and reset over complete owner images; original 0x43bd30 takes its empty-mask return and native 0x43b750 runs path-wrap transitions with translated 0x53d640 geometry/reset. The successful geometric response remains open. Child 0x43bd30 has a separate bounded partial translation.",
+    "scope": "Partial surface-correction search translation covers the +0x5b4 probe-generation increment, fast retries, side-specific path offsets, per-row positive/negative search ordering, topology-direction and index stepping, and the terminal fallback probe. The 0x403070 fallback child reads bounded 0x1c-byte rows at +0x10/+0x14 and returns zero for a null table. 128 original executions match all probe arguments, response calls, and the owner counter with populated fallback rows while geometric child 0x43bd30 and response child 0x51e460 are intercepted. A separate 128-case failed-lookup composition matches translated search, wrapper and reset over complete owner images; original 0x43bd30 takes its empty-mask return and native 0x43b750 runs path-wrap transitions with translated 0x53d640 geometry/reset. A new 24-case successful probe path runs original 0x43bd30, 0x42e010, and 0x51e460, matching the translated geometry, search and contact-frame pipeline across complete owner images. Nonempty mask domains and broader live geometry remain open. Child 0x43bd30 has a separate bounded partial translation.",
     "sources": [
       "client/collision_recovery.py",
       "client/track_topology.py",
       "tests/test_track_topology.py",
       "tools/verify_collision_recovery.py",
       "tools/verify_world_object_environment_correction.py",
+      "tools/verify_collision_recovery_response.py",
       "tools/verify_track_topology.py"
     ]
   },
@@ -1265,7 +1267,7 @@
   "0x43bd30": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Collision prefilters, candidate construction, and surface acceptance are translated. The final filter checks descriptor flags and the vertical plane coefficient, not sampled height. 128 original executions match early returns and query points with the sampler intercepted; 96 additional executions run the original 0x42e010 and 0x437b20 and match successful-hit accept/reject behavior across descriptor flags, normal thresholds, and both virtual-filter outcomes. The new 128-case failed-lookup composition runs the original early mask gate with empty masks while the translated 0x43ba40 caller matches complete owner records. The helper's XOR AL,AL guarantees only its low byte is zero; the separate object-vtable method is an explicit required 32-bit input because its runtime target/state is unresolved. Full caller finalization 0x51e460 remains open, with its track-frame prefix separately translated.",
+    "scope": "Collision prefilters, candidate construction, and surface acceptance are translated. The final filter checks descriptor flags and the vertical plane coefficient, not sampled height. 128 original executions match early returns and query points with the sampler intercepted; 96 additional executions run the original 0x42e010 and 0x437b20 and match successful-hit accept/reject behavior across descriptor flags, normal thresholds, and both virtual-filter outcomes. The new 128-case failed-lookup composition runs the original early mask gate with empty masks while the translated 0x43ba40 caller matches complete owner records. A 24-case successful-probe response composition also matches complete owner images while original 0x42e010 and 0x51e460 execute. The helper's XOR AL,AL guarantees only its low byte is zero; the separate object-vtable method is an explicit required 32-bit input because its runtime target/state is unresolved. Broader dynamic masks and stateful object/traffic lists remain open.",
     "sources": [
       "client/collision_geometry.py",
       "client/track_surface_sample.py",
@@ -1273,6 +1275,7 @@
       "tests/test_collision_geometry.py",
       "tools/verify_collision_surface_gate.py",
       "tools/verify_collision_geometry.py",
+      "tools/verify_collision_recovery_response.py",
       "tools/verify_world_object_environment_correction.py"
     ],
     "evidence_ids": [

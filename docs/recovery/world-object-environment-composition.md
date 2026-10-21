@@ -22,8 +22,13 @@ return, and the original `0x43b750` reset runs through final dispatch. Its
 The Python search, correction wrapper, and full translated reset run on the
 same bounded inputs and match every owner byte, including the `+0x5b4`
 probe-generation counter and path-wrap reset transitions. Successful surface
-response (`0x51e460`), nonempty collision masks, and live service effects remain
-open.
+response (`0x51e460`) has a separate 24-case composition in
+`tools/verify_collision_recovery_response.py`: the original `0x43bd30`,
+`0x42e010`, and `0x51e460` execute on a valid surface hit, while translated
+search/geometry/contact-frame code matches the complete owner image (maximum
+compared float error `1.4013e-45`). This covers one bounded collision-mask and
+surface fixture; broader dynamic geometry, owner/traffic interaction, and live
+service effects remain open.
 
 Separately, `tools/verify_world_object_maintenance_full.py` checks 256 varied
 active/inactive maintenance records with `0x51e940` isolated, and
