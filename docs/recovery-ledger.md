@@ -491,7 +491,12 @@ preserving the underlying two bytes.
 
 `tools/verify_world_object_maintenance.py` runs six cases through the original
 callback and `0x6f1210` magnitude helper with `0x520c20` isolated; the byte-image
-adapter now matches the complete `0x4f8` owner record for all six cases. The owned
+adapter matches the complete `0x4f8` owner record for all six cases.
+`tools/verify_world_object_maintenance_full.py` now compares the composed
+`0x4265f0` parent and translated `0x520c20` physics callback over 256 varied
+owner records, matching every byte while isolating only environment stage
+`0x51e940`. The six-contact `0x51fc00` stage and maintenance magnitude helper
+run in the comparison. The owned
 `0x520c20` physics step is now separately translated in Python and C++. It
 executes gravity projection, velocity integration or stop behavior, scheduler
 force gating, and the stored kinetic-energy metric. Python and C++ each match

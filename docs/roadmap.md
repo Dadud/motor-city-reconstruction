@@ -28,7 +28,7 @@ harness and does not define the intended handling or game rules.
 1. Complete cylinder-state/thermodynamic integration and final engine-curve corrections, including unsupported fuel/boost branches.
 2. Implement recovered tire forces, suspension forces, steering, drivetrain, braking and collision response.
 3. Complete original owner startup and per-tick shared-state wiring; eliminate mandatory placeholder callbacks from the actual playable path.
-4. Connect recovered force, collision and world-object updates using original input/configuration and terrain producers; replace bicycle dynamics. The `0x426730` active-object array plus live `0x520250` motion/vertex child now match full owner bytes in composed executable comparisons; `0x4265f0` now has a full-record adapter around its required `0x520c20` child. Scheduler, force, collision and playable-path integration remain open.
+4. Connect recovered force, collision and world-object updates using original input/configuration and terrain producers; replace bicycle dynamics. The `0x426730` active-object array plus live `0x520250` motion/vertex child match full owner bytes in composed executable comparisons. The `0x4265f0` parent now composes with translated `0x520c20` and matches 256 full records with only environment stage `0x51e940` isolated. Scheduler clock, environment/terrain integration, remaining force and collision producers, and playable-path wiring remain open.
 5. Reconstruct original game startup, screens, event/race state, audio and persistence, then exercise a complete offline game loop on installed assets.
 
 These gates are substantial unfinished engineering. The prototype sprint is only

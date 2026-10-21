@@ -942,6 +942,29 @@
       "docs/calculations/stock-driving-startup.md"
     ]
   },
+  "0x4265f0": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The active-object maintenance callback is connected to its translated 0x520c20 child, followed by the original 0x6f1210 magnitude helper and parent damping/cap/counter effects. 256 varied active/inactive full-record executions match byte-for-byte while only environment child 0x51e940 is isolated; the contact-force child 0x51fc00 executes through its translation. Broader environment and real-track integration remain open.",
+    "sources": [
+      "client/world_object_maintenance.py",
+      "client/world_object_record.py",
+      "client/world_object_physics_step.py",
+      "client/contact_force.py",
+      "tools/verify_world_object_maintenance_full.py",
+      "docs/recovery-ledger.md"
+    ],
+    "evidence_ids": [
+      "ev_c14ba8e33701ed5a1fc9c86790e3715a20d400b6cf40acc62edc8c2b0b601945"
+    ],
+    "verification_refs": [
+      "tools/verify_world_object_maintenance_full.py",
+      "tools/verify_world_object_maintenance.py"
+    ],
+    "doc_refs": [
+      "docs/recovery-ledger.md"
+    ]
+  },
   "0x520c20": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
