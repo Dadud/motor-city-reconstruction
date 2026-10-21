@@ -1,4 +1,4 @@
-# Oriented-box point tests in `0x45af30`
+# Collision-pair response in `0x45af30`
 
 `client.collision_pair_geometry` and `mco::collision_pair_geometry` now
 translate the four bounded geometry helpers called by the pair
@@ -16,6 +16,13 @@ routine `0x45af30`:
   within 15 units on every world axis; otherwise it sign-orients the candidate
   box axes and selects the one with the greatest absolute center projection.
 
+`client.collision_pair_solver` and `mco::resolve_collision_pair` now translate
+the enclosing sampled response. Each correction probes the six signed axis
+points, then (when needed) the ordered 5×5×5 grid, tests the reverse direction,
+and applies a mass-weighted center-line correction of `1/32`. Corrections stop
+when the tests find no contact or after 32 updates. The two movement-gate
+branches are represented from the original mode bytes and pair thresholds.
+
 The original helper reads matrix and center-projection scratch prepared by its
 caller. The comparison harness derives each helper's scratch from explicit box
 records, then executes the original bodies. Each helper matches 192 direct
@@ -26,20 +33,25 @@ error `4.9121094747306415e-8`.
 For `0x45bfe0`, 1,024 direct original calls covered both center-distance
 branches (523 near, 501 far) and matched the selected normal exactly in the
 tested float components.
+For `0x45af30`, 128 direct calls covered axis-aligned and independently rotated
+boxes, mass differences, movement modes and threshold gates. Collision decisions
+matched; final positions differed by at most `7.62939453125e-6`. Native and
+Python pair solvers matched over the same corpus within `2.677530669958905e-7`.
 
 ```powershell
 python -m tools.collision_pair_geometry_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 192
 python -m tools.collision_pair_geometry_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --reverse --cases 192
 python -m tools.collision_pair_normal_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 1024
+python -m tools.collision_pair_solver_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 128
+python -m tools.native_collision_pair_solver_compare build/recovered-collision-pair/Release/mco_collision_pair_solver_compare.exe --cases 128
 python -m tools.native_collision_pair_geometry_compare build/recovered-collision-pair/Release/mco_collision_pair_geometry_compare.exe
 python -m tools.native_collision_pair_reverse_compare build/recovered-collision-pair/Release/mco_collision_pair_reverse_compare.exe
 ```
 
-These four geometric leaves do not complete `0x45af30`. Its 32-step sample
-order, per-object gates, paired contact writes, impulse delivery, and coupled
-position/orientation response remain open. The tests supply caller-prepared
-transform scratch and synthetic boxes; they do not establish live collision
-behavior or complete game source.
+The pair response translation does not yet reproduce the final `0x6f1320`
+derived-transform refresh and all of its callees, or establish live collision
+behavior in the game frame. The tests use explicit synthetic records and the
+original function call; they do not prove whole-game equivalence.
 
 Target SHA-256:
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.

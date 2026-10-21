@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <cstdint>
 
 namespace mco {
 struct OrientedCollisionBox {
@@ -29,6 +30,25 @@ struct PairContactNormalResult {
     bool near_center_branch;
 };
 
+struct CollisionPairBody {
+    OrientedCollisionBox box;
+    float mass;
+    std::uint8_t mode;
+    float gate;
+    float peer_gate;
+};
+
+struct CollisionPairResult {
+    bool collided;
+    CollisionPairBody owner;
+    CollisionPairBody target;
+    unsigned correction_steps;
+    bool has_contact;
+    std::array<float, 3> last_contact;
+    bool has_normal;
+    std::array<float, 3> last_normal;
+};
+
 // Complete bounded translation of original helper 0x45b8e0.
 OrientedBoxPointResult oriented_box_point_test(
     const OrientedCollisionBox& owner,
@@ -51,4 +71,10 @@ PairContactNormalResult select_pair_contact_normal(
     const OrientedCollisionBox& target,
     const std::array<double, 3>& projected_center,
     bool side);
+
+// Bounded translation of the sampled pair resolver at original 0x45af30.
+CollisionPairResult resolve_collision_pair(
+    const CollisionPairBody& owner,
+    const CollisionPairBody& target,
+    unsigned max_corrections = 32);
 } // namespace mco

@@ -106,14 +106,14 @@ accumulated into positions; angular deltas are accumulated and scaled by
 body that receives response. The routine returns one when its sample loop
 records a collision and applies accumulated deltas.
 
-This pair routine depends on the two recovered numerical helpers, but its
-sample geometry, iteration order, per-body gating, contact-record layout,
-accumulation and coupled body mutations have not yet been reproduced in a
-comparison harness. All three oriented-box point-test leaves (`0x45b8e0`,
-`0x45bb70`, and `0x45be10`) and the normal selector (`0x45bfe0`) are now
-translated to Python and C++; the point tests match 192 direct original calls
-each and the selector matches 1,024, as documented. The enclosing pair
-routine remains open. `0x459150` likewise transforms an array of support points
+The separate impulse-producing path above still lacks a comparison harness for
+its sample geometry, contact records, accumulation and coupled body mutations.
+
+The oriented-box resolver at `0x45af30` is now translated in Python and C++.
+Its four geometry helpers, ordered point sampling, movement gates, and
+mass-weighted 32-step center-line correction were checked against 128 direct
+original calls; position error stayed below `7.7e-6`. Its final `0x6f1320`
+derived-transform refresh is still unresolved. `0x459150` likewise transforms an array of support points
 and applies terrain-plane corrections, but its complete terrain and contact
 producer chain remains open.
 
@@ -121,9 +121,9 @@ producer chain remains open.
 
 - Recover the data types and producers for collision object shapes, triangles,
   terrain queries, rotations, global candidates and shared contact records.
-- Recover and compare `0x45af30`, `0x45cf70`, `0x45d1f0`, `0x45c3e0`, task-list
+- Recover and compare `0x45cf70`, `0x45d1f0`, `0x45c3e0`, task-list
   execution, and the recurring game-frame caller.
-- Port the dispatcher and pair path with ordered callbacks and byte-level
+- Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
 - Integrate it with the force vehicle state and test wall/resting impacts,
   object pairs, terrain contacts, repeated contact persistence and tunnelling.

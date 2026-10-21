@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <optional>
 #include <stdexcept>
+#include <type_traits>
 
 namespace mco {
 namespace {
@@ -223,5 +225,133 @@ PairContactNormalResult select_pair_contact_normal(
     auto normal = basis.axes[axis];
     if (flip) for (auto& value : normal) value = -value;
     return {normal, axis, true};
+}
+
+CollisionPairResult resolve_collision_pair(
+    const CollisionPairBody& owner_input, const CollisionPairBody& target_input,
+    unsigned max_corrections) {
+    validate(owner_input.box);
+    validate(target_input.box);
+    if (!std::isfinite(owner_input.mass) || !std::isfinite(target_input.mass) ||
+        !std::isfinite(owner_input.gate) || !std::isfinite(target_input.gate) ||
+        !std::isfinite(owner_input.peer_gate) || !std::isfinite(target_input.peer_gate))
+        throw std::invalid_argument("finite collision-pair body fields required");
+    if (max_corrections == 0 || max_corrections > 32)
+        throw std::invalid_argument("collision-pair correction limit must be 1..32");
+
+    struct Candidate {
+        std::array<float, 3> contact{};
+        std::array<float, 3> projection{};
+        std::array<float, 3> normal{};
+        bool has_normal = false;
+    };
+    constexpr std::array<std::array<double, 3>, 6> axes{{
+        {{1, 0, 0}}, {{0, 1, 0}}, {{0, 0, 1}},
+        {{-1, 0, 0}}, {{0, -1, 0}}, {{0, 0, -1}}}};
+    constexpr std::array<double, 5> samples{{-1, -0.5, 0, 0.5, 1}};
+    const auto first_hit = [&](const auto& test, const OrientedCollisionBox& owner,
+                               const OrientedCollisionBox& target,
+                               const auto& points) -> std::optional<Candidate> {
+        for (const auto& point : points) {
+            const auto hit = test(owner, target, point);
+            if (hit.inside) {
+                Candidate candidate;
+                if constexpr (std::is_same_v<std::remove_cv_t<decltype(hit)>, OrientedBoxPointResult>) {
+                    candidate.contact = hit.target_world_point;
+                    candidate.projection = hit.owner_local_point;
+                } else {
+                    candidate.contact = hit.owner_world_point;
+                    candidate.projection = hit.target_local_point;
+                    candidate.normal = hit.owner_direction;
+                    candidate.has_normal = true;
+                }
+                return candidate;
+            }
+        }
+        return std::nullopt;
+    };
+
+    CollisionPairBody owner = owner_input;
+    CollisionPairBody target = target_input;
+    bool owner_gate = owner.mode != 0 && target.mode == 0;
+    bool target_gate = target.mode != 0 && owner.mode == 0;
+    if (target.peer_gate < owner.gate) owner_gate = true;
+    if (owner.peer_gate < target.gate) target_gate = true;
+    if (owner_gate && target_gate) owner_gate = target_gate = false;
+    const float total_mass = stored(static_cast<double>(owner.mass) + target.mass);
+    CollisionPairResult result{};
+    result.owner = owner;
+    result.target = target;
+
+    for (unsigned step = 0; step < max_corrections; ++step) {
+        auto candidate = first_hit(oriented_box_point_test, owner.box, target.box, axes);
+        if (!candidate) {
+            std::array<std::array<double, 3>, 125> grid{};
+            std::size_t index = 0;
+            for (double x : samples) for (double y : samples) for (double z : samples)
+                grid[index++] = {x, y, z};
+            candidate = first_hit(oriented_box_point_test, owner.box, target.box, grid);
+            if (candidate) {
+                const auto normal = select_pair_contact_normal(owner.box, target.box,
+                    {candidate->projection[0], candidate->projection[1], candidate->projection[2]}, false);
+                candidate->normal = normal.normal;
+                candidate->has_normal = true;
+            }
+        }
+        if (!candidate) candidate = first_hit(owner_point_direction_test,
+            owner.box, target.box, axes);
+        if (!candidate) {
+            std::array<std::array<double, 3>, 125> grid{};
+            std::size_t index = 0;
+            for (double x : samples) for (double y : samples) for (double z : samples)
+                grid[index++] = {x, y, z};
+            candidate = first_hit(owner_point_contact_test, owner.box, target.box, grid);
+            if (candidate) {
+                const auto normal = select_pair_contact_normal(owner.box, target.box,
+                    {candidate->projection[0], candidate->projection[1], candidate->projection[2]}, true);
+                candidate->normal = normal.normal;
+                candidate->has_normal = true;
+            }
+        }
+        if (!candidate) break;
+
+        std::array<float, 3> delta{};
+        double squared = 0;
+        for (std::size_t i = 0; i < 3; ++i) {
+            delta[i] = stored(static_cast<double>(target.box.center[i]) - owner.box.center[i]);
+            squared += static_cast<double>(delta[i]) * delta[i];
+        }
+        const float inverse = squared == 0 ? 0 : stored(1.0 / std::sqrt(stored(squared)));
+        std::array<float, 3> direction{};
+        for (std::size_t i = 0; i < 3; ++i)
+            direction[i] = stored(static_cast<double>(delta[i]) * inverse);
+        const float owner_scale = stored(static_cast<double>(stored(-target.mass / total_mass)) * 0.03125);
+        const float target_scale = stored(static_cast<double>(stored(owner.mass / total_mass)) * 0.03125);
+        for (std::size_t i = 0; i < 3; ++i) {
+            const float owner_move = stored(static_cast<double>(direction[i]) * owner_scale);
+            const float target_move = stored(static_cast<double>(direction[i]) * target_scale);
+            float owner_delta = 0;
+            float target_delta = 0;
+            if (!owner_gate && !target_gate) {
+                owner_delta = owner_move;
+                target_delta = target_move;
+            } else if (target_gate) {
+                owner_delta = stored(static_cast<double>(owner_move) - target_move);
+            } else {
+                target_delta = stored(-static_cast<double>(owner_move) + target_move);
+            }
+            owner.box.center[i] = stored(static_cast<double>(owner.box.center[i]) + owner_delta);
+            target.box.center[i] = stored(static_cast<double>(target.box.center[i]) + target_delta);
+        }
+        result.collided = true;
+        result.has_contact = true;
+        result.last_contact = candidate->contact;
+        result.has_normal = candidate->has_normal;
+        result.last_normal = candidate->normal;
+        result.correction_steps = step + 1;
+    }
+    result.owner = owner;
+    result.target = target;
+    return result;
 }
 } // namespace mco

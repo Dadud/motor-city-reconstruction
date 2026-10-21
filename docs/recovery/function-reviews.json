@@ -1654,5 +1654,33 @@
       "docs/calculations/collision-pair-geometry.md",
       "docs/collision-world.md"
     ]
+  },
+  "0x45af30": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The oriented-box pair resolver is translated in Python and C++ through its 32-step sampled contact search, forward and reverse axis/grid probes, movement gates, contact-normal selection and mass-weighted center-line position correction. 128 direct original calls matched collision decisions and final positions within 7.62939453125e-6, covering rotated boxes, unequal masses, mode bytes and threshold gates. The final 0x6f1320 derived-transform refresh and its callees are not yet translated; the fixture does not establish live game-frame behavior.",
+    "sources": [
+      "client/collision_pair_solver.py",
+      "client/collision_pair_geometry.py",
+      "native/include/mco/collision_pair_geometry.hpp",
+      "native/src/collision_pair_geometry.cpp",
+      "native/tests/collision_pair_geometry_test.cpp",
+      "native/tests/collision_pair_solver_compare.cpp",
+      "tools/collision_pair_solver_oracle.py",
+      "tools/native_collision_pair_solver_compare.py",
+      "docs/calculations/collision-pair-geometry.md"
+    ],
+    "evidence_ids": [
+      "ev_d07c6168165f0bef8d76f4b3aec6b75e67eb1682d94daf5a5a4b9c263e650fde"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_solver_oracle.py",
+      "tools/native_collision_pair_solver_compare.py",
+      "native/tests/collision_pair_geometry_test.cpp"
+    ],
+    "doc_refs": [
+      "docs/calculations/collision-pair-geometry.md",
+      "docs/collision-world.md"
+    ]
   }
 }

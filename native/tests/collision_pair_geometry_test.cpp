@@ -41,4 +41,18 @@ int main() {
         {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}, {1, 1, 1}};
     const auto normal_far = select_pair_contact_normal(owner, distant, {1, -1, 1}, false);
     assert(!normal_far.near_center_branch);
+
+    const CollisionPairBody pair_a{small_owner, 1000, 0, 0, 1};
+    const CollisionPairBody pair_b{OrientedCollisionBox{{1, 0, 0},
+        {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}, {1, 1, 1}}, 1000, 0, 0, 1};
+    const auto resolved = resolve_collision_pair(pair_a, pair_b);
+    assert(resolved.collided);
+    assert(resolved.correction_steps == 32);
+    assert(resolved.owner.box.center == (std::array<float, 3>{-0.5f, 0, 0}));
+    assert(resolved.target.box.center == (std::array<float, 3>{1.5f, 0, 0}));
+    const CollisionPairBody separated{OrientedCollisionBox{{3, 0, 0},
+        {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}, {1, 1, 1}}, 1000, 0, 0, 1};
+    const auto no_collision = resolve_collision_pair(pair_a, separated);
+    assert(!no_collision.collided);
+    assert(no_collision.correction_steps == 0);
 }
