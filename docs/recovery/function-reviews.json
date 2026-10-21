@@ -1447,6 +1447,28 @@
       "ev_f41ca7c034d6743711309e8509d3c471bc2e7e1b0dbc90d517cd65a4955e171d"
     ]
   },
+  "0x567940": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Both session task lists are reconstructed, including capacity formulas, exact callback/payload registrations, stable priority order, and the flag-controlled secondary vehicle callback. 64 direct executions of the original registration routine match both native queue capacities and all 16-byte queue entries. The allocator and dynamic service-value producer are controlled; global count/address/flag producers and actual callback implementations remain separate dependencies.",
+    "sources": [
+      "client/game_schedule.py",
+      "client/scheduler.py",
+      "tests/test_game_schedule.py",
+      "tools/verify_game_schedule.py",
+      "docs/scheduler.md"
+    ],
+    "evidence_ids": [
+      "ev_79bf176eaf937332ead62b1a3511a400587a3bb366cda7f86a7701fb2d15c01b"
+    ],
+    "verification_refs": [
+      "tools/verify_game_schedule.py",
+      "tests/test_game_schedule.py"
+    ],
+    "doc_refs": [
+      "docs/scheduler.md"
+    ]
+  },
   "0x586730": {
     "translation": "partial",
     "verification": "original-comparison-bounded",

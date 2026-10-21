@@ -13,6 +13,15 @@ signed 32-bit priorities and inserts before the first strictly larger priority.
 Equal priorities keep registration order. Priority is an ordering key; the
 executor does not interpret it as an interval, deadline or frequency.
 
+The registration builder now has a direct bounded translation in
+`client/game_schedule.py`. It preserves both original capacity formulas,
+vehicle/world-object registration order and the flag-gated secondary vehicle
+callback. `tools/verify_game_schedule.py` compares complete allocated list
+contents against 64 original `0x567940` executions with the allocator and
+dynamic service-value producer controlled. This validates list construction
+from supplied counts, addresses, flags and service payload; it does not recover
+the producers of those global values or the callbacks' full runtime behavior.
+
 The original executor `0x565e40` snapshots the list's signed count on entry.
 It walks that many 16-byte records, reading each callback and argument when it
 reaches the record. A null callback is skipped; every other callback receives
