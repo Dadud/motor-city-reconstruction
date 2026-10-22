@@ -63,7 +63,9 @@ def build_dynamic_candidate_table(sources, vertices_by_address, *,
         for point_index in range(1, point_count):
             for axis in range(3):
                 value = coordinates[point_index * 3 + axis]
-                if value < mins[axis]:
+                # The original x87 min comparison takes the update edge for
+                # unordered operands as well as values below the current min.
+                if math.isnan(value) or value < mins[axis]:
                     mins[axis] = value
                 if maxs[axis] < value:
                     maxs[axis] = value

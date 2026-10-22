@@ -1,6 +1,7 @@
 import struct
 import unittest
 from client.track_mesh import decode_mesh
+from client.track_object_bounds import build_track_object_bounds
 from test_track import fixture as road_fixture
 
 
@@ -44,6 +45,8 @@ class TrackMeshTests(unittest.TestCase):
 
     def test_attached_object_payload_is_retained(self):
         source=fixture()
+        vertex_start = 56 + 84 * 2 + 0x6c4 + 4 * 16 + 32 + 56 + 3
+        source[vertex_start:vertex_start + 16] = bytes(range(16))
         groups=[]
         decode_mesh(source,object_records=groups)
         self.assertEqual(len(groups),1)
@@ -52,10 +55,33 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual(len(group.objects),1)
         obj=group.objects[0]
         self.assertEqual(obj.animation,b'abc')
-        self.assertEqual(obj.vertex_records,(bytes(16),))
-        self.assertEqual(obj.vertex_attributes,(bytes(4),))
+        self.assertEqual(obj.vertex_records,(bytes(range(12)),))
+        self.assertEqual(obj.vertex_attributes,(bytes(range(12,16)),))
         self.assertEqual(obj.faces,())
         self.assertEqual(len(obj.descriptor),56)
+
+    def test_decoded_track_objects_feed_runtime_bounds_producer(self):
+        source = fixture()
+        descriptor = 56 + 84 * 2 + 0x6c4 + 4 * 16 + 32
+        struct.pack_into('<H', source, descriptor + 2, 3)
+        groups = []
+        decode_mesh(source, object_records=groups)
+        result = build_track_object_bounds(
+            groups[0], source_address=0x71001000,
+            table_address=0x71004000, payload_address=0x71001038)
+        candidates = result.candidates
+        row = candidates.records[:0x78]
+        self.assertEqual(struct.unpack_from('<I', row, 0x30)[0], 0)
+        self.assertEqual(struct.unpack_from('<3f', row, 0x4c),
+                         (0.0, 0.0, 0.0))
+        self.assertEqual(struct.unpack_from('<3f', row, 0x3c),
+                         (0.0, 0.0, 0.0))
+        self.assertEqual(struct.unpack_from('<H', candidates.sources, 2)[0], 5)
+        self.assertEqual(struct.unpack_from('<I', candidates.sources, 0x28)[0],
+                         0x7100103b)
+        self.assertEqual(struct.unpack_from('<H', result.source_rows, 2)[0], 3)
+        self.assertEqual(result.vertex_arrays,
+                         ((0x7100103b, struct.pack('<3f', 0.0, 0.0, 0.0)),))
 
     def test_invalid_indices_and_truncated_object_are_rejected(self):
         source=fixture()

@@ -85,11 +85,13 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
                 raise ValueError('FRD object geometry exceeds budget')
             animation_start = take(animation_size)
             vertex_start = take(vertex_count * 16)
-            vertex_records = tuple(bytes(data[vertex_start + i * 16:
-                                               vertex_start + (i + 1) * 16])
+            position_start = vertex_start
+            attribute_start = vertex_start + vertex_count * 12
+            vertex_records = tuple(bytes(data[position_start + i * 12:
+                                               position_start + (i + 1) * 12])
                                     for i in range(vertex_count))
-            attributes = tuple(bytes(data[vertex_start + i * 16 + 12:
-                                          vertex_start + i * 16 + 16])
+            attributes = tuple(bytes(data[attribute_start + i * 4:
+                                          attribute_start + (i + 1) * 4])
                                for i in range(vertex_count))
             face_start = take(face_count * 30)
             faces = tuple(struct.unpack_from('<15H', data, face_start + i * 30)

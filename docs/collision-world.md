@@ -444,7 +444,14 @@ controlled original-entry harness
 matched every output-table and mutated-source byte in 128 cases. The original
 producer body ran with fixed-address allocation and exact-range zeroing bridges;
 allocator policies and upstream candidate roster production remain explicit
-runtime inputs.
+runtime inputs. Decoded scenery objects now feed the same translation through
+[`client/track_object_bounds.py`](../client/track_object_bounds.py). This exposed
+that each FRD object's 16-byte-per-vertex payload is stored as a contiguous XYZ
+array followed by a separate four-byte attribute array, matching the pointers
+laid out by `0x428680`; it is not interleaved per vertex. Running the original
+`0x427f50` body over all installed track groups matched every candidate and
+mutated-source byte: 27 tracks, 2,242 groups and 5,783 objects. The corpus
+harness is [`tools/track_object_bounds_corpus_oracle.py`](../tools/track_object_bounds_corpus_oracle.py).
 
 Its downstream spatial marking helpers are translated in
 [`client/collision_spatial_hash.py`](../client/collision_spatial_hash.py).
@@ -602,8 +609,8 @@ The returned track-world record also retains each original 0x6c4 block header
 and the four object-group counts consumed by `0x428150`. Across the same corpus
 this preserves 3,465 block headers and exposes 5,783 object records for
 future object decoding. The decoder now retains those 5,783 56-byte descriptors,
-their animation byte ranges, interleaved 16-byte vertex records, 30-byte face
-records and per-group boundaries. The four-byte per-vertex attributes and face
+their animation byte ranges, contiguous XYZ vertex arrays and four-byte
+per-vertex attributes, 30-byte face records and per-group boundaries. Face
 words remain raw. `0x428680` was run against every actual descriptor group from
 the 27 installed `Tr.frd` files: all 2,242 groups and 5,783 rows matched the
 original descriptor mutations and final cursor. This verifies section sizes
