@@ -34,6 +34,12 @@ class Part:
             raise ValueError('native detail selector must be an unsigned byte')
         return self.native_detail_gate == 0 or selector < self.native_detail_gate
 
+    def visible_at_native_quality(self, quality):
+        """Apply one of the five values exposed by the native detail menu."""
+        if type(quality) is not int or not 0 <= quality <= 4:
+            raise ValueError('native detail quality must be an integer from 0 to 4')
+        return self.visible_at_native_detail(quality * 0x10)
+
 
 @dataclass(frozen=True)
 class Model:

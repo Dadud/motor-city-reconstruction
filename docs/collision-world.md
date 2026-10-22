@@ -651,11 +651,16 @@ The object visibility condition is now captured on each `Part` as its native
 detail gate: the upper nibble of descriptor byte `+2`. The renderer submits the
 object when that nibble is zero or the current detail selector is less than
 the nibble (`0x42b1d0`, `ev_9fd496e58b37787caf16533e95e50f9c866097fd303119ffba429af3ae8ce991`).
-The view setup maps quality settings 1 through 4 to selector bytes `0x10`,
-`0x20`, `0x30`, and `0x40` (`0x429480`,
+The native options menu exposes quality values 0 through 4 and stores the
+selection (`0x620520`,
+`ev_975ca23d993a5a0e00220a4356f0776d5ee001f137b89272f67e45e64153e689`).
+View setup maps the values to selector bytes `0x00`, `0x10`, `0x20`, `0x30`,
+and `0x40` (`0x429480`,
 `ev_3407c8cff0c80961b872f5ca486ddb60a84ecc06452e6ae5860a13c9718bccef`).
-`Part.visible_at_native_detail()` reproduces that predicate; the application
-does not yet choose a matching runtime selector for scenery rendering.
+`Part.visible_at_native_detail()` reproduces the predicate and
+`DecodedTrackWorld.object_meshes_at_quality()` applies one of the five menu
+values to the decoded scenery. The application does not yet submit that
+filtered scenery to its renderer.
 Material binding and draw ordering also remain unresolved, so matching these
 inputs does not establish a rendered-scene match.
 

@@ -121,6 +121,8 @@ class TrackMeshTests(unittest.TestCase):
         self.assertFalse(part.visible_at_native_detail(0x20))
         self.assertTrue(part.visible_at_native_detail(0x10))
         self.assertTrue(part.visible_at_native_detail(0))
+        self.assertTrue(part.visible_at_native_quality(1))
+        self.assertFalse(part.visible_at_native_quality(2))
         descriptor[2] = 4
         always_visible = decode_track_object_group(
             TrackObjectGroup(0, 0x640,
@@ -129,6 +131,8 @@ class TrackMeshTests(unittest.TestCase):
         self.assertTrue(always_visible.visible_at_native_detail(0xff))
         with self.assertRaisesRegex(ValueError, 'unsigned byte'):
             part.visible_at_native_detail(0x100)
+        with self.assertRaisesRegex(ValueError, 'from 0 to 4'):
+            part.visible_at_native_quality(5)
 
     def test_object_animation_interpolates_and_loops_native_samples(self):
         animation = bytearray(8 + 2 * 20)

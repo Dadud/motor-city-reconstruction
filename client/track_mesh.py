@@ -28,6 +28,13 @@ class DecodedTrackWorld:
             if obj.animation and (obj.descriptor[2] & 0xf) == 3 else None
             for obj in group.objects) for group in self.objects)
 
+    def object_meshes_at_quality(self, quality):
+        """Return scenery meshes visible at the native five-step detail setting."""
+        return tuple(Model(tuple(part for part in model.parts
+                                 if part.visible_at_native_quality(quality)),
+                           model.version, model.warnings)
+                     for model in self.object_meshes)
+
 
 @dataclass(frozen=True)
 class TrackObject:
