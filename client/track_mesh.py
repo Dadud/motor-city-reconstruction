@@ -2,6 +2,7 @@
 import math
 import struct
 from dataclasses import dataclass, replace
+from .collision_palette import adjust_color_words
 from .fce import Model, Part, Triangle
 from .track import decode_track
 from .track_spatial import (SpatialIndex, decode_relocated_spatial,
@@ -28,12 +29,20 @@ class DecodedTrackWorld:
             if obj.animation and (obj.descriptor[2] & 0xf) == 3 else None
             for obj in group.objects) for group in self.objects)
 
-    def object_meshes_at_quality(self, quality):
-        """Return scenery meshes visible at the native five-step detail setting."""
-        return tuple(Model(tuple(part for part in model.parts
-                                 if part.visible_at_native_quality(quality)),
-                           model.version, model.warnings)
-                     for model in self.object_meshes)
+    def object_meshes_at_quality(self, quality, *, include_animated=True):
+        """Filter scenery by native detail, optionally omitting posed type-3 objects."""
+        if len(self.objects) != len(self.object_meshes):
+            raise ValueError('track object records and meshes are misaligned')
+        result = []
+        for group, model in zip(self.objects, self.object_meshes):
+            if len(group.objects) != len(model.parts):
+                raise ValueError('track object group and mesh parts are misaligned')
+            parts = tuple(part for obj, part in zip(group.objects, model.parts)
+                          if (include_animated or
+                              (obj.descriptor[2] & 0xf) != 3)
+                          and part.visible_at_native_quality(quality))
+            result.append(Model(parts, model.version, model.warnings))
+        return tuple(result)
 
 
 @dataclass(frozen=True)
@@ -52,7 +61,8 @@ class TrackObjectGroup:
     objects: tuple[TrackObject, ...]
 
 
-def decode_mesh(data, materials=False, surface_records=None, object_records=None):
+def decode_mesh(data, materials=False, surface_records=None, object_records=None,
+                color_percentages=(100, 100, 100)):
     track = decode_track(data)
     headers = 56+len(track.slices)*84
     cursor = headers+track.block_count*0x6c4
@@ -129,7 +139,10 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
         vertices=tuple(struct.unpack_from('<3f',data,start+i*12) for i in range(count))
         if not all(math.isfinite(x) for v in vertices for x in v):
             raise ValueError('non-finite FRD mesh position')
-        take(count*4)  # Vertex shading values; not interpreted yet.
+        color_start = take(count * 4)
+        color_bytes = bytearray(data[color_start:color_start + count * 4])
+        adjust_color_words(color_bytes, count, color_percentages)
+        vertex_colors = struct.unpack('<' + 'I' * count, color_bytes)
         descriptors=()
         for offset,stride in ((0x660,20),(0x684,20),(0x68c,20),(0x694,16),(0x69c,24)):
             entries=count_at(header+offset)
@@ -179,7 +192,8 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
             surface_records.append((vertices,tuple(surface_quads),descriptors))
         if triangles:
             parts.append(Part(f'Track block {block}',(0,0,0),vertices,
-                              tuple(tuple(n) for n in sums),tuple(triangles)))
+                              tuple(tuple(n) for n in sums),tuple(triangles),
+                              vertex_colors))
     if materials:
         for _ in range(2):
             count=count_at(take(4))
@@ -204,11 +218,6 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
 def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=True,
                        object_color_percentages=None, lighting_file=None):
     """Decode mesh, relocate the native grid trailer, and build its query view."""
-    objects = []
-    mesh, grid_offset = decode_mesh(data, materials=True, object_records=objects)
-    uv_count = struct.unpack_from('<I', data, 52)[0] & 0xffff
-    uv_start = grid_offset - uv_count * 4
-    uv_coordinates = struct.unpack_from(f'<{uv_count}f', data, uv_start)
     if object_color_percentages is not None and lighting_file is not None:
         raise ValueError('supply object color percentages or a lighting INI, not both')
     if lighting_file is not None:
@@ -216,6 +225,12 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
         object_color_percentages = read_object_color_percentages(lighting_file)
     if object_color_percentages is None:
         object_color_percentages = (100, 100, 100)
+    objects = []
+    mesh, grid_offset = decode_mesh(data, materials=True, object_records=objects,
+                                    color_percentages=object_color_percentages)
+    uv_count = struct.unpack_from('<I', data, 52)[0] & 0xffff
+    uv_start = grid_offset - uv_count * 4
+    uv_coordinates = struct.unpack_from(f'<{uv_count}f', data, uv_start)
     from client.track_object_mesh import decode_track_object_group
     object_meshes = tuple(decode_track_object_group(
                               group, uv_coordinates,

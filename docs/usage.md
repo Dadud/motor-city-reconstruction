@@ -5,8 +5,9 @@ The garage and combined vehicle/track renderer run on Windows with OpenGL,
 resizable windows, orbit/zoom controls, browsing, and part isolation. Linux
 rendering passes a generated-geometry Xvfb/Mesa smoke check; original-asset
 driving on Linux remains unverified. Offline driving and time trials use an authored
-prototype model. Full vehicle assembly, track objects/effects, recovered force
-physics, sound, login, economy and multiplayer remain to implement.
+prototype model. Static track scenery can be previewed with recovered lighting,
+textures and detail gates; animated scenery/effects, complete vehicle rendering,
+recovered force physics, sound, login, economy and multiplayer remain to implement.
 
 For offline driving, add `--vehicle 101 --track Drag --drive`. Up accelerates,
 Down/Space brakes, Left/Right steers, and Shift+Up reverses. R resets and P
@@ -137,14 +138,22 @@ Track road-corridor preview:
 motor-city --data /path/to/game --track Boothill
 motor-city --data /path/to/game --track Boothill --track-mesh
 motor-city --data /path/to/game --track Boothill --track-mesh --track-textures --track-view start
+motor-city --data /path/to/game --track Boothill --track-objects --track-view start --track-detail 2
 ```
 
 This reads original FRD road-slice positions, basis vectors and limits. Left/Right
 browse the 27 day tracks. All 58 supplied FRD variants pass slice parsing. The
 corridor is a preview. `--track-mesh` renders decoded base track block geometry;
 `--track-textures` applies recovered UV-table references and day FSH pages.
+`--track-objects` combines base geometry with static scenery, applies the
+selected `Tr.ini` ambient vertex colors, and loads the day texture pages. It
+accepts native detail presets `0..4` through `--track-detail`; the default 0
+keeps all detail gates visible. Type-3 animated objects are omitted until their
+vertex transforms are implemented. Track-and-vehicle world views enable this
+static scenery preview automatically.
 Home focuses the first road slice; End returns to the overview. Animated material
-effects, object instances, vehicle collision response and driving are not implemented.
+effects, animated object motion, object collision response and original driving
+physics are not implemented.
 The final slice is not automatically joined to the
 first, and the corridor limits do not establish pavement widths.
 

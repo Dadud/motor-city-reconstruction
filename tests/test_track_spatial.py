@@ -117,6 +117,11 @@ class SpatialTests(unittest.TestCase):
         at_quality_four = world.object_meshes_at_quality(4)
         self.assertLessEqual(sum(len(model.parts) for model in at_quality_four),
                              sum(len(model.parts) for model in at_quality_zero))
+        static_models = world.object_meshes_at_quality(0, include_animated=False)
+        expected_static = sum(1 for group in world.objects for obj in group.objects
+                              if (obj.descriptor[2] & 0xf) != 3)
+        self.assertEqual(sum(len(model.parts) for model in static_models),
+                         expected_static)
         poses = world.sample_object_poses(0)
         self.assertEqual(tuple(map(len, poses)),
                          tuple(len(group.objects) for group in world.objects))

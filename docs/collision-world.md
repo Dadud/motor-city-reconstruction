@@ -623,16 +623,17 @@ The 30-byte records are interpreted as quad corners, eight UV-coordinate
 indices, texture page and flags, following the same 15-word layout used by
 track-block quads. Across the installed corpus this yields 5,783 parts and
 43,235 triangles; every selected vertex and UV index is in range. This mapping
-is supported by the asset structure but has not yet been checked against a
-native renderer call. The renderer's type-2 and type-4 paths read the object
-origin at descriptor offsets `+0x10/+0x14/+0x18`; those origins are carried in
-`Part.origin`. Type-3 object origins come from the sampled animation pose, which
-is exposed separately. Visibility, materials and draw ordering remain
-unresolved, so these are transformed local mesh inputs rather than a complete
-rendered scenery scene.
+is supported by the asset structure and now drives the static track-scene
+preview. The renderer's type-2 and type-4 paths read the object origin at
+descriptor offsets `+0x10/+0x14/+0x18`; those origins are carried in
+`Part.origin`. Type-3 object origins come from the sampled animation pose, but
+the preview omits those objects until their vertex transforms are applied. The
+preview uses face texture-page indices with `TR0.fsh`; exact effect flags,
+transparent-object sorting and native draw ordering remain unresolved.
 
-The native load path also adjusts each object's packed per-vertex RGB values.
-`0x428150` calls `0x428500` over the vertex attribute array; that helper scales
+The native load path adjusts packed per-vertex RGB values for scenery and base
+track blocks. `0x428150` calls `0x428500` over each object's vertex attribute
+array and each block's shading array; that helper scales
 the red, green and blue bytes using three global percentages, preserves the
 high byte, and clamps each loaded percentage to `0..200`. `0x491f40` reads
 `AmbientRed`, `AmbientGreen` and `AmbientBlue` from the selected track INI's
@@ -640,8 +641,10 @@ high byte, and clamps each loaded percentage to `0..200`. `0x491f40` reads
 [`track_lighting.py`](../client/track_lighting.py) parser selects `Tr.ini`,
 `TrN.ini`, `TrW.ini` or `TrNW.ini`, and `decode_track_world(...,
 lighting_file=...)` applies those values to every scenery object's
-`Part.vertex_colors`. The percentage transformation reuses the independently
-verified [`collision_palette.py`](../client/collision_palette.py) port. Evidence:
+`Part.vertex_colors`. `decode_mesh(..., color_percentages=...)` retains the
+transformed block colors as well, and the viewer's shader multiplies either
+texture by those RGB and alpha channels. The percentage transformation reuses
+the independently verified [`collision_palette.py`](../client/collision_palette.py) port. Evidence:
 `0x428150` `ev_3e79bc8939f6fabb6308f3555bbeb26e6073eb720dbacebdf73b17cd0ea3dc48`,
 `0x428500` `ev_e629ac186507865bd498798221b70d3c3edd5478233cc3fb75606eb114a931f7`,
 INI loading and clamping `0x491f40`

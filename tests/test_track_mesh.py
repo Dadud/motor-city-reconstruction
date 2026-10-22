@@ -45,6 +45,16 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual(model.parts[0].triangles[1].indices,(0,2,3))
         self.assertEqual(model.parts[0].vertices[2],(1,0,1))
 
+    def test_base_track_vertex_shading_uses_native_rgb_percentages(self):
+        source = fixture()
+        model, _ = decode_mesh(source, color_percentages=(50, 125, 200))
+        self.assertEqual(model.parts[0].vertex_colors, (0x00003fff,) * 4)
+        header = 56 + 84 * 2
+        color_start = header + 0x6c4 + 4 * 12
+        struct.pack_into('<4I', source, color_start, *(0x7f804020 for _ in range(4)))
+        model, _ = decode_mesh(source, color_percentages=(50, 125, 200))
+        self.assertEqual(model.parts[0].vertex_colors, (0x7f406fff,) * 4)
+
     def test_attached_object_payload_is_retained(self):
         source=fixture()
         vertex_start = 56 + 84 * 2 + 0x6c4 + 4 * 16 + 32 + 56 + 3

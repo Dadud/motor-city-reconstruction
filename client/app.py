@@ -5,7 +5,7 @@ import math
 import platform
 from pathlib import Path
 import sys
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from .assets import Assets
 from . import settings
 from .assembly import PROFILES, select_body, stock_body_flags
@@ -14,25 +14,41 @@ from .track import decode_track
 from .track_mesh import decode_mesh
 from .textures import decode_fsh
 
+
+def _part_color(part, vertex):
+    if not part.vertex_colors:
+        return 1.0, 1.0, 1.0, 1.0
+    if len(part.vertex_colors) != len(part.vertices):
+        raise ValueError(f'{part.name}: vertex color count disagrees with vertices')
+    value = part.vertex_colors[vertex]
+    return (((value >> 16) & 0xff) / 255.0,
+            ((value >> 8) & 0xff) / 255.0,
+            (value & 0xff) / 255.0,
+            ((value >> 24) & 0xff) / 255.0)
+
 VERTEX_SHADER = '''#version 330 core
 in vec3 position;
 in vec3 normal;
 in vec2 uv;
+in vec4 color;
 uniform mat4 mvp;
 uniform mat4 object_to_world;
 out float light;
 out vec2 texcoord;
+out vec4 tint;
 void main() {
     gl_Position = mvp * vec4(position, 1.0);
     float len = length(normal);
     vec3 n = len > 0.0001 ? mat3(object_to_world) * normal / len : vec3(0, 1, 0);
     light = 0.3 + 0.7 * abs(dot(n, normalize(vec3(0.4, 0.8, 0.6))));
     texcoord = vec2(uv.x, 1.0 - uv.y);
+    tint = color;
 }
 '''
 FRAGMENT_SHADER = '''#version 330 core
 in float light;
 in vec2 texcoord;
+in vec4 tint;
 uniform vec4 paint;
 uniform sampler2D surface;
 uniform bool textured;
@@ -40,7 +56,7 @@ out vec4 fragment;
 void main() {
     vec4 colour = textured ? texture(surface, texcoord) : paint;
     if (colour.a < 0.02) discard;
-    fragment = vec4(colour.rgb * light, colour.a);
+    fragment = vec4(colour.rgb * tint.rgb * light, colour.a * tint.a);
 }
 '''
 
@@ -52,6 +68,9 @@ def main():
     parser.add_argument('--track', help='track folder, e.g. Boothill; combine with --vehicle for world view')
     parser.add_argument('--track-mesh', action='store_true', help='render decoded base geometry instead of road corridor')
     parser.add_argument('--track-textures', action='store_true', help='apply original track UVs and day texture pages')
+    parser.add_argument('--track-objects', action='store_true', help='render decoded static track scenery with native lighting and detail filtering')
+    parser.add_argument('--track-detail', type=int, choices=range(5), default=0,
+                        help='native scenery detail preset (0-4; default 0)')
     parser.add_argument('--track-view', choices=('overview','start'), default='overview', help='initial track camera')
     parser.add_argument('--vehicle', type=int, help='stock branded vehicle ID, e.g. 101')
     parser.add_argument('--driver-variant', type=int, choices=range(33), default=0,
@@ -70,6 +89,8 @@ def main():
     parser.add_argument('--verify-driving', action='store_true', help='exercise driving, braking and reset before screenshot')
     parser.add_argument('--verify-race', action='store_true', help='complete a Drag sprint through input/update/render before screenshot')
     args = parser.parse_args()
+    if args.track_objects:
+        args.track_mesh = args.track_textures = True
     if args.recovered_driving_output and not args.recovered_driving_report:
         parser.error('--recovered-driving-output requires --recovered-driving-report')
     if args.recovered_driving_report and (args.vehicle is None or not args.track):
@@ -99,6 +120,7 @@ def main():
         if args.body_style not in (None, 'stock'):
             parser.error('world view currently uses the stock vehicle assembly')
         args.track_mesh = args.track_textures = True
+        args.track_objects = True
     if args.verify_controls and not args.screenshot:
         parser.error('--verify-controls requires --screenshot')
     if args.vehicle is not None and args.model:
@@ -220,12 +242,15 @@ def main():
                                               major_version=3, minor_version=3))
             self.program = ShaderProgram(Shader(VERTEX_SHADER, 'vertex'), Shader(FRAGMENT_SHADER, 'fragment'))
             self.gate_mesh = self.program.vertex_list(6, gl.GL_LINES,
-                position=('f', [0]*18), normal=('f', [0]*18), uv=('f', [0]*12)) if args.drive else None
+                position=('f', [0]*18), normal=('f', [0]*18), uv=('f', [0]*12),
+                color=('f', [1]*24)) if args.drive else None
             self.meshes = []
             self.gpu_textures = []
             self.vehicle_meshes = []
             self.vehicle_textures = []
             self.world_vehicle = None
+            self.track_scene = None
+            self.track_scenery_parts = 0
             self.drive = None
             self.paused = False
             self.follow_car = True
@@ -295,7 +320,23 @@ def main():
                 if args.track:
                     track_bytes = paths[self.index].read_bytes()
                     self.track_data = decode_track(track_bytes)
-                    model = decode_mesh(track_bytes,materials=args.track_textures)[0] if args.track_mesh else self.track_data.corridor()
+                    if args.track_objects:
+                        from .track_mesh import decode_track_world
+                        name = paths[self.index].parent.name
+                        lighting = assets.paths.get(
+                            f'data/tracks/{name}/tr.ini'.casefold())
+                        self.track_scene = decode_track_world(
+                            track_bytes, lighting_file=lighting)
+                        visible = self.track_scene.object_meshes_at_quality(
+                            args.track_detail, include_animated=False)
+                        scenery = tuple(part for model_part in visible
+                                        for part in model_part.parts)
+                        self.track_scenery_parts = len(scenery)
+                        model = replace(self.track_scene.mesh,
+                                        parts=self.track_scene.mesh.parts + scenery)
+                    else:
+                        model = (decode_mesh(track_bytes, materials=args.track_textures)[0]
+                                 if args.track_mesh else self.track_data.corridor())
                     prepared_textures = ()
                     if args.track_textures:
                         name=paths[self.index].parent.name
@@ -383,7 +424,7 @@ def main():
             meshes = []
             for part in model.parts:
                 for page in sorted({face.texture_page for face in part.triangles}):
-                    positions, normals, coordinates = [], [], []
+                    positions, normals, coordinates, colors = [], [], [], []
                     for face in part.triangles:
                         if face.texture_page != page:
                             continue
@@ -391,8 +432,10 @@ def main():
                             positions.extend(part.vertices[v][i] + part.origin[i] for i in range(3))
                             normals.extend(part.normals[v])
                             coordinates.extend((face.uv[corner], face.uv[corner+3]))
+                            colors.extend(_part_color(part, v))
                     meshes.append((self.program.vertex_list(len(positions)//3, gl.GL_TRIANGLES,
-                        position=('f', positions), normal=('f', normals), uv=('f', coordinates)), page))
+                        position=('f', positions), normal=('f', normals), uv=('f', coordinates),
+                        color=('f', colors)), page))
             return meshes
 
         def focus_start(self):
@@ -439,7 +482,7 @@ def main():
                     continue
                 pages=sorted(set(face.texture_page for face in part.triangles))
                 for page in pages:
-                    positions, normals, coordinates = [], [], []
+                    positions, normals, coordinates, colors = [], [], [], []
                     for face in part.triangles:
                         if face.texture_page != page:
                             continue
@@ -447,19 +490,24 @@ def main():
                             positions.extend(part.vertices[v][i] + part.origin[i] for i in range(3))
                             normals.extend(part.normals[v])
                             coordinates.extend((face.uv[corner],face.uv[corner+3]))
+                            colors.extend(_part_color(part, v))
                     self.meshes.append((self.program.vertex_list(len(positions)//3, gl.GL_TRIANGLES,
-                        position=('f', positions), normal=('f', normals), uv=('f',coordinates)), page))
+                        position=('f', positions), normal=('f', normals), uv=('f',coordinates),
+                        color=('f', colors)), page))
             self.labels[2].text = (paths[self.index].parent.name if args.track else selected_vehicle.name if selected_vehicle and
                 paths[self.index].name.casefold() == chosen_model.casefold() else paths[self.index].stem)
             self.labels[3].text = f'{self.index+1} / {len(paths)} models   ·   {self.model.triangle_count:,} triangles'
             if args.track:
-                self.labels[1].text = 'Track geometry' if args.track_mesh else 'Track corridor'
+                self.labels[1].text = ('Track scene' if args.track_objects else
+                                       'Track geometry' if args.track_mesh else
+                                       'Track corridor')
                 self.labels[3].text = f'{self.index+1} / {len(paths)} tracks   ·   {len(self.track_data.slices):,} road slices'
             self.labels[4].text = (('Body parts' if self.body_flags is not None or
                 self.body_style in PROFILES else 'All parts') if self.part_index is None else
                                   f'Part {self.part_index+1}: {self.model.parts[self.part_index].name}')
             if args.track:
-                self.labels[4].text = ('Base track geometry · Object instances and material effects pending' if args.track_textures else
+                self.labels[4].text = (f'Static scenery preview · detail {args.track_detail} · animated objects and effects pending' if args.track_objects else
+                                      'Base track geometry · Object instances and material effects pending' if args.track_textures else
                                       'Base track geometry · Materials and object instances pending' if args.track_mesh else
                                       'Road corridor preview · Use --track-mesh for base geometry')
             if self.body_style == 'stock' and self.body_flags is not None:
@@ -683,6 +731,9 @@ def main():
                 track=paths[self.index].parent.name if args.track else None,
                 track_mesh=args.track_mesh,
                 track_textures=args.track_textures,
+                track_objects=args.track_objects,
+                track_detail=args.track_detail if args.track_objects else None,
+                track_scenery_parts=self.track_scenery_parts,
                 vehicle_id=selected_vehicle.branded_id if selected_vehicle else None,
                 body_style=self.body_style,
                 body_flags=self.body_flags,
