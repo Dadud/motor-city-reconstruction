@@ -11,6 +11,7 @@ from tools.native_oracle import DynoOracle
 
 def cases():
     dimensions = [(1., .5, 2.), (2., .5, 1.), (1., 1., 1.), (.1234567, .7654321, 2.345678)]
+    dimensions += [(0., 3., 0.), (-1., .5, -2.), (0., 0., 0.)]
     rng = random.Random(0x51f440)
     dimensions += [tuple(rng.uniform(.05, 5.) for _ in range(3)) for _ in range(20)]
     for i, extent in enumerate(dimensions):

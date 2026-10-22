@@ -25,8 +25,15 @@ class BodyConstructorTests(unittest.TestCase):
         result=construct_body(owner,0,1000,(1.,.5,2.),4,0)
         self.assertEqual(struct.unpack_from('<3f',result,0xcc),(2.,2.,2.))
 
+    def test_zero_extent_preserves_ieee_infinities_from_native_constructor(self):
+        result=construct_body(bytes(0x2000),0xfffffffd,25.,(0.,3.,0.),0,2)
+        self.assertEqual(struct.unpack_from('<3f',result,0xcc),(0.,3.,0.))
+        self.assertEqual(struct.unpack_from('<3f',result,0x2f0),(75.,0.,75.))
+        self.assertEqual(struct.unpack_from('<f',result,0x70)[0],float('inf'))
+        self.assertEqual(struct.unpack_from('<3f',result,0x2fc)[1],float('inf'))
+
     def test_rejects_unverified_domains(self):
-        for mass,extent,shape in ((-1.,(1.,1.,1.),0),(1.,(0.,1.,1.),0),(1.,(1.,1.,1.),5)):
+        for mass,extent,shape in ((-1.,(1.,1.,1.),0),(1.,(1.,1.,1.),5)):
             with self.assertRaises(ValueError): construct_body(bytes(0x2000),0,mass,extent,shape,0)
 
 

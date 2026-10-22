@@ -10,7 +10,7 @@ Addresses refer exclusively to main executable SHA-256
 | Entry | Recovered behavior | Verification domain |
 | --- | --- | --- |
 | `0x51ed40` | Build 22 body sampling positions | All five internal shapes; asymmetric, negative and signed-zero extents |
-| `0x51f440` | Clear and construct the base owner, mass, volume, inertia, response coefficients, matrices and two sampling arrays | All five shapes, nine material values, zero/nonzero mass and 24 dimension sets |
+| `0x51f440` | Clear and construct the base owner, mass, volume, inertia, response coefficients, matrices and two sampling arrays | All five shapes, nine material values, zero/nonzero mass and 27 dimension sets, including zero/negative extents |
 | `0x43a240` | Catalogue-body adjustment of selected sampling coordinates | All eight catalogue selectors and ten distinct arrays |
 | `0x53a150` | Three body inertia multipliers | Known and unknown selectors, including nonidentity prior values |
 | `0x43ab88..0x43acb1` | Connected body phase of the larger startup function `0x43a990` | 320 authored owner/configuration/model states; all observation bytes compared |
@@ -19,6 +19,8 @@ The internal primitive selector `0..4` and catalogue selector `0..7` are differe
 contracts. Vehicle startup constructs primitive zero and subsequently customizes
 it with the catalogue selector. Treating the catalogue value as a primitive would
 change the shape, inertia and sampling arrangement.
+
+The direct Python comparison now also covers zero and negative dimensions, including zero-volume and infinite inverse-inertia writes. These edge cases match all original observation bytes; the native implementation comparison remains limited to the prior nondegenerate extent corpus.
 
 The original clears exactly `0x418` bytes. The authored observation image holds
 `0x2000` bytes so comparisons can also detect unintended writes in derived state;

@@ -61,7 +61,7 @@
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The packed sample decoder and pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. Classifier/allocation is independently compared in 128 executions. The downstream 0x459940 response includes both 8- and 22-point branches and matches 128 direct calls. Decision 1 composes classifier, response, impulse and post-response cache writes in 128 full caller executions; checked contact/cache bytes and position match exactly, velocity error is at most 2.4e-7, and 64 cases apply impacts/cache writes. Decision 2 matches 128 full caller executions, including 96 timer-triggered writes. The shared event lookup, contact-event helper, and actual +0x14 callback path are translated and compared in direct and full-caller original executions. 128 full 0x45d1f0 cases include 64 queued events with exact event payload/counter bytes; position matches exactly and velocity error is at most 2.4e-7. The separate 0x487490 audio target is stubbed; decision-minus-one pair effects and outer audio/debug callbacks remain open.",
+    "scope": "The packed sample decoder and pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. Classifier/allocation is independently compared in 128 executions. The downstream 0x459940 response includes both 8- and 22-point branches and matches 128 direct calls. Decision 1 composes classifier, response, impulse and post-response cache writes in 128 full caller executions; checked contact/cache bytes and position match exactly, velocity error is at most 2.4e-7, and 64 cases apply impacts/cache writes. Decision 2 matches 128 full caller executions, including 96 timer-triggered writes. The shared event lookup, contact-event helper, and actual +0x14 callback path are translated and compared in direct and full-caller original executions. 128 full 0x45d1f0 cases include 64 queued events with exact event payload/counter bytes; position matches exactly and velocity error is at most 2.4e-7. The separate 0x487490 audio target is stubbed. The decision-minus-one branch now matches 128 full caller executions with the classifier result forced to -1, including 64 impacts; classifier allocation integration, zero-sized proxy inertia, and outer audio/debug callbacks remain open.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -76,7 +76,10 @@
       "client/collision_event.py",
       "tools/collision_event_oracle.py",
       "tests/test_collision_event.py",
-      "tools/collision_world_event_dispatch_oracle.py"
+      "tools/collision_world_event_dispatch_oracle.py",
+      "client/collision_world_pair.py",
+      "tools/collision_world_decision_minus_one_oracle.py",
+      "tests/test_collision_world_pair.py"
     ],
     "evidence_ids": [
       "ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3",
@@ -94,7 +97,10 @@
       "tools/collision_event_oracle.py",
       "tests/test_collision_event.py",
       "tools/collision_world_event_dispatch_oracle.py",
-      "tests/test_collision_world_response.py"
+      "tests/test_collision_world_response.py",
+      "client/collision_world_pair.py",
+      "tools/collision_world_decision_minus_one_oracle.py",
+      "tests/test_collision_world_pair.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
@@ -553,12 +559,15 @@
   "0x51f440": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "Complete base owner constructor in the supported finite domain: 1080 original calls, five shapes and nine material values, all 0x2000 observation bytes exact. MSVC/Zig native/Python comparisons exact. Preserves all bytes above original 0x418 clear range; prior derived geometry remains supplied.",
+    "scope": "Complete Python base owner constructor matches all 0x2000 observation bytes in 1215 original calls spanning five shapes, nine material values, zero/nonzero mass, and positive, zero and negative dimensions. Native/Python comparisons remain exact for the previous 1080 nondegenerate calls; preserved bytes above the 0x418 clear range and prior derived geometry remain supplied.",
     "sources": [
       "client/body_constructor.py",
       "native/src/body_constructor.cpp",
       "tools/body_constructor_oracle.py",
-      "docs/calculations/body-construction.md"
+      "docs/calculations/body-construction.md",
+      "tests/test_body_constructor.py",
+      "client/collision_world_pair.py",
+      "tools/collision_world_decision_minus_one_oracle.py"
     ]
   },
   "0x43a240": {

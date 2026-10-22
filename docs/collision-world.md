@@ -133,8 +133,7 @@ body and increments the handler count when activation succeeds. The full
 caller harness [`tools/collision_world_event_dispatch_oracle.py`](../tools/collision_world_event_dispatch_oracle.py)
 matched 128 `0x45d1f0` executions, including all event fields and handler
 counters: 64 queued events, exact positions, and maximum velocity error
-`2.384185791015625e-7`. It stubs `0x487490`; audio behavior and the
-decision-minus-one pair collision branch remain open.
+`2.384185791015625e-7`. It stubs `0x487490`; audio behavior remains open.
 
 The kind-1 decision-1 path is also composed through the actual caller. It forms
 a horizontal normal from the body to the sample, offsets the sample by its
@@ -146,8 +145,22 @@ path. The direct harness [`tools/collision_world_decision_one_oracle.py`](../too
 matched 128 full `0x45d1f0` executions: 64 impacts updated the cache and 64
 receding cases did not. Position and checked contact/cache bytes matched
 exactly; maximum linear-velocity error was `2.384185791015625e-7`. The
-conditional virtual event dispatch after this branch and the decision-minus-one
-pair collision branch still need reconstruction.
+conditional virtual event dispatch is verified above. For classifier result
+`-1`, the caller builds a temporary `0x418`-byte body with dimensions
+`(vertical, 3, vertical)`, places it at the sample, normalizes the horizontal
+body-to-sample direction, and calls `0x458530`. A successful result clears
+`+0x3c4`, records type `0x19` and mode 5, and stores the counter-derived
+contact magnitude. This path is translated in
+[`client/collision_world_pair.py`](../client/collision_world_pair.py).
+[`tools/collision_world_decision_minus_one_oracle.py`](../tools/collision_world_decision_minus_one_oracle.py)
+matched 128 executions through the original caller with `0x42d9f0` forced to
+return `-1`; the remaining world-sample decoding, temporary-body construction,
+`0x458530` response and caller writes ran in the original. All 128 reached the
+pair solver, 64 applied impacts, and maximum velocity error was
+`7.152557373046875e-7`; the other compared body bytes matched exactly. The
+allocator/classifier result and pair coefficients are supplied inputs, and
+zero-sized proxy inertia remains unverified. Dynamic candidate-record
+production and full trigger-allocation integration remain open.
 
 The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
 first three signed words of each 20-byte record. The portable decoder in

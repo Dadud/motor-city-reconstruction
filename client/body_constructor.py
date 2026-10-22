@@ -5,6 +5,15 @@ from client.body_geometry import body_samples
 from client.tire_response import f32
 
 
+def _ieee_div(numerator, denominator):
+    """Return an IEEE single-compatible quotient, including zero divisors."""
+    if denominator == 0.0:
+        if numerator == 0.0:
+            return float('nan')
+        return math.copysign(float('inf'), numerator * math.copysign(1.0, denominator))
+    return numerator / denominator
+
+
 def construct_body(owner, identity, mass, half_extents, shape, material):
     if len(owner) != 0x2000:
         raise ValueError('expected full startup observation image')
@@ -15,8 +24,8 @@ def construct_body(owner, identity, mass, half_extents, shape, material):
     dimensions = tuple(map(f32, half_extents))
     mass = f32(mass)
     if (len(dimensions) != 3 or not math.isfinite(mass) or not 0 <= mass <= 1e6
-            or not all(math.isfinite(v) and 1e-3 <= v <= 1e3 for v in dimensions)):
-        raise ValueError('bounded nonnegative mass and positive model half extents required')
+            or not all(math.isfinite(v) and abs(v) <= 1e3 for v in dimensions)):
+        raise ValueError('bounded nonnegative mass and finite model half extents required')
     if type(shape) is not int or not 0 <= shape <= 4:
         raise ValueError('original body shape must be 0..4')
     if shape == 4:
@@ -25,7 +34,10 @@ def construct_body(owner, identity, mass, half_extents, shape, material):
     out = bytearray(owner)
     out[:0x418] = bytes(0x418)
     def word(offset, value): struct.pack_into('<I', out, offset, value)
-    def put(offset, value): struct.pack_into('<f', out, offset, f32(value))
+    def put(offset, value):
+        value = float(value)
+        struct.pack_into('<f', out, offset,
+                         f32(value) if math.isfinite(value) else value)
     word(0, identity); word(0x58, material); word(0xdc, shape)
     for offset, value in zip((0xcc, 0xd0, 0xd4), dimensions): put(offset, value)
     put(0xd8, math.sqrt(z*z+y*y+x*x))
@@ -62,9 +74,10 @@ def construct_body(owner, identity, mass, half_extents, shape, material):
         inertia = (x*mass*f32(.4),)*3
         volume = f32(x*x)*x*f32(4.188790321350098)
     volume = f32(volume)
-    put(0x74, volume); put(0x70, mass/volume)
+    put(0x74, volume); put(0x70, _ieee_div(mass, volume))
     for axis, value in enumerate(inertia):
-        put(0x2f0+axis*4, value); put(0x2fc+axis*4, 1./f32(value))
+        put(0x2f0+axis*4, value)
+        put(0x2fc+axis*4, _ieee_div(1., f32(value)))
     for axis, value in enumerate(response): put(0x308+axis*4, value)
     points = body_samples(shape, dimensions)
     packed = struct.pack('<66f', *(v for p in points for v in p))
