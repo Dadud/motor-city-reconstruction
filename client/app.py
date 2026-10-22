@@ -287,6 +287,8 @@ def main():
             self.error = ''
             if args.track:
                 self.labels[5].text = 'Drag: orbit   Scroll: zoom   Left / Right: track   W: wireframe   Home: start   End: overview'
+            if args.track_objects:
+                self.labels[5].text += '   , / .: animation tick'
             if world_view:
                 self.set_caption('Motor City | World')
                 self.labels[5].text = 'Drag: orbit   Scroll: zoom   Left / Right: track   W: wireframe   Home: car   End: overview'
@@ -611,6 +613,12 @@ def main():
         def on_key_press(self, symbol, modifiers):
             if symbol == key.ESCAPE:
                 self.close()
+            elif (args.track and args.track_objects
+                  and symbol in (key.COMMA, key.PERIOD)):
+                tick = 0 if args.track_animation_tick is None else args.track_animation_tick
+                args.track_animation_tick = max(0, tick +
+                    (1 if symbol == key.PERIOD else -1))
+                self.load_model()
             elif args.drive and symbol == key.R and self.drive:
                 self.drive.reset()
                 self.focus_start()
@@ -695,6 +703,15 @@ def main():
                 assert self.width == 1200
                 checks.append('window resize')
                 if args.track:
+                    if args.track_objects:
+                        previous_tick = args.track_animation_tick
+                        base_tick = 0 if previous_tick is None else previous_tick
+                        self.on_key_press(key.PERIOD, 0)
+                        assert args.track_animation_tick == base_tick + 1
+                        self.on_key_press(key.COMMA, 0)
+                        assert args.track_animation_tick == base_tick
+                        assert self.track_scenery_parts > 0 and not self.error
+                        checks.append('sampled track-object animation stepped and rebuilt')
                     self.on_key_press(key.HOME,0)
                     assert tuple(self.center)==(self.world_vehicle.pose.position if self.world_vehicle else self.track_data.slices[0].position)
                     self.on_draw()

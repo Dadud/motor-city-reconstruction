@@ -154,7 +154,8 @@ keeps all detail gates visible. Type-3 animated objects are omitted unless
 recovered quaternion transform is applied to their vertices. This is a sampled
 preview, not a real-time animation loop. Track-and-vehicle world views enable
 the scenery preview automatically.
-Home focuses the first road slice; End returns to the overview. Animated material
+In the window, comma and period step the sampled animation tick backward and
+forward. Home focuses the first road slice; End returns to the overview. Animated material
 material effects, continuous animation playback, object collision response and
 original driving physics are not implemented.
 The final slice is not automatically joined to the

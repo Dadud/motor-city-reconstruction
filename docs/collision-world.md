@@ -623,13 +623,13 @@ The 30-byte records are interpreted as quad corners, eight UV-coordinate
 indices, texture page and flags, following the same 15-word layout used by
 track-block quads. Across the installed corpus this yields 5,783 parts and
 43,235 triangles; every selected vertex and UV index is in range. This mapping
-is supported by the asset structure and now drives the static track-scene
-preview. The renderer's type-2 and type-4 paths read the object origin at
+is supported by the asset structure and now drives the track-scene preview.
+The renderer's type-2 and type-4 paths read the object origin at
 descriptor offsets `+0x10/+0x14/+0x18`; those origins are carried in
-`Part.origin`. Type-3 object origins come from the sampled animation pose, but
-the preview omits those objects until their vertex transforms are applied. The
-preview uses face texture-page indices with `TR0.fsh`; exact effect flags,
-transparent-object sorting and native draw ordering remain unresolved.
+`Part.origin`. Type-3 objects use the sampled animation translation and
+quaternion matrix to transform their vertices and normals. The preview uses
+face texture-page indices with `TR0.fsh`; exact effect flags, transparent-object
+sorting and native draw ordering remain unresolved.
 
 The native load path adjusts packed per-vertex RGB values for scenery and base
 track blocks. `0x428150` calls `0x428500` over each object's vertex attribute
@@ -662,10 +662,9 @@ and `0x40` (`0x429480`,
 `ev_3407c8cff0c80961b872f5ca486ddb60a84ecc06452e6ae5860a13c9718bccef`).
 `Part.visible_at_native_detail()` reproduces the predicate and
 `DecodedTrackWorld.object_meshes_at_quality()` applies one of the five menu
-values to the decoded scenery. The application does not yet submit that
-filtered scenery to its renderer.
-Material binding and draw ordering also remain unresolved, so matching these
-inputs does not establish a rendered-scene match.
+values to the decoded scenery. The application submits the filtered scenery
+with its base track mesh. This establishes a decoded preview, not a full match:
+material binding details and native draw ordering remain unresolved.
 
 The renderer dispatch path `0x58cc10` uses type-3 animation rows as a 20-byte
 sample stream. [`client/track_object_animation.py`](../client/track_object_animation.py)
@@ -675,9 +674,11 @@ exposes aligned per-object samples with `sample_object_poses(tick)`. The native
 oracle [`tools/track_object_animation_oracle.py`](../tools/track_object_animation_oracle.py)
 compared 1,046 sampled calls over all 226 installed animation payloads plus 226
 end-of-sequence checks. Maximum absolute output error was `6.11e-5` across
-float outputs; results matched within a scale-aware tolerance. Applying these
-poses to mesh vertices and recovering renderer material/visibility state remain
-open.
+float outputs; results matched within a scale-aware tolerance. The preview
+applies the pose at a selected integer tick through `--track-animation-tick`;
+comma and period step the tick interactively. This remains sampled playback,
+without a continuous game clock. Renderer material/visibility state and native
+draw order remain open.
 
 ## Sampled world vertex response
 
