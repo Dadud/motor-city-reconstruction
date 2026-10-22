@@ -6,7 +6,8 @@ from pathlib import Path
 from client.assets import Assets
 from client.sky import (load_sky_resources, sky_resource_names,
                         sky_material_triangle_indices,
-                        sky_material_normalize_grid, sky_material_random_grid)
+                        sky_material_normalize_grid, sky_material_random_grid,
+                        sky_material_smooth_grid)
 from client.random_state import RandomState
 
 
@@ -44,6 +45,11 @@ class SkyResourceTests(unittest.TestCase):
         self.assertEqual(normalized[0], 0.0)
         self.assertAlmostEqual(normalized[1], 37.3438835, places=5)
         self.assertGreater(normalized[2], 254.0)
+
+    def test_material_smoothing_preserves_midpoint_field(self):
+        grid = sky_material_smooth_grid([128.0] * 676, upper_bound=255)
+        self.assertEqual(grid, (128.0,) * 676)
+
 
     def test_material_triangle_index_topology(self):
         indices = sky_material_triangle_indices()

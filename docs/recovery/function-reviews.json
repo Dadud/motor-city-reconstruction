@@ -2738,13 +2738,14 @@
   "0x4943f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Three bounded stages of the procedural sky-material kernel are translated: its 1,250 deterministic grid indices including native row padding, its transposed 26x26 random-height field, and the signed-square-root normalization. Original comparisons cover the complete emitted index buffer and four parameter sets of 676 raw and normalized values each; raw floats match exactly and normalized values had zero observed error. The repeated smoothing passes, color packing and mesh-vertex updates remain untranslated.",
+    "scope": "Four bounded stages of the procedural sky-material kernel are translated: its 1,250 deterministic grid indices including native row padding, transposed 26x26 random-height field, signed-square-root normalization, and 20 in-place weighted 5x5 smoothing passes. Original comparisons cover the full index buffer and four parameter sets of 676 raw, normalized and smoothed values each; raw floats match exactly and normalized/smoothed values had zero observed error. Color packing and mesh-vertex updates remain untranslated.",
     "sources": [
       "client/sky.py",
       "tests/test_sky.py",
       "tools/sky_material_topology_oracle.py",
       "docs/recovery/track-sky-assets.md",
-      "tools/sky_material_grid_oracle.py"
+      "tools/sky_material_grid_oracle.py",
+      "client/random_state.py"
     ],
     "evidence_ids": [
       "ev_9de9d6afa83b7c0997de55c52f19572932b4d8059d0ad358066f78ff80844c92",
@@ -2752,8 +2753,8 @@
     ],
     "verification_refs": [
       "tools/sky_material_topology_oracle.py",
-      "tests/test_sky.py",
-      "tools/sky_material_grid_oracle.py"
+      "tools/sky_material_grid_oracle.py",
+      "tests/test_sky.py"
     ],
     "doc_refs": [
       "docs/recovery/track-sky-assets.md"

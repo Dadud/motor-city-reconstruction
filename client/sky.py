@@ -30,7 +30,7 @@ def sky_material_triangle_indices():
 
 
 def sky_material_random_grid(random_state, *, upper_bound, modulus):
-    """Produce the row-major 26×26 random height field from 0x4943f0."""
+    """Produce the transposed 26×26 random height field from 0x4943f0."""
     if not isinstance(random_state, RandomState):
         raise TypeError('random_state must be a RandomState')
     if (type(upper_bound) is not int or type(modulus) is not int or
@@ -57,6 +57,42 @@ def sky_material_normalize_grid(values):
         signed_root = sign * math.sqrt(abs(normalized))
         result.append(_f32((signed_root + 1.0) * 0.5 * 255.0))
     return tuple(result)
+
+
+def sky_material_smooth_grid(values, *, upper_bound, passes=20):
+    """Apply the native in-place weighted 5x5 height smoothing passes."""
+    if len(values) != 26 * 26:
+        raise ValueError('sky material height grid must contain 676 values')
+    if type(upper_bound) is not int or not 0 <= upper_bound <= 0x7fffffff:
+        raise ValueError('height bound must fit the native signed integer field')
+    if type(passes) is not int or not 0 <= passes <= 20:
+        raise ValueError('smoothing pass count must be within [0, 20]')
+    grid = [_f32(value) for value in values]
+    for _ in range(passes):
+        for row in range(26):
+            for column in range(26):
+                center_index = column * 26 + row
+                center = grid[center_index]
+                accumulator = 0.0
+                count = 0
+                for drow in range(-2, 3):
+                    for dcolumn in range(-2, 3):
+                        if (drow == 0 and dcolumn == 0 or
+                                not 0 <= row + drow < 26 or
+                                not 0 <= column + dcolumn < 26):
+                            continue
+                        neighbor = grid[(column + dcolumn) * 26 + row + drow]
+                        scaled_distance = (abs(neighbor) - 128.0) / 128.0
+                        weight = 1.0 if abs(drow) <= 1 and abs(dcolumn) <= 1 else 0.5
+                        accumulator = _f32(
+                            accumulator + scaled_distance * scaled_distance *
+                            (neighbor - center) * weight)
+                        count += 1
+                average = accumulator / count
+                if average != 0.0:
+                    grid[center_index] = _f32(min(float(upper_bound),
+                                                  max(0.0, center + average * 0.5)))
+    return tuple(grid)
 
 
 @dataclass(frozen=True)

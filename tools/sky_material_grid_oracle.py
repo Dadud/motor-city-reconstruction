@@ -4,7 +4,8 @@ import json
 import math
 
 from client.random_state import RandomState
-from client.sky import sky_material_normalize_grid, sky_material_random_grid
+from client.sky import (sky_material_normalize_grid, sky_material_random_grid,
+                        sky_material_smooth_grid)
 from tools.native_oracle import DynoOracle
 
 
@@ -15,6 +16,7 @@ _INITIAL = (0xf22d0e56, 0x883126e9, 0xc624dd2f,
 def verify(executable):
     oracle = DynoOracle(executable)
     cases = 0
+    max_smoothing_error = 0.0
     for bound, modulus, angle, row_scale, column_scale in (
             (64, 8, 0.125, 1.0, 1.0), (0, 0, 0.0, 0.0, 0.0),
             (255, 31, -0.375, 1.25, 0.75), (128, 1, 0.25, -0.5, 2.0)):
@@ -37,11 +39,24 @@ def verify(executable):
             index = max(range(len(errors)), key=errors.__getitem__)
             raise AssertionError(('normalized', bound, modulus, index,
                                   actual_normalized[index], expected_normalized[index], errors[index]))
+        expected_smoothed = sky_material_smooth_grid(
+            expected_normalized, upper_bound=bound)
+        actual_smoothed = oracle.sky_material_height_grid(
+            'smoothed', upper_bound=bound, modulus=modulus, angle=angle,
+            row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL)
+        smooth_errors = [abs(a-b) for a, b in zip(actual_smoothed, expected_smoothed)]
+        max_smoothing_error = max(max_smoothing_error, *smooth_errors)
+        if any(not math.isfinite(error) or error > 2e-4 for error in smooth_errors):
+            index = max(range(len(smooth_errors)), key=smooth_errors.__getitem__)
+            raise AssertionError(('smoothed', bound, modulus, index,
+                                  actual_smoothed[index], expected_smoothed[index],
+                                  smooth_errors[index]))
         cases += 1
     return {'parameter_sets': cases, 'raw_values': cases*676,
             'normalized_values': cases*676,
             'maximum_normalization_error': max(errors),
-            'scope': 'local random-height and signed-square-root stages only; native kernel stops before smoothing'}
+            'maximum_smoothing_error': max_smoothing_error,
+            'scope': 'local random-height, normalization, and 20 in-place smoothing passes; native kernel stops before color and mesh output'}
 
 
 if __name__ == '__main__':

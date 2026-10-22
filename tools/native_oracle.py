@@ -95,9 +95,10 @@ class DynoOracle:
     def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
                                  row_scale, column_scale, random_state):
         """Capture the kernel's local 26x26 grid at a specific verified stage."""
-        stops = {'raw': 0x4945f5, 'normalized': 0x49466f}
+        stops = {'raw': 0x4945f5, 'normalized': 0x49466f,
+                 'smoothed': 0x49480e}
         if stage not in stops:
-            raise ValueError('sky material stage must be raw or normalized')
+            raise ValueError('sky material stage must be raw, normalized, or smoothed')
         if (len(random_state) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff
                                           for word in random_state)):
             raise ValueError('random state must contain six unsigned words')
