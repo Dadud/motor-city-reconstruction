@@ -352,9 +352,9 @@ terrain query and full collision contact-producer chain remain open.
 - Recover the data types and producers for collision object shapes, triangles,
   terrain queries, rotations, global candidates and shared contact records.
 - Integrate the independently verified `0x458530` response with dynamic-pair
-  retries and recover dynamic candidate-record production; complete the
-  compact 8-point extraction in `0x4596b0`, sampled-world caller side effects,
-  and successful resource-table/heading lookup integration in `0x42d9f0`;
+  retries and recover dynamic candidate-record production; recover sampled-world
+  caller side effects and successful resource-table/heading lookup integration
+  in `0x42d9f0`;
   recover `0x45c3e0`, task-list execution, and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
@@ -414,13 +414,20 @@ offset from the body center is behind the plane, then corrects penetration.
 The correction updates body position and all 22 cached world points before
 delegating the impact to `0x457df0`.
 
+The point extractor `0x4596b0` is also translated in
+[`extract_world_contact_points`](../client/collision_world_response.py). Its
+normal branch copies 66 floats from body offset `+0xe0`; the compact branch is
+selected when the signed counter at `+0x3bc` is zero and `abs(+0xc4) > 0.707`,
+then constructs eight points from the stored bounds and twelve trailing
+coordinates. The direct harness [`tools/collision_world_points_oracle.py`](../tools/collision_world_points_oracle.py)
+compared 256 calls, evenly split between both branches, with exact counts and
+float bits.
+
 [`client/collision_world_response.py`](../client/collision_world_response.py)
 translates that scan and response for supplied point sets. The direct original
 harness [`tools/collision_world_response_oracle.py`](../tools/collision_world_response_oracle.py)
-matched 128 deterministic 22-point cases, including penetration corrections,
+matched 128 deterministic cases, evenly split between extracted 8- and 22-point inputs, including penetration corrections,
 cached point updates, linear velocity changes, contact-record bytes, and the
 routine return. Position corrections matched exactly; velocity error stayed
-below `4.2e-7`. This does not recover
-the body's compact 8-point extraction in `0x4596b0`; sampled caller effects
-such as audio/debug notifications and subsequent event dispatch also remain
-outside the current model.
+below `4.2e-7`. Sampled caller effects such as audio/debug notifications and
+subsequent event dispatch remain outside the current model.

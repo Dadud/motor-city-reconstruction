@@ -22,15 +22,52 @@ class WorldVertexContactResult:
     selected_vertex: int | None
 
 
+@dataclass(frozen=True)
+class ExtractedWorldContactPoints:
+    count: int
+    vertices: tuple[float, ...]
+
+
+def extract_world_contact_points(body_image):
+    """Translate the compact/full body point extractor at original 0x4596b0."""
+    image = bytes(body_image)
+    if len(image) < 0x1e8:
+        raise ValueError('body image must cover the 22-point local geometry buffer')
+    compact = (struct.unpack_from('<h', image, 0x3bc)[0] == 0 and
+               abs(struct.unpack_from('<f', image, 0xc4)[0]) > .707)
+    if not compact:
+        return ExtractedWorldContactPoints(
+            22, struct.unpack_from('<66f', image, 0xe0))
+
+    value = lambda offset: struct.unpack_from('<f', image, offset)[0]
+    choose_left_if_less = lambda left, right: left if left < right else right
+    choose_right_if_less = lambda left, right: right if left < right else left
+    average = lambda left, right: f32((left + right) * .5)
+    vertices = (
+        choose_left_if_less(value(0xe0), value(0x110)),
+        average(value(0xe4), value(0x114)),
+        choose_right_if_less(value(0xe8), value(0x118)),
+        choose_right_if_less(value(0xec), value(0x11c)),
+        average(value(0x120), value(0xf0)),
+        choose_right_if_less(value(0xf4), value(0x124)),
+        choose_right_if_less(value(0xf8), value(0x128)),
+        average(value(0x12c), value(0xfc)),
+        choose_left_if_less(value(0x100), value(0x130)),
+        choose_left_if_less(value(0x104), value(0x134)),
+        average(value(0x138), value(0x108)),
+        choose_left_if_less(value(0x10c), value(0x13c)),
+        *struct.unpack_from('<12f', image, 0x140),
+    )
+    return ExtractedWorldContactPoints(8, tuple(f32(value) for value in vertices))
+
+
 def resolve_world_vertex_contact(body, local_vertices, normal, plane_point,
                                 max_distance, threshold_coefficient,
                                 sliding_coefficient):
     """Translate the 8/22 vertex plane scan and response call in 0x459940.
 
-    ``local_vertices`` are the points returned by the preceding body-specific
-    geometry extractor. The 8-point extraction itself remains a separate
-    unresolved branch; count=22 corresponds to the ordinary cached geometry
-    path and is the path exercised by the shipped-client comparison.
+    ``local_vertices`` are the points returned by
+    :func:`extract_world_contact_points` for the same body image.
     """
     if not isinstance(body, CollisionImpactBody):
         raise ValueError('a collision impact body is required')

@@ -6,7 +6,8 @@ import struct
 
 from client.collision_impulse import CollisionInertia
 from client.collision_pair_response import CollisionImpactBody
-from client.collision_world_response import resolve_world_vertex_contact
+from client.collision_world_response import (extract_world_contact_points,
+                                             resolve_world_vertex_contact)
 from tools.native_oracle import DynoOracle
 
 
@@ -18,10 +19,11 @@ def _f32_arg(value):
     return struct.unpack('<I', struct.pack('<f', value))[0]
 
 
-def _body_image(body, vertices):
+def _body_image(body, vertices, *, compact):
     data = bytearray(body.contact_record)
     data.extend(bytes(max(0, 0x408 - len(data))))
-    struct.pack_into('<h', data, 0x3bc, 1)  # use the 22 supplied geometry points
+    struct.pack_into('<h', data, 0x3bc, 0 if compact else 1)
+    struct.pack_into('<f', data, 0xc4, .8 if compact else .2)
     struct.pack_into('<3f', data, 8, *body.position)
     struct.pack_into('<3f', data, 0x14, *body.linear_velocity)
     struct.pack_into('<3f', data, 0x38, *body.angular_turn_velocity)
@@ -45,6 +47,8 @@ def compare(executable, count=128):
     maximum_position = 0.0
     maximum_velocity = 0.0
     corrections = 0
+    compact_cases = 0
+    full_cases = 0
     for index in range(count):
         axis = index % 3
         normal = tuple(1. if i == axis else 0. for i in range(3))
@@ -61,11 +65,21 @@ def compare(executable, count=128):
                                    (0., 0., 0.), (0., 0., 0.), inertia,
                                    1000., response_coefficient=.2,
                                    contact_record=bytes(0x400))
-        expected = resolve_world_vertex_contact(body, vertices, normal, plane,
+        compact = index % 2 == 1
+        native_image = _body_image(body, vertices, compact=compact)
+        body = CollisionImpactBody(
+            body.address, body.position, body.linear_velocity,
+            body.angular_turn_velocity, body.center_of_mass_local,
+            body.inertia, body.mass, response_coefficient=body.response_coefficient,
+            contact_record=native_image[:0x400])
+        extracted = extract_world_contact_points(native_image)
+        compact_cases += int(extracted.count == 8)
+        full_cases += int(extracted.count == 22)
+        expected = resolve_world_vertex_contact(body, extracted.vertices, normal, plane,
                                                 .25, .45, .2)
 
         cpu = oracle.cpu
-        cpu.mem_write(BODY, _body_image(body, vertices))
+        cpu.mem_write(BODY, native_image)
         cpu.mem_write(NORMAL, struct.pack('<3f', *normal))
         cpu.mem_write(PLANE, struct.pack('<3f', *plane))
         oracle.call(0x459940, (BODY, NORMAL, PLANE, _f32_arg(.25),
@@ -99,10 +113,12 @@ def compare(executable, count=128):
                 if actual != wanted:
                     raise AssertionError(f'case {index}: contact record byte {offset:#x}: {actual:#x} != {wanted:#x}')
         corrections += int(expected.selected_vertex is not None and expected.penetration < 0.)
-    return {'entry': '0x459940', 'cases': count, 'position_corrections': corrections,
+    return {'entry': '0x459940', 'cases': count,
+            'compact_8_point_cases': compact_cases, 'full_22_point_cases': full_cases,
+            'position_corrections': corrections,
             'maximum_absolute_position_error': maximum_position,
             'maximum_absolute_velocity_error': maximum_velocity,
-            'scope': '22-point candidate selection, penetration correction, cached vertices, and delegated impulse/contact writes'}
+            'scope': 'integrated 8/22-point extraction, candidate selection, penetration correction, cached vertices, and delegated impulse/contact writes'}
 
 
 if __name__ == '__main__':

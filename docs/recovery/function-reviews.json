@@ -61,7 +61,7 @@
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The classifier/allocation caller path is independently compared in 128 executions. The 22-point response branch in 0x459940 is bounded against the original when supplied geometry is used; compact 8-point extraction and outer callback/event effects remain open.",
+    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The classifier/allocation caller path is independently compared in 128 executions. The downstream 0x459940 response now includes both 8- and 22-point geometry branches and matches 128 integrated direct calls. Outer callback/event effects remain open.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -84,9 +84,10 @@
   "0x459940": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The vertex-to-plane scan, candidate selection, penetration correction, cached 22-vertex translation, and surface impulse delegation are translated for caller-supplied geometry. 128 direct original calls compare position, cached vertex buffer, return value, linear velocity, and contact-record writes. The 8-point geometry extraction branch in 0x4596b0 and live caller event/audio state remain outside this translation.",
+    "scope": "The compact/full point extraction from 0x4596b0 is composed with the vertex-to-plane scan, candidate selection, penetration correction, cached 22-vertex translation, and surface impulse delegation. 128 direct original calls (64 compact 8-point and 64 full 22-point) compare position, cached vertex buffer, return value, linear velocity, and contact-record writes. Live caller event/audio state remains outside this translation.",
     "sources": [
       "client/collision_world_response.py",
+      "tools/collision_world_points_oracle.py",
       "client/geometry_transform.py",
       "client/collision_pair_response.py",
       "tests/test_collision_world_response.py",
@@ -101,6 +102,28 @@
       "tools/collision_world_response_oracle.py",
       "tests/test_collision_world_response.py",
       "tests/test_geometry_transform.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x4596b0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Both body point-set branches are translated: the default 66-float copy returns 22 points, while a zero contact counter plus abs(body+0xc4)>0.707 constructs the compact 24-float/8-point set from bounding coordinates and the trailing 12 stored floats. 256 direct calls compare returned count and every output float bit-exactly, with 128 cases per branch. Non-finite payload corner cases are not claimed.",
+    "sources": [
+      "client/collision_world_response.py",
+      "tests/test_collision_world_response.py",
+      "tools/collision_world_points_oracle.py",
+      "tools/collision_world_response_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_53c94a1e33be46add3041477a6f02e8aa1f014ecdc07e70294edccc7223a95fe"
+    ],
+    "verification_refs": [
+      "tools/collision_world_points_oracle.py",
+      "tests/test_collision_world_response.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
