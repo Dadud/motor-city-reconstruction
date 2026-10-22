@@ -2611,5 +2611,23 @@
       "ev_685145d3daf3f87b594e683803f22cd32a0d48d933ce79d4284d20d18de28f88",
       "ev_16c8798794d11884dd1d26f5fcdd79d5bc6c5c5c2b8ac33666e2d349158e7571"
     ]
+  },
+  "0x427d80": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Copies the exact 248-byte image at executable address 0x0083b830 to the writable global destination 0x0097c238. The source bytes and all destination bytes match the original 0x427d80 under bounded Unicorn emulation. The table meaning and consuming runtime behavior remain unknown.",
+    "sources": [
+      "client/track_template.py",
+      "tests/test_track_template.py",
+      "tools/track_template_oracle.py",
+      "docs/recovery/track-template.md"
+    ],
+    "evidence_ids": [
+      "ev_d0d13035ac8f2df45dbbf79c68ee6e8f7b7a0cefa9aa0a53306ab7bd3eee1974",
+      "ev_05e8bf8832128df93db1571e641d79ea25f2ab730d1eb3e5066469cf0971776f"
+    ],
+    "verification_refs": [
+      "tools/track_template_oracle.py"
+    ]
   }
 }
