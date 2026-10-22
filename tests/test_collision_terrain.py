@@ -12,7 +12,8 @@ from client.collision_terrain import (triangle_candidate_gate,
                                       specialized_quad_projection_gate,
                                       specialized_quad_projection_candidate,
                                       specialized_quad_height_gate,
-                                      sample_specialized_quad_heights)
+                                      sample_specialized_quad_heights,
+                                      terrain_contact_lever_arm)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -180,6 +181,12 @@ class TerrainTriangleGateTests(unittest.TestCase):
         self.assertEqual(settled.accepted_indices, (0, 1, 2))
         self.assertFalse(rising.candidate_accepted)
         self.assertEqual(rising.accepted_indices, ())
+
+    def test_contact_lever_arm_rotates_local_center_before_subtracting(self):
+        result = terrain_contact_lever_arm(
+            (12., -3., 8.), (1.5, -2., .25),
+            (0., 0., 1., 0., 1., 0., -1., 0., 0.), (12., 2., 8.))
+        self.assertEqual(result, (.25, 7., -1.5))
 
     def test_response_normal_is_upward_and_degenerate_is_zero(self):
         self.assertEqual(terrain_response_normal(self.triangle), (0., 1., 0.))

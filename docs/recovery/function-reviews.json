@@ -1120,6 +1120,16 @@
       "native/tests/contact_force_compare.cpp"
     ]
   },
+  "0x457910": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The point-to-center-of-mass lever arm helper is translated by terrain_contact_lever_arm. 515 direct original executions vary owner positions, local centers, arbitrary body bases and contact points; outputs match within max(2e-4, 2e-6 relative), with maximum absolute error 1.9073486328125e-6. This verifies only the supplied-record helper, not successful 0x54f2a0 contact selection or response.",
+    "sources": [
+      "client/collision_terrain.py",
+      "tests/test_collision_terrain.py",
+      "tools/terrain_contact_lever_oracle.py"
+    ]
+  },
   "0x51fc00": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",

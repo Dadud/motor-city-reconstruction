@@ -151,8 +151,13 @@ and clear the worker's 24-byte six-word record on each rejection. Run
 `python -m tools.terrain_specialized_height_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
 Evidence for the original worker is
 `ev_83bcd3e2b0527b9514e1e7da31cd7cdb3affb0a023a110e4700f17b7ec14fb30`.
-The worker's contact selection, response construction, body correction and
-successful return behavior remain open.
+The point-to-center-of-mass helper called once for each corner is also
+translated by `terrain_contact_lever_arm`. Its 515 direct original comparisons
+vary the position, local center, supplied body basis and point; maximum absolute
+error is `1.9073486328125e-6`. Run
+`python -m tools.terrain_contact_lever_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
+This recovers only the helper; the worker's contact selection, response
+construction, body correction and successful return behavior remain open.
 
 The three triangle tables at `0x88c9d4`, `0x88ca64` and `0x88c7f4` contain 12
 ordered triangles for shapes 0/2, 6 for shape 1, and 40 for shapes 3/4. Their

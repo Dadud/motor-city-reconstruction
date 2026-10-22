@@ -308,6 +308,32 @@ def specialized_quad_height_gate(vertices, surface_heights, object_heights,
                                         minimum <= f32(maximum_gap))
 
 
+def terrain_contact_lever_arm(owner_position, center_of_mass_local,
+                              body_to_world, point):
+    """Translate the point-to-center-of-mass transform used by ``0x457910``.
+
+    ``body_to_world`` is the owner's row-major 3x3 basis. The original first
+    rounds point-minus-owner-position to float32, then subtracts the rotated
+    local center of mass and stores each resulting component as float32.
+    """
+    if any(len(vector) != 3 for vector in
+           (owner_position, center_of_mass_local, point)):
+        raise ValueError('owner position, local center and point must be XYZ triples')
+    if len(body_to_world) != 9:
+        raise ValueError('body-to-world basis must contain nine values')
+    position = tuple(f32(value) for value in owner_position)
+    center = tuple(f32(value) for value in center_of_mass_local)
+    point = tuple(f32(value) for value in point)
+    matrix = tuple(f32(value) for value in body_to_world)
+    rotated_center = (
+        float(center[0]) * matrix[0] + float(center[1]) * matrix[3] + float(center[2]) * matrix[6],
+        float(center[0]) * matrix[1] + float(center[1]) * matrix[4] + float(center[2]) * matrix[7],
+        float(center[0]) * matrix[2] + float(center[1]) * matrix[5] + float(center[2]) * matrix[8],
+    )
+    return tuple(f32(float(f32(point[i] - position[i])) - rotated_center[i])
+                 for i in range(3))
+
+
 def _sample_candidate_planes(world, vertices, query_seed,
                              object_plane_normal, object_plane_point):
     if not isinstance(world, TrackSurfaceWorld):
