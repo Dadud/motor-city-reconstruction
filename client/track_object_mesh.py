@@ -65,5 +65,6 @@ def decode_track_object_group(group: TrackObjectGroup, uv_coordinates, *,
         name = (f'Track object {group.block_index}:'
                 f'{group.section_offset:#x}:{object_index}')
         parts.append(Part(name, origin, vertices,
-                          normals, tuple(triangles), vertex_colors))
+                          normals, tuple(triangles), vertex_colors,
+                          obj.descriptor[2] & 0xf0))
     return Model(tuple(parts), 0)

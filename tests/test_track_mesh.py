@@ -111,6 +111,25 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual(model.parts[0].origin, (10.0, 20.0, 30.0))
         self.assertEqual(model.parts[0].vertex_colors, (0x7f406fff,) * 4)
 
+    def test_object_detail_gate_matches_native_descriptor_nibble(self):
+        descriptor = bytearray(56)
+        descriptor[2] = 0x24
+        obj = TrackObject(bytes(descriptor), b'', (), (), ())
+        group = TrackObjectGroup(0, 0x640, (obj,))
+        part = decode_track_object_group(group, ()).parts[0]
+        self.assertEqual(part.native_detail_gate, 0x20)
+        self.assertFalse(part.visible_at_native_detail(0x20))
+        self.assertTrue(part.visible_at_native_detail(0x10))
+        self.assertTrue(part.visible_at_native_detail(0))
+        descriptor[2] = 4
+        always_visible = decode_track_object_group(
+            TrackObjectGroup(0, 0x640,
+                             (TrackObject(bytes(descriptor), b'', (), (), ()),)),
+            ()).parts[0]
+        self.assertTrue(always_visible.visible_at_native_detail(0xff))
+        with self.assertRaisesRegex(ValueError, 'unsigned byte'):
+            part.visible_at_native_detail(0x100)
+
     def test_object_animation_interpolates_and_loops_native_samples(self):
         animation = bytearray(8 + 2 * 20)
         struct.pack_into('<HH', animation, 4, 2, 4)

@@ -26,6 +26,13 @@ class Part:
     normals: tuple[tuple[float, float, float], ...]
     triangles: tuple[Triangle, ...]
     vertex_colors: tuple[int, ...] = ()
+    native_detail_gate: int = 0
+
+    def visible_at_native_detail(self, selector):
+        """Apply the native descriptor gate from renderer dispatch 0x42b1d0."""
+        if type(selector) is not int or not 0 <= selector <= 0xff:
+            raise ValueError('native detail selector must be an unsigned byte')
+        return self.native_detail_gate == 0 or selector < self.native_detail_gate
 
 
 @dataclass(frozen=True)
