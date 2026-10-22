@@ -12,6 +12,8 @@ from client.body_constructor import construct_body
 from client.collision_pair_candidate import (dynamic_pair_candidate,
                                              resolve_dynamic_pair_retries)
 from client.collision_pair_geometry import OrientedCollisionBox
+from client.collision_impulse import CollisionInertia
+from client.collision_pair_response import CollisionImpactBody, resolve_pair_impulse
 from client.collision_pair_solver import CollisionPairBody
 from tools.native_oracle import DynoOracle
 
@@ -20,6 +22,8 @@ OWNER = 0x71008000
 RECORDS_POINTER = 0x0097C410
 RECORD = 0x71002000
 COUNT = 0x0097C398
+IMPACT_POINT = 0x0098CD90
+FALLBACK_GLOBALS = (0x0098CDE0, 0x0098CDE4, 0x0098CDE8)
 
 
 def _record(origin, local, radius, flags=(True, True), matrix=None):
@@ -34,6 +38,25 @@ def _record(origin, local, radius, flags=(True, True), matrix=None):
     return bytes(data)
 
 
+def _impact_body(address, image):
+    inertia = CollisionInertia(
+        struct.unpack_from('<f', image, 0x54)[0],
+        struct.unpack_from('<3f', image, 0x2FC),
+        struct.unpack_from('<9f', image, 0x9C),
+        struct.unpack_from('<9f', image, 0x78))
+    return CollisionImpactBody(
+        address, struct.unpack_from('<3f', image, 8),
+        struct.unpack_from('<3f', image, 0x14),
+        struct.unpack_from('<3f', image, 0x38),
+        struct.unpack_from('<3f', image, 0x5C), inertia,
+        struct.unpack_from('<f', image, 0x50)[0], mode=image[5],
+        response_coefficient=struct.unpack_from('<f', image, 0x68)[0],
+        gate=struct.unpack_from('<f', image, 0x6C)[0],
+        peer_gate=struct.unpack_from('<f', image, 0x3C0)[0],
+        contact_record=bytes(image[:0x400]),
+        embedded_contact_pointer=struct.unpack_from('<I', image, 0x404)[0])
+
+
 def compare(executable, count=128, execute_pair_resolver=False):
     if type(count) is not int or count < 1:
         raise ValueError('case count must be positive')
@@ -42,9 +65,11 @@ def compare(executable, count=128, execute_pair_resolver=False):
     cpu = oracle.cpu
     reached_filter = 0
     response_calls = 0
+    response_cases = []
     total_response_calls = 0
     retry_cases = 0
     total_retry_attempts = 0
+    response_impacts = 0
     filter_results = []
     faults = []
 
@@ -67,6 +92,16 @@ def compare(executable, count=128, execute_pair_resolver=False):
             machine.reg_write(oracle.reg.UC_X86_REG_EIP, ret)
         elif address == 0x458530:
             response_calls += 1
+            sp = machine.reg_read(oracle.reg.UC_X86_REG_ESP)
+            owner_ptr, target_ptr, point_ptr, normal_ptr = struct.unpack(
+                '<4I', machine.mem_read(sp + 4, 16))
+            response_cases.append((
+                owner_ptr, target_ptr,
+                bytes(machine.mem_read(owner_ptr, 0x408)),
+                bytes(machine.mem_read(target_ptr, 0x408)),
+                struct.unpack('<3f', machine.mem_read(point_ptr, 12)),
+                struct.unpack('<3f', machine.mem_read(normal_ptr, 12)),
+                struct.unpack('<2f', machine.mem_read(0x0089C070, 8))))
 
     cpu.hook_add(UC_HOOK_CODE, stop_pair_filter)
     cpu.hook_add(UC_HOOK_MEM_INVALID,
@@ -115,6 +150,8 @@ def compare(executable, count=128, execute_pair_resolver=False):
             body = bytearray(0x500)
             struct.pack_into('<f', body, 0xD8, .75)
         struct.pack_into('<3f', body, 8, *position)
+        if execute_pair_resolver and index == 0:
+            struct.pack_into('<3f', body, 0x14, 1., 0., 0.)
         struct.pack_into('<f', body, 0x50, 1.)
         struct.pack_into('<I', body, 0x3C4, 0xFFFFFFFF)
         translated = dynamic_pair_candidate(body, candidate_record)
@@ -143,6 +180,12 @@ def compare(executable, count=128, execute_pair_resolver=False):
         cpu.mem_write(COUNT, struct.pack('<I', 1))
         cpu.mem_write(RECORDS_POINTER, struct.pack('<I', RECORD))
         cpu.mem_write(RECORD, candidate_record)
+        response_cases.clear()
+        if execute_pair_resolver:
+            cpu.mem_write(IMPACT_POINT, struct.pack('<3f', .5, 0., 0.))
+            fallback = (-1., 0., 0.) if index == 0 else (0., 0., 0.)
+            for address, value in zip(FALLBACK_GLOBALS, fallback):
+                cpu.mem_write(address, struct.pack('<f', value))
         try:
             oracle.call(0x45CF70, (OWNER,), instruction_limit=1_000_000)
         except Exception as error:
@@ -180,12 +223,49 @@ def compare(executable, count=128, execute_pair_resolver=False):
                     f'case {index}: native response calls {response_calls} '
                     f'!= {int(retry_result.response_due)}')
             total_response_calls += response_calls
+            for owner_ptr, target_ptr, owner_image, target_image, point, normal, coeffs in response_cases:
+                expected = resolve_pair_impulse(
+                    _impact_body(owner_ptr, owner_image),
+                    _impact_body(target_ptr, target_image), point, normal, *coeffs)
+                response_impacts += int(expected.collided)
+                native_owner = bytes(cpu.mem_read(owner_ptr, 0x408))
+                native_target = bytes(cpu.mem_read(target_ptr, 0x408))
+                for label, actual, expected_body in (
+                        ('owner', native_owner, expected.owner),
+                        ('target', native_target, expected.target)):
+                    if label == 'owner':
+                        expected_record = bytearray(expected_body.contact_record)
+                        # 0x45cf70 clears the owner contact-link word after response.
+                        struct.pack_into('<I', expected_record, 0x3C4, 0)
+                    else:
+                        expected_record = expected_body.contact_record
+                    for offset, length in ((0x14, 12), (0x38, 12), (0x3C4, 0x3C)):
+                        actual_part = actual[offset:offset + length]
+                        expected_part = (bytes(expected_record[offset:offset + length])
+                                         if offset == 0x3C4 else
+                                         struct.pack('<3f', *(expected_body.linear_velocity
+                                                              if offset == 0x14 else
+                                                              expected_body.angular_turn_velocity)))
+                        if offset == 0x3C4:
+                            if actual_part != expected_part:
+                                raise AssertionError(
+                                    f'case {index}: {label} integrated response record differs')
+                        else:
+                            values_a = struct.unpack('<3f', actual_part)
+                            values_b = struct.unpack('<3f', expected_part)
+                            if any(abs(a - b) > max(3e-5, abs(b) * 5e-6)
+                                   for a, b in zip(values_a, values_b)):
+                                raise AssertionError(
+                                    f'case {index}: {label} integrated response velocity differs')
     return {'entry': '0x45cf70', 'cases': count,
             'pair_filter_calls': reached_filter,
             'response_calls': total_response_calls if execute_pair_resolver else None,
             'retry_cases': retry_cases if execute_pair_resolver else None,
             'retry_attempts': total_retry_attempts if execute_pair_resolver else None,
-            'scope': 'candidate broadphase, pair-solver retries, and response scheduling; original x86 execution'}
+            'response_impacts': response_impacts if execute_pair_resolver else None,
+            'scope': ('candidate broadphase, pair-solver retries, and integrated pair response; original x86 execution'
+                      if execute_pair_resolver else
+                      'candidate broadphase and first-rejection path; original x86 execution')}
 
 
 if __name__ == '__main__':

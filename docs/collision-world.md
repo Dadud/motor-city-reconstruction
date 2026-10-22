@@ -70,16 +70,16 @@ The direct original harness executes the real `0x45cf70` path for 512 varied
 records and body positions; 134 reach `0x45af30`, and all eligibility, boundary
 and first-rejection outcomes match. With `--execute-pair-resolver`, the same
 original path runs the real `0x45af30` resolver: 35 pairs produced 83 calls and
-33 response calls, matching the translated retry loop and final body centers.
-This includes the 33-call cap when a coincident pair cannot separate. The
-response function's state effects are independently translated and checked;
-this candidate-pass oracle checks response scheduling only, not those effects
-in the enclosing pass. Dynamic candidate-record production remains
-untranslated. Original function dossier:
+33 calls to `0x458530`, matching the translated retry loop and final body
+centers. This includes the 33-call cap when a coincident pair cannot separate.
+The harness also seeds one approaching pair and compares the integrated
+response velocities and reciprocal contact records with the translated
+`0x458530`; one of the 33 response calls applies a nonzero impulse. Dynamic
+candidate-record production remains untranslated. Original function dossier:
 `ev_bc440ea786fb8140385b6eb99b24d3af70ca0fa66b5794d68152e16e25b75471`.
 Run `python -m tools.collision_pair_candidate_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 512`
 for the broadphase, or add `--execute-pair-resolver --cases 128` to check
-resolver retries and response scheduling against native execution.
+resolver retries and integrated pair response against native execution.
 
 ## Scheduler placement
 
