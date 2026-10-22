@@ -81,8 +81,8 @@ def mark_spatial_hash_neighbors(bodies, hash_cells, neighbor_cells):
         if neighbors is None or len(neighbors) != 8:
             raise ValueError('each active body needs eight observed neighbor slots')
         for group in (cell, *neighbors):
-            if type(group) is not int or group < -1 or group >= 300:
-                raise ValueError('neighbor cells must be -1 or a valid hash index')
+            if type(group) is not int or not -0x80000000 <= group < 300:
+                raise ValueError('neighbor cells must be signed int32 hash indices')
             if group >= 0:
                 marked += mark_sphere_neighbors(owner, hash_cells.get(group, ()))
     return marked
@@ -122,11 +122,12 @@ def rebuild_collision_spatial_flags(bodies, active_roster, neighbor_cells,
             continue
         if _get_f32(body, 0x6c) != 0.0:
             body[4] = 0
-        low_motion = (_get_f32(body, 0x3b4) < _f32(.15) and
-                      _get_f32(body, 0x18) <= _f32(.30625) and
-                      abs(_get_f32(body, 0x3c)) < _f32(.05) and
-                      abs(_get_f32(body, 0x38)) < _f32(.02) and
-                      abs(_get_f32(body, 0x40)) < _f32(.02))
+        low_motion = not (
+            _f32(.15) <= _get_f32(body, 0x3b4) or
+            _f32(.30625) < _get_f32(body, 0x18) or
+            _f32(.05) <= abs(_get_f32(body, 0x3c)) or
+            _f32(.02) <= abs(_get_f32(body, 0x38)) or
+            _f32(.02) <= abs(_get_f32(body, 0x40)))
         if (_i16(body, 0x3bc) == 0 and low_motion and
                 _get_f32(body, 0x350) < _get_f32(body, 0xd8)):
             body[4] = 0

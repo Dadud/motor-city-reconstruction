@@ -45,7 +45,7 @@ class CollisionSpatialHashTests(unittest.TestCase):
         missing_cell_only = body((0., 0., 0.), 100.)
         cells = {2: (owner, same_cell), 3: (neighbor,), 4: (missing_cell_only,)}
         before = mark_spatial_hash_neighbors(
-            (owner,), cells, {2: (3, -1, -1, -1, -1, -1, -1, -1)})
+            (owner,), cells, {2: (3, -1, -2, -1, -1, -1, -1, -1)})
         self.assertEqual(before, 2)
         self.assertEqual((same_cell[4], neighbor[4], missing_cell_only[4]), (1, 1, 0))
 
