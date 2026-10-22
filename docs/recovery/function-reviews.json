@@ -2522,5 +2522,41 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x5529a0": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The recursive four-word cell-node relocator is translated with a sentinel leaf/count layout, recursive child pointer patching, explicit depth/size/address bounds, and source-buffer preservation. Composed through 0x552a00, all mutated atlas payload bytes and final cursor match the original client for all 27 installed Tr.frd assets. Leaf IDs remain opaque; downstream meanings and query behavior are outside this loader comparison.",
+    "sources": [
+      "client/world_grid.py",
+      "client/track_spatial.py",
+      "tests/test_world_grid.py",
+      "tools/world_grid_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "verification_refs": [
+      "tools/world_grid_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x552a00": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The bounds copy, float32 world-to-grid scales, 64 KiB cell-table relocation, and payload cursor behavior are translated. All table and payload bytes, bounds, scale values and final cursor match the original executable for all 27 installed Tr.frd assets after the existing material/UV decoder supplies the atlas start. The surrounding 0x428150 loader and later world-query consumers remain incomplete.",
+    "sources": [
+      "client/world_grid.py",
+      "client/track_mesh.py",
+      "tests/test_world_grid.py",
+      "tools/world_grid_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "verification_refs": [
+      "tools/world_grid_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }

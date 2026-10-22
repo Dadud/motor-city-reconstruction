@@ -572,6 +572,25 @@ with its explicit child and global-state boundaries in
 unit coverage but no direct original-execution comparison yet; this does not
 complete the collision chain above.
 
+## Track world-grid relocation
+
+The track mesh decoder returns the byte immediately after its UV/material
+tables. That cursor is the input to the original `0x552a00` loader, which
+copies the four-float bounds and 64 KiB cell table into global state, computes
+the X/Z scale values, then calls recursive helper `0x5529a0` to relocate
+pointer/count nodes and leaf identifier arrays in the remaining payload. The
+bounded translation is in [`client/world_grid.py`](../client/world_grid.py);
+`decode_track_with_spatial` in [`client/track_mesh.py`](../client/track_mesh.py)
+joins the existing mesh and query-side spatial decoders.
+
+`tools/world_grid_oracle.py` compared the Python mutation against the original
+executable for all 27 installed `Tr.frd` tracks. Each comparison matched all
+65,536 table bytes, all mutated payload bytes, bounds, scale floats, and the
+final cursor. The corpus manifest is retained locally at
+`evidence/session/world-grid-track-corpus.json`. This verifies loader relocation
+for the installed assets; leaf identifiers remain opaque and their downstream
+collision meaning and complete world-query integration are still open.
+
 ## Sampled world vertex response
 
 The response routine `0x459940` receives a plane normal, a plane point, a

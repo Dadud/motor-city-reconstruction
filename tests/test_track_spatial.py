@@ -1,6 +1,7 @@
 import struct
 import unittest
 from client.track_spatial import Node, SpatialIndex, decode_spatial
+from client.track_mesh import decode_track_with_spatial
 
 
 def fixture():
@@ -11,6 +12,21 @@ def fixture():
 
 
 class SpatialTests(unittest.TestCase):
+    def test_mesh_spatial_handoff_api(self):
+        data = fixture()
+        # A minimal valid FRD header/track is impractical here; exercise the
+        # public handoff with patched mesh decoder to isolate trailer routing.
+        import client.track_mesh as mesh
+        original = mesh.decode_mesh
+        try:
+            mesh.decode_mesh = lambda source, materials=False: ('mesh', 0)
+            model, spatial, end = decode_track_with_spatial(data)
+        finally:
+            mesh.decode_mesh = original
+        self.assertEqual(model, 'mesh')
+        self.assertEqual(end, len(data))
+        self.assertEqual(spatial.cells[0].children[0].identifiers, (7, 9))
+
     def test_query_axis_order_quadrants_and_bounds(self):
         empty = Node((), ())
         cells = [empty]*4096

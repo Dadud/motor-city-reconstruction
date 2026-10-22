@@ -119,3 +119,16 @@ def decode_mesh(data, materials=False, surface_records=None):
             resolved.append(replace(part,triangles=tuple(triangles)))
         parts=resolved
     return Model(tuple(parts),0),cursor
+
+
+def decode_track_with_spatial(data):
+    """Decode visible mesh and the trailing native spatial grid in one pass.
+
+    The returned cursor is the byte immediately after the spatial trailer;
+    callers can use it to detect versioned or additional track sections.
+    """
+    from .track_spatial import decode_spatial
+
+    model, spatial_offset = decode_mesh(data, materials=True)
+    spatial, end = decode_spatial(data, spatial_offset)
+    return model, spatial, end
