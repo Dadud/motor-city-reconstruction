@@ -50,7 +50,9 @@ def decode_mesh(data, materials=False, surface_records=None):
         for i in range(count):
             record=start+i*56
             animation,vertices,faces=(count_at(record+x) for x in (28,36,48))
-            take(animation+vertices*16+faces*30+(faces & 1)*2)
+            take(animation+vertices*16+faces*30)
+            if faces & 1:
+                take(2)
 
     parts=[]
     for block in range(track.block_count):
