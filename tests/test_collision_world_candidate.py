@@ -1,7 +1,10 @@
 import struct
 import unittest
 
-from client.collision_world_candidate import decode_collision_world_sample
+from client.body_constructor import construct_body
+from client.collision_world_candidate import (CollisionWorldSample,
+                                              decode_collision_world_sample,
+                                              world_sample_overlaps_body)
 
 
 def record(position=(0, 0, 0), vertical=0, kind=0):
@@ -13,6 +16,10 @@ def record(position=(0, 0, 0), vertical=0, kind=0):
 
 
 class CollisionWorldSampleTests(unittest.TestCase):
+    def setUp(self):
+        self.body = bytearray(construct_body(bytearray(0x2000), 0x1000, 1.,
+                                             (1., 1., 1.), 0, 0))
+
     def test_all_packed_kinds_select_their_scale_and_radius(self):
         expected = ((0, 1., 3.), (1, .5, 12.),
                     (2, 2., 2.), (3, 1., 1.))
@@ -35,6 +42,18 @@ class CollisionWorldSampleTests(unittest.TestCase):
     def test_record_must_cover_the_complete_packed_sample(self):
         with self.assertRaises(ValueError):
             decode_collision_world_sample(bytes(0x13))
+
+    def test_world_candidate_passes_radius_and_oriented_extent_gates(self):
+        sample = CollisionWorldSample((0., 0., 0.), 1., 3., 0)
+        self.assertTrue(world_sample_overlaps_body(self.body, sample))
+        self.assertFalse(world_sample_overlaps_body(
+            self.body, CollisionWorldSample((4., 0., 0.), 3., 3., 0)))
+
+    def test_world_candidate_uses_strict_bounds(self):
+        self.assertFalse(world_sample_overlaps_body(
+            self.body, CollisionWorldSample((0., 0., 0.), 10., 0., 0)))
+        self.assertFalse(world_sample_overlaps_body(
+            self.body, CollisionWorldSample((4., 0., 0.), 3., 3., 0)))
 
 
 if __name__ == '__main__':

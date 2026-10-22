@@ -84,16 +84,20 @@ resolver retries and integrated pair response against native execution.
 ## Sampled world-contact pass
 
 `0x45d1f0` scans the sampled candidate records owned by the selected world
-object, checks horizontal distance and projections against the object's three
-local extents, then dispatches on the candidate classification from `0x42d9f0`.
-Its pure decoder `0x42db70` reads signed 16.16 coordinates from each 0x14-byte
-record, converts a signed short field according to the low two type bits, and
-returns a type-dependent radius (3, 12, 2, or 1). That decoder is translated in
+object. The translated prefilter checks a horizontal radius, a vertical
+threshold, and projections against the object's three local extents expanded
+by the decoded vertical value. Its pure decoder `0x42db70` reads signed 16.16
+coordinates from each 0x14-byte record, converts a signed short field according
+to the low two type bits, and returns a type-dependent radius (3, 12, 2, or 1).
+That decoder is translated in
 [`client/collision_world_candidate.py`](../client/collision_world_candidate.py)
 and matches 256 original calls, including 204 valid indices, in
 [`tools/collision_world_sample_oracle.py`](../tools/collision_world_sample_oracle.py).
-The enclosing scan, stateful classification, callbacks, and terrain/pair
-response branches remain to be translated. REA evidence for the decoder is
+The `0x45d1f0` prefilter matches 512 original calls, with 348 reaching a stubbed
+`0x42d9f0` classifier, in
+[`tools/collision_world_prefilter_oracle.py`](../tools/collision_world_prefilter_oracle.py).
+The stateful classifier, callbacks, and terrain/pair response branches remain
+to be translated. REA evidence for the decoder is
 `ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817`; the
 parent scan dossier is `ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3`.
 

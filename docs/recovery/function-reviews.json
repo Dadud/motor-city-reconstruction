@@ -1,4 +1,27 @@
 {
+  "0x45d1f0": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The stateful classifier, callbacks, and contact-response branches remain open.",
+    "sources": [
+      "client/collision_world_candidate.py",
+      "tests/test_collision_world_candidate.py",
+      "tools/collision_world_sample_oracle.py",
+      "tools/collision_world_prefilter_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3"
+    ],
+    "verification_refs": [
+      "tools/collision_world_sample_oracle.py",
+      "tools/collision_world_prefilter_oracle.py",
+      "tests/test_collision_world_candidate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
   "0x42db70": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
