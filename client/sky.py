@@ -18,6 +18,15 @@ _GRID_SIZE = 26
 _NATIVE_STEP = struct.unpack('<f', struct.pack('<f', 0.03846154))[0]
 
 
+def sky_material_triangle_indices():
+    """Return the native 25x25 grid's interleaved row-index pairs."""
+    indices = []
+    for row in range(1, 26):
+        for column in range(25):
+            indices.extend((row * 26 - 26 + column, row * 26 + column))
+    return tuple(indices)
+
+
 @dataclass(frozen=True)
 class SkyLookup:
     """A native 26×26 RGBA lookup texture and its table position."""

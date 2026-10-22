@@ -4,7 +4,8 @@ import unittest
 from pathlib import Path
 
 from client.assets import Assets
-from client.sky import load_sky_resources, sky_resource_names
+from client.sky import (load_sky_resources, sky_resource_names,
+                        sky_material_triangle_indices)
 
 
 def fsh(entries):
@@ -25,6 +26,13 @@ def fsh(entries):
 
 
 class SkyResourceTests(unittest.TestCase):
+    def test_material_triangle_index_topology(self):
+        indices = sky_material_triangle_indices()
+        self.assertEqual(len(indices), 25 * 25 * 2)
+        self.assertEqual(indices[:8], (0, 26, 1, 27, 2, 28, 3, 29))
+        self.assertEqual(indices[-2:], (648, 674))
+        self.assertTrue(all(0 <= index < 26 * 26 for index in indices))
+
     def test_exact_native_table_order_for_each_mode(self):
         self.assertEqual(sky_resource_names(),
                          ('CLDD', 'CLD2', 'CHRD', 'SUND', 'VAMD', 'VMD2', 'HDC%d', None))

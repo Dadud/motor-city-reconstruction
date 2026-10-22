@@ -72,6 +72,26 @@ class DynoOracle:
                        for address in addresses)
         return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), result
 
+    def sky_material_indices(self):
+        """Capture the enabled 25x25 index table emitted by 0x4943f0."""
+        self._reset()
+        block = bytearray(0xc138)
+        struct.pack_into('<I', block, 0xc0c4, 1)
+        struct.pack_into('<f', block, 0xc120, 0.125)
+        self.cpu.mem_write(self.inputs, bytes(block))
+        stack = self.frame-0x1000
+        self.cpu.mem_write(stack, struct.pack('<I', self.stop))
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESP, stack)
+        self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
+        code = b'\x68'+struct.pack('<I', self.inputs)+b'\xe8'+b'\0'*4+b'\x83\xc4\x04\xc3'
+        call_at = self.stub+5
+        code = code[:6]+struct.pack('<i', 0x4943f0-(call_at+5))+code[10:]
+        self.cpu.mem_write(self.stub, code)
+        if hasattr(self.cpu, 'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self._run(self.stub, self.stop, timeout=0, count=100_000_000)
+        return bytes(self.cpu.mem_read(self.inputs+0x9e70, 25*0x138))
+
     def call(self, entry, arguments=(), *, tail=b'', cleanup=None,
              this_pointer=None, instruction_limit=4096):
         """Call a cdecl routine in the original with planted arguments.
