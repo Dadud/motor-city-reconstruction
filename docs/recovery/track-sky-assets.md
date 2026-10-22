@@ -32,9 +32,13 @@ deterministic 25×25 cell index table is now available through
 `client.sky.sky_material_triangle_indices`; the original writes each row at a
 `0x138`-byte stride, leaving `0x70` bytes after its 50 indices. The full native
 buffer matches under the bounded original-execution comparison. The random
-height generation, normalization, repeated neighborhood smoothing, color
-packing and mesh-vertex updates remain untranslated. The shared generator at
-`0x6f0fa0` is separately translated and compared across 1,024 states.
+height generation and signed-square-root normalization are now translated and
+compared at four parameter sets: 2,704 raw values and 2,704 normalized values
+per stage, with exact raw floats and zero observed normalization error. The
+random field is stored transposed (`column * 26 + row`). Repeated neighborhood
+smoothing, color packing and mesh-vertex updates remain untranslated. The
+shared generator at `0x6f0fa0` is separately translated and compared across
+1,024 states.
 
 Evidence on `mcity.exe` SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`, Ghidra
@@ -51,3 +55,8 @@ Evidence on `mcity.exe` SHA-256
 - Integer clamp helper `0x6f1380`: `ev_7be2f31f8590766654160b7b92edb80f9d6d801c6d79d659eac94b924c1ba564`
 - Procedural sky-material kernel `0x4943f0`: `ev_9de9d6afa83b7c0997de55c52f19572932b4d8059d0ad358066f78ff80844c92`
 - Shared random generator `0x6f0fa0`: `ev_1a069217dbc28f2f1f5ade3b367ef667595ba5f70dd491c621a1b5ea1326a625`
+
+The staged original comparison for the raw and normalized 26×26 local buffers
+is reproducible with `python -m tools.sky_material_grid_oracle
+"/path/to/mcity.exe"`. It stops the original x86 routine at its corresponding
+instruction boundaries before neighborhood smoothing.

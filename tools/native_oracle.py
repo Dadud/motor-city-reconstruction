@@ -92,6 +92,40 @@ class DynoOracle:
         self._run(self.stub, self.stop, timeout=0, count=100_000_000)
         return bytes(self.cpu.mem_read(self.inputs+0x9e70, 25*0x138))
 
+    def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
+                                 row_scale, column_scale, random_state):
+        """Capture the kernel's local 26x26 grid at a specific verified stage."""
+        stops = {'raw': 0x4945f5, 'normalized': 0x49466f}
+        if stage not in stops:
+            raise ValueError('sky material stage must be raw or normalized')
+        if (len(random_state) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff
+                                          for word in random_state)):
+            raise ValueError('random state must contain six unsigned words')
+        self._reset()
+        block = bytearray(0xc138)
+        struct.pack_into('<I', block, 0xc0c4, 1)
+        struct.pack_into('<i', block, 0xc0c8, upper_bound)
+        struct.pack_into('<I', block, 0xc0d0, modulus)
+        struct.pack_into('<f', block, 0xc0fc, 0.0)
+        struct.pack_into('<f', block, 0xc100, 0.0)
+        struct.pack_into('<f', block, 0xc118, column_scale)
+        struct.pack_into('<f', block, 0xc11c, row_scale)
+        struct.pack_into('<f', block, 0xc120, angle)
+        self.cpu.mem_write(self.inputs, bytes(block))
+        for address, word in zip((0x8c89d0, 0x8c89d4, 0x8c89d8,
+                                  0x8c89dc, 0x8c89e0, 0x8c89e4), random_state):
+            self.cpu.mem_write(address, struct.pack('<I', word))
+        stack = self.frame
+        self.cpu.mem_write(stack, struct.pack('<II', self.stop, self.inputs))
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESP, stack)
+        self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
+        if hasattr(self.cpu, 'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self._run(0x4943f0, stops[stage], timeout=0, count=100_000_000)
+        frame = self.cpu.reg_read(self.reg.UC_X86_REG_EBP)
+        raw = bytes(self.cpu.mem_read(frame-0xae0, 26*26*4))
+        return struct.unpack('<676f', raw)
+
     def call(self, entry, arguments=(), *, tail=b'', cleanup=None,
              this_pointer=None, instruction_limit=4096):
         """Call a cdecl routine in the original with planted arguments.

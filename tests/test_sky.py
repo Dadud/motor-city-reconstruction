@@ -5,7 +5,9 @@ from pathlib import Path
 
 from client.assets import Assets
 from client.sky import (load_sky_resources, sky_resource_names,
-                        sky_material_triangle_indices)
+                        sky_material_triangle_indices,
+                        sky_material_normalize_grid, sky_material_random_grid)
+from client.random_state import RandomState
 
 
 def fsh(entries):
@@ -26,6 +28,23 @@ def fsh(entries):
 
 
 class SkyResourceTests(unittest.TestCase):
+    def test_material_random_grid_uses_native_transposed_storage(self):
+        seed = (0xf22d0e56, 0x883126e9, 0xc624dd2f,
+                0x0702c49c, 0x9e353f7d, 0x6fdf3b64)
+        state = RandomState(seed)
+        grid = sky_material_random_grid(state, upper_bound=64, modulus=8)
+        self.assertEqual((grid[0], grid[26], grid[52], grid[1]),
+                         (59.0, 59.0, 64.0, 58.0))
+        self.assertEqual(len(grid), 676)
+
+    def test_material_height_normalization(self):
+        grid = [128.0] * 676
+        grid[0], grid[1], grid[2] = 0.0, 64.0, 255.0
+        normalized = sky_material_normalize_grid(grid)
+        self.assertEqual(normalized[0], 0.0)
+        self.assertAlmostEqual(normalized[1], 37.3438835, places=5)
+        self.assertGreater(normalized[2], 254.0)
+
     def test_material_triangle_index_topology(self):
         indices = sky_material_triangle_indices()
         self.assertEqual(len(indices), 25 * 25 * 2)

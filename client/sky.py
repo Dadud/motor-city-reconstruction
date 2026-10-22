@@ -1,7 +1,9 @@
 """Translate the 0x494070 and 0x4940f0 track sky initialization path."""
 from dataclasses import dataclass
+import math
 import struct
 
+from .random_state import RandomState
 from .textures import Texture, decode_fsh
 
 
@@ -25,6 +27,36 @@ def sky_material_triangle_indices():
         for column in range(25):
             indices.extend((row * 26 - 26 + column, row * 26 + column))
     return tuple(indices)
+
+
+def sky_material_random_grid(random_state, *, upper_bound, modulus):
+    """Produce the row-major 26×26 random height field from 0x4943f0."""
+    if not isinstance(random_state, RandomState):
+        raise TypeError('random_state must be a RandomState')
+    if (type(upper_bound) is not int or type(modulus) is not int or
+            not 0 <= upper_bound <= 0x7fffffff or not 0 <= modulus <= 0xffffffff):
+        raise ValueError('height bound and random modulus must fit native integer fields')
+    values = [0.0] * (26 * 26)
+    for row in range(26):
+        for column in range(26):
+            value = (upper_bound if modulus == 0 else
+                     upper_bound - random_state.next_u32() % modulus)
+            values[column * 26 + row] = _f32(value)
+    return tuple(values)
+
+
+def sky_material_normalize_grid(values):
+    """Apply the native signed-square-root contrast transform to 676 values."""
+    if len(values) != 26 * 26:
+        raise ValueError('sky material height grid must contain 676 values')
+    result = []
+    for value in values:
+        delta = _f32(_f32(value) - 128.0)
+        normalized = _f32(delta * _f32(1.0 / 128.0))
+        sign = -1.0 if normalized < 0.0 else 1.0
+        signed_root = sign * math.sqrt(abs(normalized))
+        result.append(_f32((signed_root + 1.0) * 0.5 * 255.0))
+    return tuple(result)
 
 
 @dataclass(frozen=True)
