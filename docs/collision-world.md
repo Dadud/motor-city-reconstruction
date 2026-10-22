@@ -446,6 +446,21 @@ producer body ran with fixed-address allocation and exact-range zeroing bridges;
 allocator policies and upstream candidate roster production remain explicit
 runtime inputs.
 
+Its downstream spatial marking helpers are translated in
+[`client/collision_spatial_hash.py`](../client/collision_spatial_hash.py).
+The `0x426af0` radius predicate and `0x426b40` linked-cell walk match 128 and
+256 controlled original calls, respectively. The `0x426bc0` pass scans each
+active body's own hash bucket and eight signed neighbor slots, marking inactive
+overlapping objects; 128 original calls over 816 body records matched all
+record bytes. The complete `0x426770` rebuild now composes those gates with the
+body sleep filters, head-inserted hash links, active-roster pass, dynamic
+candidate rows, nine-cell marking pass, and inactive-body cache clearing. Its
+original-entry harness compared all bytes of 696 body records over 128
+supplied-world cases, including 380 active-roster entries and 192 dynamic
+candidates. The body array, roster, neighbor cells and candidate table remain
+explicit runtime inputs; their producers and world-scale tick integration are
+still open.
+
 The response child `0x459b90` is translated in
 [`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
 It transforms the body's 8- or 22-point set, selects the deepest eligible

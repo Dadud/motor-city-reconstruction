@@ -2346,5 +2346,85 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x426af0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The three-axis center distance is compared inclusively to the squared sum of radii with original single-precision behavior. 128 direct original calls matched the translated predicate across targeted and randomized cases.",
+    "sources": [
+      "client/collision_spatial_hash.py",
+      "tests/test_collision_spatial_hash.py",
+      "tools/collision_spatial_hash_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_7d4538a1dbc7a026bffed7e6f2daae6f257d4164e6e8931aee33be4550864407"
+    ],
+    "verification_refs": [
+      "tools/collision_spatial_hash_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x426b40": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The linked-cell walk skips the owner and already-active candidates, then marks inactive candidates whose center distance is within the summed radii. 256 direct original calls over 1,392 candidate bodies matched every body byte, including 548 active-flag updates.",
+    "sources": [
+      "client/collision_spatial_hash.py",
+      "tests/test_collision_spatial_hash.py",
+      "tools/collision_spatial_hash_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_a1c440e942e3928af467b22a6aa485e965ff0cdccb4fc604306ea13c60feb449"
+    ],
+    "verification_refs": [
+      "tools/collision_spatial_hash_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x426bc0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The active-object pass scans its own spatial bucket and eight signed neighbor slots through the supplied hash heads, marking overlapping inactive records. 128 direct original calls across 816 body records matched every record byte; body roster, bucket chains and cell-neighbor records are explicit inputs.",
+    "sources": [
+      "client/collision_spatial_hash.py",
+      "tests/test_collision_spatial_hash.py",
+      "tools/collision_spatial_hash_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_0e0add763e33a20bfede8e1e81375dbb629bfc34c980e8dfe1d565c37ec88abc"
+    ],
+    "verification_refs": [
+      "tools/collision_spatial_hash_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x426770": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The full spatial-flag rebuild composes active-record sleep gates, 300-entry head insertion, active roster same-cell and eight-cell scans, dynamic-candidate gates and sphere tests, the nine-cell active pass, and inactive motion-cache clearing. 128 original entry executions compared every byte in 696 body records, 380 active-roster entries and 192 dynamic candidate rows. Body array, roster pointers, neighbor-cell table and candidate rows are supplied explicitly; their producers and world-scale tick integration remain outside this function translation.",
+    "sources": [
+      "client/collision_spatial_hash.py",
+      "tests/test_collision_spatial_hash.py",
+      "tools/collision_spatial_builder_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_8581eb3b261d59aa5ffad74fb50114919d5189dc8c001ec7a9ab43a4c3acbb0d"
+    ],
+    "verification_refs": [
+      "tools/collision_spatial_builder_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }
