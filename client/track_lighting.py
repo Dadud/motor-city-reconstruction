@@ -40,4 +40,3 @@ def read_object_color_percentages(path):
                     raise ValueError(f'invalid {key} value in {path}') from exc
                 values[key] = min(200, max(0, number))
     return values['ambientred'], values['ambientgreen'], values['ambientblue']
-
