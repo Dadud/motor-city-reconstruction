@@ -235,6 +235,16 @@ class TerrainContactVelocityResult:
 
 
 @dataclass(frozen=True)
+class SpecializedQuadContactSelection:
+    point_velocity_dots: tuple
+    predicted_gaps: tuple
+    accepted_indices: tuple
+    source_points: tuple
+    adjusted_points: tuple
+    candidate_accepted: bool
+
+
+@dataclass(frozen=True)
 class TerrainImpactResult:
     linear_velocity: tuple
     angular_turn_velocity: tuple
@@ -455,6 +465,61 @@ def terrain_contact_velocity_gate(vertices, normals, position, linear_velocity,
     selected = tuple(accepted)
     return TerrainContactVelocityResult(tuple(dots), tuple(predicted), selected,
                                         len(selected) == 3)
+
+
+def specialized_quad_contact_selection(
+        vertices, normals, position, linear_velocity, angular_turn_velocity,
+        center_of_mass_local, body_to_world, corner_offsets, minimum_gap,
+        maximum_gap):
+    """Recover the four-corner motion filter in ``0x54f2a0``.
+
+    The worker predicts each corner's normal velocity at 1/32 second, applies
+    its ``0.3065625`` bias, subtracts that corner's stored vertical offset,
+    and keeps the first three points satisfying the strict extent test. The
+    result contains both the original points and points with the offset added
+    to Y, matching the two arrays passed to the response-normal helper.
+    """
+    vectors = (position, linear_velocity, angular_turn_velocity,
+               center_of_mass_local)
+    if (len(vertices) != 4 or len(normals) != 4 or
+            any(len(vector) != 3 for vector in vectors) or
+            any(len(point) != 3 for point in vertices) or
+            any(len(normal) != 3 for normal in normals) or
+            len(body_to_world) != 9 or len(corner_offsets) != 4):
+        raise ValueError('four-corner selection requires four points and normals')
+    points = tuple(tuple(f32(value) for value in point) for point in vertices)
+    ns = tuple(tuple(f32(value) for value in normal) for normal in normals)
+    position = tuple(f32(value) for value in position)
+    linear = tuple(f32(value) for value in linear_velocity)
+    turns = tuple(f32(value) for value in angular_turn_velocity)
+    com = tuple(f32(value) for value in center_of_mass_local)
+    matrix = tuple(f32(value) for value in body_to_world)
+    offsets = tuple(f32(value) for value in corner_offsets)
+    minimum_gap = f32(minimum_gap)
+    maximum_gap = f32(maximum_gap)
+    omega = tuple(f32(value * 6.2831855) for value in turns)
+    dots, predicted, indices, sources, adjusted = [], [], [], [], []
+    for index, (point, normal, corner_offset) in enumerate(
+            zip(points, ns, offsets)):
+        lever = terrain_contact_lever_arm(position, com, matrix, point)
+        spin = (f32(omega[1] * lever[2] - omega[2] * lever[1]),
+                f32(omega[2] * lever[0] - omega[0] * lever[2]),
+                f32(omega[0] * lever[1] - omega[1] * lever[0]))
+        velocity = tuple(f32(spin[axis] + linear[axis]) for axis in range(3))
+        dot = ((float(velocity[0]) * normal[0] +
+                float(velocity[1]) * normal[1]) +
+               float(velocity[2]) * normal[2])
+        projected_gap = (dot - 0.3065625) * 0.03125 + minimum_gap
+        dots.append(dot)
+        predicted.append(projected_gap)
+        if projected_gap - corner_offset < maximum_gap and len(indices) < 3:
+            indices.append(index)
+            sources.append(point)
+            adjusted.append((point[0], f32(point[1] + corner_offset), point[2]))
+    selected = tuple(indices)
+    return SpecializedQuadContactSelection(
+        tuple(dots), tuple(predicted), selected, tuple(sources),
+        tuple(adjusted), len(selected) == 3)
 
 
 def terrain_impact_response(linear_velocity, angular_turn_velocity,

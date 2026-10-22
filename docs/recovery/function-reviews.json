@@ -1820,11 +1820,12 @@
   "0x54f2a0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The worker's four-point sampled-height stage is translated in sample_specialized_quad_heights and specialized_quad_height_gate. Sixty-four supplied-world direct original calls vary corner heights, XZ positions and geometry extent; all return at the translated height rejection with minimum gaps from 0.5 to 1.5. The runs make 256 0x42e760 lookups, 256 0x42dc50 plane queries and 458 0x4b71a0 height evaluations, enter none of 0x457910/0x459e30/0x457550, and each clears the six-word record at +0xc64. Successful contact selection, response construction, body correction and live-world behavior remain untranslated.",
+    "scope": "The four-point sampled-height stage and motion/contact filter are translated in sample_specialized_quad_heights, specialized_quad_height_gate and specialized_quad_contact_selection. 64 supplied-world calls previously verified height rejection. A further 87 direct original calls on a flat supplied track include 55 successful contact selections and 32 motion rejections; all return decisions match, and the two three-point arrays passed to 0x459e30 match exactly (maximum absolute error 0). The latter corpus varies per-corner offsets including strict-boundary neighbors. The worker's response construction, body correction, live-world behavior and broad runtime coverage remain untranslated.",
     "sources": [
       "client/collision_terrain.py",
       "tests/test_collision_terrain.py",
       "tools/terrain_specialized_height_oracle.py",
+      "tools/terrain_specialized_contact_oracle.py",
       "docs/collision-world.md"
     ]
   },

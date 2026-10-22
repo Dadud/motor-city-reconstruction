@@ -13,7 +13,8 @@ from client.collision_terrain import (triangle_candidate_gate,
                                       specialized_quad_projection_candidate,
                                       specialized_quad_height_gate,
                                       sample_specialized_quad_heights,
-                                      terrain_contact_lever_arm)
+                                      terrain_contact_lever_arm,
+                                      specialized_quad_contact_selection)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -187,6 +188,24 @@ class TerrainTriangleGateTests(unittest.TestCase):
             (12., -3., 8.), (1.5, -2., .25),
             (0., 0., 1., 0., 1., 0., -1., 0., 0.), (12., 2., 8.))
         self.assertEqual(result, (.25, 7., -1.5))
+
+    def test_specialized_quad_contact_filter_keeps_first_three_accepted(self):
+        points = ((0., 0., 0.), (1., 0., 0.),
+                  (2., 0., 0.), (3., 0., 0.))
+        normals = ((0., 1., 0.),) * 4
+        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        result = specialized_quad_contact_selection(
+            points, normals, (0., 0., 0.), (0., 0., 0.), (0., 0., 0.),
+            (0., 0., 0.), identity, (0., 0., 0., 0.), 0., .25)
+        self.assertTrue(result.candidate_accepted)
+        self.assertEqual(result.accepted_indices, (0, 1, 2))
+        self.assertEqual(result.source_points, points[:3])
+        self.assertEqual(result.adjusted_points, points[:3])
+        rejected = specialized_quad_contact_selection(
+            points, normals, (0., 0., 0.), (0., 0., 0.), (0., 0., 0.),
+            (0., 0., 0.), identity, (-.5, -.5, 0., 0.), 0., .25)
+        self.assertFalse(rejected.candidate_accepted)
+        self.assertEqual(rejected.accepted_indices, (2, 3))
 
     def test_response_normal_is_upward_and_degenerate_is_zero(self):
         self.assertEqual(terrain_response_normal(self.triangle), (0., 1., 0.))
