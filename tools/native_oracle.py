@@ -92,6 +92,52 @@ class DynoOracle:
         self._run(self.stub, self.stop, timeout=0, count=100_000_000)
         return bytes(self.cpu.mem_read(self.inputs+0x9e70, 25*0x138))
 
+    def sky_material_parameters(self, *, height_bound, random_modulus,
+                                 random_divisor, random_reciprocal,
+                                 column_scale, row_scale,
+                                 angle_degrees, radial_distance):
+        """Run the original 0x494dc0 sky parameter normalization helper."""
+        self._reset()
+        block = bytearray(0xc138)
+        for offset, value in ((0xc0c8, height_bound),
+                              (0xc0d0, random_modulus),
+                              (0xc0d8, random_divisor),
+                              (0xc130, radial_distance),
+                              (0xc134, angle_degrees)):
+            struct.pack_into('<i', block, offset, value)
+        for offset, value in ((0xc0dc, random_reciprocal),
+                              (0xc118, column_scale), (0xc11c, row_scale)):
+            struct.pack_into('<f', block, offset, value)
+        self.cpu.mem_write(self.inputs, bytes(block))
+        self.call(0x494dc0, (self.inputs,), instruction_limit=1000)
+        block = bytes(self.cpu.mem_read(self.inputs, len(block)))
+        return (struct.unpack_from('<i', block, 0xc0d0)[0],
+                struct.unpack_from('<f', block, 0xc0dc)[0],
+                struct.unpack_from('<f', block, 0xc118)[0],
+                struct.unpack_from('<f', block, 0xc11c)[0],
+                struct.unpack_from('<f', block, 0xc0e0)[0],
+                struct.unpack_from('<f', block, 0xc0e4)[0])
+
+    def vector_length3(self, values):
+        """Capture 0x6f1210's x87 result as a binary32 output word."""
+        if len(values) != 3:
+            raise ValueError('vector length oracle requires three values')
+        self._reset()
+        self.cpu.mem_write(self.inputs, struct.pack('<3f', *values))
+        code = (b'\x68'+struct.pack('<I', self.inputs)+b'\xe8'+b'\0'*4+
+                b'\x83\xc4\x04\xd9\x1d'+struct.pack('<I', self.inputs+16)+b'\xc3')
+        call_at = self.stub+5
+        code = code[:6]+struct.pack('<i', 0x6f1210-(call_at+5))+code[10:]
+        self.cpu.mem_write(self.stub, code)
+        stack = self.frame-0x1000
+        self.cpu.mem_write(stack, struct.pack('<I', self.stop))
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESP, stack)
+        self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
+        if hasattr(self.cpu, 'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self._run(self.stub, self.stop, timeout=0, count=1000)
+        return struct.unpack('<f', self.cpu.mem_read(self.inputs+16, 4))[0]
+
     def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
                                  row_scale, column_scale, random_state,
                                  base_offset=0.0, amplitude=0.0,

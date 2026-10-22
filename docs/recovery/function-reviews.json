@@ -2660,12 +2660,16 @@
   "0x494dc0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "Translates the complete parameter-block normalizer: reciprocal and signed clamp fields, zero/NaN factor defaults, and binary32 angle/scale calculations through the observed x87 cosine/sine helpers. The full 0xc138-byte supplied block matched original execution byte-for-byte in 512 cases. Parent 0x494940 graphics initialization and live platform calls remain outside scope.",
+    "scope": "Translates the complete parameter-block normalizer: reciprocal and signed clamp fields, zero/NaN factor defaults, and binary32 angle/scale calculations through the observed x87 cosine/sine helpers. The full 0xc138-byte supplied block matched original execution byte-for-byte in 512 cases. Parent 0x494940 graphics initialization and live platform calls remain outside scope. A separate sky-material adapter view compares the same helper outputs in four synthetic cases with maximum float error below 1.3e-8.",
     "sources": [
       "client/track_effect_params.py",
       "tests/test_track_effect_params.py",
       "tools/track_effect_params_oracle.py",
-      "docs/recovery/track-effect-parameters.md"
+      "docs/recovery/track-effect-parameters.md",
+      "client/sky.py",
+      "tests/test_sky.py",
+      "tools/sky_parameter_oracle.py",
+      "docs/recovery/track-sky-assets.md"
     ],
     "evidence_ids": [
       "ev_ded4ce9793bf0c1ba90c562a99374d9966e2672cef057a9d055b34b05df445a2",
@@ -2674,10 +2678,16 @@
       "ev_faf1097f2e66208438b7771c5b188b9f986e8258e86272af837591b43c1594e4",
       "ev_0c473930b62b17e9e2ae38070ad958e9a3ad5e795d5fdfd39dd2556b77c18847",
       "ev_473cdecfc554ad5ce644241844a2e5191d78a787376a3d1596b93e34d544c6d9",
-      "ev_d68b5896a0140a149a23c9f9ef22ac8a6ac5310a9d0eb923b29a5aa6b0a7d7a3"
+      "ev_d68b5896a0140a149a23c9f9ef22ac8a6ac5310a9d0eb923b29a5aa6b0a7d7a3",
+      "ev_e177d129087282a9a1d0e93995232f12f156ad707000f8309088c3828a79c77f"
     ],
     "verification_refs": [
-      "tools/track_effect_params_oracle.py"
+      "tools/track_effect_params_oracle.py",
+      "tools/sky_parameter_oracle.py",
+      "tests/test_sky.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-sky-assets.md"
     ]
   },
   "0x494070": {
@@ -2757,6 +2767,28 @@
     "verification_refs": [
       "tools/sky_material_topology_oracle.py",
       "tools/sky_material_grid_oracle.py",
+      "tests/test_sky.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-sky-assets.md"
+    ]
+  },
+  "0x6f1210": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The three-component Euclidean magnitude helper is translated with the original addition order and binary32 inputs. 512 deterministic vectors, including zero, extreme and small-magnitude cases, match the original x86 x87 result exactly after binary32 storage.",
+    "sources": [
+      "client/matrix_math.py",
+      "client/sky.py",
+      "tests/test_sky.py",
+      "tools/vector_length_oracle.py",
+      "docs/recovery/track-sky-assets.md"
+    ],
+    "evidence_ids": [
+      "ev_e2eb524fe947bce9d6efea9857ff6964eef03b668cce22dfd4f2a2a980cf4a5c"
+    ],
+    "verification_refs": [
+      "tools/vector_length_oracle.py",
       "tests/test_sky.py"
     ],
     "doc_refs": [

@@ -8,7 +8,8 @@ from client.sky import (load_sky_resources, sky_resource_names,
                         sky_material_triangle_indices,
                         sky_material_normalize_grid, sky_material_random_grid,
                         sky_material_smooth_grid, sky_material_mesh_outputs)
-from client.sky import build_sky_material
+from client.sky import build_sky_material, prepare_sky_material_parameters
+from client.matrix_math import vector_length3
 from client.random_state import RandomState
 
 
@@ -82,6 +83,21 @@ class SkyResourceTests(unittest.TestCase):
         self.assertEqual(len(material.smoothed_heights), 676)
         self.assertEqual(len(material.positions), 676)
         self.assertEqual(len(material.mesh), 676)
+
+    def test_prepare_sky_material_parameter_defaults_and_bounds(self):
+        prepared = prepare_sky_material_parameters(
+            height_bound=8, random_modulus=31, random_divisor=4,
+            random_reciprocal=0.0, column_scale=0.0, row_scale=2.0,
+            angle_degrees=90, radial_distance=1000)
+        self.assertEqual(prepared.random_modulus, 8)
+        self.assertEqual(prepared.random_reciprocal, 0.25)
+        self.assertEqual(prepared.column_scale, 1.0)
+        self.assertEqual(prepared.row_scale, 2.0)
+
+    def test_native_vector_length_helper(self):
+        self.assertEqual(vector_length3((3.0, 4.0, 12.0)), 13.0)
+        with self.assertRaises(ValueError):
+            vector_length3((1.0, 2.0))
 
 
     def test_material_triangle_index_topology(self):

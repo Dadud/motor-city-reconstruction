@@ -50,8 +50,14 @@ connects those buffers to `0x4940f0`: pointer-table entries 4 and 5 are sampled
 into the two material blocks at `0x9b88d4` and `0x9c4a0c`, exactly each block's
 `+0x93e0` input. `SkyResources.material_lookup_rgba(0/1)` exposes that mapping,
 and `build_sky_material` composes the recovered stages into one callable model.
+The adjacent parameter helper `0x494dc0` is also translated: it caps the random
+modulus to the height bound, computes an optional reciprocal, supplies default
+grid scales, and derives radial sine/cosine terms. Four synthetic parameter
+sets match all six mutated fields, with maximum float error below `1.3e-8`.
 The shared generator at `0x6f0fa0` is separately translated and compared across
-1,024 states.
+1,024 states. Sky geometry uses the shared vector magnitude helper `0x6f1210`,
+now routed through `client.matrix_math.vector_length3` and compared across 512
+vectors with exact binary32 results.
 
 Evidence on `mcity.exe` SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`, Ghidra
@@ -67,6 +73,8 @@ Evidence on `mcity.exe` SHA-256
 - Indexed cloud format helper `0x699330`: `ev_b4a497760ae553c4c2fdf04747ca8ab3f960387c714af40ddd3fe95d6b1a6709`
 - Integer clamp helper `0x6f1380`: `ev_7be2f31f8590766654160b7b92edb80f9d6d801c6d79d659eac94b924c1ba564`
 - Procedural sky-material kernel `0x4943f0`: `ev_9de9d6afa83b7c0997de55c52f19572932b4d8059d0ad358066f78ff80844c92`
+- Sky material parameter helper `0x494dc0`: `ev_e177d129087282a9a1d0e93995232f12f156ad707000f8309088c3828a79c77f`
+- Three-component vector magnitude `0x6f1210`: `ev_e2eb524fe947bce9d6efea9857ff6964eef03b668cce22dfd4f2a2a980cf4a5c`
 - Shared random generator `0x6f0fa0`: `ev_1a069217dbc28f2f1f5ade3b367ef667595ba5f70dd491c621a1b5ea1326a625`
 
 The staged original comparison for the raw, normalized, smoothed 26×26 local

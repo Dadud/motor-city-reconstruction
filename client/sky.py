@@ -4,6 +4,7 @@ import math
 import struct
 
 from .random_state import RandomState
+from .matrix_math import vector_length3
 from .textures import Texture, decode_fsh
 
 
@@ -119,7 +120,7 @@ def sky_material_mesh_outputs(heights, *, angle, row_scale, column_scale,
             world_x = -3000.0 + column * 225.0
             x = _f32(sine * world_y + cosine * world_x)
             z = _f32(cosine * world_y - sine * world_x)
-            radius = math.sqrt(x * x + z * z)
+            radius = vector_length3((x, 0.0, z))
             radial_angle = _f32(radius * 0.25 * 0.00033333333)
             profile = _f32(math.cos(radial_angle * (2.0 * math.pi)) * amplitude + base_offset)
             index = column * 26 + row
@@ -178,6 +179,10 @@ def sky_resource_names(*, night=False, wet=False):
 
 def _f32(value):
     return struct.unpack('<f', struct.pack('<f', value))[0]
+
+
+def _i32(value):
+    return value if value < 0x80000000 else value - 0x100000000
 
 
 def _sample_26(texture):
@@ -252,6 +257,55 @@ class SkyMaterialOutput:
     smoothed_heights: tuple[float, ...]
     positions: tuple[tuple[float, float, float], ...]
     mesh: tuple[tuple[float, float, int], ...]
+
+
+@dataclass(frozen=True)
+class PreparedSkyMaterialParameters:
+    """Normalized parameter fields prepared by the native 0x494dc0 helper."""
+    height_bound: int
+    random_modulus: int
+    random_reciprocal: float
+    column_scale: float
+    row_scale: float
+    angle_cycles: float
+    radial_scale: float
+    profile_cosine: float
+    profile_sine: float
+
+
+def prepare_sky_material_parameters(*, height_bound, random_modulus,
+                                    random_divisor, random_reciprocal,
+                                    column_scale, row_scale,
+                                    angle_degrees, radial_distance):
+    """Translate 0x494dc0's bounds, scale defaults, and radial terms."""
+    int_fields = (height_bound, random_modulus, random_divisor,
+                  angle_degrees, radial_distance)
+    if any(type(value) is not int or not -0x80000000 <= value <= 0x7fffffff
+           for value in int_fields):
+        raise ValueError('sky parameter integer fields must be signed 32-bit values')
+    height_bound = _i32(height_bound)
+    random_modulus = _i32(random_modulus)
+    random_divisor = _i32(random_divisor)
+    if height_bound < 0 or random_modulus < 0:
+        raise ValueError('height bound and random modulus must be non-negative')
+    reciprocal = _f32(random_reciprocal)
+    if random_divisor:
+        reciprocal = _f32(1.0 / float(random_divisor))
+    if height_bound < random_modulus:
+        random_modulus = height_bound
+    column_scale = _f32(column_scale)
+    row_scale = _f32(row_scale)
+    if column_scale == 0.0:
+        column_scale = 1.0
+    if row_scale == 0.0:
+        row_scale = 1.0
+    angle_cycles = _f32(angle_degrees * _f32(0.0027777778))
+    radial_scale = _f32(radial_distance * _f32(3.0e-5))
+    cosine = _f32(math.cos(angle_cycles * (2.0 * math.pi)) * radial_scale)
+    sine = _f32(math.sin(angle_cycles * (2.0 * math.pi)) * radial_scale)
+    return PreparedSkyMaterialParameters(
+        height_bound, random_modulus, reciprocal, column_scale, row_scale,
+        angle_cycles, radial_scale, cosine, sine)
 
 
 def build_sky_material(random_state, *, upper_bound, modulus, angle, row_scale,

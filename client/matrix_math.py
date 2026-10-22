@@ -1,5 +1,5 @@
 """Bit-preserving matrix helpers recovered from the client math library."""
-from math import cos, sin
+from math import cos, sin, sqrt
 
 from .tire_response import f32
 
@@ -35,6 +35,15 @@ def dot_3_f32(left, right):
     left = tuple(f32(value) for value in left)
     right = tuple(f32(value) for value in right)
     return f32(left[0] * right[0] + left[1] * right[1] + left[2] * right[2])
+
+
+def vector_length3(values):
+    """Translate 0x6f1210's x87 three-component Euclidean magnitude."""
+    values = tuple(f32(value) for value in values)
+    if len(values) != 3:
+        raise ValueError('three-component vector required')
+    x, y, z = values
+    return sqrt((z*z + y*y) + x*x)
 
 
 def _multiply_3x3(left, right):
