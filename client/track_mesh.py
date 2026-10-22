@@ -1,9 +1,4 @@
-"""MCO base track block geometry from REA 0x428150 and 0x428680 assembly.
-
-Object payload bytes and descriptors are retained but not rendered. UVs and
-material references are decoded; object rendering, collision and animated
-scenery remain to reconstruct.
-"""
+"""MCO track geometry and world data from native track-loader evidence."""
 import math
 import struct
 from dataclasses import dataclass, replace
@@ -199,15 +194,25 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
     return Model(tuple(parts),0),cursor
 
 
-def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=True):
+def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=True,
+                       object_color_percentages=None, lighting_file=None):
     """Decode mesh, relocate the native grid trailer, and build its query view."""
     objects = []
     mesh, grid_offset = decode_mesh(data, materials=True, object_records=objects)
     uv_count = struct.unpack_from('<I', data, 52)[0] & 0xffff
     uv_start = grid_offset - uv_count * 4
     uv_coordinates = struct.unpack_from(f'<{uv_count}f', data, uv_start)
+    if object_color_percentages is not None and lighting_file is not None:
+        raise ValueError('supply object color percentages or a lighting INI, not both')
+    if lighting_file is not None:
+        from client.track_lighting import read_object_color_percentages
+        object_color_percentages = read_object_color_percentages(lighting_file)
+    if object_color_percentages is None:
+        object_color_percentages = (100, 100, 100)
     from client.track_object_mesh import decode_track_object_group
-    object_meshes = tuple(decode_track_object_group(group, uv_coordinates)
+    object_meshes = tuple(decode_track_object_group(
+                              group, uv_coordinates,
+                              color_percentages=object_color_percentages)
                           for group in objects)
     track = decode_track(data)
     header_start = 56 + len(track.slices) * 84

@@ -631,6 +631,26 @@ is exposed separately. Visibility, materials and draw ordering remain
 unresolved, so these are transformed local mesh inputs rather than a complete
 rendered scenery scene.
 
+The native load path also adjusts each object's packed per-vertex RGB values.
+`0x428150` calls `0x428500` over the vertex attribute array; that helper scales
+the red, green and blue bytes using three global percentages, preserves the
+high byte, and clamps each loaded percentage to `0..200`. `0x491f40` reads
+`AmbientRed`, `AmbientGreen` and `AmbientBlue` from the selected track INI's
+`[light]` section. The executable's initial values are all 100. The
+[`track_lighting.py`](../client/track_lighting.py) parser selects `Tr.ini`,
+`TrN.ini`, `TrW.ini` or `TrNW.ini`, and `decode_track_world(...,
+lighting_file=...)` applies those values to every scenery object's
+`Part.vertex_colors`. The percentage transformation reuses the independently
+verified [`collision_palette.py`](../client/collision_palette.py) port. Evidence:
+`0x428150` `ev_3e79bc8939f6fabb6308f3555bbeb26e6073eb720dbacebdf73b17cd0ea3dc48`,
+`0x428500` `ev_e629ac186507865bd498798221b70d3c3edd5478233cc3fb75606eb114a931f7`,
+INI loading and clamping `0x491f40`
+`ev_2b8591dcb2f1e5ea9c410f221c0115a619f37a2083b26affc708d6d60d084c01`, and
+the initialized RGB percentages at `0x8914fc` `ev_32558be58a038be5c36414f4c2c4cfc295852d3b1081b72f5e5a00ccae391731`.
+The renderer's complete material binding, visibility and draw ordering are
+still unresolved, so matching these inputs does not establish a rendered-scene
+match.
+
 The renderer dispatch path `0x58cc10` uses type-3 animation rows as a 20-byte
 sample stream. [`client/track_object_animation.py`](../client/track_object_animation.py)
 implements the fixed-point translation/quaternion interpolation in `0x407940`

@@ -115,3 +115,29 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(tuple(map(len, poses)),
                          tuple(len(group.objects) for group in world.objects))
         self.assertTrue(any(pose is not None for group in poses for pose in group))
+
+    def test_installed_track_lighting_percentages_reach_object_vertex_colors(self):
+        from pathlib import Path
+        from client.collision_palette import adjust_color_words
+        from client.track_lighting import read_object_color_percentages
+        from client.track_mesh import decode_track_world
+        root = Path(r'C:\Program Files (x86)\EA Games\Motor City Online\Data\Tracks')
+        candidates = sorted(root.rglob('Tr.frd'))
+        selected = next(((frd, frd.with_name('Tr.ini')) for frd in candidates
+                         if frd.with_name('Tr.ini').is_file()
+                         and read_object_color_percentages(frd.with_name('Tr.ini'))
+                         != (100, 100, 100)), None)
+        if selected is None:
+            self.skipTest('installed non-neutral track lighting fixture is unavailable')
+        frd, lighting_file = selected
+        percentages = read_object_color_percentages(lighting_file)
+        world = decode_track_world(frd.read_bytes(), lighting_file=lighting_file)
+        group = next(group for group in world.objects if group.objects)
+        obj = group.objects[0]
+        expected = bytearray(b''.join(obj.vertex_attributes))
+        adjust_color_words(expected, len(obj.vertex_attributes), percentages)
+        import struct
+        colors = struct.unpack('<' + 'I' * len(obj.vertex_attributes), expected)
+        model_index = world.objects.index(group)
+        self.assertEqual(world.object_meshes[model_index].parts[0].vertex_colors,
+                         colors)

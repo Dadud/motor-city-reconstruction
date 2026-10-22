@@ -96,9 +96,11 @@ class TrackMeshTests(unittest.TestCase):
             bytes(descriptor), b'',
             (struct.pack('<3f', 0, 0, 0), struct.pack('<3f', 1, 0, 0),
              struct.pack('<3f', 1, 1, 0), struct.pack('<3f', 0, 1, 0)),
-            (bytes(4),) * 4, (face,))
+            (struct.pack('<I', 0x7f804020),) * 4, (face,))
         group = TrackObjectGroup(2, 0x640, (obj,))
-        model = decode_track_object_group(group, (0.0, 0.25, 0.5, 0.75))
+        model = decode_track_object_group(
+            group, (0.0, 0.25, 0.5, 0.75),
+            color_percentages=(50, 125, 200))
         self.assertEqual(model.triangle_count, 2)
         first, second = model.parts[0].triangles
         self.assertEqual(first.indices, (3, 2, 1))
@@ -107,6 +109,7 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual(second.indices, (3, 1, 0))
         self.assertEqual(model.parts[0].normals[0][2], -1.0)
         self.assertEqual(model.parts[0].origin, (10.0, 20.0, 30.0))
+        self.assertEqual(model.parts[0].vertex_colors, (0x7f406fff,) * 4)
 
     def test_object_animation_interpolates_and_loops_native_samples(self):
         animation = bytearray(8 + 2 * 20)

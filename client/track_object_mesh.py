@@ -3,10 +3,12 @@ import math
 import struct
 
 from client.fce import Model, Part, Triangle
+from client.collision_palette import adjust_color_words
 from client.track_mesh import TrackObjectGroup
 
 
-def decode_track_object_group(group: TrackObjectGroup, uv_coordinates):
+def decode_track_object_group(group: TrackObjectGroup, uv_coordinates, *,
+                              color_percentages=(100, 100, 100)):
     """Build one local-space mesh model from an FRD object group.
 
     Object transforms and animation are retained on the source records and are
@@ -53,10 +55,15 @@ def decode_track_object_group(group: TrackObjectGroup, uv_coordinates):
                            for corner in uv_corners)
                 triangles.append(Triangle(indices, uv, record[13], record[14]))
         normals = tuple(tuple(value for value in normal) for normal in normal_sums)
+        if len(obj.vertex_attributes) != len(vertices):
+            raise ValueError('track object color count disagrees with vertex array')
+        colors = bytearray(b''.join(obj.vertex_attributes))
+        adjust_color_words(colors, len(vertices), color_percentages)
+        vertex_colors = struct.unpack('<' + 'I' * len(vertices), colors)
         origin = (struct.unpack_from('<3f', obj.descriptor, 0x10)
                   if kind in (2, 4) else (0.0, 0.0, 0.0))
         name = (f'Track object {group.block_index}:'
                 f'{group.section_offset:#x}:{object_index}')
         parts.append(Part(name, origin, vertices,
-                          normals, tuple(triangles)))
+                          normals, tuple(triangles), vertex_colors))
     return Model(tuple(parts), 0)

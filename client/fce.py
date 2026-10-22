@@ -25,6 +25,7 @@ class Part:
     vertices: tuple[tuple[float, float, float], ...]
     normals: tuple[tuple[float, float, float], ...]
     triangles: tuple[Triangle, ...]
+    vertex_colors: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
