@@ -2271,5 +2271,30 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x459b90": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The 8/22-point body geometry is transformed, filtered by candidate height and inward normal motion, and reduced to the closest signed distance. Penetration correction updates body position and all 22 cached world points before delegating to the translated 0x457df0 support impulse. 512 direct original calls match return and discrete writes; 448 select/correct a point and 320 apply impulses. Float comparisons use max(3e-5, 3e-6 relative), with maximum absolute error 0.000244140625. The supplied plane and body record remain inputs; candidate production and complete 0x45c3e0 integration remain open.",
+    "sources": [
+      "client/collision_pair_surface.py",
+      "client/collision_world_response.py",
+      "client/geometry_transform.py",
+      "client/collision_pair_response.py",
+      "tests/test_collision_pair_surface.py",
+      "tools/collision_pair_surface_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_6ab32723175a804a5d115873fcb2f0251f9599ca1afa15ab3d00babbdbce3178",
+      "ev_c330242ba999ce0ec8685a78379ea93646e8de10800f3fa78e0239490c667c6b"
+    ],
+    "verification_refs": [
+      "tests/test_collision_pair_surface.py",
+      "tools/collision_pair_surface_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }

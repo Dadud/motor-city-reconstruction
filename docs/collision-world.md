@@ -419,6 +419,16 @@ matched 256 direct original calls, including 35 vertical rejects. The world
 table and the four candidate vertex records remain explicit inputs; the terrain
 and mesh candidate producer and the rest of `0x45c3e0` are still open.
 
+The response child `0x459b90` is translated in
+[`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
+It transforms the body's 8- or 22-point set, selects the deepest eligible
+inward vertex, corrects penetration and cached world points, then delegates to
+the recovered support impulse. Its direct oracle matched 512 original calls:
+448 selected vertices and corrected position, and 320 applied impulses. The
+maximum observed float error was `0.000244140625`. This verifies the supplied
+plane and body inputs; the producer and complete `0x45c3e0` caller are still
+unverified.
+
 ## Remaining work
 
 - Recover the data types and producers for collision object shapes, triangles,
