@@ -29,18 +29,36 @@ class DecodedTrackWorld:
             if obj.animation and (obj.descriptor[2] & 0xf) == 3 else None
             for obj in group.objects) for group in self.objects)
 
-    def object_meshes_at_quality(self, quality, *, include_animated=True):
-        """Filter scenery by native detail, optionally omitting posed type-3 objects."""
+    def object_meshes_at_quality(self, quality, *, include_animated=True,
+                                 animation_tick=None):
+        """Filter scenery by native detail and optionally pose type-3 objects."""
+        if animation_tick is not None and (type(animation_tick) is not int
+                                           or animation_tick < 0):
+            raise ValueError('animation tick must be a nonnegative integer')
         if len(self.objects) != len(self.object_meshes):
             raise ValueError('track object records and meshes are misaligned')
         result = []
         for group, model in zip(self.objects, self.object_meshes):
             if len(group.objects) != len(model.parts):
                 raise ValueError('track object group and mesh parts are misaligned')
-            parts = tuple(part for obj, part in zip(group.objects, model.parts)
-                          if (include_animated or
-                              (obj.descriptor[2] & 0xf) != 3)
-                          and part.visible_at_native_quality(quality))
+            parts = []
+            for obj, part in zip(group.objects, model.parts):
+                animated = (obj.descriptor[2] & 0xf) == 3
+                if ((animated and not include_animated)
+                        or not part.visible_at_native_quality(quality)):
+                    continue
+                if animated and animation_tick is not None:
+                    if not obj.animation:
+                        continue
+                    from client.track_object_animation import (
+                        apply_track_object_pose, evaluate_track_object_animation)
+                    pose = evaluate_track_object_animation(obj.animation,
+                                                           animation_tick)
+                    if pose is None:
+                        continue
+                    part = apply_track_object_pose(part, pose)
+                parts.append(part)
+            parts = tuple(parts)
             result.append(Model(parts, model.version, model.warnings))
         return tuple(result)
 

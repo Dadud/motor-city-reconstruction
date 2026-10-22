@@ -68,9 +68,11 @@ def main():
     parser.add_argument('--track', help='track folder, e.g. Boothill; combine with --vehicle for world view')
     parser.add_argument('--track-mesh', action='store_true', help='render decoded base geometry instead of road corridor')
     parser.add_argument('--track-textures', action='store_true', help='apply original track UVs and day texture pages')
-    parser.add_argument('--track-objects', action='store_true', help='render decoded static track scenery with native lighting and detail filtering')
+    parser.add_argument('--track-objects', action='store_true', help='render decoded track scenery with native lighting and detail filtering')
     parser.add_argument('--track-detail', type=int, choices=range(5), default=0,
                         help='native scenery detail preset (0-4; default 0)')
+    parser.add_argument('--track-animation-tick', type=int,
+                        help='sample native type-3 scenery animation at this integer tick')
     parser.add_argument('--track-view', choices=('overview','start'), default='overview', help='initial track camera')
     parser.add_argument('--vehicle', type=int, help='stock branded vehicle ID, e.g. 101')
     parser.add_argument('--driver-variant', type=int, choices=range(33), default=0,
@@ -100,6 +102,9 @@ def main():
         parser.error('--recovered-driving-report is an inspection mode; remove conflicting display or report options')
     if args.track_mesh and not args.track:
         parser.error('--track-mesh requires --track')
+    if args.track_animation_tick is not None and (not args.track_objects
+                                                   or args.track_animation_tick < 0):
+        parser.error('--track-animation-tick requires --track-objects and a nonnegative tick')
     if args.track_textures and not args.track_mesh:
         parser.error('--track-textures requires --track-mesh')
     if args.contact_report and (args.vehicle is None or not args.track):
@@ -328,7 +333,9 @@ def main():
                         self.track_scene = decode_track_world(
                             track_bytes, lighting_file=lighting)
                         visible = self.track_scene.object_meshes_at_quality(
-                            args.track_detail, include_animated=False)
+                            args.track_detail,
+                            include_animated=args.track_animation_tick is not None,
+                            animation_tick=args.track_animation_tick)
                         scenery = tuple(part for model_part in visible
                                         for part in model_part.parts)
                         self.track_scenery_parts = len(scenery)
@@ -506,7 +513,10 @@ def main():
                 self.body_style in PROFILES else 'All parts') if self.part_index is None else
                                   f'Part {self.part_index+1}: {self.model.parts[self.part_index].name}')
             if args.track:
-                self.labels[4].text = (f'Static scenery preview · detail {args.track_detail} · animated objects and effects pending' if args.track_objects else
+                self.labels[4].text = (f'Scenery preview · detail {args.track_detail}' +
+                    (f' · animation tick {args.track_animation_tick}'
+                     if args.track_animation_tick is not None else
+                     ' · animated objects and effects pending') if args.track_objects else
                                       'Base track geometry · Object instances and material effects pending' if args.track_textures else
                                       'Base track geometry · Materials and object instances pending' if args.track_mesh else
                                       'Road corridor preview · Use --track-mesh for base geometry')

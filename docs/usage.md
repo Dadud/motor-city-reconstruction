@@ -139,21 +139,24 @@ motor-city --data /path/to/game --track Boothill
 motor-city --data /path/to/game --track Boothill --track-mesh
 motor-city --data /path/to/game --track Boothill --track-mesh --track-textures --track-view start
 motor-city --data /path/to/game --track Boothill --track-objects --track-view start --track-detail 2
+motor-city --data /path/to/game --track Boothill --track-objects --track-animation-tick 12 --track-view start
 ```
 
 This reads original FRD road-slice positions, basis vectors and limits. Left/Right
 browse the 27 day tracks. All 58 supplied FRD variants pass slice parsing. The
 corridor is a preview. `--track-mesh` renders decoded base track block geometry;
 `--track-textures` applies recovered UV-table references and day FSH pages.
-`--track-objects` combines base geometry with static scenery, applies the
+`--track-objects` combines base geometry with scenery, applies the
 selected `Tr.ini` ambient vertex colors, and loads the day texture pages. It
 accepts native detail presets `0..4` through `--track-detail`; the default 0
-keeps all detail gates visible. Type-3 animated objects are omitted until their
-vertex transforms are implemented. Track-and-vehicle world views enable this
-static scenery preview automatically.
+keeps all detail gates visible. Type-3 animated objects are omitted unless
+`--track-animation-tick` selects an integer sample time; at that tick, the
+recovered quaternion transform is applied to their vertices. This is a sampled
+preview, not a real-time animation loop. Track-and-vehicle world views enable
+the scenery preview automatically.
 Home focuses the first road slice; End returns to the overview. Animated material
-effects, animated object motion, object collision response and original driving
-physics are not implemented.
+material effects, continuous animation playback, object collision response and
+original driving physics are not implemented.
 The final slice is not automatically joined to the
 first, and the corridor limits do not establish pavement widths.
 

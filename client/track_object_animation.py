@@ -1,5 +1,5 @@
 """Evaluate the fixed-point animation records attached to FRD objects."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import math
 import struct
 
@@ -10,6 +10,28 @@ class TrackObjectPose:
     fraction: float
     translation: tuple[float, float, float]
     rotation: tuple[float, ...]
+
+
+def apply_track_object_pose(part, pose):
+    """Apply the native object pose to local mesh vertices and normals.
+
+    The recovered renderer reads the 3x3 matrix by columns and adds the
+    sampled translation to positions. Baking the transform keeps the shared
+    preview mesh path and its lighting shader consistent.
+    """
+    m = pose.rotation
+
+    def rotate(vector):
+        x, y, z = vector
+        return (x*m[0] + y*m[3] + z*m[6],
+                x*m[1] + y*m[4] + z*m[7],
+                x*m[2] + y*m[5] + z*m[8])
+    vertices = tuple(tuple(value + pose.translation[axis]
+                           for axis, value in enumerate(rotate(vertex)))
+                     for vertex in part.vertices)
+    normals = tuple(rotate(normal) for normal in part.normals)
+    return replace(part, origin=(0.0, 0.0, 0.0), vertices=vertices,
+                   normals=normals)
 
 
 def _f32(value):
