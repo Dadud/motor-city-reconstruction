@@ -2656,5 +2656,28 @@
     "verification_refs": [
       "tools/track_checksum_oracle.py"
     ]
+  },
+  "0x494dc0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Translates the complete parameter-block normalizer: reciprocal and signed clamp fields, zero/NaN factor defaults, and binary32 angle/scale calculations through the observed x87 cosine/sine helpers. The full 0xc138-byte supplied block matched original execution byte-for-byte in 512 cases. Parent 0x494940 graphics initialization and live platform calls remain outside scope.",
+    "sources": [
+      "client/track_effect_params.py",
+      "tests/test_track_effect_params.py",
+      "tools/track_effect_params_oracle.py",
+      "docs/recovery/track-effect-parameters.md"
+    ],
+    "evidence_ids": [
+      "ev_ded4ce9793bf0c1ba90c562a99374d9966e2672cef057a9d055b34b05df445a2",
+      "ev_8dd28d352ff8fb01b3a3981676d721beb6f3e8cefd6ea2ee893b9ec243967652",
+      "ev_f7727a20d9ef3250bcb07419b81fcc62b0f6c421ea7277941d3d3efce0687c38",
+      "ev_faf1097f2e66208438b7771c5b188b9f986e8258e86272af837591b43c1594e4",
+      "ev_0c473930b62b17e9e2ae38070ad958e9a3ad5e795d5fdfd39dd2556b77c18847",
+      "ev_473cdecfc554ad5ce644241844a2e5191d78a787376a3d1596b93e34d544c6d9",
+      "ev_d68b5896a0140a149a23c9f9ef22ac8a6ac5310a9d0eb923b29a5aa6b0a7d7a3"
+    ],
+    "verification_refs": [
+      "tools/track_effect_params_oracle.py"
+    ]
   }
 }
