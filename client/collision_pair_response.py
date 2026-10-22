@@ -1,10 +1,19 @@
 """Pairwise impulse accumulation recovered from original 0x458530."""
 from dataclasses import dataclass, replace
 import math
+import struct
 
 from client.collision_impulse import CollisionInertia, impulse_motion
 from client.collision_response import tangential_response
 from client.tire_response import f32
+
+
+def _ieee_f32(value):
+    """Single precision rounding that follows the original x87/SSE IEEE flow."""
+    try:
+        return struct.unpack('<f', struct.pack('<f', value))[0]
+    except (OverflowError, struct.error):
+        return math.copysign(float('inf'), value)
 
 
 @dataclass(frozen=True)
@@ -49,31 +58,31 @@ def _v3(values):
 
 
 def _add(a, b):
-    return tuple(f32(a[i] + b[i]) for i in range(3))
+    return tuple(_ieee_f32(a[i] + b[i]) for i in range(3))
 
 
 def _sub(a, b):
-    return tuple(f32(a[i] - b[i]) for i in range(3))
+    return tuple(_ieee_f32(a[i] - b[i]) for i in range(3))
 
 
 def _scale(a, scalar):
-    scalar = f32(scalar)
-    return tuple(f32(value * scalar) for value in a)
+    scalar = _ieee_f32(scalar)
+    return tuple(_ieee_f32(value * scalar) for value in a)
 
 
 def _dot(a, b):
-    return f32((a[0] * b[0] + a[1] * b[1]) + a[2] * b[2])
+    return _ieee_f32((a[0] * b[0] + a[1] * b[1]) + a[2] * b[2])
 
 
 def _cross(a, b):
-    return (f32(a[1] * b[2] - a[2] * b[1]),
-            f32(a[2] * b[0] - a[0] * b[2]),
-            f32(a[0] * b[1] - a[1] * b[0]))
+    return (_ieee_f32(a[1] * b[2] - a[2] * b[1]),
+            _ieee_f32(a[2] * b[0] - a[0] * b[2]),
+            _ieee_f32(a[0] * b[1] - a[1] * b[0]))
 
 
 def _transform(vector, matrix):
-    return tuple(f32((vector[0] * matrix[i] + vector[1] * matrix[i + 3]) +
-                     vector[2] * matrix[i + 6]) for i in range(3))
+    return tuple(_ieee_f32((vector[0] * matrix[i] + vector[1] * matrix[i + 3]) +
+                           vector[2] * matrix[i + 6]) for i in range(3))
 
 
 def _response_modes(owner, target):
@@ -144,8 +153,8 @@ def resolve_pair_impulse(owner, target, contact_point, normal,
     linear_b = [0., 0., 0.]
     angular_b = [0., 0., 0.]
     current_linear_a, current_linear_b = owner.linear_velocity, target.linear_velocity
-    current_angular_a = tuple(f32(value * 6.2831855) for value in owner.angular_turn_velocity)
-    current_angular_b = tuple(f32(value * 6.2831855) for value in target.angular_turn_velocity)
+    current_angular_a = tuple(_ieee_f32(value * 6.2831855) for value in owner.angular_turn_velocity)
+    current_angular_b = tuple(_ieee_f32(value * 6.2831855) for value in target.angular_turn_velocity)
     record_a, record_b = owner.contact_record, target.contact_record
     samples = 0
     status = 0
@@ -161,10 +170,11 @@ def resolve_pair_impulse(owner, target, contact_point, normal,
         if approach >= 0:
             break
 
-        magnitude = f32(-approach)
+        magnitude = _ieee_f32(-approach)
         normal_impulse = _scale(normal, magnitude)
         response = tangential_response(relative, normal,
-                                       threshold_coefficient, sliding_coefficient)
+                                       threshold_coefficient, sliding_coefficient,
+                                       allow_nonfinite=True)
         tangential_impulse = response.vector
         status = response.status
         if step == 0:
@@ -179,47 +189,49 @@ def resolve_pair_impulse(owner, target, contact_point, normal,
         normal_at_time = _scale(normal_impulse, time)
         tangential_at_time = _scale(tangential_impulse, time)
         if owner_movable:
-            normal_motion = impulse_motion(owner.inertia, normal_at_time, lever_a, radial_a)
-            tangent_motion = impulse_motion(owner.inertia, tangential_at_time, lever_a, radial_a)
+            normal_motion = impulse_motion(owner.inertia, normal_at_time, lever_a, radial_a,
+                                           allow_nonfinite=True)
+            tangent_motion = impulse_motion(owner.inertia, tangential_at_time, lever_a, radial_a,
+                                            allow_nonfinite=True)
             current_linear_a = _add(_add(current_linear_a, tangent_motion.linear),
                                     normal_motion.linear)
             current_angular_a = _add(_add(current_angular_a, tangent_motion.angular),
                                      normal_motion.angular)
             for i in range(3):
-                linear_a[i] = f32(f32(normal_motion.linear[i] * response_weight) +
-                                  linear_a[i])
-                linear_a[i] = f32(linear_a[i] + tangent_motion.linear[i])
-                angular_a[i] = f32(f32(normal_motion.angular[i] * response_weight) +
-                                   angular_a[i])
-                angular_a[i] = f32(angular_a[i] + tangent_motion.angular[i])
+                linear_a[i] = _ieee_f32(_ieee_f32(normal_motion.linear[i] * response_weight) +
+                                        linear_a[i])
+                linear_a[i] = _ieee_f32(linear_a[i] + tangent_motion.linear[i])
+                angular_a[i] = _ieee_f32(_ieee_f32(normal_motion.angular[i] * response_weight) +
+                                         angular_a[i])
+                angular_a[i] = _ieee_f32(angular_a[i] + tangent_motion.angular[i])
         if target_movable:
             normal_motion = impulse_motion(target.inertia, _scale(normal_at_time, -1),
-                                           lever_b, radial_b)
+                                           lever_b, radial_b, allow_nonfinite=True)
             tangent_motion = impulse_motion(target.inertia, _scale(tangential_at_time, -1),
-                                            lever_b, radial_b)
+                                            lever_b, radial_b, allow_nonfinite=True)
             current_linear_b = _add(_add(current_linear_b, tangent_motion.linear),
                                     normal_motion.linear)
             current_angular_b = _add(_add(current_angular_b, tangent_motion.angular),
                                      normal_motion.angular)
             for i in range(3):
-                linear_b[i] = f32(f32(normal_motion.linear[i] * response_weight) +
-                                  linear_b[i])
-                linear_b[i] = f32(linear_b[i] + tangent_motion.linear[i])
-                angular_b[i] = f32(f32(normal_motion.angular[i] * response_weight) +
-                                   angular_b[i])
-                angular_b[i] = f32(angular_b[i] + tangent_motion.angular[i])
+                linear_b[i] = _ieee_f32(_ieee_f32(normal_motion.linear[i] * response_weight) +
+                                        linear_b[i])
+                linear_b[i] = _ieee_f32(linear_b[i] + tangent_motion.linear[i])
+                angular_b[i] = _ieee_f32(_ieee_f32(normal_motion.angular[i] * response_weight) +
+                                         angular_b[i])
+                angular_b[i] = _ieee_f32(angular_b[i] + tangent_motion.angular[i])
         samples += 1
 
     if samples:
         owner = replace(owner,
             linear_velocity=_add(owner.linear_velocity, linear_a),
             angular_turn_velocity=_add(owner.angular_turn_velocity,
-                tuple(f32(value * .15915494) for value in angular_a)),
+            tuple(_ieee_f32(value * .15915494) for value in angular_a)),
             contact_record=record_a)
         target = replace(target,
             linear_velocity=_add(target.linear_velocity, linear_b),
             angular_turn_velocity=_add(target.angular_turn_velocity,
-                tuple(f32(value * .15915494) for value in angular_b)),
+                tuple(_ieee_f32(value * .15915494) for value in angular_b)),
             contact_record=record_b)
     return CollisionImpactResult(samples != 0, owner, target, samples, status, effective_mass)
 

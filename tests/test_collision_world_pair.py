@@ -1,4 +1,5 @@
 import struct
+import math
 import unittest
 
 from client.body_constructor import construct_body
@@ -57,6 +58,19 @@ class WorldPairTests(unittest.TestCase):
         self.assertFalse(result.collided)
         self.assertEqual(result.impulse_samples, 0)
         self.assertEqual(result.body_image, bytes(image))
+
+    def test_zero_sized_proxy_preserves_native_ieee_impulse_flow(self):
+        result = resolve_world_decision_minus_one(
+            owner_body(1.), (.1, 0., 0.), 0., 0x19, OWNER, TEMPORARY, .8, .7)
+
+        self.assertTrue(result.collided)
+        self.assertEqual(result.impulse_samples, 32)
+        self.assertEqual(struct.unpack_from('<3f', result.body_image, 0x14),
+                         (1., 0., 0.))
+        self.assertTrue(all(math.isnan(value) for value in
+                            struct.unpack_from('<3f', result.body_image, 0x38)))
+        self.assertEqual(struct.unpack_from('<I', result.body_image, 0x3f4)[0], 5)
+        self.assertEqual(struct.unpack_from('<I', result.body_image, 0x3f8)[0], 0x19)
 
 
 if __name__ == '__main__':

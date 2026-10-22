@@ -1,6 +1,7 @@
 """Compare the decision-minus-one pair response branch in 0x45d1f0."""
 import argparse
 import json
+import math
 import random
 import struct
 
@@ -29,13 +30,14 @@ def _sample(x, y, z, height):
     return bytes(image)
 
 
-def compare(executable, count=128):
+def compare(executable, count=128, *, zero_proxy=False):
     if type(count) is not int or count < 1:
         raise ValueError('case count must be positive')
     rng = random.Random(0x45D1F0FF)
     oracle = DynoOracle(executable)
     cpu = oracle.cpu
     maximum_velocity_error = 0.0
+    maximum_angular_error = 0.0
     collision_cases = 0
     temporary_body_cases = 0
     target_address = 0
@@ -58,7 +60,8 @@ def compare(executable, count=128):
         struct.pack_into('<3f', body, 0x14, *velocity)
         struct.pack_into('<f', body, 0x350, 0.)
         struct.pack_into('<f', body, 0x3b4, (index % 5) * .25)
-        record = _sample(*sample_position, 100 + (index % 40) * 10)
+        record = _sample(*sample_position, 0 if zero_proxy else
+                         100 + (index % 40) * 10)
         decoded = decode_collision_world_sample(record)
 
         oracle._reset()
@@ -109,14 +112,25 @@ def compare(executable, count=128):
             temporary_body_cases += 1
 
         expected_body = expected.body_image
-        actual_velocity = struct.unpack_from('<3f', actual, 0x14)
-        expected_velocity = struct.unpack_from('<3f', expected_body, 0x14)
-        velocity_error = max(abs(a-b) for a, b in zip(actual_velocity,
-                                                       expected_velocity))
-        maximum_velocity_error = max(maximum_velocity_error, velocity_error)
-        if velocity_error > max(4e-5, max(map(abs, expected_velocity)) * 5e-6):
-            raise AssertionError(f'case {index}: velocity {actual_velocity} != '
-                                 f'{expected_velocity}')
+        for offset, label in ((0x14, 'velocity'), (0x38, 'angular velocity')):
+            actual_values = struct.unpack_from('<3f', actual, offset)
+            expected_values = struct.unpack_from('<3f', expected_body, offset)
+            if any(math.isnan(a) != math.isnan(b) or
+                   (not math.isnan(a) and not math.isnan(b) and
+                    abs(a-b) > max(4e-5, abs(b) * 5e-6))
+                   for a, b in zip(actual_values, expected_values)):
+                raise AssertionError(f'case {index}: {label} {actual_values} != '
+                                     f'{expected_values}')
+            finite_errors = [abs(a-b) for a, b in zip(actual_values,
+                                                      expected_values)
+                             if math.isfinite(a) and math.isfinite(b)]
+            maximum_error = max(finite_errors, default=0.0)
+            if offset == 0x14:
+                maximum_velocity_error = max(maximum_velocity_error,
+                                             maximum_error)
+            else:
+                maximum_angular_error = max(maximum_angular_error,
+                                            maximum_error)
         for offset, (a, b) in enumerate(zip(actual, expected_body)):
             if offset not in IGNORED_FLOATS and a != b:
                 raise AssertionError(
@@ -127,6 +141,8 @@ def compare(executable, count=128):
             'temporary_pair_calls': temporary_body_cases,
             'collisions': collision_cases,
             'maximum_absolute_velocity_error': maximum_velocity_error,
+            'maximum_absolute_angular_error': maximum_angular_error,
+            'zero_proxy': zero_proxy,
             'scope': 'original world-sample decode and decision-minus-one proxy/pair/cache branch; classifier forced to -1 and pair coefficients supplied'}
 
 
@@ -134,5 +150,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable')
     parser.add_argument('--cases', type=int, default=128)
+    parser.add_argument('--zero-proxy', action='store_true')
     args = parser.parse_args()
-    print(json.dumps(compare(args.executable, args.cases)))
+    print(json.dumps(compare(args.executable, args.cases,
+                             zero_proxy=args.zero_proxy)))

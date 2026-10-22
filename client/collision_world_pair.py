@@ -78,8 +78,6 @@ def resolve_world_decision_minus_one(owner_image, sample_position,
     if length_squared == 0.0:
         return WorldPairResponseResult(image, bytes(proxy), False, contact,
                                        (0., 0., 0.), 0)
-    if vertical_value == 0.0:
-        raise ValueError('zero-sized proxy inertia remains outside the verified pair domain')
     length = math.sqrt(length_squared)
     reciprocal = 1.0 / length
     normal = (f32(delta_x * reciprocal), 0., f32(delta_z * reciprocal))

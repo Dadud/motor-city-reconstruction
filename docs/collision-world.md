@@ -159,8 +159,12 @@ return `-1`; the remaining world-sample decoding, temporary-body construction,
 pair solver, 64 applied impacts, and maximum velocity error was
 `7.152557373046875e-7`; the other compared body bytes matched exactly. The
 allocator/classifier result and pair coefficients are supplied inputs, and
-zero-sized proxy inertia remains unverified. Dynamic candidate-record
-production and full trigger-allocation integration remain open.
+the zero-height proxy now also matches 128 original caller executions. Its
+zero X/Z dimensions produce infinite inverse inertia on one axis; native IEEE
+propagation yields NaN owner angular velocity while leaving linear velocity
+unchanged. The model preserves that behavior instead of rejecting the
+singular inertia. Dynamic candidate-record production and full
+trigger-allocation integration remain open.
 
 The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
 first three signed words of each 20-byte record. The portable decoder in
