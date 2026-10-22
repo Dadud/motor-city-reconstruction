@@ -111,6 +111,16 @@ Python across the same 256 cases, with maximum absolute output error below
 `mco_collision_pair_response_compare` runner. Neither comparison establishes
 live-game behavior.
 
+The world-sample decision-minus-one caller can construct a zero-sized proxy
+when its decoded vertical value is zero. Its constructor stores an infinite
+inverse-inertia component, and the original pair solver propagates IEEE NaNs
+through angular response while retaining finite linear velocity and contact
+cache writes. Python and C++ now preserve this singular path. The expanded
+caller oracle compares 128 zero-proxy executions and checks finite values,
+NaN positions, decisions and cache bytes; the native pair test covers the same
+singular inertia shape. This is an edge-domain match, not evidence that normal
+gameplay intentionally supplies zero-height samples.
+
 ## Single-body support impulse
 
 `resolve_surface_impulse` translates the supplied-state body path at `0x457df0`,

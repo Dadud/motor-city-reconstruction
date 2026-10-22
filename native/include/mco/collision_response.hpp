@@ -10,5 +10,6 @@ struct TangentialResponse {
 TangentialResponse tangential_response(const std::array<double, 3>& relative_vector,
                                       const std::array<double, 3>& normal,
                                       double threshold_coefficient,
-                                      double sliding_coefficient);
+                                      double sliding_coefficient,
+                                      bool allow_nonfinite = false);
 } // namespace mco

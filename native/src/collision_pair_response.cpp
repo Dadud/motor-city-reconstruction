@@ -17,35 +17,36 @@ float f32(double value) {
         throw std::invalid_argument("finite float32 collision input required");
     return static_cast<float>(value);
 }
+float native_round(double value) { return static_cast<float>(value); }
 V3 add(const V3& a, const V3& b) {
-    return {f32(static_cast<double>(a[0]) + b[0]),
-            f32(static_cast<double>(a[1]) + b[1]),
-            f32(static_cast<double>(a[2]) + b[2])};
+    return {native_round(static_cast<double>(a[0]) + b[0]),
+            native_round(static_cast<double>(a[1]) + b[1]),
+            native_round(static_cast<double>(a[2]) + b[2])};
 }
 V3 subtract(const V3& a, const V3& b) {
-    return {f32(static_cast<double>(a[0]) - b[0]),
-            f32(static_cast<double>(a[1]) - b[1]),
-            f32(static_cast<double>(a[2]) - b[2])};
+    return {native_round(static_cast<double>(a[0]) - b[0]),
+            native_round(static_cast<double>(a[1]) - b[1]),
+            native_round(static_cast<double>(a[2]) - b[2])};
 }
 V3 scale(const V3& a, float value) {
-    return {f32(static_cast<double>(a[0]) * value),
-            f32(static_cast<double>(a[1]) * value),
-            f32(static_cast<double>(a[2]) * value)};
+    return {native_round(static_cast<double>(a[0]) * value),
+            native_round(static_cast<double>(a[1]) * value),
+            native_round(static_cast<double>(a[2]) * value)};
 }
 float dot(const V3& a, const V3& b) {
-    return f32((static_cast<double>(a[0]) * b[0] +
-                static_cast<double>(a[1]) * b[1]) +
-                static_cast<double>(a[2]) * b[2]);
+    return native_round((static_cast<double>(a[0]) * b[0] +
+                         static_cast<double>(a[1]) * b[1]) +
+                         static_cast<double>(a[2]) * b[2]);
 }
 V3 cross(const V3& a, const V3& b) {
-    return {f32(static_cast<double>(a[1]) * b[2] - static_cast<double>(a[2]) * b[1]),
-            f32(static_cast<double>(a[2]) * b[0] - static_cast<double>(a[0]) * b[2]),
-            f32(static_cast<double>(a[0]) * b[1] - static_cast<double>(a[1]) * b[0])};
+    return {native_round(static_cast<double>(a[1]) * b[2] - static_cast<double>(a[2]) * b[1]),
+            native_round(static_cast<double>(a[2]) * b[0] - static_cast<double>(a[0]) * b[2]),
+            native_round(static_cast<double>(a[0]) * b[1] - static_cast<double>(a[1]) * b[0])};
 }
 V3 transform(const V3& v, const std::array<double, 9>& m) {
-    return {f32((static_cast<double>(v[0]) * m[0] + v[1] * m[3]) + v[2] * m[6]),
-            f32((static_cast<double>(v[0]) * m[1] + v[1] * m[4]) + v[2] * m[7]),
-            f32((static_cast<double>(v[0]) * m[2] + v[1] * m[5]) + v[2] * m[8])};
+    return {native_round((static_cast<double>(v[0]) * m[0] + v[1] * m[3]) + v[2] * m[6]),
+            native_round((static_cast<double>(v[0]) * m[1] + v[1] * m[4]) + v[2] * m[7]),
+            native_round((static_cast<double>(v[0]) * m[2] + v[1] * m[5]) + v[2] * m[8])};
 }
 D3 widen(const V3& value) { return {value[0], value[1], value[2]}; }
 V3 lever_for(const CollisionImpactBody& body, const V3& contact, V3& radial) {
@@ -133,8 +134,8 @@ CollisionImpactResult resolve_pair_impulse(
     V3 current_linear_owner = owner.linear_velocity, current_linear_target = target.linear_velocity;
     V3 current_angular_owner{}, current_angular_target{};
     for (std::size_t i = 0; i < 3; ++i) {
-        current_angular_owner[i] = f32(static_cast<double>(owner.angular_turn_velocity[i]) * 6.2831855);
-        current_angular_target[i] = f32(static_cast<double>(target.angular_turn_velocity[i]) * 6.2831855);
+        current_angular_owner[i] = native_round(static_cast<double>(owner.angular_turn_velocity[i]) * 6.2831855);
+        current_angular_target[i] = native_round(static_cast<double>(target.angular_turn_velocity[i]) * 6.2831855);
     }
     unsigned samples = 0;
     int status = 0;
@@ -145,9 +146,10 @@ CollisionImpactResult resolve_pair_impulse(
         const V3 relative = scale(subtract(point_velocity_owner, point_velocity_target), effective_mass);
         const float approach = dot(relative, normal);
         if (approach >= 0.f) break;
-        const V3 normal_impulse = scale(normal, f32(-approach));
+        const V3 normal_impulse = scale(normal, native_round(-approach));
         const auto response = tangential_response(widen(relative), widen(normal),
-                                                  threshold_coefficient, sliding_coefficient);
+                                                  threshold_coefficient, sliding_coefficient,
+                                                  true);
         status = response.status;
         const V3 tangent_impulse = response.vector;
         if (step == 0) {
@@ -165,16 +167,16 @@ CollisionImpactResult resolve_pair_impulse(
             const V3 signed_normal = scale(normal_at_time, sign);
             const V3 signed_tangent = scale(tangent_at_time, sign);
             const auto normal_motion = impulse_motion(body.inertia, widen(signed_normal),
-                                                       widen(lever), widen(radial));
+                                                       widen(lever), widen(radial), true);
             const auto tangent_motion = impulse_motion(body.inertia, widen(signed_tangent),
-                                                        widen(lever), widen(radial));
+                                                        widen(lever), widen(radial), true);
             current_linear = add(add(current_linear, tangent_motion.linear), normal_motion.linear);
             current_angular = add(add(current_angular, tangent_motion.angular), normal_motion.angular);
             for (std::size_t i = 0; i < 3; ++i) {
-                sum_linear[i] = f32(static_cast<double>(normal_motion.linear[i]) * response_weight + sum_linear[i]);
-                sum_linear[i] = f32(static_cast<double>(sum_linear[i]) + tangent_motion.linear[i]);
-                sum_angular[i] = f32(static_cast<double>(normal_motion.angular[i]) * response_weight + sum_angular[i]);
-                sum_angular[i] = f32(static_cast<double>(sum_angular[i]) + tangent_motion.angular[i]);
+                sum_linear[i] = native_round(static_cast<double>(normal_motion.linear[i]) * response_weight + sum_linear[i]);
+                sum_linear[i] = native_round(static_cast<double>(sum_linear[i]) + tangent_motion.linear[i]);
+                sum_angular[i] = native_round(static_cast<double>(normal_motion.angular[i]) * response_weight + sum_angular[i]);
+                sum_angular[i] = native_round(static_cast<double>(sum_angular[i]) + tangent_motion.angular[i]);
             }
             body.gate = 0.f;
         };

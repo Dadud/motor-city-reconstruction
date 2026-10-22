@@ -1,6 +1,7 @@
 #include "mco/collision_pair_response.hpp"
 #include <array>
 #include <cmath>
+#include <limits>
 #include <stdexcept>
 
 namespace {
@@ -62,4 +63,23 @@ int main() {
     check(separating.owner.linear_velocity == owner.linear_velocity);
     check(separating.owner.contact_record == owner.contact_record);
     check(separating.target.contact_record == target.contact_record);
+
+    mco::CollisionImpactBody zero_proxy_owner{}, zero_proxy_target{};
+    zero_proxy_owner.address = 0x3000;
+    zero_proxy_owner.linear_velocity = {1,0,0};
+    zero_proxy_owner.mass = 1000;
+    zero_proxy_owner.inertia = {1.0/1000.0,{1,1,1},identity,identity};
+    zero_proxy_target.address = 0x4000;
+    zero_proxy_target.position = {.1f,0,0};
+    zero_proxy_target.mass = 25;
+    zero_proxy_target.inertia = {1.0/25.0,
+        {1.0/75.0,std::numeric_limits<double>::infinity(),1.0/75.0},
+        identity,identity};
+    const auto singular = mco::resolve_pair_impulse(
+        zero_proxy_owner, zero_proxy_target, {.1f,0,0}, {-1,0,0}, .8f, .7f);
+    check(singular.collided && singular.samples == 32);
+    check(singular.owner.linear_velocity == std::array<float,3>{1,0,0});
+    check(std::isnan(singular.owner.angular_turn_velocity[0]) &&
+          std::isnan(singular.owner.angular_turn_velocity[1]) &&
+          std::isnan(singular.owner.angular_turn_velocity[2]));
 }
