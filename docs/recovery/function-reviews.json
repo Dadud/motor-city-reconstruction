@@ -61,7 +61,7 @@
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The stateful classifier, callbacks, and contact-response branches remain open.",
+    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The classifier/allocation caller path is independently compared in 128 executions. The 22-point response branch in 0x459940 is bounded against the original when supplied geometry is used; compact 8-point extraction and outer callback/event effects remain open.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -76,6 +76,31 @@
       "tools/collision_world_sample_oracle.py",
       "tools/collision_world_prefilter_oracle.py",
       "tests/test_collision_world_candidate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x459940": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The vertex-to-plane scan, candidate selection, penetration correction, cached 22-vertex translation, and surface impulse delegation are translated for caller-supplied geometry. 128 direct original calls compare position, cached vertex buffer, return value, linear velocity, and contact-record writes. The 8-point geometry extraction branch in 0x4596b0 and live caller event/audio state remain outside this translation.",
+    "sources": [
+      "client/collision_world_response.py",
+      "client/geometry_transform.py",
+      "client/collision_pair_response.py",
+      "tests/test_collision_world_response.py",
+      "tests/test_geometry_transform.py",
+      "tools/collision_world_response_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_b5f02a70b93aa2adce2359254389ed87863acc6c1631ae6037db42e21fe76a52"
+    ],
+    "verification_refs": [
+      "tools/collision_world_response_oracle.py",
+      "tests/test_collision_world_response.py",
+      "tests/test_geometry_transform.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"

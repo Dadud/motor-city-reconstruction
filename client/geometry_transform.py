@@ -14,8 +14,8 @@ def transform_vertices(vertices, matrix, position, *, count=22,
     position = tuple(float32_ieee(value) for value in position)
     if len(matrix) != 9 or len(position) != 3:
         raise ValueError('a 3x3 matrix and 3D position are required')
-    if type(count) is not int or count != 22:
-        raise ValueError('the observed mode-6 geometry path transforms 22 vertices')
+    if type(count) is not int or count not in (8, 22):
+        raise ValueError('the observed mode-6 geometry path transforms 8 or 22 vertices')
     if type(input_stride) is not int or input_stride < 3 or type(output_stride) is not int or output_stride < 3:
         raise ValueError('vertex strides must fit three float components')
     if len(vertices) < (count - 1) * input_stride + 3:

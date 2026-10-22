@@ -353,8 +353,8 @@ terrain query and full collision contact-producer chain remain open.
   terrain queries, rotations, global candidates and shared contact records.
 - Integrate the independently verified `0x458530` response with dynamic-pair
   retries and recover dynamic candidate-record production; complete the
-  `0x45d1f0` sampled world-contact response branches and the successful
-  resource-table/heading lookup integration in `0x42d9f0`;
+  compact 8-point extraction in `0x4596b0`, sampled-world caller side effects,
+  and successful resource-table/heading lookup integration in `0x42d9f0`;
   recover `0x45c3e0`, task-list execution, and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
@@ -404,3 +404,23 @@ with its explicit child and global-state boundaries in
 [`collision-dispatch.md`](calculations/collision-dispatch.md). It has focused
 unit coverage but no direct original-execution comparison yet; this does not
 complete the collision chain above.
+
+## Sampled world vertex response
+
+The response routine `0x459940` receives a plane normal, a plane point, a
+distance limit, and the body's point set. It transforms 8 or 22 local points,
+selects the nearest point whose plane distance is below the limit and whose
+offset from the body center is behind the plane, then corrects penetration.
+The correction updates body position and all 22 cached world points before
+delegating the impact to `0x457df0`.
+
+[`client/collision_world_response.py`](../client/collision_world_response.py)
+translates that scan and response for supplied point sets. The direct original
+harness [`tools/collision_world_response_oracle.py`](../tools/collision_world_response_oracle.py)
+matched 128 deterministic 22-point cases, including penetration corrections,
+cached point updates, linear velocity changes, contact-record bytes, and the
+routine return. Position corrections matched exactly; velocity error stayed
+below `4.2e-7`. This does not recover
+the body's compact 8-point extraction in `0x4596b0`; sampled caller effects
+such as audio/debug notifications and subsequent event dispatch also remain
+outside the current model.

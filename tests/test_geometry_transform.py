@@ -16,6 +16,12 @@ class GeometryTransformTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             transform_vertices((0.0,) * 3, (1,0,0,0,1,0,0,0,1), (0,0,0))
 
+    def test_transforms_eight_points_for_compact_world_contact_geometry(self):
+        points = (1.0, 2.0, 3.0) * 8
+        self.assertEqual(transform_vertices(points, (1,0,0,0,1,0,0,0,1),
+                                            (10,20,30), count=8),
+                         (11.0,22.0,33.0) * 8)
+
     def test_adds_translation_to_contiguous_points(self):
         self.assertEqual(add_vector_to_points((1, 2, 3, -1, -2, -3),
                                               (.5, 1, 1.5), count=2),
