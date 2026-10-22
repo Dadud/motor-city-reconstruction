@@ -617,6 +617,17 @@ original descriptor mutations and final cursor. This verifies section sizes
 and pointer layout, not object animation, material, visibility, collision or
 rendering semantics.
 
+[`client/track_object_mesh.py`](../client/track_object_mesh.py) now turns each
+retained object group into local-space `Model` parts using the shared UV table.
+The 30-byte records are interpreted as quad corners, eight UV-coordinate
+indices, texture page and flags, following the same 15-word layout used by
+track-block quads. Across the installed corpus this yields 5,783 parts and
+43,235 triangles; every selected vertex and UV index is in range. This mapping
+is supported by the asset structure but has not yet been checked against a
+native renderer call. Object transforms, animation playback, visibility,
+materials and draw ordering remain unresolved, so these are local meshes rather
+than a complete rendered scenery scene.
+
 ## Sampled world vertex response
 
 The response routine `0x459940` receives a plane normal, a plane point, a

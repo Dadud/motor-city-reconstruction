@@ -1,7 +1,8 @@
 import struct
 import unittest
-from client.track_mesh import decode_mesh
 from client.track_object_bounds import build_track_object_bounds
+from client.track_object_mesh import decode_track_object_group
+from client.track_mesh import (TrackObject, TrackObjectGroup, decode_mesh)
 from test_track import fixture as road_fixture
 
 
@@ -82,6 +83,26 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from('<H', result.source_rows, 2)[0], 3)
         self.assertEqual(result.vertex_arrays,
                          ((0x7100103b, struct.pack('<3f', 0.0, 0.0, 0.0)),))
+
+    def test_object_quad_becomes_two_local_triangles_with_native_uv_order(self):
+        descriptor = bytearray(56)
+        struct.pack_into('<I', descriptor, 36, 4)
+        struct.pack_into('<I', descriptor, 48, 1)
+        face = (3, 2, 1, 0, 0, 1, 2, 3, 0, 1, 2, 3, 0, 7, 0x8000)
+        obj = TrackObject(
+            bytes(descriptor), b'',
+            (struct.pack('<3f', 0, 0, 0), struct.pack('<3f', 1, 0, 0),
+             struct.pack('<3f', 1, 1, 0), struct.pack('<3f', 0, 1, 0)),
+            (bytes(4),) * 4, (face,))
+        group = TrackObjectGroup(2, 0x640, (obj,))
+        model = decode_track_object_group(group, (0.0, 0.25, 0.5, 0.75))
+        self.assertEqual(model.triangle_count, 2)
+        first, second = model.parts[0].triangles
+        self.assertEqual(first.indices, (3, 2, 1))
+        self.assertEqual(first.uv, (0.5, 0.0, 0.5, 0.75, 0.25, 0.75))
+        self.assertEqual((first.texture_page, first.flags), (7, 0x8000))
+        self.assertEqual(second.indices, (3, 1, 0))
+        self.assertEqual(model.parts[0].normals[0][2], -1.0)
 
     def test_invalid_indices_and_truncated_object_are_rejected(self):
         source=fixture()

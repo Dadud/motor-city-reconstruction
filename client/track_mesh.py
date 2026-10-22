@@ -23,6 +23,7 @@ class DecodedTrackWorld:
     block_headers: tuple[bytes, ...] = ()
     object_sections: tuple[tuple[int, tuple[int, int, int, int]], ...] = ()
     objects: tuple['TrackObjectGroup', ...] = ()
+    object_meshes: tuple[Model, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -194,6 +195,12 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
     """Decode mesh, relocate the native grid trailer, and build its query view."""
     objects = []
     mesh, grid_offset = decode_mesh(data, materials=True, object_records=objects)
+    uv_count = struct.unpack_from('<I', data, 52)[0] & 0xffff
+    uv_start = grid_offset - uv_count * 4
+    uv_coordinates = struct.unpack_from(f'<{uv_count}f', data, uv_start)
+    from client.track_object_mesh import decode_track_object_group
+    object_meshes = tuple(decode_track_object_group(group, uv_coordinates)
+                          for group in objects)
     track = decode_track(data)
     header_start = 56 + len(track.slices) * 84
     if retain_block_headers:
@@ -217,7 +224,7 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
     if relocated != spatial:
         raise ValueError('relocated and file-layout spatial trees disagree')
     return DecodedTrackWorld(mesh, grid, relocated, end, headers, sections,
-                             tuple(objects))
+                             tuple(objects), object_meshes)
 
 
 def decode_track_with_spatial(data):

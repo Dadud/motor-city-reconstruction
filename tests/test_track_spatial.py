@@ -107,3 +107,7 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(sum(len(group.objects) for group in world.objects),
                          sum(sum(counts) for _, counts in world.object_sections))
         self.assertTrue(world.objects)
+        self.assertEqual(len(world.object_meshes), len(world.objects))
+        self.assertEqual(sum(len(model.parts) for model in world.object_meshes),
+                         sum(len(group.objects) for group in world.objects))
+        self.assertGreater(sum(model.triangle_count for model in world.object_meshes), 0)
