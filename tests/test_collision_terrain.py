@@ -14,7 +14,8 @@ from client.collision_terrain import (triangle_candidate_gate,
                                       specialized_quad_height_gate,
                                       sample_specialized_quad_heights,
                                       terrain_contact_lever_arm,
-                                      specialized_quad_contact_selection)
+                                      specialized_quad_contact_selection,
+                                      specialized_quad_response_axes)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -190,8 +191,8 @@ class TerrainTriangleGateTests(unittest.TestCase):
         self.assertEqual(result, (.25, 7., -1.5))
 
     def test_specialized_quad_contact_filter_keeps_first_three_accepted(self):
-        points = ((0., 0., 0.), (1., 0., 0.),
-                  (2., 0., 0.), (3., 0., 0.))
+        points = ((0., 0., 0.), (0., 0., 1.),
+                  (1., 0., 1.), (1., 0., 0.))
         normals = ((0., 1., 0.),) * 4
         identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
         result = specialized_quad_contact_selection(
@@ -206,6 +207,23 @@ class TerrainTriangleGateTests(unittest.TestCase):
             (0., 0., 0.), identity, (-.5, -.5, 0., 0.), 0., .25)
         self.assertFalse(rejected.candidate_accepted)
         self.assertEqual(rejected.accepted_indices, (2, 3))
+
+    def test_specialized_quad_response_axes_project_and_clamp(self):
+        points = ((0., 0., 0.), (0., 0., 1.),
+                  (1., 0., 1.), (1., 0., 0.))
+        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        selection = specialized_quad_contact_selection(
+            points, ((0., 1., 0.),) * 4, (0., 0., 0.), (0., 0., 0.),
+            (0., 0., 0.), (0., 0., 0.), identity, (0., 0., 0., 0.),
+            0., .25)
+        axes = specialized_quad_response_axes(
+            selection, identity, (.2, .3, .4), (7., .5, 7.),
+            (.2, .3, .4), .5, .05, -.2, .2, .15)
+        self.assertAlmostEqual(axes.yaw_correction, .05 + .14758362, places=6)
+        self.assertAlmostEqual(axes.pitch_correction, .09358352, places=6)
+        self.assertAlmostEqual(axes.penetration, .35, places=6)
+        self.assertAlmostEqual(axes.roll_error, 0., places=6)
+        self.assertAlmostEqual(axes.pitch_error, 0., places=6)
 
     def test_response_normal_is_upward_and_degenerate_is_zero(self):
         self.assertEqual(terrain_response_normal(self.triangle), (0., 1., 0.))

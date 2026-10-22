@@ -157,14 +157,17 @@ vary the position, local center, supplied body basis and point; maximum absolute
 error is `1.9073486328125e-6`. Run
 `python -m tools.terrain_contact_lever_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
 The worker's four-corner motion filter now has a translation in
-`specialized_quad_contact_selection`. On 87 direct original calls over a flat
-supplied track, 55 select at least three corners and 32 reject on predicted
-motion. The return decision matches every call, and the two selected three-point
-arrays passed to `0x459e30` match exactly. The corpus varies the per-corner
-vertical offsets around the strict acceptance threshold. Run
+`specialized_quad_contact_selection`, followed by the first response-axis
+projection in `specialized_quad_response_axes`. On 263 direct original calls
+over a flat supplied track, 183 select at least three corners and 80 reject on
+predicted motion. Every return decision and both three-point arrays passed to
+`0x459e30` match; on accepted cases the owner fields `+0xc00`, `+0xc04`,
+`+0xbfc`, `+0xbf4` and `+0xbf8` match within a maximum absolute error of
+`2.9802322387695312e-8`. The corpus varies per-corner vertical offsets around
+the strict acceptance threshold and includes sloped contact triplets. Run
 `python -m tools.terrain_specialized_contact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 80`.
-This translates contact selection only; response construction and body
-correction still need source translations and broader direct comparisons.
+The later response forces and body velocity/orientation correction still need
+source translations and broader direct comparisons.
 
 The three triangle tables at `0x88c9d4`, `0x88ca64` and `0x88c7f4` contain 12
 ordered triangles for shapes 0/2, 6 for shape 1, and 40 for shapes 3/4. Their

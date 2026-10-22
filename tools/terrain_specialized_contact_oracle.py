@@ -7,7 +7,8 @@ import struct
 from unicorn import UC_HOOK_CODE
 
 from client.collision_terrain import (sample_specialized_quad_heights,
-                                      specialized_quad_contact_selection)
+                                      specialized_quad_contact_selection,
+                                      specialized_quad_response_axes)
 from tools.native_oracle import DynoOracle
 from tools.support_correction_oracle import _install_world, _make_world
 from tools.track_surface_cases import fixture
@@ -59,6 +60,7 @@ def compare(executable, count=256):
 
     cpu.hook_add(UC_HOOK_CODE, trace)
     maximum = 0.0
+    maximum_axis_error = 0.0
     selected_cases = 0
     rejected_cases = 0
     for case_index, offsets in enumerate(_cases(count)):
@@ -79,6 +81,15 @@ def compare(executable, count=256):
         struct.pack_into('<3f', image, 0x340, *origin)
         struct.pack_into('<9f', image, 0x78,
                          1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        struct.pack_into('<3f', image, 8, 7., .5, 7.)
+        struct.pack_into('<f', image, 0x7C, .2)
+        struct.pack_into('<3f', image, 0x84, .2, .3, .4)
+        struct.pack_into('<f', image, 0x94, .4)
+        struct.pack_into('<9f', image, 0x9C,
+                         1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        struct.pack_into('<f', image, 0xD0, .5)
+        struct.pack_into('<f', image, 0x18F4, .05)
+        struct.pack_into('<3f', image, 0x18FC, .2, .2, .15)
         image[0x370:0x370 + 0x44] = seed[:0x44]
         for index, offset in enumerate(offsets):
             struct.pack_into('<f', image, 0x6EC + index * 0x10C, offset)
@@ -111,6 +122,21 @@ def compare(executable, count=256):
                         raise AssertionError(
                             f'case {case_index} call {call_index} float {axis}: '
                             f'original {got} != translated {wanted}')
+            axes = specialized_quad_response_axes(
+                expected, (1., 0., 0., 0., 1., 0., 0., 0., 1.),
+                (.2, .3, .4), (7., .5, 7.), (.2, .3, .4), .5,
+                .05, -.2, .2, .15)
+            actual_axes = tuple(struct.unpack('<f', cpu.mem_read(OWNER + offset, 4))[0]
+                                for offset in (0xC00, 0xC04, 0xBFC, 0xBF4, 0xBF8))
+            expected_axes = (axes.yaw_correction, axes.pitch_correction,
+                             axes.penetration, axes.roll_error, axes.pitch_error)
+            for axis, (got, wanted) in enumerate(zip(actual_axes, expected_axes)):
+                error = abs(got - wanted)
+                maximum_axis_error = max(maximum_axis_error, error)
+                if error > max(2e-5, abs(got) * 2e-6):
+                    raise AssertionError(
+                        f'case {case_index} response field {axis}: '
+                        f'original {got} != translated {wanted}')
         else:
             rejected_cases += 1
             if captured:
@@ -118,7 +144,8 @@ def compare(executable, count=256):
     return {'entry': '0x54f2a0', 'cases': count + 7,
             'contact_selected': selected_cases, 'motion_rejected': rejected_cases,
             'maximum_selected_point_error': maximum,
-            'scope': 'accepted height gate, four-corner motion filter and the two point arrays passed to 0x459e30; original x86 execution'}
+            'maximum_response_axis_error': maximum_axis_error,
+            'scope': 'accepted height gate, four-corner motion filter, contact-normal projections and five response-axis owner fields; original x86 execution'}
 
 
 if __name__ == '__main__':

@@ -245,6 +245,17 @@ class SpecializedQuadContactSelection:
 
 
 @dataclass(frozen=True)
+class SpecializedQuadResponseAxes:
+    adjusted_normal: tuple
+    sampled_normal: tuple
+    yaw_correction: float
+    pitch_correction: float
+    penetration: float
+    roll_error: float
+    pitch_error: float
+
+
+@dataclass(frozen=True)
 class TerrainImpactResult:
     linear_velocity: tuple
     angular_turn_velocity: tuple
@@ -520,6 +531,72 @@ def specialized_quad_contact_selection(
     return SpecializedQuadContactSelection(
         tuple(dots), tuple(predicted), selected, tuple(sources),
         tuple(adjusted), len(selected) == 3)
+
+
+def _terrain_turn_angle(y, x):
+    """The normalized ``fpatan(y, x)`` helper at ``0x6f1430``."""
+    return math.atan2(float(y), float(x)) * 0.15915493667125702
+
+
+def _terrain_response_basis(vector, basis):
+    """Project a world vector using the worker's transposed body basis."""
+    x, y, z = vector
+    return tuple(f32(float(z) * basis[index + 6] +
+                     float(y) * basis[index + 3] +
+                     float(x) * basis[index]) for index in range(3))
+
+
+def specialized_quad_response_axes(
+        selection, body_basis, body_angles, position, center_projection,
+        center_projection_scale, yaw_offset, pitch_lower, pitch_upper,
+        roll_limit):
+    """Translate the normal projection and contact-axis writes in ``0x54f2a0``.
+
+    This is the response prefix through owner offsets ``+0xc00`` to
+    ``+0xbf8``. Body-basis layout is the worker's row-major block at ``+0x9c``;
+    ``body_angles`` are owner fields ``(+0x7c, +0x88, +0x94)`` and
+    ``center_projection`` is owner fields ``(+0x84, +0x88, +0x8c)`` used by
+    its penetration projection.
+    """
+    if not selection.candidate_accepted or len(selection.source_points) != 3:
+        raise ValueError('three selected terrain contacts are required')
+    if len(body_basis) != 9 or any(len(vector) != 3 for vector in
+                                   (body_angles, position, center_projection)):
+        raise ValueError('response axes require a 3x3 basis and XYZ fields')
+    basis = tuple(f32(value) for value in body_basis)
+    angles = tuple(f32(value) for value in body_angles)
+    origin = tuple(f32(value) for value in position)
+    projection = tuple(f32(value) for value in center_projection)
+    adjusted = terrain_response_normal(selection.adjusted_points)
+    sampled = terrain_response_normal(selection.source_points)
+    adjusted_body = _terrain_response_basis(adjusted, basis)
+    sampled_body = _terrain_response_basis(sampled, basis)
+    yaw = f32(_terrain_turn_angle(angles[2], angles[1]) -
+              _terrain_turn_angle(sampled_body[2], sampled_body[1]) +
+              float(f32(yaw_offset)))
+    pitch = f32(_terrain_turn_angle(angles[0], angles[1]) -
+                _terrain_turn_angle(sampled_body[0], sampled_body[1]))
+
+    scale = f32(center_projection_scale)
+    contact = selection.source_points[0]
+    relative = tuple(f32(f32(origin[i] - f32(projection[i] * scale)) -
+                          f32(contact[i])) for i in range(3))
+    penetration_dot = ((float(relative[0]) * sampled[0] +
+                        float(relative[1]) * sampled[1]) +
+                       float(relative[2]) * sampled[2])
+    penetration = f32(max(0., penetration_dot))
+
+    roll = f32(_terrain_turn_angle(adjusted_body[1], adjusted_body[2]) -
+               _terrain_turn_angle(sampled_body[1], sampled_body[2]))
+    pitch_error = f32(_terrain_turn_angle(adjusted_body[0], adjusted_body[1]) -
+                      _terrain_turn_angle(sampled_body[0], sampled_body[1]))
+    lower = f32(pitch_lower)
+    upper = f32(pitch_upper)
+    pitch_error = f32(min(max(pitch_error, lower), upper))
+    limit = abs(f32(roll_limit))
+    roll = f32(min(max(roll, -limit), limit))
+    return SpecializedQuadResponseAxes(
+        adjusted, sampled, yaw, pitch, penetration, roll, pitch_error)
 
 
 def terrain_impact_response(linear_velocity, angular_turn_velocity,
