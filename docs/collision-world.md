@@ -59,6 +59,20 @@ routine as a callback rather than calling it directly. Its actual task execution
 and the scheduler's per-frame caller remain open. The dispatcher also has a
 fast return when its entry field at `+0x6c` is nonzero.
 
+The dynamic candidate loop in `0x45cf70` consumes the separate record table at
+`0x97c410`, bounded by the count at `0x97c398`. It skips entries whose float
+fields at `+0x30` or `+0x74` are zero, transforms the record's local center at `+0x4c`
+through its matrix at `+0x0c`, and admits a pair when squared center distance
+is no greater than the square of owner radius `+0xd8` plus record radius
+`+0x48`. This prefilter is translated in
+[`client/collision_pair_candidate.py`](../client/collision_pair_candidate.py).
+The direct original harness executes the real `0x45cf70` path for 512 varied
+records and body positions; 134 reach `0x45af30`, and all eligibility, boundary
+and first-rejection outcomes match. The harness stops the pair resolver at its
+entry, so it does not cover accepted pair response or candidate-record
+production. Original function dossier: `ev_bc440ea786fb8140385b6eb99b24d3af70ca0fa66b5794d68152e16e25b75471`.
+Run `python -m tools.collision_pair_candidate_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 512`.
+
 ## Scheduler placement
 
 `0x567940` constructs two task lists. `0x565d20` inserts each callback into a
@@ -268,8 +282,9 @@ terrain query and full collision contact-producer chain remain open.
 
 - Recover the data types and producers for collision object shapes, triangles,
   terrain queries, rotations, global candidates and shared contact records.
-- Recover and compare `0x45cf70`, `0x45d1f0`, `0x45c3e0`, task-list
-  execution, and the recurring game-frame caller.
+- Finish the `0x45cf70` pair-filter setup/retry/response path and recover
+  `0x45d1f0`, `0x45c3e0`, task-list execution, and the recurring game-frame
+  caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
 - Integrate it with the force vehicle state and test wall/resting impacts,
