@@ -7,7 +7,9 @@ from .fce import Model, Part, Triangle
 from .track import decode_track
 from .track_spatial import (SpatialIndex, decode_relocated_spatial,
                             decode_spatial)
-from .world_grid import WorldGridFixup, fixup_world_grid
+from .world_grid import (PAYLOAD_OFFSET, WorldGridFixup, fixup_world_grid)
+from .track_surface_lookup import TrackSurfaceMemory, TrackSurfaceWorld
+from .world_dataset_layout import layout_pointer_record_section
 
 
 @dataclass(frozen=True)
@@ -20,6 +22,8 @@ class DecodedTrackWorld:
     object_sections: tuple[tuple[int, tuple[int, int, int, int]], ...] = ()
     objects: tuple['TrackObjectGroup', ...] = ()
     object_meshes: tuple[Model, ...] = ()
+    query_world: TrackSurfaceWorld | None = None
+    surface_blocks: tuple = ()
 
     def sample_object_poses(self, tick):
         """Sample the animation payload for each animated type-3 object."""
@@ -80,7 +84,7 @@ class TrackObjectGroup:
 
 
 def decode_mesh(data, materials=False, surface_records=None, object_records=None,
-                color_percentages=(100, 100, 100)):
+                color_percentages=(100, 100, 100), runtime_layout=None):
     track = decode_track(data)
     headers = 56+len(track.slices)*84
     cursor = headers+track.block_count*0x6c4
@@ -115,6 +119,8 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
         if count > 100000:
             raise ValueError('FRD object count exceeds budget')
         start = take(count * 56)
+        if runtime_layout is not None:
+            runtime_layout['object_sections'].append((header + section_offset, start))
         decoded = []
         for index in range(count):
             record = start + index * 56
@@ -140,6 +146,9 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
             decoded.append(TrackObject(bytes(data[record:record + 56]),
                                        bytes(data[animation_start:animation_start + animation_size]),
                                        vertex_records, attributes, faces))
+        if runtime_layout is not None:
+            runtime_layout['object_sections'][-1] = (
+                header + section_offset, start, cursor)
         if object_records is not None and decoded:
             object_records.append(TrackObjectGroup(block_index, section_offset,
                                                    tuple(decoded)))
@@ -149,15 +158,21 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
         header=headers+block*0x6c4
         groups=struct.unpack_from('<11I',data,header)
         count=count_at(header+0x134)
+        block_layout = {'header': header, 'vertices': None, 'colors': None,
+                        'descriptors': {}, 'faces': []}
+        if runtime_layout is not None:
+            runtime_layout['blocks'].append(block_layout)
         total_vertices+=count
         total_faces+=sum(groups)
         if total_vertices>2_000_000 or total_faces>2_000_000:
             raise ValueError('FRD geometry exceeds budget')
         start=take(count*12)
+        block_layout['vertices'] = start
         vertices=tuple(struct.unpack_from('<3f',data,start+i*12) for i in range(count))
         if not all(math.isfinite(x) for v in vertices for x in v):
             raise ValueError('non-finite FRD mesh position')
         color_start = take(count * 4)
+        block_layout['colors'] = color_start
         color_bytes = bytearray(data[color_start:color_start + count * 4])
         adjust_color_words(color_bytes, count, color_percentages)
         vertex_colors = struct.unpack('<' + 'I' * count, color_bytes)
@@ -165,6 +180,7 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
         for offset,stride in ((0x660,20),(0x684,20),(0x68c,20),(0x694,16),(0x69c,24)):
             entries=count_at(header+offset)
             start=take(entries*stride)
+            block_layout['descriptors'][offset] = start
             if offset == 0x660 and surface_records is not None:
                 descriptors=tuple(struct.unpack_from('<10h',data,start+i*20) for i in range(entries))
         triangles=[]
@@ -172,6 +188,7 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
         sums=[[0.,0.,0.] for _ in vertices]
         for group,faces in enumerate(groups):
             start=take(faces*30)
+            block_layout['faces'].append(start if faces else None)
             for i in range(faces):
                 record=struct.unpack_from('<15H',data,start+i*30)
                 indices=record[:4]
@@ -230,6 +247,8 @@ def decode_mesh(data, materials=False, surface_records=None, object_records=None
                 triangles.append(replace(face,uv=tuple(coordinates[index] for index in face.uv)))
             resolved.append(replace(part,triangles=tuple(triangles)))
         parts=resolved
+    if runtime_layout is not None:
+        runtime_layout['grid_offset'] = cursor
     return Model(tuple(parts),0),cursor
 
 
@@ -244,8 +263,13 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
     if object_color_percentages is None:
         object_color_percentages = (100, 100, 100)
     objects = []
-    mesh, grid_offset = decode_mesh(data, materials=True, object_records=objects,
-                                    color_percentages=object_color_percentages)
+    surface_blocks = []
+    runtime_layout = {'blocks': [], 'object_sections': []}
+    mesh, grid_offset = decode_mesh(data, materials=True, surface_records=surface_blocks,
+                                    object_records=objects,
+                                    color_percentages=object_color_percentages,
+                                    runtime_layout=runtime_layout)
+    runtime_layout.setdefault('grid_offset', grid_offset)
     uv_count = struct.unpack_from('<I', data, 52)[0] & 0xffff
     uv_start = grid_offset - uv_count * 4
     uv_coordinates = struct.unpack_from(f'<{uv_count}f', data, uv_start)
@@ -276,8 +300,73 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
                                          image_address)
     if relocated != spatial:
         raise ValueError('relocated and file-layout spatial trees disagree')
+    def validate_surface_ids(node):
+        if node.identifiers is not None:
+            for identifier in node.identifiers:
+                block, descriptor = identifier & 0xffff, identifier >> 16
+                if block >= len(surface_blocks) or descriptor >= len(surface_blocks[block][2]):
+                    raise ValueError('FRD spatial surface reference outside block')
+        else:
+            for child in node.children:
+                if child is not None:
+                    validate_surface_ids(child)
+    for cell in spatial.cells:
+        validate_surface_ids(cell)
+    query_world = _build_track_surface_world(data, track, runtime_layout,
+                                             image_address)
     return DecodedTrackWorld(mesh, grid, relocated, end, headers, sections,
-                             tuple(objects), object_meshes)
+                             tuple(objects), object_meshes, query_world,
+                             tuple(surface_blocks))
+
+
+def _build_track_surface_world(data, track, runtime_layout, image_address):
+    """Recreate the bounded pointers written by the native FRD loader.
+
+    The geometry arrays follow the copied block headers in the source stream;
+    0x428150 lays them out in that same order. Only the query-relevant pointers
+    and object record tables are fixed up here. The source file remains intact.
+    """
+    grid_offset = runtime_layout['grid_offset']
+    if grid_offset < 56 + len(track.slices) * 84:
+        raise ValueError('native FRD cursor precedes track blocks')
+    image = bytearray(data[:grid_offset])
+    descriptors = ((0x660, 0x67c), (0x684, 0x688), (0x68c, 0x690),
+                   (0x694, 0x698), (0x69c, 0x6a0))
+    for block in runtime_layout['blocks']:
+        header = block['header']
+        for header_offset, pointer_offset in ((0x14c, 'vertices'),
+                                               (0x150, 'colors')):
+            struct.pack_into('<I', image, header + header_offset,
+                             0 if block[pointer_offset] is None else
+                             image_address + block[pointer_offset])
+        for count_offset, pointer_offset in descriptors:
+            struct.pack_into('<I', image, header + pointer_offset,
+                             image_address + block['descriptors'][count_offset])
+        for index, face_start in enumerate(block['faces']):
+            struct.pack_into('<I', image, header + 0x2c + index * 4,
+                             0 if face_start is None else image_address + face_start)
+    layout_ends = {}
+    for descriptor_offset, record_start, expected_end in runtime_layout['object_sections']:
+        descriptor_address = image_address + descriptor_offset
+        result = layout_pointer_record_section(
+            image, image_address, descriptor_address,
+            image_address + record_start)
+        layout_ends[descriptor_offset] = result['cursor_address'] - image_address
+        if layout_ends[descriptor_offset] != expected_end:
+            raise ValueError('native object pointer layout disagrees with the FRD stream')
+    if any(offset < 0 or offset > grid_offset for offset in layout_ends.values()):
+        raise ValueError('native object record pointers exceed the geometry region')
+
+    grid_offset = runtime_layout['grid_offset']
+    query_grid = fixup_world_grid(memoryview(data)[grid_offset:],
+                                  image_address + grid_offset)
+    nodes = bytes(image) + bytes(PAYLOAD_OFFSET) + query_grid.payload
+    memory = TrackSurfaceMemory(query_grid.table, nodes, image_address)
+    return TrackSurfaceWorld(memory,
+        (query_grid.bounds[0], query_grid.bounds[1]),
+        (query_grid.scale_x, query_grid.scale_y),
+        image_address + 56 + len(track.slices) * 84,
+        image_address + 56, track.block_count - 1, len(track.slices))
 
 
 def decode_track_with_spatial(data):

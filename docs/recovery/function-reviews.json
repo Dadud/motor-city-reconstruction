@@ -2562,5 +2562,21 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x428150": {
+    "translation": "partial",
+    "verification": "static-analysis-only",
+    "scope": "The track query-memory adapter reconstructs the loader-observed block header pointers for vertex, color, descriptor and 11 face arrays, composes per-block 0x428680 object-record pointer fixups, and relocates the world-grid payload into one bounded address view. It is integrated into DecodedTrackWorld and the vehicle world object; 27 installed tracks decode, and 81 sampled road-slice support queries run without unmapped accesses. This does not reproduce the original allocator/resource lifecycle, both global object groups, all post-load side effects, or prove loader equivalence. The streamed cursor and field sequence come from Ghidra Evidence; runtime behavior remains partially reconstructed.",
+    "sources": [
+      "client/track_mesh.py",
+      "client/world.py",
+      "client/driving_support.py",
+      "tests/test_track_spatial.py",
+      "tests/test_driving_support.py",
+      "docs/recovery/spatial-query-progress.md"
+    ],
+    "evidence_ids": [
+      "ev_8202d7e5585c1226abc8c107ee46dff1257949b71581840b8c556bc69dde6ebb"
+    ]
   }
 }

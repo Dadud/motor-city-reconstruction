@@ -8,7 +8,9 @@ from .engine import EngineBlock
 from .scene import stock_scene
 from .simulation_inputs import VehicleSimulationInputs, build_stock_simulation_inputs
 from .track import decode_track
-from .track_surface import TrackSurface, decode_surface
+from .track_surface import TrackSurface
+from .track_mesh import decode_track_world
+from .track_surface_lookup import TrackSurfaceWorld
 
 
 @dataclass(frozen=True)
@@ -24,6 +26,7 @@ class WorldVehicle:
     terrain: TrackSurface
     engine: EngineBlock
     simulation: VehicleSimulationInputs
+    query_world: TrackSurfaceWorld
 
 
 def load_world_vehicle(assets, catalogue, vehicle, track_bytes, skin=None,
@@ -37,13 +40,15 @@ def load_world_vehicle(assets, catalogue, vehicle, track_bytes, skin=None,
     model, textures, flags, notes = stock_scene(
         assets, path, vehicle, skin, dimensions, driver_variant)
     radii = {key: tire.radius for key, tire in dimensions.items()}
-    terrain = decode_surface(track_bytes)
+    decoded_track = decode_track_world(track_bytes)
+    terrain = TrackSurface(decoded_track.spatial, decoded_track.surface_blocks)
     road = decode_track(track_bytes).slices[0]
     initial = Pose.yaw(road.position, math.atan2(road.forward[0], road.forward[2]))
     pose, contacts = rig.spawn_pose(terrain, initial, radii)
     engine = catalogue.engine_block(vehicle)
     simulation = build_stock_simulation_inputs(catalogue, vehicle, rig)
-    return WorldVehicle(model, textures, flags, notes, pose, rig, radii, contacts, terrain, engine, simulation)
+    return WorldVehicle(model, textures, flags, notes, pose, rig, radii, contacts,
+                        terrain, engine, simulation, decoded_track.query_world)
 
 
 def pose_matrix(pose):

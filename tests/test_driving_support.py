@@ -1,8 +1,8 @@
 import unittest
 from dataclasses import replace
-from client.driving_support import DrivingSupport
+from client.driving_support import DrivingSupport, project_track_surface
 from client.support_prediction import (SupportPredictionState, PredictionWheel,
-    SupportProjection, SupportRecord)
+    SupportProjection, SupportRecord, SupportQuery)
 from client.driving_pipeline import DrivingForces
 from client.vehicle_update import update_vehicle
 from tests.test_driving_pipeline import state, inputs, external
@@ -50,6 +50,28 @@ class DrivingSupportTests(unittest.TestCase):
 
     def test_projection_cannot_be_silently_omitted(self):
         with self.assertRaises(ValueError): DrivingSupport(self.prediction(), None, external)
+
+    def test_installed_track_query_builds_support_projection(self):
+        from pathlib import Path
+        from client.track import decode_track
+        from client.track_mesh import decode_track_world
+        root = Path(r'C:\Program Files (x86)\EA Games\Motor City Online\Data\Tracks')
+        candidates = sorted(root.rglob('Tr.frd'))
+        if not candidates:
+            self.skipTest('installed MCO track corpus is unavailable')
+        data = candidates[0].read_bytes()
+        track = decode_track(data)
+        world = decode_track_world(data).query_world
+        point = track.slices[0].position
+        query = SupportQuery(0, point, 0, point)
+        projection = project_track_surface(world, query)
+        self.assertEqual(projection.reference_position, point)
+        self.assertTrue(all(abs(value) < 100000 for value in projection.point))
+        if projection.record.surface_id is not None:
+            self.assertEqual(projection.record.surface_code,
+                             world.memory.byte(projection.record.surface_id + 4))
+            self.assertTrue(all(identity is not None
+                                for identity in projection.record.vertex_ids))
 
 
 if __name__=='__main__': unittest.main()

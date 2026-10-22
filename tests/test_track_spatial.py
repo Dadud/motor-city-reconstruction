@@ -43,6 +43,9 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(world.grid.bounds, world.spatial.bounds)
         self.assertEqual(world.spatial.cells[0].identifiers, ())
         self.assertEqual(len(world.block_headers), 1)
+        self.assertIsNotNone(world.query_world)
+        self.assertEqual(world.query_world.path_count, 2)
+        self.assertEqual(world.query_world.last_block, 0)
         self.assertEqual(world.object_sections, ((0, (0, 0, 0, 0)),))
         self.assertIs(model, mesh)
         self.assertEqual(spatial, world.spatial)
@@ -100,7 +103,14 @@ class SpatialTests(unittest.TestCase):
         candidates = sorted(Path(r'C:\Program Files (x86)\EA Games\Motor City Online\Data\Tracks').rglob('Tr.frd'))
         if not candidates:
             self.skipTest('installed MCO track corpus is unavailable')
-        world = decode_track_world(candidates[0].read_bytes())
+        track_data = candidates[0].read_bytes()
+        world = decode_track_world(track_data)
+        from client.track import decode_track
+        from client.track_surface_lookup import track_surface_lookup
+        query_world = world.query_world
+        self.assertIsNotNone(query_world)
+        track = decode_track(track_data)
+        self.assertEqual(query_world.path_count, len(track.slices))
         self.assertEqual(len(world.block_headers), len(world.object_sections))
         self.assertTrue(world.block_headers)
         self.assertTrue(any(sum(counts) for _, counts in world.object_sections))
@@ -126,6 +136,22 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(tuple(map(len, poses)),
                          tuple(len(group.objects) for group in world.objects))
         self.assertTrue(any(pose is not None for group in poses for pose in group))
+        point = track.slices[0].position
+        record = bytearray(0x44)
+        track_surface_lookup(query_world, point, record)
+        block = struct.unpack_from('<I', record, 4)[0]
+        descriptor = struct.unpack_from('<I', record, 12)[0]
+        block_base = query_world.blocks_address + block * 0x6c4
+        if descriptor:
+            descriptor_base = query_world.memory.word(block_base + 0x67c)
+            descriptor_count = query_world.memory.word(block_base + 0x660)
+            self.assertGreaterEqual(descriptor, descriptor_base)
+            self.assertLessEqual(descriptor + 20, descriptor_base + descriptor_count * 20)
+            for vertex in struct.unpack_from('<4I', record, 16):
+                vertex_base = query_world.memory.word(block_base + 0x14c)
+                vertex_count = query_world.memory.word(block_base + 0x134)
+                self.assertGreaterEqual(vertex, vertex_base)
+                self.assertLessEqual(vertex + 12, vertex_base + vertex_count * 12)
 
     def test_installed_track_lighting_percentages_reach_object_vertex_colors(self):
         from pathlib import Path
