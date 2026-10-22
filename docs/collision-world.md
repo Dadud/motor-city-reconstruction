@@ -494,6 +494,16 @@ for the 0x44-byte query record is zero-initialized; the translation accepts an
 explicit initial image because the native initializer itself writes only the
 first eight words before invoking the query child.
 
+The preceding `0x428710` object-table loop is translated in
+[`client/world_object_table_setup.py`](../client/world_object_table_setup.py).
+For each supplied source row, it copies 0xa8 descriptor bytes into the object
+at +0x418, clears +0x4c0 and the 0x24-byte block at +0x4c8, invokes the body
+initializer, then replaces the row's +0x20 source pointer with the object
+address. 128 original runs over 255 rows matched every object and row byte;
+the `0x426d50` body initializer and `0x6ee0c0` clear child were intercepted.
+World-file allocation, pointer-table production and the completed initializer
+remain caller inputs.
+
 The response child `0x459b90` is translated in
 [`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
 It transforms the body's 8- or 22-point set, selects the deepest eligible

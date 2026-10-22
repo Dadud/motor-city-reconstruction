@@ -2505,5 +2505,22 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x428710": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The world-object preparation loop copies 0xa8 source bytes into each object's embedded descriptor, clears owner +0x4c0 and the 0x24-byte helper region at +0x4c8, calls the explicit 0x426d50 child, then replaces the source-row pointer at +0x20 with the object address. 128 original executions over 255 records matched every object and source-row byte with 0x426d50 and 0x6ee0c0 intercepted. Counts, source rows, source buffers and destination object images are explicit inputs.",
+    "sources": [
+      "client/world_object_table_setup.py",
+      "tests/test_world_object_table_setup.py",
+      "tools/world_object_table_setup_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "verification_refs": [
+      "tools/world_object_table_setup_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }
