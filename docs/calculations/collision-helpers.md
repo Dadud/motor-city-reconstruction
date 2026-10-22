@@ -1,11 +1,14 @@
 # Original collision calculation helpers
 
-Four bounded helpers now have authored Python/C++ implementations. They consume
-supplied contact/body data. The original caller order and object-pair contact
-response have now been traced in [the collision update](../collision-world.md),
-but that enclosing path has no portable implementation or trajectory comparison
-yet. Contact discovery, complete terrain/object response, damage, recovery and
-the integrated collision tick remain unfinished.
+The verified helpers now compose into a Python translation of the track-query
+object-pair dispatcher. The translation predicts the next 1/32-second pose,
+queries the supplied track surface twice per body point, applies the pair gates
+and edge selector, classifies the path material, and invokes the recovered
+single-body plane response. Direct original-instruction comparisons cover 128
+dispatcher calls and 256 swept-pose calls, as documented in
+[the collision update](../collision-world.md). Dynamic object producers, virtual
+event delivery, damage, recovery and the integrated collision tick remain
+unfinished.
 
 Source: x86 `mcity.exe`, SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.

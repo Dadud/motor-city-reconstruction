@@ -2208,10 +2208,40 @@
       "docs/collision-world.md"
     ]
   },
+  "0x45c3e0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The object-pair dispatcher now composes compact/full body-point extraction, the 1/32-second swept pose, two actual track surface queries per sample, identity/material/height gates, edge contact selection, path-based material classification, and the single-body plane response. The 0x520110 pose helper matched 256 direct original calls with maximum absolute position/matrix error 1.9073486328125e-6. Across 128 complete original 0x45c3e0 calls on supplied adjacent-track fixtures, all discrete body writes matched, 102 responses occurred, and float fields matched within max(3e-5, 3e-6 relative); maximum absolute field error was 0.0078125. The original virtual event target, other world/object producers and the recurring simulation caller remain open.",
+    "sources": [
+      "client/collision_pair_dispatch.py",
+      "client/collision_pair_gate.py",
+      "client/collision_edge_contact.py",
+      "client/collision_pair_surface.py",
+      "client/collision_world_response.py",
+      "client/track_surface_lookup.py",
+      "tests/test_collision_pair_dispatch.py",
+      "tools/collision_pair_dispatch_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_8f89e8e095397769bde9d5aa56608ee3424269878f2be6400b42abb11fe3fe8a",
+      "ev_ec34aec30e30eec7230ddc979f662c6bee4f3a677078073e65df52ff4bb06176",
+      "ev_1df8a063c60675bbe18f4df620c002de1b36297caa1f55e04c11175b3aef127d",
+      "ev_ef4350dac0eda98617c1c5c8357c185180ce95673e6eebb6b3524cd1bc6dd030",
+      "ev_fe5a8c53c245ee151be4f933183be9c489a1c2b33ebea73f"
+    ],
+    "verification_refs": [
+      "tests/test_collision_pair_dispatch.py",
+      "tools/collision_pair_dispatch_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
   "0x45c870": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The four-edge contact selector is translated: edge flags contribute normalized normal vectors and height weights, and the mask chooses the contact vertex. 256 direct original calls compare return, normal, point and height outputs with maximum absolute error 3.814697265625e-6. Enclosing 0x45c3e0 record production and contact integration remain open.",
+    "scope": "The four-edge contact selector is translated: edge flags contribute normalized normal vectors and height weights, and the mask chooses the contact vertex. 256 direct original calls compare return, normal, point and height outputs with maximum absolute error 3.814697265625e-6. It is also composed into 128 direct original calls of 0x45c3e0 over supplied adjacent-track fixtures; other candidate producers and event delivery remain open.",
     "sources": [
       "client/collision_edge_contact.py",
       "tests/test_collision_edge_contact.py",
@@ -2275,7 +2305,7 @@
   "0x459b90": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The 8/22-point body geometry is transformed, filtered by candidate height and inward normal motion, and reduced to the closest signed distance. Penetration correction updates body position and all 22 cached world points before delegating to the translated 0x457df0 support impulse. 512 direct original calls match return and discrete writes; 448 select/correct a point and 320 apply impulses. Float comparisons use max(3e-5, 3e-6 relative), with maximum absolute error 0.000244140625. The supplied plane and body record remain inputs; candidate production and complete 0x45c3e0 integration remain open.",
+    "scope": "The 8/22-point body geometry is transformed, filtered by candidate height and inward normal motion, and reduced to the closest signed distance. Penetration correction updates body position and all 22 cached world points before delegating to the translated 0x457df0 support impulse. 512 direct original calls match return and discrete writes; 448 select/correct a point and 320 apply impulses. Float comparisons use max(3e-5, 3e-6 relative), with maximum absolute error 0.000244140625. It is now composed into the supplied-track 0x45c3e0 dispatcher; dynamic-object producers and complete game-frame integration remain open.",
     "sources": [
       "client/collision_pair_surface.py",
       "client/collision_world_response.py",

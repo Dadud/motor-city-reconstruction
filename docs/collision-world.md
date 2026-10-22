@@ -406,9 +406,7 @@ They compare the query against four ordered XZ edges, then select a contact
 vertex and average enabled edge normals and height weights. The direct oracle
 [`tools/collision_edge_contact_oracle.py`](../tools/collision_edge_contact_oracle.py)
 matched all 256 masks and selector calls; 205 returned accepted contacts, with
-maximum output error `3.814697265625e-6`. This verifies the supplied-record
-leaf only. The dispatcher, point/shape record producers and contact-path
-integration remain open.
+maximum output error `3.814697265625e-6`.
 
 The dispatcher’s earlier object and height gates are now translated in
 [`client/collision_pair_gate.py`](../client/collision_pair_gate.py):
@@ -416,8 +414,25 @@ The dispatcher’s earlier object and height gates are now translated in
 `0x45cd80` applies a material-dependent maximum-vertex-height rejection.
 [`tools/collision_pair_gate_oracle.py`](../tools/collision_pair_gate_oracle.py)
 matched 256 direct original calls, including 35 vertical rejects. The world
-table and the four candidate vertex records remain explicit inputs; the terrain
-and mesh candidate producer and the rest of `0x45c3e0` are still open.
+table and the four candidate vertex records were explicit inputs to those leaf
+checks. The full track-query dispatcher is now translated in
+[`client/collision_pair_dispatch.py`](../client/collision_pair_dispatch.py).
+It runs the original two surface queries for each extracted body point, uses
+the supplied track blocks and path table, applies the gates and edge selector,
+classifies the selected contact through the path row, scales the recovered
+material coefficients, and invokes the plane response. Its swept pose composes
+`0x520110` and the Euler-matrix update from `0x4b7430`.
+
+The controlled oracle
+[`tools/collision_pair_dispatch_oracle.py`](../tools/collision_pair_dispatch_oracle.py)
+compared 256 direct calls to the swept-pose helper and 128 complete original
+`0x45c3e0` calls. The corpus produced 102 responses; body-state discrete bytes
+matched, the maximum pose error was `1.9073486328125e-6`, and dispatcher float
+fields matched within `max(3e-5, 3e-6 relative)` (maximum absolute error
+`0.0078125`). These results cover supplied adjacent-track fixtures under
+controlled original-instruction execution; they do not establish live-game or
+whole-frame behavior. The virtual event target and other runtime candidate
+sources remain open.
 
 The response child `0x459b90` is translated in
 [`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
@@ -425,21 +440,21 @@ It transforms the body's 8- or 22-point set, selects the deepest eligible
 inward vertex, corrects penetration and cached world points, then delegates to
 the recovered support impulse. Its direct oracle matched 512 original calls:
 448 selected vertices and corrected position, and 320 applied impulses. The
-maximum observed float error was `0.000244140625`. This verifies the supplied
-plane and body inputs; the producer and complete `0x45c3e0` caller are still
-unverified.
+maximum observed float error was `0.000244140625`. The supplied plane and body
+response now compose into the tested track-query dispatcher. Dynamic object
+candidate production and the event callback remain open.
 
 ## Remaining work
 
-- Recover the data types and producers for collision object shapes, triangles,
-  terrain queries, rotations, global candidates and shared contact records.
+- Recover the remaining producers and data types for dynamic collision objects,
+  terrain triangles, global candidates and shared contact records.
 - Integrate the independently verified `0x458530` response with dynamic-pair
   retries and recover dynamic candidate-record production; recover sampled-world
   caller side effects and successful resource-table/heading lookup integration
-  in `0x42d9f0`;
-  complete `0x45c3e0`, task-list execution, and the recurring game-frame caller.
+  in `0x42d9f0`; resolve the dispatcher's virtual callback, task-list execution,
+  and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
-  contact-record checks; then compare controlled original trajectories.
+  contact-record checks across controlled original trajectories.
 - Integrate it with the force vehicle state and test wall/resting impacts,
   object pairs, terrain contacts, repeated contact persistence and tunnelling.
 
