@@ -1,7 +1,8 @@
 """MCO base track block geometry from REA 0x428150 and 0x428680 assembly.
 
-Object payloads are traversed but not rendered. UVs and material references are
-decoded; object rendering, collision and animated scenery remain to reconstruct.
+Object payload bytes and descriptors are retained but not rendered. UVs and
+material references are decoded; object rendering, collision and animated
+scenery remain to reconstruct.
 """
 import math
 import struct
@@ -21,9 +22,26 @@ class DecodedTrackWorld:
     end_offset: int
     block_headers: tuple[bytes, ...] = ()
     object_sections: tuple[tuple[int, tuple[int, int, int, int]], ...] = ()
+    objects: tuple['TrackObjectGroup', ...] = ()
 
 
-def decode_mesh(data, materials=False, surface_records=None):
+@dataclass(frozen=True)
+class TrackObject:
+    descriptor: bytes
+    animation: bytes
+    vertex_records: tuple[bytes, ...]
+    vertex_attributes: tuple[bytes, ...]
+    faces: tuple[tuple[int, ...], ...]
+
+
+@dataclass(frozen=True)
+class TrackObjectGroup:
+    block_index: int
+    section_offset: int
+    objects: tuple[TrackObject, ...]
+
+
+def decode_mesh(data, materials=False, surface_records=None, object_records=None):
     track = decode_track(data)
     headers = 56+len(track.slices)*84
     cursor = headers+track.block_count*0x6c4
@@ -53,6 +71,37 @@ def decode_mesh(data, materials=False, surface_records=None):
             take(animation+vertices*16+faces*30)
             if faces & 1:
                 take(2)
+
+    def decode_objects(count, block_index, section_offset):
+        if count > 100000:
+            raise ValueError('FRD object count exceeds budget')
+        start = take(count * 56)
+        decoded = []
+        for index in range(count):
+            record = start + index * 56
+            animation_size, vertex_count, face_count = (
+                count_at(record + offset) for offset in (28, 36, 48))
+            if vertex_count > 2_000_000 or face_count > 2_000_000:
+                raise ValueError('FRD object geometry exceeds budget')
+            animation_start = take(animation_size)
+            vertex_start = take(vertex_count * 16)
+            vertex_records = tuple(bytes(data[vertex_start + i * 16:
+                                               vertex_start + (i + 1) * 16])
+                                    for i in range(vertex_count))
+            attributes = tuple(bytes(data[vertex_start + i * 16 + 12:
+                                          vertex_start + i * 16 + 16])
+                               for i in range(vertex_count))
+            face_start = take(face_count * 30)
+            faces = tuple(struct.unpack_from('<15H', data, face_start + i * 30)
+                          for i in range(face_count))
+            if face_count & 1:
+                take(2)
+            decoded.append(TrackObject(bytes(data[record:record + 56]),
+                                       bytes(data[animation_start:animation_start + animation_size]),
+                                       vertex_records, attributes, faces))
+        if object_records is not None and decoded:
+            object_records.append(TrackObjectGroup(block_index, section_offset,
+                                                   tuple(decoded)))
 
     parts=[]
     for block in range(track.block_count):
@@ -107,7 +156,10 @@ def decode_mesh(data, materials=False, surface_records=None):
                                               record[13] if materials else 0,record[14]))
         take((sum(groups) & 1)*2)
         for offset in (0x640,0x648,0x650,0x658):
-            skip_objects(count_at(header+offset))
+            if object_records is None:
+                skip_objects(count_at(header+offset))
+            else:
+                decode_objects(count_at(header+offset), block, offset)
         if surface_records is not None:
             if any((descriptor[3] & 0xffff) >= len(surface_quads) for descriptor in descriptors):
                 raise ValueError('FRD surface descriptor polygon index outside block')
@@ -138,7 +190,8 @@ def decode_mesh(data, materials=False, surface_records=None):
 
 def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=True):
     """Decode mesh, relocate the native grid trailer, and build its query view."""
-    mesh, grid_offset = decode_mesh(data, materials=True)
+    objects = []
+    mesh, grid_offset = decode_mesh(data, materials=True, object_records=objects)
     track = decode_track(data)
     header_start = 56 + len(track.slices) * 84
     if retain_block_headers:
@@ -161,7 +214,8 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
                                          image_address)
     if relocated != spatial:
         raise ValueError('relocated and file-layout spatial trees disagree')
-    return DecodedTrackWorld(mesh, grid, relocated, end, headers, sections)
+    return DecodedTrackWorld(mesh, grid, relocated, end, headers, sections,
+                             tuple(objects))
 
 
 def decode_track_with_spatial(data):

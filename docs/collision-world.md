@@ -600,9 +600,15 @@ mesh-to-grid data handoff for this asset corpus; it does not recover the outer
 
 The returned track-world record also retains each original 0x6c4 block header
 and the four object-group counts consumed by `0x428150`. Across the same corpus
-this preserves 3,465 block headers and exposes 5,783 object-group records for
-future object decoding. These are raw source records/counts; object payload
-interpretation and rendering are still open.
+this preserves 3,465 block headers and exposes 5,783 object records for
+future object decoding. The decoder now retains those 5,783 56-byte descriptors,
+their animation byte ranges, interleaved 16-byte vertex records, 30-byte face
+records and per-group boundaries. The four-byte per-vertex attributes and face
+words remain raw. `0x428680` was run against every actual descriptor group from
+the 27 installed `Tr.frd` files: all 2,242 groups and 5,783 rows matched the
+original descriptor mutations and final cursor. This verifies section sizes
+and pointer layout, not object animation, material, visibility, collision or
+rendering semantics.
 
 ## Sampled world vertex response
 

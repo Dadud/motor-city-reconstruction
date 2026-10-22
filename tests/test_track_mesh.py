@@ -42,6 +42,21 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual(model.parts[0].triangles[1].indices,(0,2,3))
         self.assertEqual(model.parts[0].vertices[2],(1,0,1))
 
+    def test_attached_object_payload_is_retained(self):
+        source=fixture()
+        groups=[]
+        decode_mesh(source,object_records=groups)
+        self.assertEqual(len(groups),1)
+        group=groups[0]
+        self.assertEqual((group.block_index,group.section_offset),(0,0x640))
+        self.assertEqual(len(group.objects),1)
+        obj=group.objects[0]
+        self.assertEqual(obj.animation,b'abc')
+        self.assertEqual(obj.vertex_records,(bytes(16),))
+        self.assertEqual(obj.vertex_attributes,(bytes(4),))
+        self.assertEqual(obj.faces,())
+        self.assertEqual(len(obj.descriptor),56)
+
     def test_invalid_indices_and_truncated_object_are_rejected(self):
         source=fixture()
         with self.assertRaisesRegex(ValueError,'EOF'):decode_mesh(source[:-1])

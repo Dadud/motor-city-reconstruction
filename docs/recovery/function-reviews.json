@@ -2470,18 +2470,22 @@
   "0x428680": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The section helper assigns the 0x38-byte record-table pointer, nullable payload pointers, vertex-array pointers, trailing per-vertex data pointers, triangle-array cursor and odd-count two-byte alignment. 256 direct original calls matched every supplied image byte and final cursor over 1,165 records and 24 empty sections. Cursor and section bytes remain explicit caller inputs.",
+    "scope": "The section helper assigns the 0x38-byte record-table pointer, nullable payload pointers, vertex-array pointers, trailing per-vertex data pointers, triangle-array cursor and odd-count two-byte alignment. 256 synthetic original calls matched every supplied image byte; an additional corpus comparison ran all 2,242 object groups and 5,783 actual descriptors from 27 installed Tr.frd tracks, matching every descriptor mutation and final cursor. The mesh decoder now retains animation bytes, raw 16-byte vertex records, and raw 30-byte faces; their rendering semantics remain open.",
     "sources": [
       "client/world_dataset_layout.py",
+      "client/track_mesh.py",
       "tests/test_world_dataset_layout.py",
       "tools/world_dataset_layout_oracle.py",
+      "tools/track_object_layout_corpus_oracle.py",
+      "tests/test_track_mesh.py",
       "docs/collision-world.md"
     ],
     "evidence_ids": [
       "ev_921f68d67f40a91bc845981e99780c6fa7bbab3286957bd38fdcde61366af40f"
     ],
     "verification_refs": [
-      "tools/world_dataset_layout_oracle.py"
+      "tools/world_dataset_layout_oracle.py",
+      "tools/track_object_layout_corpus_oracle.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"

@@ -32,7 +32,7 @@ class SpatialTests(unittest.TestCase):
         original = mesh_module.decode_mesh
         try:
             mesh_end = len(track_data) + len(block_header) + len(material_counts)
-            mesh_module.decode_mesh = lambda source, materials=False: (mesh, mesh_end)
+            mesh_module.decode_mesh = lambda source, materials=False, **kwargs: (mesh, mesh_end)
             combined = track_data + block_header + material_counts + trailer
             world = decode_track_world(combined)
             model, spatial, end = decode_track_with_spatial(combined)
@@ -104,3 +104,6 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(len(world.block_headers), len(world.object_sections))
         self.assertTrue(world.block_headers)
         self.assertTrue(any(sum(counts) for _, counts in world.object_sections))
+        self.assertEqual(sum(len(group.objects) for group in world.objects),
+                         sum(sum(counts) for _, counts in world.object_sections))
+        self.assertTrue(world.objects)
