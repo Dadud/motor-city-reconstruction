@@ -51,6 +51,74 @@ class SpatialIndex:
         return current.identifiers
 
 
+def decode_relocated_spatial(bounds, table, payload, image_address):
+    """Build a query index from the pointer-relocated 0x552a00 result."""
+    if len(bounds) != 4 or not all(math.isfinite(v) for v in bounds):
+        raise ValueError('invalid relocated spatial bounds')
+    if bounds[2] <= bounds[0] or bounds[3] <= bounds[1]:
+        raise ValueError('invalid relocated spatial bounds')
+    if len(table) != 4096 * 16:
+        raise ValueError('relocated spatial table must be exactly 64 KiB')
+    if type(image_address) is not int or not 0 < image_address <= 0xffffffff:
+        raise ValueError('relocated spatial base must be a non-null uint32')
+    payload_base = image_address + 16 + 4096 * 16
+    payload_end = payload_base + len(payload)
+    nodes = 0
+    identifiers = 0
+
+    def words_at(buffer, offset):
+        if offset < 0 or offset + 16 > len(buffer):
+            raise ValueError('relocated spatial node extends past payload')
+        return struct.unpack_from('<4I', buffer, offset)
+
+    def node(address, depth=0):
+        nonlocal nodes, identifiers
+        nodes += 1
+        if depth > 64 or nodes > 1_000_000:
+            raise ValueError('relocated spatial node budget exceeded')
+        offset = address - payload_base
+        words = words_at(payload, offset)
+        if words[0] == 0xdeadbeef:
+            count = words[1]
+            if count == 0:
+                return Node((), ())
+            identifiers += count
+            if identifiers > 4_000_000:
+                raise ValueError('relocated spatial identifier budget exceeded')
+            start = words[2] - payload_base
+            if start < 0 or start + count * 4 > len(payload):
+                raise ValueError('relocated spatial identifiers extend past payload')
+            values = struct.unpack_from(f'<{count}I', payload, start)
+            return Node(values, ())
+        children = []
+        for pointer in words:
+            if pointer and not payload_base <= pointer < payload_end:
+                raise ValueError('relocated spatial child pointer is outside payload')
+            children.append(node(pointer, depth + 1) if pointer else None)
+        return Node(None, tuple(children))
+
+    def root_node(offset):
+        words = words_at(table, offset)
+        if words[0] == 0xdeadbeef:
+            count = words[1]
+            if count == 0:
+                return Node((), ())
+            identifiers_local = words[2] - payload_base
+            if identifiers_local < 0 or identifiers_local + count * 4 > len(payload):
+                raise ValueError('relocated root identifiers extend past payload')
+            values = struct.unpack_from(f'<{count}I', payload, identifiers_local)
+            return Node(values, ())
+        children = []
+        for pointer in words:
+            if pointer and not payload_base <= pointer < payload_end:
+                raise ValueError('relocated root child pointer is outside payload')
+            children.append(node(pointer, 1) if pointer else None)
+        return Node(None, tuple(children))
+
+    cells = tuple(root_node(i * 16) for i in range(4096))
+    return SpatialIndex(tuple(bounds), cells)
+
+
 def decode_spatial(data, offset):
     cursor = offset
     nodes = 0

@@ -1,7 +1,9 @@
 import struct
 import unittest
-from client.track_spatial import Node, SpatialIndex, decode_spatial
-from client.track_mesh import decode_track_with_spatial
+from client.track_spatial import (Node, SpatialIndex, decode_relocated_spatial,
+                                  decode_spatial)
+from client.world_grid import fixup_world_grid
+from client.track_mesh import decode_track_world, decode_track_with_spatial
 
 
 def fixture():
@@ -13,19 +15,26 @@ def fixture():
 
 class SpatialTests(unittest.TestCase):
     def test_mesh_spatial_handoff_api(self):
-        data = fixture()
-        # A minimal valid FRD header/track is impractical here; exercise the
-        # public handoff with patched mesh decoder to isolate trailer routing.
-        import client.track_mesh as mesh
-        original = mesh.decode_mesh
+        import client.track_mesh as mesh_module
+        data = bytearray(16 + 4096 * 16)
+        struct.pack_into('<4f', data, 0, -10., -20., 10., 20.)
+        for offset in range(16, len(data), 16):
+            struct.pack_into('<4I', data, offset, 0xdeadbeef, 0, 0, 0)
+        mesh = object()
+        original = mesh_module.decode_mesh
         try:
-            mesh.decode_mesh = lambda source, materials=False: ('mesh', 0)
+            mesh_module.decode_mesh = lambda source, materials=False: (mesh, 0)
+            world = decode_track_world(data)
             model, spatial, end = decode_track_with_spatial(data)
         finally:
-            mesh.decode_mesh = original
-        self.assertEqual(model, 'mesh')
-        self.assertEqual(end, len(data))
-        self.assertEqual(spatial.cells[0].children[0].identifiers, (7, 9))
+            mesh_module.decode_mesh = original
+        self.assertIs(world.mesh, mesh)
+        self.assertEqual(world.end_offset, len(data))
+        self.assertEqual(world.grid.bounds, world.spatial.bounds)
+        self.assertEqual(world.spatial.cells[0].identifiers, ())
+        self.assertIs(model, mesh)
+        self.assertEqual(spatial, world.spatial)
+        self.assertEqual(end, world.end_offset)
 
     def test_query_axis_order_quadrants_and_bounds(self):
         empty = Node((), ())
@@ -47,6 +56,17 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(end, len(data))
         self.assertEqual(index.cells[0].children[0].identifiers, (7, 9))
         self.assertEqual(index.cells[1].identifiers, (11,))
+
+    def test_relocated_tree_matches_file_layout_tree(self):
+        data = fixture()
+        image_address = 0x71000000
+        grid_offset = 0
+        expected, end = decode_spatial(data, grid_offset)
+        relocated = fixup_world_grid(data, image_address)
+        actual = decode_relocated_spatial(relocated.bounds, relocated.table,
+                                          relocated.payload, image_address)
+        self.assertEqual(actual, expected)
+        self.assertEqual(end, len(data))
 
     def test_truncation_and_identifier_budget(self):
         with self.assertRaisesRegex(ValueError, 'EOF'):

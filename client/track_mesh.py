@@ -5,9 +5,20 @@ decoded; object rendering, collision and animated scenery remain to reconstruct.
 """
 import math
 import struct
+from dataclasses import dataclass, replace
 from .fce import Model, Part, Triangle
-from dataclasses import replace
 from .track import decode_track
+from .track_spatial import (SpatialIndex, decode_relocated_spatial,
+                            decode_spatial)
+from .world_grid import WorldGridFixup, fixup_world_grid
+
+
+@dataclass(frozen=True)
+class DecodedTrackWorld:
+    mesh: Model
+    grid: WorldGridFixup
+    spatial: SpatialIndex
+    end_offset: int
 
 
 def decode_mesh(data, materials=False, surface_records=None):
@@ -121,14 +132,23 @@ def decode_mesh(data, materials=False, surface_records=None):
     return Model(tuple(parts),0),cursor
 
 
+def decode_track_world(data, image_address=0x71000000):
+    """Decode mesh, relocate the native grid trailer, and build its query view."""
+    mesh, grid_offset = decode_mesh(data, materials=True)
+    grid = fixup_world_grid(memoryview(data)[grid_offset:], image_address)
+    spatial, end = decode_spatial(data, grid_offset)
+    if end != len(data):
+        raise ValueError('FRD world-grid trailer does not end at EOF')
+    if spatial.bounds != grid.bounds:
+        raise ValueError('FRD spatial and relocated-grid bounds disagree')
+    relocated = decode_relocated_spatial(grid.bounds, grid.table, grid.payload,
+                                         image_address)
+    if relocated != spatial:
+        raise ValueError('relocated and file-layout spatial trees disagree')
+    return DecodedTrackWorld(mesh, grid, relocated, end)
+
+
 def decode_track_with_spatial(data):
-    """Decode visible mesh and the trailing native spatial grid in one pass.
-
-    The returned cursor is the byte immediately after the spatial trailer;
-    callers can use it to detect versioned or additional track sections.
-    """
-    from .track_spatial import decode_spatial
-
-    model, spatial_offset = decode_mesh(data, materials=True)
-    spatial, end = decode_spatial(data, spatial_offset)
-    return model, spatial, end
+    """Compatibility tuple form of :func:`decode_track_world`."""
+    world = decode_track_world(data)
+    return world.mesh, world.spatial, world.end_offset

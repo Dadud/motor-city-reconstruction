@@ -591,6 +591,13 @@ final cursor. The corpus manifest is retained locally at
 for the installed assets; leaf identifiers remain opaque and their downstream
 collision meaning and complete world-query integration are still open.
 
+`decode_track_world` now composes mesh decoding, native-style atlas relocation,
+and a query tree built from the relocated pointers. Its loaded-image tree and
+the earlier file-layout tree agree for every cell and leaf in all 27 installed
+track files, and both consume the trailer exactly to EOF. This closes the
+mesh-to-grid data handoff for this asset corpus; it does not recover the outer
+`0x428150` allocation/resource lifecycle or the semantics of leaf identifiers.
+
 ## Sampled world vertex response
 
 The response routine `0x459940` receives a plane normal, a plane point, a
