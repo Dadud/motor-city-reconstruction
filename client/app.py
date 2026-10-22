@@ -161,9 +161,9 @@ def main():
         if args.contact_report:
             from .contact import Pose, WheelRig
             from .track_surface import decode_surface
-            path=assets.paths.get(f'data/tracks/{args.track}/tr.frd'.casefold())
+            path=assets.track_file(args.track, '.frd')
             body=assets.paths.get(f'data/models/{chosen_model}'.casefold())
-            if path is None or body is None:
+            if not path.is_file() or body is None:
                 raise ValueError('contact report requires installed track and body assets')
             data=path.read_bytes()
             road=decode_track(data).slices[0]
@@ -189,8 +189,10 @@ def main():
             return
         paths = assets.vehicles()
         if args.track:
-            paths = sorted(p for k,p in assets.paths.items() if k.startswith('data/tracks/') and
-                           p.name.casefold() == 'tr.frd')
+            track_names = {p.parent.name for key, p in assets.paths.items()
+                           if key.startswith('data/tracks/')
+                           and p.name.casefold() == 'tr.frd'}
+            paths = sorted(assets.track_file(name, '.frd') for name in track_names)
             chosen_model = args.track
             if not any(p.parent.name.casefold() == args.track.casefold() for p in paths):
                 raise ValueError(f'track folder not found: {args.track}')
@@ -207,7 +209,7 @@ def main():
         from .tire_templates import load_tire_templates
         from .mechanical_assembly import assemble_stock_vehicle
         from .world import load_world_vehicle
-        track_bytes = assets.paths[f'data/tracks/{args.track}/tr.frd'.casefold()].read_bytes()
+        track_bytes = assets.track_file(args.track, '.frd').read_bytes()
         world = load_world_vehicle(assets, catalogue, selected_vehicle, track_bytes, args.skin)
         assembly = assemble_stock_vehicle(catalogue, selected_vehicle.branded_id,
             load_flow_templates(assets.paths['mcity.exe']),

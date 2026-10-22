@@ -24,6 +24,41 @@ class Assets:
         return sorted(path for key, path in self.paths.items()
                       if key.startswith('data/models/') and key.endswith('.viv'))
 
+    def track_file(self, track_name, suffix, night=False, wet=False):
+        """Resolve a track resource using the native Tr{variant}{suffix} order.
+
+        REA's static analysis of mcity.exe 0x4287f0 shows that the night and
+        wet flags select ``nw``, ``n``, then ``w`` variants (when enabled),
+        before the unconditional base ``Tr`` file. The caller supplies the
+        resource tail, such as ``.frd`` or ``0.fsh``; this method does not
+        decode or load its contents.
+        """
+        if (not isinstance(track_name, str) or not track_name
+                or track_name in {'.', '..'}
+                or any(char in track_name for char in '/\\:')):
+            raise ValueError(f'invalid track name: {track_name!r}')
+        if (not isinstance(suffix, str) or not suffix
+                or any(char in suffix for char in '/\\:')):
+            raise ValueError(f'invalid track resource suffix: {suffix!r}')
+
+        variants = []
+        if night and wet:
+            variants.append('nw')
+        if night:
+            variants.append('n')
+        if wet:
+            variants.append('w')
+        variants.append('')
+
+        directory = f'data/tracks/{track_name}/'.casefold()
+        for variant in variants:
+            key = f'{directory}tr{variant}{suffix}'.casefold()
+            if key in self.paths:
+                return self.paths[key]
+        # The native resolver returns the ordinary path even when no
+        # candidate exists; preserve that behavior for downstream open calls.
+        return self.root / 'Data' / 'Tracks' / track_name / f'Tr{suffix}'
+
     def load_vehicle(self, path):
         return decode(self.load_vehicle_bytes(path))
 

@@ -198,7 +198,7 @@ def load_stock_driving_bindings(game, vehicle_id=101, track='drag'):
     assets = Assets(game)
     catalogue = Catalogue.load(assets.paths['data/db/online.mdb'])
     vehicle = catalogue.vehicle(vehicle_id)
-    track_bytes = assets.paths[f'data/tracks/{track}/tr.frd'].read_bytes()
+    track_bytes = assets.track_file(track, '.frd').read_bytes()
     world = load_world_vehicle(assets, catalogue, vehicle, track_bytes)
     assembly=assemble_stock_vehicle(catalogue,vehicle_id,load_flow_templates(assets.paths['mcity.exe']),
         tire_templates=load_tire_templates(assets.paths['data/db/online.mdb']),percent_damage=0,item_wear=0)
