@@ -2229,5 +2229,47 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x42d890": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The object-identity test accepts equal IDs or scans exactly eight contact links in the owner world-table record. It is exercised in 256 direct 0x45cd80 comparisons with controlled table state; full table population and lifetime remain external inputs.",
+    "sources": [
+      "client/collision_pair_gate.py",
+      "tests/test_collision_pair_gate.py",
+      "tools/collision_pair_gate_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_e55d30850361eb564a011e41cb04fd5373c8ea885d524e39fc58838eeac93940"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_gate_oracle.py",
+      "tests/test_collision_pair_gate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x45cd80": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The pair candidate gate checks the candidate identity, zero gate word, shared-object/contact-link result and material low-five-bit exclusions, then rejects when the maximum of four vertex heights is less than or equal to the record height limit. 256 direct original calls match; 35 targeted cases exercise the vertical reject. Candidate record producers and complete 0x45c3e0 integration remain open.",
+    "sources": [
+      "client/collision_pair_gate.py",
+      "tests/test_collision_pair_gate.py",
+      "tools/collision_pair_gate_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_9462dea4eacb5b8082ace58669881ecece485564e3431ba0d1bed97dc0b94925"
+    ],
+    "verification_refs": [
+      "tools/collision_pair_gate_oracle.py",
+      "tests/test_collision_pair_gate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }

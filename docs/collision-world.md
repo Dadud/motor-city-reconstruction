@@ -410,6 +410,15 @@ maximum output error `3.814697265625e-6`. This verifies the supplied-record
 leaf only. The dispatcher, point/shape record producers and contact-path
 integration remain open.
 
+The dispatcher’s earlier object and height gates are now translated in
+[`client/collision_pair_gate.py`](../client/collision_pair_gate.py):
+`0x42d890` checks identity against the owner’s eight contact links, while
+`0x45cd80` applies a material-dependent maximum-vertex-height rejection.
+[`tools/collision_pair_gate_oracle.py`](../tools/collision_pair_gate_oracle.py)
+matched 256 direct original calls, including 35 vertical rejects. The world
+table and the four candidate vertex records remain explicit inputs; the terrain
+and mesh candidate producer and the rest of `0x45c3e0` are still open.
+
 ## Remaining work
 
 - Recover the data types and producers for collision object shapes, triangles,
