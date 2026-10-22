@@ -624,9 +624,12 @@ indices, texture page and flags, following the same 15-word layout used by
 track-block quads. Across the installed corpus this yields 5,783 parts and
 43,235 triangles; every selected vertex and UV index is in range. This mapping
 is supported by the asset structure but has not yet been checked against a
-native renderer call. Object transforms, animation playback, visibility,
-materials and draw ordering remain unresolved, so these are local meshes rather
-than a complete rendered scenery scene.
+native renderer call. The renderer's type-2 and type-4 paths read the object
+origin at descriptor offsets `+0x10/+0x14/+0x18`; those origins are carried in
+`Part.origin`. Type-3 object origins come from the sampled animation pose, which
+is exposed separately. Visibility, materials and draw ordering remain
+unresolved, so these are transformed local mesh inputs rather than a complete
+rendered scenery scene.
 
 The renderer dispatch path `0x58cc10` uses type-3 animation rows as a 20-byte
 sample stream. [`client/track_object_animation.py`](../client/track_object_animation.py)

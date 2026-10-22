@@ -87,8 +87,10 @@ class TrackMeshTests(unittest.TestCase):
 
     def test_object_quad_becomes_two_local_triangles_with_native_uv_order(self):
         descriptor = bytearray(56)
+        struct.pack_into('<H', descriptor, 2, 4)
         struct.pack_into('<I', descriptor, 36, 4)
         struct.pack_into('<I', descriptor, 48, 1)
+        struct.pack_into('<3f', descriptor, 0x10, 10.0, 20.0, 30.0)
         face = (3, 2, 1, 0, 0, 1, 2, 3, 0, 1, 2, 3, 0, 7, 0x8000)
         obj = TrackObject(
             bytes(descriptor), b'',
@@ -104,6 +106,7 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual((first.texture_page, first.flags), (7, 0x8000))
         self.assertEqual(second.indices, (3, 1, 0))
         self.assertEqual(model.parts[0].normals[0][2], -1.0)
+        self.assertEqual(model.parts[0].origin, (10.0, 20.0, 30.0))
 
     def test_object_animation_interpolates_and_loops_native_samples(self):
         animation = bytearray(8 + 2 * 20)

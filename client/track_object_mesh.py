@@ -16,6 +16,7 @@ def decode_track_object_group(group: TrackObjectGroup, uv_coordinates):
     uv_coordinates = tuple(uv_coordinates)
     parts = []
     for object_index, obj in enumerate(group.objects):
+        kind = obj.descriptor[2] & 0xf
         vertices = tuple(struct.unpack('<3f', record)
                          for record in obj.vertex_records)
         if any(not math.isfinite(value) for vertex in vertices for value in vertex):
@@ -52,8 +53,10 @@ def decode_track_object_group(group: TrackObjectGroup, uv_coordinates):
                            for corner in uv_corners)
                 triangles.append(Triangle(indices, uv, record[13], record[14]))
         normals = tuple(tuple(value for value in normal) for normal in normal_sums)
+        origin = (struct.unpack_from('<3f', obj.descriptor, 0x10)
+                  if kind in (2, 4) else (0.0, 0.0, 0.0))
         name = (f'Track object {group.block_index}:'
                 f'{group.section_offset:#x}:{object_index}')
-        parts.append(Part(name, (0.0, 0.0, 0.0), vertices,
+        parts.append(Part(name, origin, vertices,
                           normals, tuple(triangles)))
     return Model(tuple(parts), 0)
