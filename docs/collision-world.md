@@ -165,7 +165,7 @@ predicted motion. Every return decision and both three-point arrays passed to
 `+0xbfc`, `+0xbf4` and `+0xbf8` match within a maximum absolute error of
 `2.9802322387695312e-8`. The corpus varies per-corner vertical offsets around
 the strict acceptance threshold and includes sloped contact triplets. Run
-`python -m tools.terrain_specialized_contact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 80`.
+`python -m tools.terrain_specialized_contact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 256`.
 The later response forces and body velocity/orientation correction still need
 source translations and broader direct comparisons.
 
