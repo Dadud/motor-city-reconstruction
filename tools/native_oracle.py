@@ -93,12 +93,14 @@ class DynoOracle:
         return bytes(self.cpu.mem_read(self.inputs+0x9e70, 25*0x138))
 
     def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
-                                 row_scale, column_scale, random_state):
+                                 row_scale, column_scale, random_state,
+                                 base_offset=0.0, amplitude=0.0,
+                                 color_scale=1.0, invert=False):
         """Capture the kernel's local 26x26 grid at a specific verified stage."""
         stops = {'raw': 0x4945f5, 'normalized': 0x49466f,
-                 'smoothed': 0x49480e}
+                 'smoothed': 0x49480e, 'output': 0x49492a}
         if stage not in stops:
-            raise ValueError('sky material stage must be raw, normalized, or smoothed')
+            raise ValueError('unknown sky material stage')
         if (len(random_state) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff
                                           for word in random_state)):
             raise ValueError('random state must contain six unsigned words')
@@ -107,11 +109,13 @@ class DynoOracle:
         struct.pack_into('<I', block, 0xc0c4, 1)
         struct.pack_into('<i', block, 0xc0c8, upper_bound)
         struct.pack_into('<I', block, 0xc0d0, modulus)
-        struct.pack_into('<f', block, 0xc0fc, 0.0)
-        struct.pack_into('<f', block, 0xc100, 0.0)
+        struct.pack_into('<f', block, 0xc0fc, base_offset)
+        struct.pack_into('<f', block, 0xc100, amplitude)
+        struct.pack_into('<f', block, 0xc0cc, color_scale)
         struct.pack_into('<f', block, 0xc118, column_scale)
         struct.pack_into('<f', block, 0xc11c, row_scale)
         struct.pack_into('<f', block, 0xc120, angle)
+        struct.pack_into('<I', block, 0xc124, int(invert))
         self.cpu.mem_write(self.inputs, bytes(block))
         for address, word in zip((0x8c89d0, 0x8c89d4, 0x8c89d8,
                                   0x8c89dc, 0x8c89e0, 0x8c89e4), random_state):
@@ -123,6 +127,8 @@ class DynoOracle:
         if hasattr(self.cpu, 'ctl_flush_tb'):
             self.cpu.ctl_flush_tb()
         self._run(0x4943f0, stops[stage], timeout=0, count=100_000_000)
+        if stage == 'output':
+            return bytes(self.cpu.mem_read(self.inputs, len(block)))
         frame = self.cpu.reg_read(self.reg.UC_X86_REG_EBP)
         raw = bytes(self.cpu.mem_read(frame-0xae0, 26*26*4))
         return struct.unpack('<676f', raw)

@@ -38,9 +38,13 @@ per stage, with exact raw floats and zero observed normalization error. The
 random field is stored transposed (`column * 26 + row`). The native 20-pass,
 in-place weighted 5×5 smoothing stage is now translated too; the same four
 parameter sets compare all 2,704 values after smoothing with zero observed
-error. Color packing and mesh-vertex updates remain untranslated. The shared
-generator at `0x6f0fa0` is separately translated and compared across 1,024
-states.
+error. The output pass now builds both 676-vertex arrays: rotated world
+positions and grid coordinates with repeated-byte grayscale colors. Across the
+same four synthetic parameter sets, all secondary-array and grayscale bytes
+match exactly; world positions differ by at most 0.00036 due to x87 versus
+Python math precision. The texture-driven color/height override when
+`block[0xc12c]` is enabled remains unresolved. The shared generator at
+`0x6f0fa0` is separately translated and compared across 1,024 states.
 
 Evidence on `mcity.exe` SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`, Ghidra
@@ -58,7 +62,9 @@ Evidence on `mcity.exe` SHA-256
 - Procedural sky-material kernel `0x4943f0`: `ev_9de9d6afa83b7c0997de55c52f19572932b4d8059d0ad358066f78ff80844c92`
 - Shared random generator `0x6f0fa0`: `ev_1a069217dbc28f2f1f5ade3b367ef667595ba5f70dd491c621a1b5ea1326a625`
 
-The staged original comparison for the raw, normalized, and smoothed 26×26
-local buffers is reproducible with `python -m tools.sky_material_grid_oracle
+The staged original comparison for the raw, normalized, smoothed 26×26 local
+buffers and final vertex arrays is reproducible with
+`python -m tools.sky_material_grid_oracle
 "/path/to/mcity.exe"`. It stops the original x86 routine at its corresponding
-instruction boundaries before neighborhood smoothing.
+instruction boundaries after raw generation, normalization, smoothing, and
+final vertex output.

@@ -7,7 +7,7 @@ from client.assets import Assets
 from client.sky import (load_sky_resources, sky_resource_names,
                         sky_material_triangle_indices,
                         sky_material_normalize_grid, sky_material_random_grid,
-                        sky_material_smooth_grid)
+                        sky_material_smooth_grid, sky_material_mesh_outputs)
 from client.random_state import RandomState
 
 
@@ -49,6 +49,15 @@ class SkyResourceTests(unittest.TestCase):
     def test_material_smoothing_preserves_midpoint_field(self):
         grid = sky_material_smooth_grid([128.0] * 676, upper_bound=255)
         self.assertEqual(grid, (128.0,) * 676)
+
+    def test_material_mesh_outputs_pack_grayscale(self):
+        positions, mesh = sky_material_mesh_outputs(
+            [128.0] * 676, angle=0.0, row_scale=2.0, column_scale=4.0,
+            base_offset=1.0, amplitude=0.0, color_scale=1.0)
+        self.assertEqual(len(positions), 676)
+        self.assertEqual(len(mesh), 676)
+        self.assertEqual(mesh[0], (0.0, 0.0, 0x80808080))
+        self.assertEqual(mesh[27], (2.0, 1.0, 0x80808080))
 
 
     def test_material_triangle_index_topology(self):

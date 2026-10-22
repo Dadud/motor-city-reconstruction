@@ -95,6 +95,43 @@ def sky_material_smooth_grid(values, *, upper_bound, passes=20):
     return tuple(grid)
 
 
+def sky_material_mesh_outputs(heights, *, angle, row_scale, column_scale,
+                             base_offset, amplitude, color_scale, invert=False):
+    """Build the two transposed vertex arrays emitted by 0x4943f0.
+
+    The first array contains rotated world positions. The second contains
+    unrotated grid coordinates and the packed grayscale height color.
+    """
+    if len(heights) != 26 * 26:
+        raise ValueError('sky material height grid must contain 676 values')
+    angle = _f32(angle)
+    row_scale, column_scale = _f32(row_scale), _f32(column_scale)
+    base_offset, amplitude, color_scale = map(_f32, (base_offset, amplitude, color_scale))
+    sine, cosine = math.sin(angle * (2.0 * math.pi)), math.cos(angle * (2.0 * math.pi))
+    positions, mesh = [None] * 676, [None] * 676
+    for row in range(26):
+        world_y = -3000.0 + row * 225.0
+        for column in range(26):
+            world_x = -3000.0 + column * 225.0
+            x = _f32(sine * world_y + cosine * world_x)
+            z = _f32(cosine * world_y - sine * world_x)
+            radius = math.sqrt(x * x + z * z)
+            radial_angle = _f32(radius * 0.25 * 0.00033333333)
+            profile = _f32(math.cos(radial_angle * (2.0 * math.pi)) * amplitude + base_offset)
+            height = _f32(heights[column * 26 + row])
+            fraction = _f32(height * _f32(0.003921569))
+            if invert:
+                fraction = -fraction
+            profile = _f32(profile - amplitude * color_scale * fraction * 0.5)
+            shade = int(round(height)) & 0xff
+            packed = shade * 0x01010101
+            index = column * 26 + row
+            positions[index] = (_f32(x), profile, z)
+            mesh[index] = (_f32(column * column_scale * 0.5),
+                           _f32(row * row_scale * 0.5), packed)
+    return tuple(positions), tuple(mesh)
+
+
 @dataclass(frozen=True)
 class SkyLookup:
     """A native 26×26 RGBA lookup texture and its table position."""
