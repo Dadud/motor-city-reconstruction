@@ -144,6 +144,23 @@ class CollisionWorldSampleTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from('<II', result.trigger_slots, 0),
                          (0x12345678, 0x87654321))
 
+    def test_world_contact_sign_extends_heading_byte_in_slot_word(self):
+        self.body[6] = 1
+        self.body[0x474] = 2
+        struct.pack_into('<f', self.body, 0x14, -1.)
+        struct.pack_into('<f', self.body, 0x1c, -1.)
+        resources = [0] * 256
+        resources[3] = 0x12345678
+        result = update_world_contact(
+            self.body, self.contact_record(2), b'\xff\x11\x22',
+            bytes(0x1800), resources, 0x87654321)
+
+        angle = result.sample_state[1]
+        self.assertGreaterEqual(angle, 0x80)
+        self.assertEqual(result.sample_state[0], 0)
+        self.assertEqual(struct.unpack_from('<IIi', result.trigger_slots, 0x0c),
+                         (2, 0, angle - 0x100))
+
     def test_missing_resource_sets_failure_sentinel_and_preserves_state_tail(self):
         self.body[6] = 1
         self.body[0x474] = 2

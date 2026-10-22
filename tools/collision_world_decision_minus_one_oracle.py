@@ -6,9 +6,12 @@ import random
 import struct
 
 from client.body_constructor import construct_body
-from client.collision_world_candidate import decode_collision_world_sample
+from client.collision_world_candidate import (decode_collision_world_sample,
+                                              update_world_contact)
 from client.collision_world_pair import resolve_world_decision_minus_one
 from tools.collision_world_decision_one_oracle import OWNER, TABLE, RECORD
+from tools.collision_world_trigger_update_oracle import (OWNER_GLOBAL, RESOURCES,
+                                                        SLOTS)
 from tools.native_oracle import DynoOracle
 
 
@@ -30,7 +33,8 @@ def _sample(x, y, z, height):
     return bytes(image)
 
 
-def compare(executable, count=128, *, zero_proxy=False):
+def compare(executable, count=128, *, zero_proxy=False,
+            real_classifier=False):
     if type(count) is not int or count < 1:
         raise ValueError('case count must be positive')
     rng = random.Random(0x45D1F0FF)
@@ -60,9 +64,22 @@ def compare(executable, count=128, *, zero_proxy=False):
         struct.pack_into('<3f', body, 0x14, *velocity)
         struct.pack_into('<f', body, 0x350, 0.)
         struct.pack_into('<f', body, 0x3b4, (index % 5) * .25)
-        record = _sample(*sample_position, 0 if zero_proxy else
-                         100 + (index % 40) * 10)
+        if real_classifier:
+            struct.pack_into('<f', body, 0x3c0, 40000.)
+        record = bytearray(_sample(*sample_position, 0 if zero_proxy else
+                                   100 + (index % 40) * 10))
+        if real_classifier:
+            record[0x13] = 2
+        record = bytes(record)
         decoded = decode_collision_world_sample(record)
+
+        trigger_slots = bytes(0x1800)
+        resources = [0] * 256
+        resources[3] = 0x7100A003
+        sample_state = bytes((0xff, 0, 0))
+        expected_update = (update_world_contact(
+            body, record, sample_state, trigger_slots, resources, 0x7100BEEF)
+            if real_classifier else None)
 
         oracle._reset()
         cpu.mem_write(OWNER, bytes(body))
@@ -71,9 +88,14 @@ def compare(executable, count=128, *, zero_proxy=False):
         cpu.mem_write(TABLE + 0x688, struct.pack('<I', RECORD))
         cpu.mem_write(RECORD, record)
         cpu.mem_write(SAMPLE_STATE, b'\xff')
-        # Trigger allocation is separately translated; force its documented
-        # failure result so this comparison enters the -1 response branch.
-        cpu.mem_write(0x0042D9F0, CLASSIFIER_MINUS_ONE)
+        if real_classifier:
+            cpu.mem_write(SLOTS, trigger_slots)
+            cpu.mem_write(RESOURCES, struct.pack('<256I', *resources))
+            cpu.mem_write(OWNER_GLOBAL, struct.pack('<I', 0x7100BEEF))
+        else:
+            # Isolate the sampled pair response when the classifier itself is
+            # outside this oracle mode.
+            cpu.mem_write(0x0042D9F0, CLASSIFIER_MINUS_ONE)
         cpu.mem_write(0x0089C070, struct.pack('<2f', *PAIR_COEFFICIENTS))
         captured = []
 
@@ -92,6 +114,19 @@ def compare(executable, count=128, *, zero_proxy=False):
         hook = cpu.hook_add(UC_HOOK_CODE, capture_solver)
         oracle.call(0x0045D1F0, (OWNER, 0), instruction_limit=3_000_000)
         actual = bytes(cpu.mem_read(OWNER, 0x408))
+        if real_classifier:
+            actual_state = bytes(cpu.mem_read(SAMPLE_STATE, 3))
+            actual_slots = bytes(cpu.mem_read(SLOTS, 0x1800))
+            if actual_state != expected_update.sample_state:
+                raise AssertionError(f'case {index}: real classifier sample-state bytes differ')
+            if actual_slots != expected_update.trigger_slots:
+                difference = next(i for i, (a, b) in enumerate(
+                    zip(actual_slots, expected_update.trigger_slots)) if a != b)
+                start = difference // 0x18 * 0x18
+                raise AssertionError(
+                    f'case {index}: real allocator slot differs at {difference:#x}; '
+                    f'native={actual_slots[start:start + 0x18].hex()} '
+                    f'model={expected_update.trigger_slots[start:start + 0x18].hex()}')
         if captured:
             target_address, actual_target, _point, _normal = captured[-1]
         expected = resolve_world_decision_minus_one(
@@ -143,7 +178,12 @@ def compare(executable, count=128, *, zero_proxy=False):
             'maximum_absolute_velocity_error': maximum_velocity_error,
             'maximum_absolute_angular_error': maximum_angular_error,
             'zero_proxy': zero_proxy,
-            'scope': 'original world-sample decode and decision-minus-one proxy/pair/cache branch; classifier forced to -1 and pair coefficients supplied'}
+            'real_classifier': real_classifier,
+            'scope': ('original decode, real classifier/allocator/heading writer, '
+                      'proxy construction and pair/cache branch'
+                      if real_classifier else
+                      'original decode and proxy/pair/cache branch; classifier '
+                      'forced to -1 and pair coefficients supplied')}
 
 
 if __name__ == '__main__':
@@ -151,6 +191,8 @@ if __name__ == '__main__':
     parser.add_argument('executable')
     parser.add_argument('--cases', type=int, default=128)
     parser.add_argument('--zero-proxy', action='store_true')
+    parser.add_argument('--real-classifier', action='store_true')
     args = parser.parse_args()
     print(json.dumps(compare(args.executable, args.cases,
-                             zero_proxy=args.zero_proxy)))
+                             zero_proxy=args.zero_proxy,
+                             real_classifier=args.real_classifier)))

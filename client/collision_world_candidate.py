@@ -185,8 +185,10 @@ def update_world_contact(body, record, sample_state, trigger_slots,
     updated_slots = bytearray(allocation.slots)
     if classification.trigger_angle_after is not None:
         slot_index = classification.trigger_state_after
-        struct.pack_into('<III', updated_slots, slot_index * 0x18 + 0x0c,
-                         2, 0, classification.trigger_angle_after)
+        angle = classification.trigger_angle_after
+        signed_angle = angle - 0x100 if angle & 0x80 else angle
+        struct.pack_into('<IIi', updated_slots, slot_index * 0x18 + 0x0c,
+                         2, 0, signed_angle)
         updated_state = bytes((slot_index, classification.trigger_angle_after, 0))
     elif classification.trigger_state_after == 0xfe:
         updated_state = bytes((0xfe,)) + sample_state[1:]

@@ -153,18 +153,17 @@ body-to-sample direction, and calls `0x458530`. A successful result clears
 contact magnitude. This path is translated in
 [`client/collision_world_pair.py`](../client/collision_world_pair.py).
 [`tools/collision_world_decision_minus_one_oracle.py`](../tools/collision_world_decision_minus_one_oracle.py)
-matched 128 executions through the original caller with `0x42d9f0` forced to
-return `-1`; the remaining world-sample decoding, temporary-body construction,
-`0x458530` response and caller writes ran in the original. All 128 reached the
-pair solver, 64 applied impacts, and maximum velocity error was
-`7.152557373046875e-7`; the other compared body bytes matched exactly. The
-allocator/classifier result and pair coefficients are supplied inputs, and
-the zero-height proxy now also matches 128 original caller executions. Its
+matched 128 executions through the original caller with the real `0x42d9f0`
+classifier, allocator, heading helper and writer. All 128 reached the pair
+solver, 64 applied impacts, sample-state and complete trigger-slot memory
+matched exactly, and maximum velocity error was `7.152557373046875e-7`.
+The isolated-response mode still supports forcing `0x42d9f0` to return `-1`;
+pair coefficients remain supplied inputs. The zero-height proxy also matches
+128 original caller executions. Its
 zero X/Z dimensions produce infinite inverse inertia on one axis; native IEEE
 propagation yields NaN owner angular velocity while leaving linear velocity
 unchanged. The model preserves that behavior instead of rejecting the
-singular inertia. Dynamic candidate-record production and full
-trigger-allocation integration remain open.
+singular inertia. Dynamic candidate-record production remains open.
 
 The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
 first three signed words of each 20-byte record. The portable decoder in
