@@ -399,6 +399,17 @@ remain outside the pair result. Its support-point caller `0x459150` transforms
 translation helper `0x6f1450` is now recovered and checked directly, while the
 terrain query and full collision contact-producer chain remain open.
 
+The four-edge contact-mask helper `0x42d900` and edge-contact selector
+`0x45c870`, called by the object-pair dispatcher `0x45c3e0`, are now translated
+in [`client/collision_edge_contact.py`](../client/collision_edge_contact.py).
+They compare the query against four ordered XZ edges, then select a contact
+vertex and average enabled edge normals and height weights. The direct oracle
+[`tools/collision_edge_contact_oracle.py`](../tools/collision_edge_contact_oracle.py)
+matched all 256 masks and selector calls; 205 returned accepted contacts, with
+maximum output error `3.814697265625e-6`. This verifies the supplied-record
+leaf only. The dispatcher, point/shape record producers and contact-path
+integration remain open.
+
 ## Remaining work
 
 - Recover the data types and producers for collision object shapes, triangles,
@@ -407,7 +418,7 @@ terrain query and full collision contact-producer chain remain open.
   retries and recover dynamic candidate-record production; recover sampled-world
   caller side effects and successful resource-table/heading lookup integration
   in `0x42d9f0`;
-  recover `0x45c3e0`, task-list execution, and the recurring game-frame caller.
+  complete `0x45c3e0`, task-list execution, and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
 - Integrate it with the force vehicle state and test wall/resting impacts,

@@ -61,7 +61,7 @@
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The packed sample decoder and pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. Classifier/allocation is independently compared in 128 executions. The downstream 0x459940 response includes both 8- and 22-point branches and matches 128 direct calls. Decision 1 composes classifier, response, impulse and post-response cache writes in 128 full caller executions; checked contact/cache bytes and position match exactly, velocity error is at most 2.4e-7, and 64 cases apply impacts/cache writes. Decision 2 matches 128 full caller executions, including 96 timer-triggered writes. The shared event lookup, contact-event helper, and actual +0x14 callback path are translated and compared in direct and full-caller original executions. 128 full 0x45d1f0 cases include 64 queued events with exact event payload/counter bytes; position matches exactly and velocity error is at most 2.4e-7. The separate 0x487490 audio target is stubbed. The decision-minus-one branch now matches 128 full caller executions with the classifier result forced to -1, including 64 impacts; classifier allocation integration, zero-sized proxy inertia, and outer audio/debug callbacks remain open.",
+    "scope": "The packed sample decoder, pre-classifier gates and all four decision branches are translated. Decisions 1 and 2, virtual event dispatch, and decision-minus-one each have 128 full original-caller comparisons; the latter runs the real classifier, allocator, heading helper and writer, then the original proxy construction and pair solver. It includes 64 impacts, exact sample-state and 0x1800-byte trigger-slot writes, and maximum velocity error 7.152557373046875e-7. A separate 128-case zero-height proxy corpus matches native IEEE angular NaN propagation and cache writes. The 0x487490 audio target remains stubbed; candidate-record producers and complete frame integration remain open.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -79,7 +79,10 @@
       "tools/collision_world_event_dispatch_oracle.py",
       "client/collision_world_pair.py",
       "tools/collision_world_decision_minus_one_oracle.py",
-      "tests/test_collision_world_pair.py"
+      "tests/test_collision_world_pair.py",
+      "client/collision_pair_response.py",
+      "client/collision_impulse.py",
+      "client/collision_edge_contact.py"
     ],
     "evidence_ids": [
       "ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3",
@@ -2178,6 +2181,50 @@
     "verification_refs": [
       "tools/collision_event_oracle.py",
       "tools/collision_world_event_dispatch_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x42d900": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The four ordered XZ edge tests and same-edge-record early return are translated. 256 direct original calls match the returned mask exactly as part of the composed edge-contact oracle; supplied polygon identities, vertices and query points remain explicit inputs.",
+    "sources": [
+      "client/collision_edge_contact.py",
+      "tests/test_collision_edge_contact.py",
+      "tools/collision_edge_contact_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_921eb8751a8162ac6e8c6fd888a33d72d6407439faaae5e27f6ae61d3105f7e1",
+      "ev_424a6d8338db5c535933eb178a861a12ab93abc8e99b911f73e0ae0b74c81cad"
+    ],
+    "verification_refs": [
+      "tools/collision_edge_contact_oracle.py",
+      "tests/test_collision_edge_contact.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x45c870": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The four-edge contact selector is translated: edge flags contribute normalized normal vectors and height weights, and the mask chooses the contact vertex. 256 direct original calls compare return, normal, point and height outputs with maximum absolute error 3.814697265625e-6. Enclosing 0x45c3e0 record production and contact integration remain open.",
+    "sources": [
+      "client/collision_edge_contact.py",
+      "tests/test_collision_edge_contact.py",
+      "tools/collision_edge_contact_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_93433c3c1e588e65721577da90ef541392f5e72afdfa1767f8f3adad2a9ff611",
+      "ev_424a6d8338db5c535933eb178a861a12ab93abc8e99b911f73e0ae0b74c81cad"
+    ],
+    "verification_refs": [
+      "tools/collision_edge_contact_oracle.py",
+      "tests/test_collision_edge_contact.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
