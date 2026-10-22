@@ -2426,5 +2426,65 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x428500": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Packed ARGB palette colors apply three signed-int32 scaling percentages to R/G/B using the original wrapped multiply and truncating division; alpha is retained. 256 original calls matched every byte across 7,853 color words, including negative and overflow-boundary percentages.",
+    "sources": [
+      "client/collision_palette.py",
+      "tests/test_collision_palette.py",
+      "tools/collision_palette_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_f6a526930b2dddb3937a214d85e45cffe77fa522e53a547c01fe09547122c4e3"
+    ],
+    "verification_refs": [
+      "tools/collision_palette_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x428640": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The group wrapper walks each 0x38-byte palette record from the supplied descriptor and applies 0x428500 to its pointed color words. 128 original calls matched every palette byte across 1,778 color words. Pointer targets and group records remain explicit inputs.",
+    "sources": [
+      "client/collision_palette.py",
+      "tests/test_collision_palette.py",
+      "tools/collision_palette_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_81aa0eb65349b71021a4e33077802e797244e5db71dbaaf29e6d2e0854c0e28a"
+    ],
+    "verification_refs": [
+      "tools/collision_palette_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x428680": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The section helper assigns the 0x38-byte record-table pointer, nullable payload pointers, vertex-array pointers, trailing per-vertex data pointers, triangle-array cursor and odd-count two-byte alignment. 256 direct original calls matched every supplied image byte and final cursor over 1,165 records and 24 empty sections. Cursor and section bytes remain explicit caller inputs.",
+    "sources": [
+      "client/world_dataset_layout.py",
+      "tests/test_world_dataset_layout.py",
+      "tools/world_dataset_layout_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_921f68d67f40a91bc845981e99780c6fa7bbab3286957bd38fdcde61366af40f"
+    ],
+    "verification_refs": [
+      "tools/world_dataset_layout_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }

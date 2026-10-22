@@ -461,6 +461,23 @@ candidates. The body array, roster, neighbor cells and candidate table remain
 explicit runtime inputs; their producers and world-scale tick integration are
 still open.
 
+The loader's palette pass is reconstructed in
+[`client/collision_palette.py`](../client/collision_palette.py). The `0x428500`
+helper applies three signed-int32 percentage scales to packed RGB bytes while
+preserving alpha; `0x428640` walks pointer-based groups and applies the same
+transform to each palette. The original routines matched 7,853 direct color
+words and 1,778 words reached through 128 group-list calls. This recovers the
+helper behavior only; world-file layout and resource loading in `0x428150`
+remain incomplete.
+
+The variable-section pointer fixup used by the same loader is implemented in
+[`client/world_dataset_layout.py`](../client/world_dataset_layout.py). The
+`0x428680` translation lays out 0x38-byte rows, nullable payload pointers,
+vertex arrays, trailing per-vertex values, triangle arrays and the observed
+two-byte odd-count alignment. In 256 direct original calls, all supplied image
+bytes and the final global cursor matched across 1,165 rows and 24 empty
+sections. The caller's file-buffer and section ownership logic remain open.
+
 The response child `0x459b90` is translated in
 [`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
 It transforms the body's 8- or 22-point set, selects the deepest eligible
