@@ -2326,5 +2326,25 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x427f50": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The dynamic pair candidate-table producer consumes explicit 0x38-byte source rows and packed vertex arrays, emits 0x78-byte records with copied metadata, local bounds, center and bounding radius, then mutates eligible source type and backlink fields. 128 controlled original-entry cases matched every table and source byte. The producer body executed with fixed-address allocation and exact-range zeroing bridges; upstream roster generation and allocator policy remain open.",
+    "sources": [
+      "client/collision_pair_candidate.py",
+      "tests/test_collision_pair_candidate.py",
+      "tools/collision_dynamic_candidate_table_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_b558aab0fa6f50a60b56abee2c81464fe2bad9b37375e0f3013b7ecb6d48ee6a"
+    ],
+    "verification_refs": [
+      "tools/collision_dynamic_candidate_table_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }

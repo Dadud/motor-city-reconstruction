@@ -434,6 +434,18 @@ controlled original-instruction execution; they do not establish live-game or
 whole-frame behavior. The virtual event target and other runtime candidate
 sources remain open.
 
+The dynamic-pair candidate table producer `0x427f50` is translated in
+[`client/collision_pair_candidate.py`](../client/collision_pair_candidate.py).
+It consumes explicit 0x38-byte source rows and their packed vertex arrays,
+then builds the parallel 0x78-byte candidate rows with local bounds, center,
+bounding radius, copied metadata, source type mutation, and back-link. The
+controlled original-entry harness
+[`tools/collision_dynamic_candidate_table_oracle.py`](../tools/collision_dynamic_candidate_table_oracle.py)
+matched every output-table and mutated-source byte in 128 cases. The original
+producer body ran with fixed-address allocation and exact-range zeroing bridges;
+allocator policies and upstream candidate roster production remain explicit
+runtime inputs.
+
 The response child `0x459b90` is translated in
 [`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
 It transforms the body's 8- or 22-point set, selects the deepest eligible
@@ -449,7 +461,7 @@ candidate production and the event callback remain open.
 - Recover the remaining producers and data types for dynamic collision objects,
   terrain triangles, global candidates and shared contact records.
 - Integrate the independently verified `0x458530` response with dynamic-pair
-  retries and recover dynamic candidate-record production; recover sampled-world
+  retries; recover upstream candidate-roster production; recover sampled-world
   caller side effects and successful resource-table/heading lookup integration
   in `0x42d9f0`; resolve the dispatcher's virtual callback, task-list execution,
   and the recurring game-frame caller.

@@ -3,6 +3,7 @@ import unittest
 
 from client.body_geometry import body_samples
 from client.collision_pair_candidate import (dynamic_pair_candidate,
+                                             build_dynamic_candidate_table,
                                              resolve_dynamic_pair_retries)
 from client.collision_pair_geometry import OrientedCollisionBox
 from client.collision_pair_solver import CollisionPairBody
@@ -82,6 +83,33 @@ class DynamicPairCandidateTests(unittest.TestCase):
                                               self.body((0., 0., 0.)))
         self.assertEqual((result.attempts, result.accepted_attempts), (1, 0))
         self.assertFalse(result.response_due)
+
+    def test_dynamic_candidate_table_bounds_and_source_backlinks(self):
+        source = bytearray(2 * 0x38)
+        struct.pack_into('<H', source, 2, 0x23)
+        struct.pack_into('<I', source, 8, 0x11111111)
+        struct.pack_into('<I', source, 0x0c, 0x22222222)
+        struct.pack_into('<I', source, 0x20, 0x33333333)
+        struct.pack_into('<I', source, 0x24, 2)
+        struct.pack_into('<I', source, 0x28, 0x71002000)
+        struct.pack_into('<H', source, 0x38 + 2, 0x14)
+        struct.pack_into('<I', source, 0x38 + 0x20, 0x44444444)
+        vertices = struct.pack('<6f', -1., 2., 3., 3., 6., 7.)
+        result = build_dynamic_candidate_table(
+            bytes(source), {0x71002000: vertices}, source_address=0x71001000,
+            table_address=0x71004000)
+        active = result.records[:0x78]
+        self.assertEqual(struct.unpack_from('<I', active, 0x30)[0], 0x22222222)
+        self.assertEqual(struct.unpack_from('<I', active, 0x70)[0], 0x11111111)
+        self.assertEqual(struct.unpack_from('<I', active, 0x74)[0], 0x33333333)
+        self.assertEqual(struct.unpack_from('<3f', active, 0x4c), (1., 4., 5.))
+        self.assertEqual(struct.unpack_from('<3f', active, 0x3c), (2., 2., 2.))
+        self.assertAlmostEqual(struct.unpack_from('<f', active, 0x48)[0], 12 ** .5,
+                               delta=1e-6)
+        self.assertEqual(struct.unpack_from('<H', result.sources, 2)[0], 5)
+        self.assertEqual(struct.unpack_from('<I', result.sources, 0x20)[0], 0x71004000)
+        self.assertEqual(result.records[0x78:], bytes(0x78))
+        self.assertEqual(struct.unpack_from('<H', result.sources, 0x38 + 2)[0], 0x14)
 
 
 if __name__ == '__main__':

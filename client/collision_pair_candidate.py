@@ -1,5 +1,6 @@
 """Candidate-record broadphase used by the dynamic pair pass at 0x45cf70."""
 from dataclasses import dataclass
+import math
 import struct
 
 from client.collision_pair_solver import resolve_collision_pair
@@ -11,6 +12,79 @@ def _f32(value):
 
 def _get_f32(data, offset):
     return struct.unpack_from('<f', data, offset)[0]
+
+
+@dataclass(frozen=True)
+class DynamicCandidateTable:
+    records: bytes
+    sources: bytes
+    table_address: int
+    source_address: int
+
+
+def build_dynamic_candidate_table(sources, vertices_by_address, *,
+                                  source_address, table_address):
+    """Build the 0x427f50 dynamic-pair table from supplied 0x38-byte rows.
+
+    ``vertices_by_address`` maps each source row's +0x28 pointer to packed
+    XYZ float triples. Allocation and allocator-specific zeroing are outside
+    this address-independent translation; the returned rows are byte-exact
+    0x78-byte records, and ``sources`` includes the game's type/back-link
+    mutations. Ineligible rows remain zero after the table's initial clear.
+    """
+    if len(sources) % 0x38:
+        raise ValueError('source image must contain whole 0x38-byte rows')
+    if any(type(value) is not int or not 0 <= value <= 0xffffffff
+           for value in (source_address, table_address)):
+        raise ValueError('source and table addresses must be uint32 values')
+    count = len(sources) // 0x38
+    if count > 0x7fffffff // 0x78:
+        raise ValueError('candidate table size overflows the original allocation')
+    mutated = bytearray(sources)
+    table = bytearray(count * 0x78)
+    for index in range(count):
+        src = index * 0x38
+        dst = index * 0x78
+        old_link = struct.unpack_from('<I', mutated, src + 0x20)[0]
+        struct.pack_into('<I', table, dst + 0x74, 0)
+        point_count = struct.unpack_from('<I', mutated, src + 0x24)[0]
+        kind = struct.unpack_from('<H', mutated, src + 2)[0] & 0xf
+        if point_count == 0 or kind != 3:
+            continue
+        if point_count > 0x100000:
+            raise ValueError('source vertex count exceeds bounded input limit')
+        vertex_address = struct.unpack_from('<I', mutated, src + 0x28)[0]
+        points = vertices_by_address.get(vertex_address)
+        if points is None or len(points) != point_count * 12:
+            raise ValueError('missing or incorrectly sized candidate vertex array')
+        coordinates = struct.unpack('<' + 'f' * (point_count * 3), points)
+        mins = [coordinates[axis] for axis in range(3)]
+        maxs = list(mins)
+        for point_index in range(1, point_count):
+            for axis in range(3):
+                value = coordinates[point_index * 3 + axis]
+                if value < mins[axis]:
+                    mins[axis] = value
+                if maxs[axis] < value:
+                    maxs[axis] = value
+        center = [_f32(_f32(mins[axis] + maxs[axis]) * 0.5)
+                  for axis in range(3)]
+        extents = [_f32(_f32(maxs[axis] - mins[axis]) * 0.5)
+                   for axis in range(3)]
+        radius = _f32(math.sqrt(sum(value * value for value in extents)))
+        struct.pack_into('<I', table, dst + 0x30,
+                         struct.unpack_from('<I', mutated, src + 0x0c)[0])
+        struct.pack_into('<I', table, dst + 0x74, old_link)
+        struct.pack_into('<I', table, dst + 0x70,
+                         struct.unpack_from('<I', mutated, src + 8)[0])
+        struct.pack_into('<3f', table, dst + 0x4c, *center)
+        struct.pack_into('<3f', table, dst + 0x3c, *extents)
+        struct.pack_into('<f', table, dst + 0x48, radius)
+        struct.pack_into('<H', mutated, src + 2, 5)
+        struct.pack_into('<I', mutated, src + 0x20,
+                         table_address + dst)
+    return DynamicCandidateTable(bytes(table), bytes(mutated), table_address,
+                                 source_address)
 
 
 @dataclass(frozen=True)
