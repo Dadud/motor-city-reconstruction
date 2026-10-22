@@ -4,6 +4,8 @@ import math
 import struct
 
 from client.collision_impulse import CollisionInertia
+from client.collision_event import (apply_collision_contact_event,
+                                    lookup_collision_event_handler)
 from client.collision_pair_response import (CollisionImpactBody,
                                             resolve_surface_impulse)
 from client.geometry_transform import add_vector_to_points, transform_vertices
@@ -100,7 +102,8 @@ def apply_world_decision_two_contact_cache(body_image, decision, type_code,
 
 
 def resolve_world_decision_one_sample(body_image, sample_position,
-                                      vertical_value, type_code):
+                                      vertical_value, type_code,
+                                      handler_table=None, global_event_value=0):
     """Compose decision-1 setup, 0x459940 response, and caller cache writes."""
     image = bytes(body_image)
     position = tuple(f32(value) for value in sample_position)
@@ -157,6 +160,11 @@ def resolve_world_decision_one_sample(body_image, sample_position,
         struct.pack_into('<f', updated, 0x3f0, position[2])
         struct.pack_into('<I', updated, 0x3f4, 5)
         struct.pack_into('<I', updated, 0x3f8, type_code)
+    if (handler_table is not None and updated[6] != 0 and
+            struct.unpack_from('<I', updated, 0x474)[0] & 2):
+        if lookup_collision_event_handler(updated, handler_table) != 0:
+            updated = bytearray(apply_collision_contact_event(
+                updated, global_event_value))
     return WorldDecisionOneResult(bytes(updated), response, cache_written)
 
 

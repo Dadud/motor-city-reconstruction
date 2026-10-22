@@ -122,8 +122,13 @@ update is translated by
 and compared through the real classifier and full caller in
 [`tools/collision_world_decision_two_oracle.py`](../tools/collision_world_decision_two_oracle.py):
 128 executions matched the complete 0x400-byte body image, 96 with the timer
-gate active. Conditional event dispatch after decision 1 and the
-decision-minus-one pair collision branch remain open.
+gate active. The decision-1 handler lookup and shared contact-event method are
+now translated in [`client/collision_event.py`](../client/collision_event.py).
+The direct harness [`tools/collision_event_oracle.py`](../tools/collision_event_oracle.py)
+compared 128 executions of lookup `0x43b550` and method `0x4658f0` byte-for-byte,
+including both state transitions. The caller-side dispatch condition is wired
+into the Python composition, but a full `0x45d1f0` event-path comparison remains
+open, as does the decision-minus-one pair collision branch.
 
 The kind-1 decision-1 path is also composed through the actual caller. It forms
 a horizontal normal from the body to the sample, offsets the sample by its
@@ -454,5 +459,6 @@ harness [`tools/collision_world_response_oracle.py`](../tools/collision_world_re
 matched 128 deterministic cases, evenly split between extracted 8- and 22-point inputs, including penetration corrections,
 cached point updates, linear velocity changes, contact-record bytes, and the
 routine return. Position corrections matched exactly; velocity error stayed
-below `4.2e-7`. Sampled caller effects such as audio/debug notifications and
-subsequent event dispatch remain outside the current model.
+below `4.2e-7`. Sampled audio/debug notifications remain outside the current
+model. The event handler lookup and contact-event method have direct original
+comparisons, while the complete caller-to-event path remains unverified.
