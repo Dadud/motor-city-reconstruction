@@ -124,6 +124,43 @@ def specialized_quad_projection_gate(projected_point, vertices):
     return first or second
 
 
+@dataclass(frozen=True)
+class SpecializedQuadProjectionResult:
+    transformed_vertices: tuple
+    forwarded_extent: float
+    intersects: bool
+
+
+def specialized_quad_projection_candidate(projected_point, local_vertices,
+                                          body_to_world, position,
+                                          extent_a, extent_b):
+    """Translate the transform and projected broad gate in ``0x54f0e0``."""
+    if (len(local_vertices) != 4 or any(len(v) != 3 for v in local_vertices) or
+            len(body_to_world) != 9 or len(position) != 3):
+        raise ValueError('specialized candidate requires four points, a basis and position')
+    matrix = tuple(f32(value) for value in body_to_world)
+    origin = tuple(f32(value) for value in position)
+    transformed = []
+    for vertex in local_vertices:
+        x, y, z = (f32(value) for value in vertex)
+        world = []
+        for first, second, third, translation in (
+                (matrix[0], matrix[3], matrix[6], origin[0]),
+                (matrix[1], matrix[4], matrix[7], origin[1]),
+                (matrix[2], matrix[5], matrix[8], origin[2])):
+            value = f32(x * first)
+            value = f32(value + f32(y * second))
+            value = f32(value + f32(z * third))
+            world.append(f32(value + translation))
+        transformed.append(tuple(world))
+    a, b = f32(extent_a), f32(extent_b)
+    forwarded = a if b < a else b
+    corners = tuple(transformed)
+    return SpecializedQuadProjectionResult(
+        corners, forwarded,
+        specialized_quad_projection_gate(projected_point, corners))
+
+
 def terrain_response_normal(vertices):
     """Recover the upward-facing response normal from three accepted points.
 

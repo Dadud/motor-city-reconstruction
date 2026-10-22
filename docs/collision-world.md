@@ -115,21 +115,25 @@ The ordered shape tables are decoded in the Python translation and checked
 against the executable. The three-vertex motion predictor and its
 caller-side velocity/rate cleanup are also translated and compared over 64
 direct executions of `0x45a320` with varied body velocities, angular rates,
-center of mass and orientation. The specialized `0x54f0e0` path, shape-table
-candidate selection over nondegenerate meshes, and broad output equivalence
-still need bounded direct-call coverage. The separate support-correction
+center of mass and orientation. The specialized `0x54f0e0` transform and
+projected gate have separate bounded direct-call coverage below; shape-table
+candidate selection over nondegenerate meshes and broad output equivalence
+remain open. The separate support-correction
 caller `0x459150` is translated and validated below; most of the `0x45a320`
 query remains unported.
 
-The `0x54f0e0` specialized branch now has a Python translation of its projected
-four-corner XZ gate in `specialized_quad_projection_gate`. It checks the quad as
-two triangles split across corners 0 and 2, preserving the original inclusive
-edge rejection. A 128-case original-entry harness checks the translated gate
-against the four original-transformed corners at the inner-worker handoff for
-delegated cases: 105 cases return before the worker and 23 delegate. In this harness only, the
+The `0x54f0e0` specialized branch now has a Python translation of its four-point
+mode-6 transform and projected XZ gate in
+`specialized_quad_projection_candidate` and `specialized_quad_projection_gate`.
+It checks the quad as two triangles split across corners 0 and 2, preserving the
+original inclusive edge rejection, and forwards the larger geometry extent. A
+128-case original-entry harness compares every transformed corner and gate
+decision with the executable: 105 cases return before the inner worker and 23
+delegate with matching corner data and bound. In this harness only, the
 `0x54f2a0` inner worker is stubbed to return true, so the test establishes the
-gate and forwarding behavior, not collision response inside that worker. The
-original `0x54f0e0` and `0x6f1320` analysis records are
+transform, projected gate and forwarding behavior, not collision response
+inside that worker. The native CPU-specific dispatch implementation itself is
+outside the translation. The original `0x54f0e0` and `0x6f1320` analysis records are
 `ev_fa6ee44ac7b009dcafb034957c75ce2a9af35ef938230fd7a3f15cf32b01382f` and
 `ev_65a4dbd1df45dd1b34e1e7da31cd7cdb3affb0a023a110e4700f17b7ec14fb30`.
 Run

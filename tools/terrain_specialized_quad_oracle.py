@@ -7,7 +7,7 @@ import struct
 
 from unicorn import UC_HOOK_CODE
 
-from client.collision_terrain import specialized_quad_projection_gate
+from client.collision_terrain import specialized_quad_projection_candidate
 from tools.native_oracle import DynoOracle
 
 
@@ -45,8 +45,15 @@ def compare(executable, count=64):
     oracle = DynoOracle(executable)
     cpu, reg = oracle.cpu, oracle.reg
     calls = []
+    transformed = []
 
     def intercept(machine, address, _size, _user):
+        if address == 0x54F193:
+            ebp = machine.reg_read(reg.UC_X86_REG_EBP)
+            values = struct.unpack('<12f', machine.mem_read(ebp - 0x38, 48))
+            transformed.append(tuple(values[i:i + 3]
+                                     for i in range(0, 12, 3)))
+            return
         if address != 0x54F2A0:
             return
         sp = machine.reg_read(reg.UC_X86_REG_ESP)
@@ -76,17 +83,36 @@ def compare(executable, count=64):
         struct.pack_into('<f', image, 0x10, projected[1])
         cpu.mem_write(OWNER, bytes(image))
         calls.clear()
+        transformed.clear()
         oracle.call(0x54F0E0, (OWNER,), instruction_limit=500_000)
         actual = cpu.reg_read(reg.UC_X86_REG_EAX) != 0
+        candidate = specialized_quad_projection_candidate(
+            projected, corners, matrix,
+            (projected[0], position[1], projected[1]), bound, bound + .2)
+        if len(transformed) != 1:
+            raise AssertionError(f'case {index}: transform output missing')
+        for original_vertex, expected_vertex in zip(
+                transformed[0], candidate.transformed_vertices):
+            if any(abs(a-b) > max(2e-5, abs(a)*2e-6)
+                   for a, b in zip(original_vertex, expected_vertex)):
+                raise AssertionError(f'case {index}: transformed point differs: '
+                                     f'{original_vertex!r} != {expected_vertex!r}')
+        if candidate.intersects != bool(calls):
+            raise AssertionError(f'case {index}: translated projection gate '
+                                 f'{candidate.intersects} != delegation {bool(calls)}')
         if calls:
             if len(calls) != 1 or calls[0][0] != OWNER:
                 raise AssertionError(f'case {index}: unexpected inner calls {calls!r}')
             _, world_corners, actual_bound = calls[0]
-            expected_gate = specialized_quad_projection_gate(projected,
-                                                              world_corners)
+            expected_gate = candidate.intersects
             if not expected_gate:
                 raise AssertionError(f'case {index}: caller delegated outside point')
-            expected_bound = bound + .2
+            for original_vertex, forwarded_vertex in zip(
+                    world_corners, candidate.transformed_vertices):
+                if any(abs(a-b) > max(2e-5, abs(a)*2e-6)
+                       for a, b in zip(original_vertex, forwarded_vertex)):
+                    raise AssertionError(f'case {index}: inner worker points changed')
+            expected_bound = candidate.forwarded_extent
             if abs(actual_bound - expected_bound) > max(1e-6, abs(expected_bound) * 1e-6):
                 raise AssertionError(f'case {index}: forwarded bound {actual_bound} != {expected_bound}')
             if not actual:
@@ -98,7 +124,7 @@ def compare(executable, count=64):
             rejected += 1
     return {'entry': '0x54f0e0', 'cases': count, 'delegated': delegated,
             'projected_rejections': rejected,
-            'scope': 'four-corner transform dispatch, projected XZ quad guard, and delegated result with inner 0x54f2a0 stubbed'}
+            'scope': 'four-point mode-6 transform and projected XZ gate; delegated result with inner 0x54f2a0 stubbed'}
 
 
 if __name__ == '__main__':

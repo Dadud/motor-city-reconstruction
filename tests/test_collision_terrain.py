@@ -9,7 +9,8 @@ from client.collision_terrain import (triangle_candidate_gate,
                                       terrain_shape_triangles,
                                       projected_shape_candidates,
                                       terrain_contact_velocity_gate,
-                                      specialized_quad_projection_gate)
+                                      specialized_quad_projection_gate,
+                                      specialized_quad_projection_candidate)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -72,6 +73,18 @@ class TerrainTriangleGateTests(unittest.TestCase):
     def test_specialized_quad_projection_rejects_degenerate_input_shape(self):
         with self.assertRaises(ValueError):
             specialized_quad_projection_gate((0., 0.), self.triangle)
+
+    def test_specialized_candidate_transforms_corners_and_forwards_max_extent(self):
+        local = ((-1., 0., -1.), (-1., 0., 1.),
+                 (1., 0., 1.), (1., 0., -1.))
+        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        result = specialized_quad_projection_candidate(
+            (3.5, 7.5), local, identity, (4., 2., 7.), .25, .5)
+        self.assertEqual(result.transformed_vertices,
+                         ((3., 2., 6.), (3., 2., 8.),
+                          (5., 2., 8.), (5., 2., 6.)))
+        self.assertEqual(result.forwarded_extent, .5)
+        self.assertTrue(result.intersects)
 
     def test_degenerate_consecutive_vertices_fail(self):
         degenerate = (self.triangle[0], self.triangle[0], self.triangle[2])
