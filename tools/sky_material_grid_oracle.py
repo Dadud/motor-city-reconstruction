@@ -5,8 +5,7 @@ import math
 import struct
 
 from client.random_state import RandomState
-from client.sky import (sky_material_normalize_grid, sky_material_random_grid,
-                        sky_material_smooth_grid, sky_material_mesh_outputs)
+from client.sky import build_sky_material
 from tools.native_oracle import DynoOracle
 
 
@@ -25,8 +24,12 @@ def verify(executable):
             (0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, False),
             (255, 31, -0.375, 1.25, 0.75, -0.3, 2.0, 0.6, True),
             (128, 1, 0.25, -0.5, 2.0, 1.25, 0.5, 1.1, False)):
-        state = RandomState(_INITIAL)
-        expected_raw = sky_material_random_grid(state, upper_bound=bound, modulus=modulus)
+        material = build_sky_material(
+            RandomState(_INITIAL), upper_bound=bound, modulus=modulus,
+            angle=angle, row_scale=row_scale, column_scale=column_scale,
+            base_offset=base, amplitude=amplitude, color_scale=color_scale,
+            invert=invert)
+        expected_raw = material.random_heights
         actual_raw = oracle.sky_material_height_grid(
             'raw', upper_bound=bound, modulus=modulus, angle=angle,
             row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL)
@@ -35,7 +38,7 @@ def verify(executable):
                             if pair[0] != pair[1])
             raise AssertionError(('raw', bound, modulus, mismatch,
                                   actual_raw[mismatch], expected_raw[mismatch]))
-        expected_normalized = sky_material_normalize_grid(expected_raw)
+        expected_normalized = material.normalized_heights
         actual_normalized = oracle.sky_material_height_grid(
             'normalized', upper_bound=bound, modulus=modulus, angle=angle,
             row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL)
@@ -44,8 +47,7 @@ def verify(executable):
             index = max(range(len(errors)), key=errors.__getitem__)
             raise AssertionError(('normalized', bound, modulus, index,
                                   actual_normalized[index], expected_normalized[index], errors[index]))
-        expected_smoothed = sky_material_smooth_grid(
-            expected_normalized, upper_bound=bound)
+        expected_smoothed = material.smoothed_heights
         actual_smoothed = oracle.sky_material_height_grid(
             'smoothed', upper_bound=bound, modulus=modulus, angle=angle,
             row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL)
@@ -56,10 +58,7 @@ def verify(executable):
             raise AssertionError(('smoothed', bound, modulus, index,
                                   actual_smoothed[index], expected_smoothed[index],
                                   smooth_errors[index]))
-        expected_positions, expected_mesh = sky_material_mesh_outputs(
-            expected_smoothed, angle=angle, row_scale=row_scale,
-            column_scale=column_scale, base_offset=base, amplitude=amplitude,
-            color_scale=color_scale, invert=invert)
+        expected_positions, expected_mesh = material.positions, material.mesh
         actual_output = oracle.sky_material_height_grid(
             'output', upper_bound=bound, modulus=modulus, angle=angle,
             row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL,
@@ -80,10 +79,13 @@ def verify(executable):
             raise AssertionError(('mesh coordinates or packed grayscale differ', bound))
         texture = bytes((index*13 + channel*47 + bound) & 0xff
                         for index in range(676) for channel in range(4))
-        expected_positions, expected_mesh = sky_material_mesh_outputs(
-            expected_smoothed, angle=angle, row_scale=row_scale,
-            column_scale=column_scale, base_offset=base, amplitude=amplitude,
-            color_scale=color_scale, invert=invert, texture_rgba=texture)
+        textured_material = build_sky_material(
+            RandomState(_INITIAL), upper_bound=bound, modulus=modulus,
+            angle=angle, row_scale=row_scale, column_scale=column_scale,
+            base_offset=base, amplitude=amplitude, color_scale=color_scale,
+            invert=invert, texture_rgba=texture)
+        expected_positions, expected_mesh = (textured_material.positions,
+                                             textured_material.mesh)
         actual_output = oracle.sky_material_height_grid(
             'output', upper_bound=bound, modulus=modulus, angle=angle,
             row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL,

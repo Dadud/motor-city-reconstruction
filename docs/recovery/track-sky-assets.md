@@ -45,10 +45,13 @@ match exactly; world positions differ by at most 0.00036 due to x87 versus
 Python math precision. With `block[0xc12c]` enabled, the output stage floors
 the mean of each RGBA pixel's four bytes to derive height and copies that pixel
 unchanged into mesh color. Patterned source buffers compare exactly for the
-height and color outputs across all four parameter sets. How the runtime caller
-fills `block+0x93e0` remains a separate interface question. The shared
-generator at `0x6f0fa0` is separately translated and compared across 1,024
-states.
+height and color outputs across all four parameter sets. Caller analysis now
+connects those buffers to `0x4940f0`: pointer-table entries 4 and 5 are sampled
+into the two material blocks at `0x9b88d4` and `0x9c4a0c`, exactly each block's
+`+0x93e0` input. `SkyResources.material_lookup_rgba(0/1)` exposes that mapping,
+and `build_sky_material` composes the recovered stages into one callable model.
+The shared generator at `0x6f0fa0` is separately translated and compared across
+1,024 states.
 
 Evidence on `mcity.exe` SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`, Ghidra

@@ -2738,18 +2738,21 @@
   "0x4943f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The procedural sky-material kernel is translated for the 1,250 deterministic grid indices including native row padding, transposed 26x26 random-height field, signed-square-root normalization, 20 in-place weighted 5x5 smoothing passes, and both final 676-vertex arrays. Original comparisons cover the full index buffer and four parameter sets; raw, normalized and smoothed grid values plus secondary-array, grayscale, and patterned RGBA override outputs match exactly, while rotated world positions differ by at most 0.00036. The runtime caller's source for block+0x93e0 remains an unresolved interface.",
+    "scope": "The procedural sky-material kernel is translated as a composed pipeline for the 1,250 deterministic grid indices including native row padding, transposed 26x26 random-height field, signed-square-root normalization, 20 in-place weighted 5x5 smoothing passes, and both final 676-vertex arrays. Original comparisons cover the full index buffer and four parameter sets; raw, normalized and smoothed grid values plus secondary-array, grayscale, and patterned RGBA override outputs match exactly, while rotated world positions differ by at most 0.00036. REA caller analysis maps table entries 4/5 through 0x4940f0 to each material block's +0x93e0 input; the adapter exposes that mapping.",
     "sources": [
       "client/sky.py",
       "tests/test_sky.py",
       "tools/sky_material_topology_oracle.py",
       "docs/recovery/track-sky-assets.md",
       "tools/sky_material_grid_oracle.py",
-      "client/random_state.py"
+      "client/random_state.py",
+      "client/assets.py"
     ],
     "evidence_ids": [
       "ev_9de9d6afa83b7c0997de55c52f19572932b4d8059d0ad358066f78ff80844c92",
-      "ev_4084dc77675b54579dacd1bdd5e9cd9f84d7001129549d169be837da1701be4b"
+      "ev_4084dc77675b54579dacd1bdd5e9cd9f84d7001129549d169be837da1701be4b",
+      "ev_222ad7ba581e2c50e2647321e6ca0d286c5801f41f622e4eb15816513d944f5f",
+      "ev_8b4fbdd664a0315049ce2fd0ff2083a14ac1ca4a816f5c1a3cbb8f52d936facc"
     ],
     "verification_refs": [
       "tools/sky_material_topology_oracle.py",

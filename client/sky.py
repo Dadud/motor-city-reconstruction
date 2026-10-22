@@ -157,6 +157,17 @@ class SkyResources:
     cloud_pattern: str
     clouds: tuple[str, ...]
 
+    def material_lookup_rgba(self, block_index):
+        """Return the sampled table-4/5 RGBA buffer for material block 0/1.
+
+        The native loader walks `param_2[4]` and `[5]` into the two
+        `0x4943f0` blocks at `0x9b88d4` and `0x9c4a0c`, respectively.
+        """
+        if type(block_index) is not int or block_index not in (0, 1):
+            raise ValueError('sky material block index must be 0 or 1')
+        lookup = self.lookups[block_index]
+        return None if lookup is None else lookup.rgba
+
 
 def sky_resource_names(*, night=False, wet=False):
     """Return the exact eight names/pattern slots selected by native flags."""
@@ -230,3 +241,30 @@ def load_sky_textures(data, *, night=False, wet=False, cloud_count=0,
                                 cloud_count=cloud_count,
                                 clouds_enabled=clouds_enabled)
     return tuple(entry for entry in result.lookups if entry is not None)
+
+
+@dataclass(frozen=True)
+class SkyMaterialOutput:
+    """Recovered data products of one procedural sky-material block."""
+    triangle_indices: tuple[int, ...]
+    random_heights: tuple[float, ...]
+    normalized_heights: tuple[float, ...]
+    smoothed_heights: tuple[float, ...]
+    positions: tuple[tuple[float, float, float], ...]
+    mesh: tuple[tuple[float, float, int], ...]
+
+
+def build_sky_material(random_state, *, upper_bound, modulus, angle, row_scale,
+                       column_scale, base_offset, amplitude, color_scale,
+                       invert=False, texture_rgba=None):
+    """Run the recovered procedural sky-material stages as one pipeline."""
+    random_heights = sky_material_random_grid(
+        random_state, upper_bound=upper_bound, modulus=modulus)
+    normalized = sky_material_normalize_grid(random_heights)
+    smoothed = sky_material_smooth_grid(normalized, upper_bound=upper_bound)
+    positions, mesh = sky_material_mesh_outputs(
+        smoothed, angle=angle, row_scale=row_scale, column_scale=column_scale,
+        base_offset=base_offset, amplitude=amplitude, color_scale=color_scale,
+        invert=invert, texture_rgba=texture_rgba)
+    return SkyMaterialOutput(sky_material_triangle_indices(), random_heights,
+                            normalized, smoothed, positions, mesh)

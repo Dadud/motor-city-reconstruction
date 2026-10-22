@@ -8,6 +8,7 @@ from client.sky import (load_sky_resources, sky_resource_names,
                         sky_material_triangle_indices,
                         sky_material_normalize_grid, sky_material_random_grid,
                         sky_material_smooth_grid, sky_material_mesh_outputs)
+from client.sky import build_sky_material
 from client.random_state import RandomState
 
 
@@ -68,6 +69,20 @@ class SkyResourceTests(unittest.TestCase):
         self.assertEqual(len(positions), 676)
         self.assertEqual(mesh[0][2], 0x04030201)
 
+    def test_complete_sky_material_pipeline(self):
+        state = RandomState((0xf22d0e56, 0x883126e9, 0xc624dd2f,
+                             0x0702c49c, 0x9e353f7d, 0x6fdf3b64))
+        material = build_sky_material(
+            state, upper_bound=64, modulus=8, angle=0.125,
+            row_scale=1.0, column_scale=1.0, base_offset=0.75,
+            amplitude=1.25, color_scale=0.8)
+        self.assertEqual(len(material.triangle_indices), 1250)
+        self.assertEqual(len(material.random_heights), 676)
+        self.assertEqual(len(material.normalized_heights), 676)
+        self.assertEqual(len(material.smoothed_heights), 676)
+        self.assertEqual(len(material.positions), 676)
+        self.assertEqual(len(material.mesh), 676)
+
 
     def test_material_triangle_index_topology(self):
         indices = sky_material_triangle_indices()
@@ -102,6 +117,10 @@ class SkyResourceTests(unittest.TestCase):
         self.assertEqual(grid.rgba[:4], bytes((0, 0, 0, 255)))
         self.assertEqual(grid.rgba[-4:], bytes((0, 26, 26, 255)))
         self.assertIsNone(resources.lookups[2])
+        self.assertEqual(resources.material_lookup_rgba(0), grid.rgba)
+        self.assertIsNone(resources.material_lookup_rgba(1))
+        with self.assertRaises(ValueError):
+            resources.material_lookup_rgba(2)
 
     def test_cloud_template_expansion_stops_at_first_missing_image(self):
         image = bytes((0, 0, 0, 255))
