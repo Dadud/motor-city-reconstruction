@@ -220,14 +220,17 @@ with maximum absolute error `1.4901161193847656e-7`. The body response helper
 `0x457550` (`ev_83c698b2ec1c4b875f84246b3e11dbbbf6a676b523333c3bff83c55949ff0684`) is
 translated as `terrain_impact_response`; 260 supplied-state original calls
 matched with maximum absolute error `0.0001220703125` under a magnitude-scaled
-tolerance. One accepted supplied-world triangle also runs through the actual
-`0x45a320` entry: it performs three terrain/plane queries, calls
-`0x459e30` twice and `0x457550` once, and the translated normal, response
-status, velocity changes and tangential contact record match. No other body
-fields change in that fixture. Run
+tolerance. An accepted supplied-world triangle also runs through the actual
+`0x45a320` entry across 512 varied linear/angular velocity states: each case
+performs three terrain/plane queries, calls `0x459e30` twice and `0x457550`
+once, and matches the helper's captured normal, status, final velocity and
+tangential contact record with maximum response error `7.62939453125e-6`
+under a magnitude-scaled tolerance. The other body bytes remain unchanged in
+every fixture. A rising-body case rejects at the caller's motion gate before
+either response helper. Run
 `python -m tools.terrain_response_normal_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` and
 `python -m tools.terrain_impact_response_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the helper comparisons, or
-`python -m tools.terrain_candidate_impact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the enclosing accepted-candidate case. The motion predictor and caller-side cleanup run in
+`python -m tools.terrain_candidate_impact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 512` for the enclosing accepted-candidate cases. The motion predictor and caller-side cleanup run in
 `python -m tools.terrain_candidate_motion_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 64`; all 64 cases match the original entry's accept/reject result and helper-call path, and accepted cases match final linear/angular velocity. Live-world behavior and broad output equivalence remain open.
 
 `0x458530` constructs center-of-mass contact levers and radial directions from
