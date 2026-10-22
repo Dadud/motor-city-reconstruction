@@ -481,14 +481,16 @@ def terrain_contact_velocity_gate(vertices, normals, position, linear_velocity,
 def specialized_quad_contact_selection(
         vertices, normals, position, linear_velocity, angular_turn_velocity,
         center_of_mass_local, body_to_world, corner_offsets, minimum_gap,
-        maximum_gap):
+        maximum_gap, sampled_heights=None):
     """Recover the four-corner motion filter in ``0x54f2a0``.
 
     The worker predicts each corner's normal velocity at 1/32 second, applies
     its ``0.3065625`` bias, subtracts that corner's stored vertical offset,
     and keeps the first three points satisfying the strict extent test. The
-    result contains both the original points and points with the offset added
-    to Y, matching the two arrays passed to the response-normal helper.
+    ``sampled_heights`` supplies the projected contact Y values from the prior
+    height pass. The result retains those sampled contact points and the input
+    vertices with their per-corner offsets added, matching both response-normal
+    arrays.
     """
     vectors = (position, linear_velocity, angular_turn_velocity,
                center_of_mass_local)
@@ -498,7 +500,12 @@ def specialized_quad_contact_selection(
             any(len(normal) != 3 for normal in normals) or
             len(body_to_world) != 9 or len(corner_offsets) != 4):
         raise ValueError('four-corner selection requires four points and normals')
+    if sampled_heights is not None and len(sampled_heights) != 4:
+        raise ValueError('four sampled contact heights are required')
     points = tuple(tuple(f32(value) for value in point) for point in vertices)
+    contacts = tuple((point[0], f32(sampled_heights[i]), point[2])
+                     if sampled_heights is not None else point
+                     for i, point in enumerate(points))
     ns = tuple(tuple(f32(value) for value in normal) for normal in normals)
     position = tuple(f32(value) for value in position)
     linear = tuple(f32(value) for value in linear_velocity)
@@ -510,9 +517,9 @@ def specialized_quad_contact_selection(
     maximum_gap = f32(maximum_gap)
     omega = tuple(f32(value * 6.2831855) for value in turns)
     dots, predicted, indices, sources, adjusted = [], [], [], [], []
-    for index, (point, normal, corner_offset) in enumerate(
-            zip(points, ns, offsets)):
-        lever = terrain_contact_lever_arm(position, com, matrix, point)
+    for index, (point, contact, normal, corner_offset) in enumerate(
+            zip(points, contacts, ns, offsets)):
+        lever = terrain_contact_lever_arm(position, com, matrix, contact)
         spin = (f32(omega[1] * lever[2] - omega[2] * lever[1]),
                 f32(omega[2] * lever[0] - omega[0] * lever[2]),
                 f32(omega[0] * lever[1] - omega[1] * lever[0]))
@@ -525,7 +532,7 @@ def specialized_quad_contact_selection(
         predicted.append(projected_gap)
         if projected_gap - corner_offset < maximum_gap and len(indices) < 3:
             indices.append(index)
-            sources.append(point)
+            sources.append(contact)
             adjusted.append((point[0], f32(point[1] + corner_offset), point[2]))
     selected = tuple(indices)
     return SpecializedQuadContactSelection(
@@ -597,6 +604,89 @@ def specialized_quad_response_axes(
     roll = f32(min(max(roll, -limit), limit))
     return SpecializedQuadResponseAxes(
         adjusted, sampled, yaw, pitch, penetration, roll, pitch_error)
+
+
+@dataclass(frozen=True)
+class SpecializedQuadResponseDynamics:
+    position: tuple
+    linear_velocity: tuple
+    angular_turn_velocity: tuple
+    local_before_response: tuple
+    local_after_response: tuple
+    contact_state_cleared: bool
+
+
+def specialized_quad_response_dynamics(
+        selection, axes, minimum_height_gap, position, linear_velocity,
+        angular_turn_velocity, response_basis, body_basis, geometry,
+        response_parameters):
+    """Translate the post-axis suspension and inward-velocity response tail.
+
+    ``response_basis`` and ``body_basis`` are the 3x3 matrices at owner offsets
+    ``+0x9c`` and ``+0x78``. Angular inputs and outputs use turn units.
+    Geometry and parameter mappings use the native record offsets exercised by
+    the direct oracle.
+    """
+    if not selection.candidate_accepted:
+        raise ValueError('accepted terrain contacts are required')
+    if any(len(v) != n for v, n in ((position, 3), (linear_velocity, 3),
+                                    (angular_turn_velocity, 3),
+                                    (response_basis, 9), (body_basis, 9))):
+        raise ValueError('response dynamics require XYZ vectors and 3x3 bases')
+    go = (0x20, 0x28, 0x38, 0xFC, 0x104, 0x114, 0x118)
+    po = (0x18CC, 0x18D4, 0x18DC, 0x18E0, 0x18E8,
+          0xD18, 0xD1C, 0xD20, 0xD24)
+    if any(k not in geometry for k in go) or any(k not in response_parameters for k in po):
+        raise ValueError('response record is missing required source fields')
+    g = {k: f32(geometry[k]) for k in go}
+    p = {k: f32(response_parameters[k]) for k in po}
+    turns = tuple(f32(v) for v in angular_turn_velocity)
+    # The body basis at +0x9c projects world angular turn rates into local axes.
+    local = _terrain_response_basis(turns, tuple(f32(v) for v in response_basis))
+    x, y, z = local
+    span = f32(g[0x20] - g[0x28])
+    ratio = f32(span / g[0x20])
+    side = g[0x118] if x <= 0.0 else g[0x114]
+    # The native angle/normal pipeline can leave a sub-ULP negative residue
+    # for a geometrically level contact where this translation rounds to 0.
+    spring_half = g[0xFC] if axes.roll_error <= 1.0e-7 else g[0x104]
+    spring = f32(f32(spring_half + spring_half) -
+                 f32(f32(f32(g[0x38] * 0.45454544) * span) * 0.1712168))
+    lateral_root = f32(p[0x18CC] * 57.295776)
+    lateral_root = f32(lateral_root * p[0x18DC])
+    lateral_root = f32(lateral_root * ratio)
+    lateral = f32(2.0 * math.sqrt(max(0.0, lateral_root)) *
+                  f32(g[0x114] + g[0x118]))
+    vertical_root = f32(spring * 57.295776)
+    vertical_root = f32(vertical_root * p[0x18D4])
+    vertical_root = f32(vertical_root * ratio)
+    vertical = f32(4.0 * math.sqrt(max(0.0, vertical_root)) * side)
+    roll_damp = p[0xD1C] if axes.roll_error <= 1.0e-7 else p[0xD18]
+    roll_damp = f32(1.0 - f32(roll_damp * 0.25))
+    pitch_damp = p[0xD24] if x <= 0.0 else p[0xD20]
+    pitch_damp = f32(1.0 - f32(pitch_damp * 0.25))
+    x_force = f32(f32(f32(roll_damp * axes.roll_error) * spring) * 360.0 -
+                  f32(f32(pitch_damp * vertical) * f32(x * 6.2831855)))
+    x = f32(x + f32(f32(f32(ratio * p[0x18E0]) * x_force) * 0.004973592))
+    z_force = f32(f32(f32(axes.pitch_error * roll_damp) * p[0x18CC]) * 360.0 -
+                  f32(f32(pitch_damp * lateral) * f32(z * 6.2831855)))
+    z = f32(z + f32(f32(f32(ratio * p[0x18E8]) * z_force) * 0.004973592))
+    after = (x, y, z)
+    b = tuple(f32(v) for v in body_basis)
+    out = (f32(z * b[6] + y * b[3] + x * b[0]),
+           f32(z * b[7] + y * b[4] + x * b[1]),
+           f32(z * b[8] + y * b[5] + x * b[2]))
+    pos = tuple(f32(v) for v in position)
+    vel = tuple(f32(v) for v in linear_velocity)
+    gap = f32(minimum_height_gap)
+    if gap < 0.0:
+        pos = tuple(f32(pos[i] - f32(axes.sampled_normal[i] * gap)) for i in range(3))
+    dot = (vel[0] * axes.sampled_normal[0] + vel[1] * axes.sampled_normal[1] +
+           vel[2] * axes.sampled_normal[2])
+    if gap <= 0.0 and dot < 0.0:
+        vel = tuple(f32(vel[i] - f32(axes.sampled_normal[i] * dot)) for i in range(3))
+    return SpecializedQuadResponseDynamics(pos, vel, out, local, after,
+                                           gap < 0.0)
 
 
 def terrain_impact_response(linear_velocity, angular_turn_velocity,

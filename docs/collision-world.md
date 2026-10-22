@@ -158,16 +158,23 @@ error is `1.9073486328125e-6`. Run
 `python -m tools.terrain_contact_lever_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
 The worker's four-corner motion filter now has a translation in
 `specialized_quad_contact_selection`, followed by the first response-axis
-projection in `specialized_quad_response_axes`. On 2,055 direct original calls
-over a flat supplied track, 1,349 select at least three corners and 706 reject on
-predicted motion. Every return decision and both three-point arrays passed to
-`0x459e30` match; on accepted cases the owner fields `+0xc00`, `+0xc04`,
-`+0xbfc`, `+0xbf4` and `+0xbf8` match within a maximum absolute error of
-`2.9802322387695312e-8`. The corpus varies per-corner vertical offsets around
-the strict acceptance threshold and includes sloped contact triplets. Run
+projection in `specialized_quad_response_axes`. `specialized_quad_contact_selection`
+uses the sampled contact heights for motion prediction and source points, while
+the offset-adjusted points retain input vertex heights. On 2,055 direct original
+calls, 1,258 select at least three corners and 797 reject on predicted motion.
+Every return decision and both three-point arrays passed to `0x459e30` match.
+For accepted cases, the owner response-axis fields `+0xc00`, `+0xc04`, `+0xbfc`,
+`+0xbf4` and `+0xbf8` match within `2.9802322387695312e-8`. The suspension
+response tail is translated in `specialized_quad_response_dynamics`; angular
+velocity, linear velocity, position correction and the `+0x350` contact-state
+clear match within `5.960464477539063e-8` (the status word matches exactly).
+The corpus varies sampled corner heights from `-0.2` through `0.2`, per-corner
+offsets around the motion threshold, and suspension geometry/response
+coefficients by a deterministic scale from `0.75` through `1.23`; accepted
+cases include sloped contact triplets and negative gaps that exercise positional
+correction. The near-zero roll branch uses a small tie window because float32
+angle calculations can reverse the native sign at zero. Run
 `python -m tools.terrain_specialized_contact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 2048`.
-The later response forces and body velocity/orientation correction still need
-source translations and broader direct comparisons.
 
 The three triangle tables at `0x88c9d4`, `0x88ca64` and `0x88c7f4` contain 12
 ordered triangles for shapes 0/2, 6 for shape 1, and 40 for shapes 3/4. Their
