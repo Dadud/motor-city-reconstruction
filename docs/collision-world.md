@@ -111,17 +111,33 @@ and response mode `+0x354`, calls `0x457550`, and returns true. Unknown shape
 values log an error; the decompiled default branch's later table use is not a
 safe portable behavior.
 
-This is static evidence, not a source translation: triangle-index data,
-triangle-boundary behavior on degenerate geometry, helper conventions, global
-coefficient values, `0x54f0e0`, and output mutations require bounded direct-call
-coverage. The separate support-correction caller `0x459150` is translated and
-validated below; its terrain producer and the complete `0x45a320` query remain
-unported.
+The ordered shape tables are decoded in the Python translation and checked
+against the executable. The three-vertex motion predictor and its
+caller-side velocity/rate cleanup are also translated and compared over 64
+direct executions of `0x45a320` with varied body velocities, angular rates,
+center of mass and orientation. The specialized `0x54f0e0` path, shape-table
+candidate selection over nondegenerate meshes, and broad output equivalence
+still need bounded direct-call coverage. The separate support-correction
+caller `0x459150` is translated and validated below; most of the `0x45a320`
+query remains unported.
+
+The three triangle tables at `0x88c9d4`, `0x88ca64` and `0x88c7f4` contain 12
+ordered triangles for shapes 0/2, 6 for shape 1, and 40 for shapes 3/4. Their
+indices are retained in `terrain_shape_triangle_indices`; the REA byte reads
+are `ev_7f990f062baa97300b2aaee6be5780fef61245b1742d10ab57f50b1102e09dbc`,
+`ev_4c554a0146d1cd355fcb9a5ffb1c636b7ac74a9320fa6f4606f4885b5f8fa512`, and
+`ev_c4b08d09aa31a238c15fac69764030037ab0f2a42c55a6d04a0a46f70de3900e`.
+The table oracle compares all decoded indices with the original executable and
+executes `0x45a320` for shapes 0 through 4 on a degenerate mesh; the original
+visits exactly 12, 6, 12, 40 and 40 candidates, respectively, then returns
+false without changing the supplied body. Run
+`python -m tools.terrain_shape_table_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
 
 The first early candidate gate is translated in
 [`client/collision_terrain.py`](../client/collision_terrain.py): it applies the
-three float32 signed XZ inequalities and rejects a zero-length consecutive 3D
-edge, matching `0x6f14f0` (`ev_3085534cf4a25e13bc6d0962322d24f2d08c453f2348dea191ade8bb4a3b53a0`).
+shape table in original order, then the three float32 signed XZ inequalities,
+and rejects a zero-length consecutive 3D edge, matching `0x6f14f0`
+(`ev_3085534cf4a25e13bc6d0962322d24f2d08c453f2348dea191ade8bb4a3b53a0`).
 Five rejected shape-0 cases execute the actual `0x45a320` entry and return
 false without mutating the supplied object image: four bypass both the edge
 helper and terrain query; the degenerate shared-edge case reaches the
@@ -156,7 +172,8 @@ status, velocity changes and tangential contact record match. No other body
 fields change in that fixture. Run
 `python -m tools.terrain_response_normal_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` and
 `python -m tools.terrain_impact_response_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the helper comparisons, or
-`python -m tools.terrain_candidate_impact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the enclosing accepted-candidate case. Triangle table coverage, motion-based vertex selection over varied states and live-world behavior remain open.
+`python -m tools.terrain_candidate_impact_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"` for the enclosing accepted-candidate case. The motion predictor and caller-side cleanup run in
+`python -m tools.terrain_candidate_motion_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 64`; all 64 cases match the original entry's accept/reject result and helper-call path, and accepted cases match final linear/angular velocity. Live-world behavior and broad output equivalence remain open.
 
 `0x458530` constructs center-of-mass contact levers and radial directions from
 the supplied world-space point. It samples for up to 32 steps and stops when

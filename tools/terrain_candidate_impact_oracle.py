@@ -6,6 +6,7 @@ import struct
 from unicorn import UC_HOOK_CODE
 
 from client.collision_terrain import (sample_triangle_candidate_heights,
+                                     terrain_contact_velocity_gate,
                                      terrain_impact_response,
                                      terrain_response_normal)
 from tools.native_oracle import DynoOracle
@@ -23,10 +24,21 @@ def compare(executable):
     vertices = ((6., 0., 6.), (6., 0., 10.), (10., 0., 6.))
     object_normal = (0., 1., 0.)
     plane_point = (0., 0., 0.)
+    identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
     sampled = sample_triangle_candidate_heights(world, vertices, seed,
                                                 object_normal, plane_point)
     if not sampled.candidate.accepted:
         raise AssertionError(f'candidate should pass height filter: {sampled.candidate!r}')
+    settled_gate = terrain_contact_velocity_gate(
+        vertices, sampled.normals, (8., 0., 8.), (1., 0., 0.),
+        (0., 0., 0.), (0., 0., 0.), identity,
+        sampled.candidate.minimum_gap)
+    rising_gate = terrain_contact_velocity_gate(
+        vertices, sampled.normals, (8., 0., 8.), (0., 4., 0.),
+        (0., 0., 0.), (0., 0., 0.), identity,
+        sampled.candidate.minimum_gap)
+    if not settled_gate.candidate_accepted or rising_gate.candidate_accepted:
+        raise AssertionError('Python motion-gate fixtures do not separate contact states')
 
     oracle = DynoOracle(executable)
     cpu = oracle.cpu
@@ -41,6 +53,7 @@ def compare(executable):
     struct.pack_into('<3f', image, 0x318, 1., 0., 0.)
     struct.pack_into('<3f', image, 0x328, *object_normal)
     struct.pack_into('<3f', image, 0x340, *plane_point)
+    struct.pack_into('<9f', image, 0x78, *identity)
     struct.pack_into('<I', image, 0x354, 0)
     struct.pack_into('<I', image, 0x404, 0)
     struct.pack_into('<9f', image, 0x1e8, *(v for vertex in vertices for v in vertex))
@@ -95,10 +108,25 @@ def compare(executable):
         before_body[start:end] = after_body[start:end]
     if before_body != after_body:
         raise AssertionError('accepted candidate changed unmodeled object fields')
+
+    rising_image = bytearray(image)
+    struct.pack_into('<3f', rising_image, 0x14, 0., 4., 0.)
+    cpu.mem_write(OWNER, bytes(rising_image))
+    counts.update({address: 0 for address in counts})
+    before_rising = bytes(cpu.mem_read(OWNER, len(rising_image)))
+    oracle.call(0x45A320, (OWNER,), instruction_limit=2_000_000)
+    rising_return = cpu.reg_read(oracle.reg.UC_X86_REG_EAX)
+    if rising_return != 0:
+        raise AssertionError(f'rising body unexpectedly returned {rising_return}')
+    if counts != {0x42E760: 3, 0x42DC50: 3, 0x459E30: 0, 0x457550: 0}:
+        raise AssertionError(f'rising body did not stop at the motion gate: {counts!r}')
+    if bytes(cpu.mem_read(OWNER, len(rising_image))) != before_rising:
+        raise AssertionError('motion-gate rejection changed the supplied body')
     return {'entry': '0x45a320', 'response_normal': normal,
             'threshold': threshold, 'sliding': sliding,
             'response_status': status, 'candidate_calls': counts,
-            'scope': 'one accepted supplied-world triangle through 0x459e30 and 0x457550'}
+            'motion_gate_cases': 2,
+            'scope': 'accepted response plus rising-body rejection through the original caller'}
 
 
 if __name__ == '__main__':

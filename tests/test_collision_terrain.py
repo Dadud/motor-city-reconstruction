@@ -4,7 +4,11 @@ from client.collision_terrain import (triangle_candidate_gate,
                                       triangle_candidate_height_gate,
                                       sample_triangle_candidate_heights,
                                       terrain_response_normal,
-                                      terrain_impact_response)
+                                      terrain_impact_response,
+                                      terrain_shape_triangle_indices,
+                                      terrain_shape_triangles,
+                                      projected_shape_candidates,
+                                      terrain_contact_velocity_gate)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -18,6 +22,37 @@ class TerrainTriangleGateTests(unittest.TestCase):
         self.assertTrue(triangle_candidate_gate((2., 2.), self.triangle))
         self.assertTrue(triangle_candidate_gate((0., 0.), self.triangle))
         self.assertTrue(triangle_candidate_gate((0., 10.), self.triangle))
+
+    def test_shape_tables_recover_all_original_topologies(self):
+        self.assertEqual(len(terrain_shape_triangle_indices(0)), 12)
+        self.assertEqual(terrain_shape_triangle_indices(0),
+                         terrain_shape_triangle_indices(2))
+        self.assertEqual(len(terrain_shape_triangle_indices(1)), 6)
+        self.assertEqual(len(terrain_shape_triangle_indices(3)), 40)
+        self.assertEqual(terrain_shape_triangle_indices(3),
+                         terrain_shape_triangle_indices(4))
+        for shape in range(5):
+            for triangle in terrain_shape_triangle_indices(shape):
+                self.assertEqual(len(triangle), 3)
+                self.assertTrue(all(0 <= index < 22 for index in triangle))
+
+    def test_shape_triangles_expand_in_original_order(self):
+        vertices = tuple((float(i), float(-i), float(i * 2)) for i in range(22))
+        expanded = terrain_shape_triangles(1, vertices)
+        self.assertEqual(expanded[0], (vertices[0], vertices[1], vertices[3]))
+        self.assertEqual(expanded[-1], (vertices[12], vertices[0], vertices[3]))
+        self.assertEqual(len(expanded), 6)
+
+    def test_projected_candidate_search_keeps_table_order_and_indices(self):
+        vertices = [(100., 100., 100.)] * 22
+        vertices[0] = (0., 0., 0.)
+        vertices[4] = (0., 0., 10.)
+        vertices[5] = (10., 0., 0.)
+        found = projected_shape_candidates(0, (2., 2.), tuple(vertices))
+        self.assertTrue(found)
+        self.assertEqual(found[0][0], 0)
+        self.assertEqual(found[0][1], (0, 4, 5))
+        self.assertEqual(found[0][2], (vertices[0], vertices[4], vertices[5]))
 
     def test_outside_points_fail_signed_edge_gate(self):
         for point in ((20., 20.), (-1., 2.), (2., -1.), (11., 0.)):
@@ -75,6 +110,22 @@ class TerrainTriangleGateTests(unittest.TestCase):
         self.assertFalse(result.candidate.accepted)
         self.assertEqual(result.candidate.gaps, (1., 1., 1.))
         self.assertEqual(len(result.query_records), 3)
+        self.assertEqual(result.normals, ((0., 1., 0.),) * 3)
+
+    def test_motion_gate_requires_all_three_predicted_contacts(self):
+        vertices = ((-1., 0., 0.), (0., 0., 1.), (1., 0., 0.))
+        normals = ((0., 1., 0.),) * 3
+        identity = (1., 0., 0., 0., 1., 0., 0., 0., 1.)
+        settled = terrain_contact_velocity_gate(
+            vertices, normals, (0., 0., 0.), (0., 0., 0.), (0., 0., 0.),
+            (0., 0., 0.), identity, 0.)
+        rising = terrain_contact_velocity_gate(
+            vertices, normals, (0., 0., 0.), (0., 4., 0.), (0., 0., 0.),
+            (0., 0., 0.), identity, 0.)
+        self.assertTrue(settled.candidate_accepted)
+        self.assertEqual(settled.accepted_indices, (0, 1, 2))
+        self.assertFalse(rising.candidate_accepted)
+        self.assertEqual(rising.accepted_indices, ())
 
     def test_response_normal_is_upward_and_degenerate_is_zero(self):
         self.assertEqual(terrain_response_normal(self.triangle), (0., 1., 0.))

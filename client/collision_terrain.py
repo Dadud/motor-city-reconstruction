@@ -8,6 +8,52 @@ from .track_surface_lookup import TrackSurfaceWorld, track_surface_lookup
 from .tire_response import f32
 
 
+# Decoded uint32 triangle-index tables read from mcity.exe's shape dispatch:
+# 0x88c9d4 (shapes 0/2), 0x88ca64 (shape 1), and 0x88c7f4 (shapes 3/4).
+_SHAPE_0_2_TRIANGLES = (
+    (0, 4, 5), (5, 1, 0), (5, 6, 2), (5, 2, 1),
+    (6, 7, 3), (6, 3, 2), (7, 4, 0), (7, 0, 3),
+    (0, 1, 2), (0, 2, 3), (5, 4, 7), (5, 7, 6),
+)
+_SHAPE_1_TRIANGLES = (
+    (0, 1, 3), (1, 2, 3), (12, 1, 0), (12, 2, 1),
+    (12, 3, 2), (12, 0, 3),
+)
+_SHAPE_3_4_TRIANGLES = (
+    (18, 1, 13), (1, 19, 13), (19, 2, 13), (2, 21, 13),
+    (21, 3, 13), (3, 20, 13), (20, 0, 13), (0, 18, 13),
+    (5, 14, 12), (14, 4, 12), (4, 16, 12), (16, 7, 12),
+    (7, 17, 12), (17, 6, 12), (6, 15, 12), (15, 5, 12),
+    (4, 14, 8), (14, 5, 8), (5, 1, 8), (1, 18, 8),
+    (18, 0, 8), (0, 4, 8), (6, 17, 9), (17, 7, 9),
+    (7, 3, 9), (3, 21, 9), (21, 2, 9), (2, 6, 9),
+    (5, 15, 11), (15, 6, 11), (6, 2, 11), (2, 19, 11),
+    (19, 1, 11), (1, 5, 11), (7, 16, 10), (16, 4, 10),
+    (4, 0, 10), (0, 20, 10), (20, 3, 10), (3, 7, 10),
+)
+
+
+def terrain_shape_triangle_indices(shape):
+    """Return the original ordered triangle-index list for collision shape."""
+    if type(shape) is not int:
+        raise ValueError('terrain collision shape must be an integer')
+    if shape in (0, 2):
+        return _SHAPE_0_2_TRIANGLES
+    if shape == 1:
+        return _SHAPE_1_TRIANGLES
+    if shape in (3, 4):
+        return _SHAPE_3_4_TRIANGLES
+    raise ValueError(f'unsupported terrain collision shape {shape}')
+
+
+def terrain_shape_triangles(shape, vertices):
+    """Expand the shape's recovered index list over its supplied mesh."""
+    if len(vertices) != 22 or any(len(vertex) != 3 for vertex in vertices):
+        raise ValueError('terrain collision mesh requires 22 XYZ vertices')
+    return tuple(tuple(vertices[index] for index in triangle)
+                 for triangle in terrain_shape_triangle_indices(shape))
+
+
 def triangle_candidate_gate(projected_point, vertices):
     """Return whether one supplied triangle passes the caller's early gates.
 
@@ -37,6 +83,20 @@ def triangle_candidate_gate(projected_point, vertices):
         if all(a[axis] == b[axis] for axis in range(3)):
             return False
     return True
+
+
+def projected_shape_candidates(shape, projected_point, vertices):
+    """Return ordered mesh triangles that pass the original early gates."""
+    indices = terrain_shape_triangle_indices(shape)
+    if len(vertices) != 22 or any(len(vertex) != 3 for vertex in vertices):
+        raise ValueError('terrain collision mesh requires 22 XYZ vertices')
+    candidates = []
+    for ordinal, triangle in enumerate(indices):
+        points = tuple(tuple(f32(value) for value in vertices[index])
+                       for index in triangle)
+        if triangle_candidate_gate(projected_point, points):
+            candidates.append((ordinal, triangle, points))
+    return tuple(candidates)
 
 
 def terrain_response_normal(vertices):
@@ -101,6 +161,15 @@ class TerrainCandidateHeightResult:
 class TerrainCandidateSamplingResult:
     candidate: TerrainCandidateHeightResult
     query_records: tuple
+    normals: tuple
+
+
+@dataclass(frozen=True)
+class TerrainContactVelocityResult:
+    point_velocity_dots: tuple
+    predicted_gaps: tuple
+    accepted_indices: tuple
+    candidate_accepted: bool
 
 
 @dataclass(frozen=True)
@@ -166,12 +235,14 @@ def sample_triangle_candidate_heights(world, vertices, query_seed,
                                         vertex) for vertex in vertices)
     sampled_heights = []
     records = []
+    normals = []
     for vertex in vertices:
         record = bytearray(query_seed)
         found = track_surface_lookup(world, vertex, record)
         records.append(bytes(record))
         if not found:
             sampled_heights.append(object_heights[len(sampled_heights)])
+            normals.append(tuple(f32(value) for value in object_plane_normal))
             continue
 
         mode = int.from_bytes(record[0x0c:0x10], 'little')
@@ -187,10 +258,67 @@ def sample_triangle_candidate_heights(world, vertices, query_seed,
         if normal is None:
             raise ValueError('row-mode query has no recovered candidate-plane normal')
         sampled_heights.append(plane_height(normal, reference, vertex))
+        normals.append(tuple(f32(value) for value in normal))
 
     candidate = triangle_candidate_height_gate(vertices, sampled_heights,
                                                object_heights)
-    return TerrainCandidateSamplingResult(candidate, tuple(records))
+    return TerrainCandidateSamplingResult(candidate, tuple(records), tuple(normals))
+
+
+def terrain_contact_velocity_gate(vertices, normals, position, linear_velocity,
+                                  angular_turn_velocity, center_of_mass_local,
+                                  body_to_world, minimum_gap):
+    """Recover the per-vertex motion predictor and 3-point contact gate.
+
+    The original predicts each signed gap after 1/32 second, with the source
+    bias 0.3065625 and inclusive final gap limit represented by a strict
+    ``< 0.1016`` test. The caller requires all three vertices before producing
+    a terrain response.
+    """
+    if (len(vertices) != 3 or len(normals) != 3 or
+            any(len(vector) != 3 for vector in (position, linear_velocity,
+                                                angular_turn_velocity,
+                                                center_of_mass_local)) or
+            len(body_to_world) != 9):
+        raise ValueError('contact predictor requires three points, normals and body vectors')
+
+    points = tuple(tuple(f32(value) for value in vertex) for vertex in vertices)
+    ns = tuple(tuple(f32(value) for value in normal) for normal in normals)
+    position = tuple(f32(value) for value in position)
+    linear = tuple(f32(value) for value in linear_velocity)
+    turns = tuple(f32(value) for value in angular_turn_velocity)
+    com = tuple(f32(value) for value in center_of_mass_local)
+    matrix = tuple(f32(value) for value in body_to_world)
+
+    # Match the caller's z, y, x accumulation order while rotating its local
+    # center-of-mass offset into the same frame as candidate points.
+    center_world = (
+        f32((com[2] * matrix[6] + com[1] * matrix[3]) + com[0] * matrix[0]),
+        f32((com[2] * matrix[7] + com[1] * matrix[4]) + com[0] * matrix[1]),
+        f32((com[2] * matrix[8] + com[1] * matrix[5]) + com[0] * matrix[2]))
+    omega = tuple(f32(value * 6.2831855) for value in turns)
+    dots = []
+    predicted = []
+    accepted = []
+    minimum_gap = f32(minimum_gap)
+    for index, (point, normal) in enumerate(zip(points, ns)):
+        offset = tuple(f32(point[i] - position[i]) for i in range(3))
+        lever = tuple(f32(offset[i] - center_world[i]) for i in range(3))
+        spin = (f32(omega[1] * lever[2] - omega[2] * lever[1]),
+                f32(omega[2] * lever[0] - omega[0] * lever[2]),
+                f32(omega[0] * lever[1] - omega[1] * lever[0]))
+        point_velocity = tuple(f32(spin[i] + linear[i]) for i in range(3))
+        projection = ((float(point_velocity[0]) * normal[0] +
+                       float(point_velocity[1]) * normal[1]) +
+                      float(point_velocity[2]) * normal[2])
+        projected_gap = (projection - 0.3065625) * 0.03125 + minimum_gap
+        dots.append(projection)
+        predicted.append(projected_gap)
+        if projected_gap < 0.1016:
+            accepted.append(index)
+    selected = tuple(accepted)
+    return TerrainContactVelocityResult(tuple(dots), tuple(predicted), selected,
+                                        len(selected) == 3)
 
 
 def terrain_impact_response(linear_velocity, angular_turn_velocity,

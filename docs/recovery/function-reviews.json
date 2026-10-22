@@ -1782,7 +1782,7 @@
   "0x45a320": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The shape-0 early candidate gates, three-vertex height filter, response normal and supplied-body terrain impulse are translated in Python. Five direct original cases verify projected-edge and degenerate-edge rejection; one supplied flat-world case verifies height rejection after three real terrain lookups and plane queries. A separate accepted triangle executes the actual 0x45a320 entry through three 0x42e760 lookups, three 0x42dc50 plane queries, two 0x459e30 normal constructions and one 0x457550 response; the normal, response status, velocity changes and tangential contact record match the translated composition and no other supplied body fields change. Independent helper comparisons cover 261 original 0x459e30 cases (maximum error 1.4901161193847656e-7) and 260 original 0x457550 cases (maximum error 0.0001220703125 under a magnitude-scaled tolerance). Shape tables, candidate motion/selection across varied body state, the specialized byte +6 path, and live terrain behavior remain unported.",
+    "scope": "The ordered shape-index tables for shapes 0/2, 1 and 3/4 are translated in Python and compared word-for-word against the executable; direct calls of 0x45a320 on degenerate meshes visit 12, 6, 12, 40 and 40 triangle candidates for shape values 0 through 4. The early candidate gates, three-vertex height filter, response normal, supplied-body terrain impulse, and three-vertex point-motion predictor are translated. Five direct original cases verify projected-edge and degenerate-edge rejection; one supplied flat-world case verifies height rejection after three real terrain lookups and plane queries. A separate accepted triangle executes the actual 0x45a320 entry through three 0x42e760 lookups, three 0x42dc50 plane queries, two 0x459e30 normal constructions and one 0x457550 response; the normal, response status, velocity changes and tangential contact record match the translated composition and no other supplied body fields change. An additional 64 direct original executions vary linear/angular velocity, COM and orientation; all candidate decisions and helper paths match, and accepted-case velocity cleanup and final linear/angular velocities match. Independent helper comparisons cover 261 original 0x459e30 cases (maximum error 1.4901161193847656e-7) and 260 original 0x457550 cases (maximum error 0.0001220703125 under a magnitude-scaled tolerance). The specialized byte +6 path, nondegenerate shape candidate selection and live terrain behavior remain unported.",
     "sources": [
       "client/collision_terrain.py",
       "tests/test_collision_terrain.py",
@@ -1791,6 +1791,8 @@
       "tools/terrain_candidate_impact_oracle.py",
       "tools/terrain_response_normal_oracle.py",
       "tools/terrain_impact_response_oracle.py",
+      "tools/terrain_shape_table_oracle.py",
+      "tools/terrain_candidate_motion_oracle.py",
       "docs/collision-world.md"
     ]
   },
