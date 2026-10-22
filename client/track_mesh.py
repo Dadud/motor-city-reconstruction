@@ -19,6 +19,8 @@ class DecodedTrackWorld:
     grid: WorldGridFixup
     spatial: SpatialIndex
     end_offset: int
+    block_headers: tuple[bytes, ...] = ()
+    object_sections: tuple[tuple[int, tuple[int, int, int, int]], ...] = ()
 
 
 def decode_mesh(data, materials=False, surface_records=None):
@@ -132,9 +134,21 @@ def decode_mesh(data, materials=False, surface_records=None):
     return Model(tuple(parts),0),cursor
 
 
-def decode_track_world(data, image_address=0x71000000):
+def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=True):
     """Decode mesh, relocate the native grid trailer, and build its query view."""
     mesh, grid_offset = decode_mesh(data, materials=True)
+    track = decode_track(data)
+    header_start = 56 + len(track.slices) * 84
+    if retain_block_headers:
+        headers = tuple(bytes(data[header_start + block * 0x6c4:
+                                   header_start + (block + 1) * 0x6c4])
+                        for block in range(track.block_count))
+        sections = tuple((block, tuple(struct.unpack_from('<I', data,
+                        header_start + block * 0x6c4 + offset)[0]
+                        for offset in (0x640, 0x648, 0x650, 0x658)))
+                         for block in range(track.block_count))
+    else:
+        headers = sections = ()
     grid = fixup_world_grid(memoryview(data)[grid_offset:], image_address)
     spatial, end = decode_spatial(data, grid_offset)
     if end != len(data):
@@ -145,7 +159,7 @@ def decode_track_world(data, image_address=0x71000000):
                                          image_address)
     if relocated != spatial:
         raise ValueError('relocated and file-layout spatial trees disagree')
-    return DecodedTrackWorld(mesh, grid, relocated, end)
+    return DecodedTrackWorld(mesh, grid, relocated, end, headers, sections)
 
 
 def decode_track_with_spatial(data):

@@ -16,22 +16,34 @@ def fixture():
 class SpatialTests(unittest.TestCase):
     def test_mesh_spatial_handoff_api(self):
         import client.track_mesh as mesh_module
-        data = bytearray(16 + 4096 * 16)
-        struct.pack_into('<4f', data, 0, -10., -20., 10., 20.)
-        for offset in range(16, len(data), 16):
-            struct.pack_into('<4I', data, offset, 0xdeadbeef, 0, 0, 0)
+        track_data = bytearray(56 + 84 * 2)
+        struct.pack_into('<I', track_data, 0, 0xfeeeeb19)
+        struct.pack_into('<II', track_data, 44, 0, 2)
+        for index in range(2):
+            struct.pack_into('<14f', track_data, 56 + index * 84,
+                             0, 0, index, 0, 1, 0, 0, 0, 1, 1, 0, 0, 3, 4)
+        block_header = bytearray(0x6c4)
+        trailer = bytearray(16 + 4096 * 16)
+        struct.pack_into('<4f', trailer, 0, -10., -20., 10., 20.)
+        for offset in range(16, len(trailer), 16):
+            struct.pack_into('<4I', trailer, offset, 0xdeadbeef, 0, 0, 0)
+        material_counts = bytes(8)
         mesh = object()
         original = mesh_module.decode_mesh
         try:
-            mesh_module.decode_mesh = lambda source, materials=False: (mesh, 0)
-            world = decode_track_world(data)
-            model, spatial, end = decode_track_with_spatial(data)
+            mesh_end = len(track_data) + len(block_header) + len(material_counts)
+            mesh_module.decode_mesh = lambda source, materials=False: (mesh, mesh_end)
+            combined = track_data + block_header + material_counts + trailer
+            world = decode_track_world(combined)
+            model, spatial, end = decode_track_with_spatial(combined)
         finally:
             mesh_module.decode_mesh = original
         self.assertIs(world.mesh, mesh)
-        self.assertEqual(world.end_offset, len(data))
+        self.assertEqual(world.end_offset, len(combined))
         self.assertEqual(world.grid.bounds, world.spatial.bounds)
         self.assertEqual(world.spatial.cells[0].identifiers, ())
+        self.assertEqual(len(world.block_headers), 1)
+        self.assertEqual(world.object_sections, ((0, (0, 0, 0, 0)),))
         self.assertIs(model, mesh)
         self.assertEqual(spatial, world.spatial)
         self.assertEqual(end, world.end_offset)
@@ -81,3 +93,14 @@ class SpatialTests(unittest.TestCase):
         struct.pack_into('<f', data, 0, float('nan'))
         with self.assertRaisesRegex(ValueError, 'bounds'):
             decode_spatial(data, 0)
+
+    def test_installed_track_world_retains_block_header_counts(self):
+        from pathlib import Path
+        from client.track_mesh import decode_track_world
+        candidates = sorted(Path(r'C:\Program Files (x86)\EA Games\Motor City Online\Data\Tracks').rglob('Tr.frd'))
+        if not candidates:
+            self.skipTest('installed MCO track corpus is unavailable')
+        world = decode_track_world(candidates[0].read_bytes())
+        self.assertEqual(len(world.block_headers), len(world.object_sections))
+        self.assertTrue(world.block_headers)
+        self.assertTrue(any(sum(counts) for _, counts in world.object_sections))

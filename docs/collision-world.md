@@ -598,6 +598,12 @@ track files, and both consume the trailer exactly to EOF. This closes the
 mesh-to-grid data handoff for this asset corpus; it does not recover the outer
 `0x428150` allocation/resource lifecycle or the semantics of leaf identifiers.
 
+The returned track-world record also retains each original 0x6c4 block header
+and the four object-group counts consumed by `0x428150`. Across the same corpus
+this preserves 3,465 block headers and exposes 5,783 object-group records for
+future object decoding. These are raw source records/counts; object payload
+interpretation and rendering are still open.
+
 ## Sampled world vertex response
 
 The response routine `0x459940` receives a plane normal, a plane point, a
