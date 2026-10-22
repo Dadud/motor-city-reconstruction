@@ -2714,5 +2714,25 @@
       "ev_b4a497760ae553c4c2fdf04747ca8ab3f960387c714af40ddd3fe95d6b1a6709",
       "ev_7be2f31f8590766654160b7b92edb80f9d6d801c6d79d659eac94b924c1ba564"
     ]
+  },
+  "0x6f0fa0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The six-word shared carry generator is translated as an explicit state transition. 1,024 deterministic supplied states match the installed original x86 return value and all six updated words; local tests also cover invalid states. No integrated caller sequence has yet been compared.",
+    "sources": [
+      "client/random_state.py",
+      "tests/test_random_state.py",
+      "docs/recovery/random-state.md"
+    ],
+    "evidence_ids": [
+      "ev_1a069217dbc28f2f1f5ade3b367ef667595ba5f70dd491c621a1b5ea1326a625"
+    ],
+    "verification_refs": [
+      "tools/random_state_oracle.py",
+      "tests/test_random_state.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/random-state.md"
+    ]
   }
 }

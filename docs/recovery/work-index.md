@@ -16,7 +16,7 @@ Function counts are not a whole-game completion percentage.
 | IFC22.dll | input-library-investigation | 899 | 0 | 884 |
 | IMPLODE.DLL | compression-library-investigation | 67 | 0 | 67 |
 | ip.exe | online-support-investigation | 2,377 | 0 | 2,367 |
-| mcity.exe | game-client | 25,779 | 329 | 25,722 |
+| mcity.exe | game-client | 25,779 | 330 | 25,722 |
 | mco-launcher.exe | patch-or-launcher-investigation | 4,348 | 0 | 4,260 |
 | nps/authlogin.dll | online-support-investigation | 496 | 0 | 481 |
 | nps/mco.exe | online-support-investigation | 2,985 | 0 | 2,969 |

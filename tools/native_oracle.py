@@ -57,6 +57,21 @@ class DynoOracle:
         self.cpu.reg_write(self.reg.UC_X86_REG_ESP, self.frame-0x1000)
         self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
 
+    def random_next(self, words):
+        """Run the original shared 0x6f0fa0 generator on six supplied words."""
+        if (len(words) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff
+                                   for word in words)):
+            raise ValueError('random oracle requires six unsigned 32-bit words')
+        self._reset()
+        addresses = (0x8c89d0, 0x8c89d4, 0x8c89d8,
+                     0x8c89dc, 0x8c89e0, 0x8c89e4)
+        for address, word in zip(addresses, words):
+            self.cpu.mem_write(address, struct.pack('<I', word))
+        self.call(0x6f0fa0)
+        result = tuple(struct.unpack('<I', self.cpu.mem_read(address, 4))[0]
+                       for address in addresses)
+        return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), result
+
     def call(self, entry, arguments=(), *, tail=b'', cleanup=None,
              this_pointer=None, instruction_limit=4096):
         """Call a cdecl routine in the original with planted arguments.
