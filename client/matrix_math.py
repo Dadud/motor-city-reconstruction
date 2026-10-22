@@ -46,6 +46,20 @@ def vector_length3(values):
     return sqrt((z*z + y*y) + x*x)
 
 
+def linear_vector_sequence(first, second, count):
+    """Translate 0x4954c0's fixed-step 3D point sequence producer."""
+    first, second = tuple(f32(v) for v in first), tuple(f32(v) for v in second)
+    if len(first) != 3 or len(second) != 3:
+        raise ValueError('two three-component points are required')
+    if type(count) is not int or not 2 <= count <= 65536:
+        raise ValueError('point count must be within [2, 65536]')
+    delta = tuple(f32(second[i] - first[i]) for i in range(3))
+    points = [first, second]
+    for _ in range(count - 2):
+        points.append(tuple(f32(points[-1][i] + delta[i]) for i in range(3)))
+    return tuple(points)
+
+
 def _multiply_3x3(left, right):
     return tuple(f32(sum(left[row * 3 + k] * right[k * 3 + col]
                          for k in range(3)))

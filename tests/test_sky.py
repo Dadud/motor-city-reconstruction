@@ -9,7 +9,7 @@ from client.sky import (load_sky_resources, sky_resource_names,
                         sky_material_normalize_grid, sky_material_random_grid,
                         sky_material_smooth_grid, sky_material_mesh_outputs)
 from client.sky import build_sky_material, prepare_sky_material_parameters
-from client.matrix_math import vector_length3
+from client.matrix_math import vector_length3, linear_vector_sequence
 from client.random_state import RandomState
 
 
@@ -98,6 +98,11 @@ class SkyResourceTests(unittest.TestCase):
         self.assertEqual(vector_length3((3.0, 4.0, 12.0)), 13.0)
         with self.assertRaises(ValueError):
             vector_length3((1.0, 2.0))
+
+    def test_linear_vector_sequence(self):
+        self.assertEqual(linear_vector_sequence((1, 2, 3), (2, 4, 6), 4),
+                         ((1.0, 2.0, 3.0), (2.0, 4.0, 6.0),
+                          (3.0, 6.0, 9.0), (4.0, 8.0, 12.0)))
 
 
     def test_material_triangle_index_topology(self):

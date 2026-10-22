@@ -138,6 +138,19 @@ class DynoOracle:
         self._run(self.stub, self.stop, timeout=0, count=1000)
         return struct.unpack('<f', self.cpu.mem_read(self.inputs+16, 4))[0]
 
+    def linear_vector_sequence(self, count, first, second):
+        """Run 0x4954c0 and return its complete count-point output buffer."""
+        if type(count) is not int or not 2 <= count <= 65536:
+            raise ValueError('native point count must be within [2, 65536]')
+        if len(first) != 3 or len(second) != 3:
+            raise ValueError('native point sequence requires two 3D points')
+        self._reset()
+        output = self.inputs+0x1000
+        self.cpu.mem_write(self.inputs, struct.pack('<6f', *(tuple(first)+tuple(second))))
+        self.call(0x4954c0, (count, self.inputs, output), instruction_limit=10000)
+        return tuple(tuple(row) for row in struct.iter_unpack(
+            '<3f', self.cpu.mem_read(output, count*12)))
+
     def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
                                  row_scale, column_scale, random_state,
                                  base_offset=0.0, amplitude=0.0,

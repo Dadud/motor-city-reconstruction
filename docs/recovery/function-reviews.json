@@ -2794,5 +2794,26 @@
     "doc_refs": [
       "docs/recovery/track-sky-assets.md"
     ]
+  },
+  "0x4954c0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The two seed points are copied, their binary32 difference is computed once, and that difference is repeatedly added to produce counts 2 through 64. All output floats match bit-for-bit in 512 deterministic original-execution cases. REA static caller lookup found no direct callers, leaving runtime use unknown.",
+    "sources": [
+      "client/matrix_math.py",
+      "tests/test_sky.py",
+      "tools/vector_sequence_oracle.py",
+      "docs/recovery/vector-sequence.md"
+    ],
+    "evidence_ids": [
+      "ev_837e11cc3b483c45e48314e1273a6733cda614a50a02b2f441c453a80c4732cb"
+    ],
+    "verification_refs": [
+      "tools/vector_sequence_oracle.py",
+      "tests/test_sky.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/vector-sequence.md"
+    ]
   }
 }
