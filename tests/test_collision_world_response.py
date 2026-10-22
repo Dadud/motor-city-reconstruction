@@ -4,6 +4,7 @@ import unittest
 from client.collision_impulse import CollisionInertia
 from client.collision_pair_response import CollisionImpactBody
 from client.collision_world_response import (extract_world_contact_points,
+                                             apply_world_decision_two_contact_cache,
                                              resolve_world_vertex_contact)
 
 
@@ -19,6 +20,22 @@ def body():
 
 
 class WorldVertexContactTests(unittest.TestCase):
+    def test_decision_two_cache_uses_strict_counter_threshold(self):
+        image = bytearray(0x400)
+        struct.pack_into('<f', image, 0x50, 100.)
+        struct.pack_into('<f', image, 0x0c, 7.)
+        struct.pack_into('<f', image, 0x3b4, 2.)
+        untouched = bytes(image)
+        self.assertEqual(apply_world_decision_two_contact_cache(
+            image, 2, 0x1a, (1., 2., 3.)), untouched)
+        struct.pack_into('<f', image, 0x3b4, 2.001)
+        result = apply_world_decision_two_contact_cache(
+            image, 2, 0x1a, (1., 2., 3.))
+        self.assertEqual(struct.unpack_from('<f', result, 0x3c8)[0], 1500.)
+        self.assertEqual(struct.unpack_from('<I', result, 0x3f8)[0], 0x1a)
+        self.assertEqual(struct.unpack_from('<3f', result, 0x3e8), (1., 7., 3.))
+        self.assertEqual(struct.unpack_from('<I', result, 0x3f4)[0], 5)
+
     def test_extractor_uses_the_ordinary_22_point_buffer(self):
         image = bytearray(0x400)
         values = tuple(float(index) for index in range(66))

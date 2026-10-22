@@ -61,6 +61,34 @@ def extract_world_contact_points(body_image):
     return ExtractedWorldContactPoints(8, tuple(f32(value) for value in vertices))
 
 
+def apply_world_decision_two_contact_cache(body_image, decision, type_code,
+                                          sample_position):
+    """Translate the ``iVar2 == 2`` contact-cache branch in 0x45d1f0."""
+    image = bytes(body_image)
+    point = tuple(f32(value) for value in sample_position)
+    if len(image) < 0x400 or len(point) != 3:
+        raise ValueError('a 0x400-byte body image and 3D sample point are required')
+    if (type(decision) is not int or type(type_code) is not int or
+            type_code < 0 or type_code > 0xffffffff):
+        raise ValueError('decision and type code are outside their native ranges')
+    if not all(math.isfinite(value) for value in point):
+        raise ValueError('sample position must be finite')
+    if decision != 2 or not 2.0 < struct.unpack_from('<f', image, 0x3b4)[0]:
+        return image
+
+    result = bytearray(image)
+    struct.pack_into('<I', result, 0x3c4, 0)
+    struct.pack_into('<f', result, 0x3c8,
+                     f32(struct.unpack_from('<f', image, 0x50)[0] * 15.0))
+    struct.pack_into('<3f', result, 0x3cc, 0.0, 0.0, 0.0)
+    struct.pack_into('<f', result, 0x3e8, point[0])
+    struct.pack_into('<f', result, 0x3ec, struct.unpack_from('<f', image, 0x0c)[0])
+    struct.pack_into('<f', result, 0x3f0, point[2])
+    struct.pack_into('<I', result, 0x3f4, 5)
+    struct.pack_into('<I', result, 0x3f8, type_code)
+    return bytes(result)
+
+
 def resolve_world_vertex_contact(body, local_vertices, normal, plane_point,
                                 max_distance, threshold_coefficient,
                                 sliding_coefficient):

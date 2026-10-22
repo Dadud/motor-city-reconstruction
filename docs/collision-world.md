@@ -113,6 +113,18 @@ folding. Its result matches 4,096 direct original calls, including zero, axes,
 all octants and full-range signed coordinates. The classifier derives and
 stores the saved angle byte itself.
 
+For classifier decision 2, the enclosing `0x45d1f0` caller has an additional
+strict timer gate: when body `+0x3b4` is greater than 2, it clears the contact
+impulse vector, writes `mass * 15` as contact magnitude, records the decoded
+sample X/Z and body Y, stores type `0x1a`, and marks contact mode 5. This state
+update is translated by
+[`apply_world_decision_two_contact_cache`](../client/collision_world_response.py)
+and compared through the real classifier and full caller in
+[`tools/collision_world_decision_two_oracle.py`](../tools/collision_world_decision_two_oracle.py):
+128 executions matched the complete 0x400-byte body image, 96 with the timer
+gate active. The decision-1 follow-up and decision-minus-one pair collision
+branches remain open.
+
 The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
 first three signed words of each 20-byte record. The portable decoder in
 [`client/collision_trigger_resources.py`](../client/collision_trigger_resources.py)

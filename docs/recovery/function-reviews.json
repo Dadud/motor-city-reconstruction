@@ -61,20 +61,27 @@
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The classifier/allocation caller path is independently compared in 128 executions. The downstream 0x459940 response now includes both 8- and 22-point geometry branches and matches 128 integrated direct calls. Outer callback/event effects remain open.",
+    "scope": "The packed sample decoder and the pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. The classifier/allocation caller path is independently compared in 128 executions. The downstream 0x459940 response includes both 8- and 22-point geometry branches and matches 128 integrated direct calls. The decision-2 contact-cache branch is translated and compared in 128 full 0x45d1f0 executions, including 96 timer-triggered writes. Decision-1 event dispatch, decision-minus-one pair effects, and outer audio/debug callbacks remain open.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
       "tools/collision_world_sample_oracle.py",
       "tools/collision_world_prefilter_oracle.py",
+      "client/collision_world_response.py",
+      "tests/test_collision_world_response.py",
+      "tools/collision_world_decision_two_oracle.py",
+      "tools/collision_world_response_oracle.py",
       "docs/collision-world.md"
     ],
     "evidence_ids": [
-      "ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3"
+      "ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3",
+      "ev_8283c77e5ed29d16326175308c41154468acc75d52c85e084eb7361a4dd1a9f0"
     ],
     "verification_refs": [
       "tools/collision_world_sample_oracle.py",
       "tools/collision_world_prefilter_oracle.py",
+      "tools/collision_world_decision_two_oracle.py",
+      "tools/collision_world_response_oracle.py",
       "tests/test_collision_world_candidate.py"
     ],
     "doc_refs": [
