@@ -110,9 +110,20 @@ across its return value and all `0x1800` slot bytes. The heading helper
 folding. Its result matches 4,096 direct original calls, including zero, axes,
 all octants and full-range signed coordinates. The classifier now derives the
 saved angle byte itself; its 128-case original comparison includes successful
-trigger updates with varied coordinates. The allocator resource table contents
-and later terrain/pair response branches remain open. REA evidence for the
-allocator is
+trigger updates with varied coordinates.
+
+The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
+first three signed words of each 20-byte record. The portable decoder in
+[`client/collision_trigger_resources.py`](../client/collision_trigger_resources.py)
+matches the original x87 precision and spill order. Direct tests run 128
+synthetic loader cases plus the seven installed game files through the original
+entry, covering 833 synthetic archive loads and the full record arrays in all
+of them, plus 7 real archives. The installed files declare 51, 41, 6, 17, 94, 51 and 41
+records in `TR00A.CAN`, `TR01.CAN` through `TR06.CAN`. The loader's path
+formatting and file-system calls are supplied at the oracle boundary; archive
+bytes and loader conversion run against original code. Resource pointer
+assignment into the collision pass and later terrain/pair response branches
+remain open. REA evidence for the allocator is
 `ev_1fc62bee4bb96955164d683b40e8efd30e167ca68d4f92d818105f47699ec40a`; evidence
 for the decoder is
 `ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817`; the
@@ -124,7 +135,9 @@ documented by REA evidence `ev_14e2213c297f683faf8b589f0daa55b2f416c4ef04025a735
 `ev_792ebf8adbd8a8da20d37072a0576d2f658a3d61a013138fd0454009b3e88eb3`
 and `ev_d1235e464bb2b08047606037ab52105f2db295cc304a4a359f74cb41e55a40de`.
 Run `python -m tools.collision_heading_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 4096`
-to compare the integer heading helper directly.
+to compare the integer heading helper directly. Run
+`python -m tools.collision_trigger_resources_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 128 --data-root "C:/Program Files (x86)/EA Games/Motor City Online/Data/GameArt"`
+to compare archive loading and coordinate conversion with the original entry.
 
 ## Scheduler placement
 

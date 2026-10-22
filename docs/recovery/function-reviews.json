@@ -23,7 +23,7 @@
   "0x42d9f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and trigger-state transitions are translated. 128 original calls match with allocation results controlled and the heading byte computed by the translated 0x6f2cc0 lookup. The allocator is separately translated; resource table contents remain supplied.",
+    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and trigger-state transitions are translated. 128 original calls match with allocator results controlled and the heading byte computed by the translated 0x6f2cc0 lookup. The trigger archive loader and coordinate conversion are translated and checked against synthetic and installed records; live pointer assignment into the collision pass remains supplied.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -1995,6 +1995,27 @@
       "tools/collision_heading_oracle.py",
       "tools/collision_world_classifier_oracle.py",
       "tests/test_collision_heading.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x407570": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The seven-entry TRxx.CAN table load order, missing-file termination, 8-byte header/count and 20-byte records are translated. The x87 conversion of record XYZ words is checked by 128 direct calls with file-system/path calls stubbed; 833 synthetic archive loads plus all seven installed game archives match every mutated record byte. Actual runtime path lookup and file-system behavior remain supplied.",
+    "sources": [
+      "client/collision_trigger_resources.py",
+      "tests/test_collision_trigger_resources.py",
+      "tools/collision_trigger_resources_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_7c5d53adefe7e4dfac26a608371a12c7ea41efc4bf631e01f9c9898fb123ca67"
+    ],
+    "verification_refs": [
+      "tools/collision_trigger_resources_oracle.py",
+      "tests/test_collision_trigger_resources.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
