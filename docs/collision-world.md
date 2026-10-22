@@ -125,10 +125,16 @@ and compared through the real classifier and full caller in
 gate active. The decision-1 handler lookup and shared contact-event method are
 now translated in [`client/collision_event.py`](../client/collision_event.py).
 The direct harness [`tools/collision_event_oracle.py`](../tools/collision_event_oracle.py)
-compared 128 executions of lookup `0x43b550` and method `0x4658f0` byte-for-byte,
-including both state transitions. The caller-side dispatch condition is wired
-into the Python composition, but a full `0x45d1f0` event-path comparison remains
-open, as does the decision-minus-one pair collision branch.
+compares 256 executions of lookup `0x43b550`, method `0x4658f0`, and sampled
+callback `0x465a00` byte-for-byte. Inspection of the actual vtables shows that
+the caller's `+0x14` slot is `0x465a00`; it invokes `0x4658c0`, which toggles
+the event state through `0x465850`/`0x465880`, then stores sample data in the
+body and increments the handler count when activation succeeds. The full
+caller harness [`tools/collision_world_event_dispatch_oracle.py`](../tools/collision_world_event_dispatch_oracle.py)
+matched 128 `0x45d1f0` executions, including all event fields and handler
+counters: 64 queued events, exact positions, and maximum velocity error
+`2.384185791015625e-7`. It stubs `0x487490`; audio behavior and the
+decision-minus-one pair collision branch remain open.
 
 The kind-1 decision-1 path is also composed through the actual caller. It forms
 a horizontal normal from the body to the sample, offsets the sample by its
@@ -460,5 +466,6 @@ matched 128 deterministic cases, evenly split between extracted 8- and 22-point 
 cached point updates, linear velocity changes, contact-record bytes, and the
 routine return. Position corrections matched exactly; velocity error stayed
 below `4.2e-7`. Sampled audio/debug notifications remain outside the current
-model. The event handler lookup and contact-event method have direct original
-comparisons, while the complete caller-to-event path remains unverified.
+model. The caller-to-event path is now compared through `0x465a00`, its nested
+callback, queued body fields, and handler counter; the independent audio/debug
+effects remain outside this model.

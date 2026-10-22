@@ -58,6 +58,35 @@ class WorldVertexContactTests(unittest.TestCase):
                          (.25, 0., 0.))
         self.assertEqual(struct.unpack_from('<I', result.body_image, 0x3f8)[0], 0x1d)
 
+    def test_decision_one_dispatches_and_queues_sampled_contact_event(self):
+        image = bytearray(0x1100)
+        struct.pack_into('<3f', image, 8, 0., 0., 0.)
+        struct.pack_into('<3f', image, 0x14, 1., 0., 0.)
+        struct.pack_into('<f', image, 0x50, 1000.)
+        struct.pack_into('<f', image, 0x54, .001)
+        struct.pack_into('<9f', image, 0x78, *IDENTITY)
+        struct.pack_into('<9f', image, 0x9c, *IDENTITY)
+        struct.pack_into('<h', image, 0x3bc, 1)
+        struct.pack_into('<66f', image, 0xe0, *([1., 0., 0.] * 22))
+        struct.pack_into('<3f', image, 0x5c, 0., 0., 0.)
+        struct.pack_into('<3f', image, 0x2fc, .001, .001, .001)
+        image[6] = 1
+        struct.pack_into('<i', image, 0x464, 0)
+        struct.pack_into('<I', image, 0x474, 2)
+        handler = bytearray(0x40)
+        struct.pack_into('<I', handler, 0x28, 7)
+
+        result = resolve_world_decision_one_sample(
+            image, (.25, 0., 0.), 1., 0x1d,
+            (0x7100c000,) + (0,) * 11, 1234, handler)
+
+        self.assertTrue(result.event_queued)
+        self.assertEqual(struct.unpack_from('<I', result.body_image, 0xe00)[0], 1)
+        self.assertEqual(struct.unpack_from('<I', result.body_image, 0xe04)[0], 1534)
+        self.assertEqual(struct.unpack_from('<4f', result.body_image, 0xe84),
+                         (.25, 0., 0., 1.))
+        self.assertEqual(struct.unpack_from('<I', result.handler_image, 0x28)[0], 8)
+
     def test_extractor_uses_the_ordinary_22_point_buffer(self):
         image = bytearray(0x400)
         values = tuple(float(index) for index in range(66))

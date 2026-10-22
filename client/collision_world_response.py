@@ -4,7 +4,7 @@ import math
 import struct
 
 from client.collision_impulse import CollisionInertia
-from client.collision_event import (apply_collision_contact_event,
+from client.collision_event import (apply_sampled_world_event_callback,
                                     lookup_collision_event_handler)
 from client.collision_pair_response import (CollisionImpactBody,
                                             resolve_surface_impulse)
@@ -38,6 +38,8 @@ class WorldDecisionOneResult:
     body_image: bytes
     vertex_response: WorldVertexContactResult
     contact_cache_written: bool
+    handler_image: bytes | None = None
+    event_queued: bool = False
 
 
 def extract_world_contact_points(body_image):
@@ -103,7 +105,8 @@ def apply_world_decision_two_contact_cache(body_image, decision, type_code,
 
 def resolve_world_decision_one_sample(body_image, sample_position,
                                       vertical_value, type_code,
-                                      handler_table=None, global_event_value=0):
+                                      handler_table=None, global_event_value=0,
+                                      handler_object_image=None):
     """Compose decision-1 setup, 0x459940 response, and caller cache writes."""
     image = bytes(body_image)
     position = tuple(f32(value) for value in sample_position)
@@ -160,12 +163,24 @@ def resolve_world_decision_one_sample(body_image, sample_position,
         struct.pack_into('<f', updated, 0x3f0, position[2])
         struct.pack_into('<I', updated, 0x3f4, 5)
         struct.pack_into('<I', updated, 0x3f8, type_code)
+    handler_result = (None if handler_object_image is None else
+                      bytes(handler_object_image))
+    event_queued = False
+    if handler_table is not None and len(updated) < 0x478:
+        raise ValueError('handler dispatch requires body fields through +0x477')
     if (handler_table is not None and updated[6] != 0 and
             struct.unpack_from('<I', updated, 0x474)[0] & 2):
         if lookup_collision_event_handler(updated, handler_table) != 0:
-            updated = bytearray(apply_collision_contact_event(
-                updated, global_event_value))
-    return WorldDecisionOneResult(bytes(updated), response, cache_written)
+            if handler_result is None:
+                handler_result = bytes(0x2c)
+            event_body, handler_result, event_queued = (
+                apply_sampled_world_event_callback(
+                    updated, handler_result,
+                    (position[0], position[1], position[2], vertical_value),
+                    global_event_value))
+            updated = bytearray(event_body)
+    return WorldDecisionOneResult(bytes(updated), response, cache_written,
+                                  handler_result, event_queued)
 
 
 def resolve_world_vertex_contact(body, local_vertices, normal, plane_point,

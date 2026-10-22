@@ -3,6 +3,7 @@ import unittest
 
 from client.collision_event import (HANDLER_COUNT,
                                     apply_collision_contact_event,
+                                    apply_sampled_world_event_callback,
                                     lookup_collision_event_handler)
 
 
@@ -50,6 +51,56 @@ class CollisionEventTests(unittest.TestCase):
         self.assertEqual(apply_collision_contact_event(image), bytes(image))
         struct.pack_into('<I', image, 0x474, 2)
         self.assertEqual(apply_collision_contact_event(image), bytes(image))
+
+    def test_sampled_callback_queues_data_and_counts_dispatch(self):
+        image = bytearray(0x1100)
+        handler = bytearray(0x40)
+        struct.pack_into('<f', image, 0x3c8, 2.)
+        struct.pack_into('<f', image, 0x105c, 3.)
+        struct.pack_into('<I', image, 0x370, 0x71001234)
+        struct.pack_into('<I', image, 0xe14, 4)
+        struct.pack_into('<I', handler, 0x28, 7)
+
+        body_result, handler_result, queued = apply_sampled_world_event_callback(
+            image, handler, (.25, 1., -.5, 512.), 1000)
+
+        self.assertTrue(queued)
+        self.assertEqual(struct.unpack_from('<I', body_result, 0xe00)[0], 1)
+        self.assertEqual(struct.unpack_from('<I', body_result, 0xe04)[0], 1300)
+        self.assertEqual(struct.unpack_from('<I', body_result, 0xe14)[0], 0x84)
+        self.assertEqual(struct.unpack_from('<I', body_result, 0xe80)[0],
+                         0x71001234)
+        self.assertEqual(struct.unpack_from('<4f', body_result, 0xe84),
+                         (.25, 1., -.5, 512.))
+        self.assertEqual(struct.unpack_from('<I', handler_result, 0x28)[0], 8)
+
+    def test_sampled_callback_releases_existing_state_without_queueing(self):
+        image = bytearray(0x1100)
+        handler = bytearray(0x40)
+        struct.pack_into('<f', image, 0x3c8, 2.)
+        struct.pack_into('<f', image, 0x105c, 3.)
+        struct.pack_into('<I', image, 0xe00, 1)
+        struct.pack_into('<I', image, 0xdf4, 0x45)
+        struct.pack_into('<I', handler, 0x28, 7)
+
+        body_result, handler_result, queued = apply_sampled_world_event_callback(
+            image, handler, (1., 2., 3., 4.), 1000)
+
+        self.assertFalse(queued)
+        self.assertEqual(struct.unpack_from('<I', body_result, 0xe00)[0], 0)
+        self.assertEqual(struct.unpack_from('<I', body_result, 0xdf4)[0], 5)
+        self.assertEqual(struct.unpack_from('<I', handler_result, 0x28)[0], 7)
+
+    def test_sampled_callback_strict_gates_preserve_both_objects(self):
+        image = bytearray(0x1100)
+        handler = bytes(0x40)
+        struct.pack_into('<f', image, 0x3c8, 2.)
+        struct.pack_into('<f', image, 0x105c, 11.17575)
+        body_result, handler_result, queued = apply_sampled_world_event_callback(
+            image, handler, (1., 2., 3., 4.), 1000)
+        self.assertFalse(queued)
+        self.assertEqual(body_result, bytes(image))
+        self.assertEqual(handler_result, handler)
 
 
 if __name__ == '__main__':

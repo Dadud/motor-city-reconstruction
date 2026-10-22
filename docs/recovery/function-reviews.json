@@ -61,7 +61,7 @@
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The packed sample decoder and pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. Classifier/allocation is independently compared in 128 executions. The downstream 0x459940 response includes both 8- and 22-point branches and matches 128 direct calls. Decision 1 composes classifier, response, impulse and post-response cache writes in 128 full caller executions; checked contact/cache bytes and position match exactly, velocity error is at most 2.4e-7, and 64 cases apply impacts/cache writes. Decision 2 matches 128 full caller executions, including 96 timer-triggered writes. The shared event lookup and contact-event method are translated and match 128 direct original calls, including both transitions; caller-to-event dispatch comparison, decision-minus-one pair effects, and outer audio/debug callbacks remain open.",
+    "scope": "The packed sample decoder and pre-classifier gates are translated: strict horizontal reach, body-height threshold, and orientation-aware expanded local extents. 512 original caller executions match the prefilter decision with 0x42d9f0 stubbed; 348 reach that stub. Classifier/allocation is independently compared in 128 executions. The downstream 0x459940 response includes both 8- and 22-point branches and matches 128 direct calls. Decision 1 composes classifier, response, impulse and post-response cache writes in 128 full caller executions; checked contact/cache bytes and position match exactly, velocity error is at most 2.4e-7, and 64 cases apply impacts/cache writes. Decision 2 matches 128 full caller executions, including 96 timer-triggered writes. The shared event lookup, contact-event helper, and actual +0x14 callback path are translated and compared in direct and full-caller original executions. 128 full 0x45d1f0 cases include 64 queued events with exact event payload/counter bytes; position matches exactly and velocity error is at most 2.4e-7. The separate 0x487490 audio target is stubbed; decision-minus-one pair effects and outer audio/debug callbacks remain open.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -75,11 +75,13 @@
       "docs/collision-world.md",
       "client/collision_event.py",
       "tools/collision_event_oracle.py",
-      "tests/test_collision_event.py"
+      "tests/test_collision_event.py",
+      "tools/collision_world_event_dispatch_oracle.py"
     ],
     "evidence_ids": [
       "ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3",
-      "ev_8283c77e5ed29d16326175308c41154468acc75d52c85e084eb7361a4dd1a9f0"
+      "ev_8283c77e5ed29d16326175308c41154468acc75d52c85e084eb7361a4dd1a9f0",
+      "ev_85ca301f8e40902bd9bcbb155980749085de2d92534d5ba6c0723da3e7b07c7c"
     ],
     "verification_refs": [
       "tools/collision_world_sample_oracle.py",
@@ -90,7 +92,9 @@
       "tests/test_collision_world_candidate.py",
       "client/collision_event.py",
       "tools/collision_event_oracle.py",
-      "tests/test_collision_event.py"
+      "tests/test_collision_event.py",
+      "tools/collision_world_event_dispatch_oracle.py",
+      "tests/test_collision_world_response.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
@@ -2084,6 +2088,87 @@
     "verification_refs": [
       "tools/collision_trigger_resources_oracle.py",
       "tests/test_collision_trigger_resources.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x43b550": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Signed body index lookup into the twelve-entry global handler table; invalid indices return null. 256 direct original executions matched exactly.",
+    "sources": [
+      "client/collision_event.py",
+      "tests/test_collision_event.py",
+      "tools/collision_event_oracle.py"
+    ],
+    "evidence_ids": [
+      "ev_1300695fc015a6a942a2a43bbd20ee9f12b07b3010601d7ae777dd814782a30c"
+    ],
+    "verification_refs": [
+      "tools/collision_event_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x4658f0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Independent shared handler method computes its contact-vector transform and applies the state/height/direction transition gates. 256 direct original calls compared the full body image exactly; this is not the sampled-world caller slot.",
+    "sources": [
+      "client/collision_event.py",
+      "tests/test_collision_event.py",
+      "tools/collision_event_oracle.py"
+    ],
+    "evidence_ids": [
+      "ev_0d43507c340aaa01f7db462587ef2ca353018fe545168b3724f7c9c9393f2568"
+    ],
+    "verification_refs": [
+      "tools/collision_event_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x4658c0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Handler callback selects the activation or release leaf from the current body event state. Exercised through the real vtable by direct 0x465a00 original comparisons and the full 0x45d1f0 caller corpus.",
+    "sources": [
+      "client/collision_event.py",
+      "tests/test_collision_event.py",
+      "tools/collision_event_oracle.py",
+      "tools/collision_world_event_dispatch_oracle.py"
+    ],
+    "evidence_ids": [
+      "ev_55f99ae299198df17221c9bd52544715e5642cfb06bd4cdc7fbc46a219d977cb"
+    ],
+    "verification_refs": [
+      "tools/collision_event_oracle.py",
+      "tools/collision_world_event_dispatch_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
+  "0x465a00": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Sampled-world virtual callback gate, nested 0x4658c0 callback, event payload writes and handler callback counter. 256 direct method calls and 128 complete caller executions matched body/handler bytes exactly.",
+    "sources": [
+      "client/collision_event.py",
+      "tests/test_collision_event.py",
+      "tools/collision_event_oracle.py",
+      "tools/collision_world_event_dispatch_oracle.py"
+    ],
+    "evidence_ids": [
+      "ev_c492c4589ab78be3ac881bdda31aa1be27e1d1490bd81df1a734eb11336d62ad",
+      "ev_142b5f4808322d88c24976f15a0eb6902b5068ded64287acf2401d4ae8313896"
+    ],
+    "verification_refs": [
+      "tools/collision_event_oracle.py",
+      "tools/collision_world_event_dispatch_oracle.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
