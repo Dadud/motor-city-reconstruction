@@ -3,6 +3,7 @@ from dataclasses import dataclass, replace
 import math
 import struct
 
+from client.collision_impulse import CollisionInertia
 from client.collision_pair_response import (CollisionImpactBody,
                                             resolve_surface_impulse)
 from client.geometry_transform import add_vector_to_points, transform_vertices
@@ -10,7 +11,9 @@ from client.tire_response import f32
 
 
 def _dot(a, b):
-    return f32(f32(f32(a[0] * b[0]) + f32(a[1] * b[1])) + f32(a[2] * b[2]))
+    # The original 32-bit x87 helper retains its extended result until the
+    # caller explicitly stores it to a float.
+    return (a[0] * b[0] + a[1] * b[1]) + a[2] * b[2]
 
 
 @dataclass(frozen=True)
@@ -26,6 +29,13 @@ class WorldVertexContactResult:
 class ExtractedWorldContactPoints:
     count: int
     vertices: tuple[float, ...]
+
+
+@dataclass(frozen=True)
+class WorldDecisionOneResult:
+    body_image: bytes
+    vertex_response: WorldVertexContactResult
+    contact_cache_written: bool
 
 
 def extract_world_contact_points(body_image):
@@ -89,6 +99,67 @@ def apply_world_decision_two_contact_cache(body_image, decision, type_code,
     return bytes(result)
 
 
+def resolve_world_decision_one_sample(body_image, sample_position,
+                                      vertical_value, type_code):
+    """Compose decision-1 setup, 0x459940 response, and caller cache writes."""
+    image = bytes(body_image)
+    position = tuple(f32(value) for value in sample_position)
+    vertical_value = f32(vertical_value)
+    if len(image) < 0x408 or len(position) != 3:
+        raise ValueError('body image must span 0x408 bytes and sample position be 3D')
+    if type(type_code) is not int or not 0 <= type_code <= 0xffffffff:
+        raise ValueError('contact type must be a uint32')
+    if not all(math.isfinite(value) for value in (*position, vertical_value)):
+        raise ValueError('world sample values must be finite')
+
+    body_position = struct.unpack_from('<3f', image, 8)
+    direction_x = f32(body_position[0] - position[0])
+    direction_z = f32(body_position[2] - position[2])
+    length_squared = (direction_z * direction_z + 0.0) + direction_x * direction_x
+    if length_squared != 0.0:
+        reciprocal = 1.0 / math.sqrt(length_squared)
+        direction_x = f32(direction_x * reciprocal)
+        direction_z = f32(direction_z * reciprocal)
+    normal = (direction_x, 0.0, direction_z)
+    plane_point = (f32(position[0] + f32(direction_x * vertical_value)),
+                   position[1],
+                   f32(position[2] + f32(direction_z * vertical_value)))
+
+    inertia = CollisionInertia(
+        struct.unpack_from('<f', image, 0x54)[0],
+        struct.unpack_from('<3f', image, 0x2fc),
+        struct.unpack_from('<9f', image, 0x9c),
+        struct.unpack_from('<9f', image, 0x78))
+    body = CollisionImpactBody(
+        0, body_position, struct.unpack_from('<3f', image, 0x14),
+        struct.unpack_from('<3f', image, 0x38),
+        struct.unpack_from('<3f', image, 0x5c), inertia,
+        struct.unpack_from('<f', image, 0x50)[0], mode=image[5],
+        response_coefficient=struct.unpack_from('<f', image, 0x68)[0],
+        gate=struct.unpack_from('<f', image, 0x6c)[0],
+        peer_gate=struct.unpack_from('<f', image, 0x3c0)[0],
+        contact_record=image[:0x400],
+        embedded_contact_pointer=struct.unpack_from('<I', image, 0x404)[0])
+    points = extract_world_contact_points(image)
+    response = resolve_world_vertex_contact(
+        body, points.vertices, normal, plane_point, 0.0, .25, .25)
+
+    updated = bytearray(image)
+    updated[:0x400] = response.body.contact_record
+    struct.pack_into('<3f', updated, 8, *response.body.position)
+    struct.pack_into('<3f', updated, 0x14, *response.body.linear_velocity)
+    struct.pack_into('<3f', updated, 0x38, *response.body.angular_turn_velocity)
+    cache_written = struct.unpack_from('<f', updated, 0x3c8)[0] != 0.0
+    if cache_written:
+        struct.pack_into('<f', updated, 0x3e8, position[0])
+        struct.pack_into('<f', updated, 0x3ec,
+                         struct.unpack_from('<f', updated, 0x0c)[0])
+        struct.pack_into('<f', updated, 0x3f0, position[2])
+        struct.pack_into('<I', updated, 0x3f4, 5)
+        struct.pack_into('<I', updated, 0x3f8, type_code)
+    return WorldDecisionOneResult(bytes(updated), response, cache_written)
+
+
 def resolve_world_vertex_contact(body, local_vertices, normal, plane_point,
                                 max_distance, threshold_coefficient,
                                 sliding_coefficient):
@@ -118,8 +189,8 @@ def resolve_world_vertex_contact(body, local_vertices, normal, plane_point,
     selected_point = None
     for index in range(count):
         point = transformed[index * 3:index * 3 + 3]
-        plane_distance = _dot(tuple(f32(point[axis] - plane_point[axis])
-                                    for axis in range(3)), normal)
+        plane_distance = f32(_dot(tuple(f32(point[axis] - plane_point[axis])
+                                         for axis in range(3)), normal))
         body_distance = _dot(tuple(f32(point[axis] - body.position[axis])
                                    for axis in range(3)), normal)
         if plane_distance < best and body_distance < 0.0:
@@ -132,6 +203,8 @@ def resolve_world_vertex_contact(body, local_vertices, normal, plane_point,
                              for axis in range(3))
     penetration = _dot(point_from_plane, normal)
     if penetration < 0.0:
+        # The x87 result is explicitly narrowed to float before the caller
+        # negates it and multiplies the normal.
         amount = f32(-penetration)
         correction = tuple(f32(normal[axis] * amount) for axis in range(3))
         position = tuple(f32(body.position[axis] + correction[axis]) for axis in range(3))

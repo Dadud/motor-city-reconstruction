@@ -122,8 +122,21 @@ update is translated by
 and compared through the real classifier and full caller in
 [`tools/collision_world_decision_two_oracle.py`](../tools/collision_world_decision_two_oracle.py):
 128 executions matched the complete 0x400-byte body image, 96 with the timer
-gate active. The decision-1 follow-up and decision-minus-one pair collision
-branches remain open.
+gate active. Conditional event dispatch after decision 1 and the
+decision-minus-one pair collision branch remain open.
+
+The kind-1 decision-1 path is also composed through the actual caller. It forms
+a horizontal normal from the body to the sample, offsets the sample by its
+decoded vertical value, and calls `0x459940` with the 8/22-point geometry and
+the caller's 0.25 response coefficients. If the response records a nonzero
+contact magnitude, it writes sample X/Z, body Y, type `0x1d` and contact mode 5
+to the body cache. `resolve_world_decision_one_sample` models this complete
+path. The direct harness [`tools/collision_world_decision_one_oracle.py`](../tools/collision_world_decision_one_oracle.py)
+matched 128 full `0x45d1f0` executions: 64 impacts updated the cache and 64
+receding cases did not. Position and checked contact/cache bytes matched
+exactly; maximum linear-velocity error was `2.384185791015625e-7`. The
+conditional virtual event dispatch after this branch and the decision-minus-one
+pair collision branch still need reconstruction.
 
 The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
 first three signed words of each 20-byte record. The portable decoder in

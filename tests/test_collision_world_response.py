@@ -5,6 +5,7 @@ from client.collision_impulse import CollisionInertia
 from client.collision_pair_response import CollisionImpactBody
 from client.collision_world_response import (extract_world_contact_points,
                                              apply_world_decision_two_contact_cache,
+                                             resolve_world_decision_one_sample,
                                              resolve_world_vertex_contact)
 
 
@@ -35,6 +36,27 @@ class WorldVertexContactTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from('<I', result, 0x3f8)[0], 0x1a)
         self.assertEqual(struct.unpack_from('<3f', result, 0x3e8), (1., 7., 3.))
         self.assertEqual(struct.unpack_from('<I', result, 0x3f4)[0], 5)
+
+    def test_decision_one_composes_vertex_impulse_and_sample_cache(self):
+        image = bytearray(0x408)
+        struct.pack_into('<3f', image, 8, 0., 0., 0.)
+        struct.pack_into('<3f', image, 0x14, 1., 0., 0.)
+        struct.pack_into('<f', image, 0x50, 1000.)
+        struct.pack_into('<f', image, 0x54, .001)
+        struct.pack_into('<9f', image, 0x78, 1.,0.,0.,0.,1.,0.,0.,0.,1.)
+        struct.pack_into('<9f', image, 0x9c, 1.,0.,0.,0.,1.,0.,0.,0.,1.)
+        struct.pack_into('<h', image, 0x3bc, 1)
+        struct.pack_into('<66f', image, 0xe0, *([1.,0.,0.] * 22))
+        struct.pack_into('<3f', image, 0x5c, 0.,0.,0.)
+        struct.pack_into('<3f', image, 0x2fc, .001,.001,.001)
+        result = resolve_world_decision_one_sample(image, (.25,0.,0.), 1., 0x1d)
+        self.assertTrue(result.vertex_response.collided)
+        self.assertTrue(result.contact_cache_written)
+        self.assertEqual(struct.unpack_from('<3f', result.body_image, 8),
+                         (-1.75, 0., 0.))
+        self.assertEqual(struct.unpack_from('<3f', result.body_image, 0x3e8),
+                         (.25, 0., 0.))
+        self.assertEqual(struct.unpack_from('<I', result.body_image, 0x3f8)[0], 0x1d)
 
     def test_extractor_uses_the_ordinary_22_point_buffer(self):
         image = bytearray(0x400)
