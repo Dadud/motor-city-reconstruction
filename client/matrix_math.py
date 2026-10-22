@@ -16,6 +16,17 @@ def transpose_3x3_words(values):
             values[2], values[5], values[8])
 
 
+def rotation_x_turns(turns):
+    """Translate the 0x6f1530 matrix builder's x-axis turn parameter."""
+    turns = f32(turns)
+    angle_scale = f32(6.2831854820251465)
+    sine = f32(sin(turns * angle_scale))
+    cosine = f32(cos(turns * angle_scale))
+    return (1.0, 0.0, 0.0,
+            0.0, cosine, sine,
+            0.0, -sine, cosine)
+
+
 def dot_3_f32(left, right):
     """Translate 0x6f1140/0x6f3b51 and round the x87 result on float storage."""
     left, right = tuple(left), tuple(right)

@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
-from tools.function_inventory import TARGET, canonical, generate, records
+from tools.function_inventory import (TARGET, canonical, generate, preserve_evidence_ids,
+                                     records)
 
 
 class FunctionInventoryTests(unittest.TestCase):
@@ -54,6 +55,18 @@ class FunctionInventoryTests(unittest.TestCase):
     def test_exported_evidence_bundle_records_are_indexable(self):
         item = dict(operation='analyze_function', normalized_result={'pseudocode': 'void f(){}'})
         self.assertEqual(list(records({'records': [item]})), [item])
+
+    def test_partial_evidence_refresh_preserves_prior_ids(self):
+        rows = [dict(address='0x400000', evidence_ids=['ev_new'],
+                     decompilation='retained'),
+                dict(address='0x400010', evidence_ids=[], decompilation='not-indexed')]
+        previous = [dict(address='0x400000', evidence_ids=['ev_old']),
+                    dict(address='0x400010', evidence_ids=['ev_other'])]
+        preserve_evidence_ids(rows, previous)
+        self.assertEqual(rows[0]['evidence_ids'], ['ev_new', 'ev_old'])
+        self.assertEqual(rows[1]['evidence_ids'], ['ev_other'])
+        self.assertEqual([row['decompilation'] for row in rows],
+                         ['retained', 'retained'])
 
 
 if __name__ == '__main__':

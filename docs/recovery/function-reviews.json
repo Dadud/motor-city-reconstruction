@@ -2486,5 +2486,24 @@
     "doc_refs": [
       "docs/collision-world.md"
     ]
+  },
+  "0x426d50": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The per-object initializer normalizes the embedded descriptor, decodes shape/material/class selectors, constructs the 0x418-byte body through 0x51f440, initializes its 0x44-byte query record, copies descriptor geometry and scalar fields, and handles the optional 0.5-turn point transform. 256 original executions match every byte of the 0x4f8-byte object with a zero-initialized query-stack tail. Surface lookup 0x42e760, contact setup 0x51e460 and selected geometry callback 0x6f28f0 are intercepted as explicit child boundaries; their effects and live world data remain outside this translation. The unwritten query tail remains an explicit input.",
+    "sources": [
+      "client/world_body_initialization.py",
+      "client/body_constructor.py",
+      "client/matrix_math.py",
+      "tests/test_world_body_initialization.py",
+      "tools/world_body_initializer_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "verification_refs": [
+      "tools/world_body_initializer_oracle.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
   }
 }

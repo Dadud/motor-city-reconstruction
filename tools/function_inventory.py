@@ -184,6 +184,17 @@ def generate(root, enumeration, evidence, reviews, triage=None):
     return rows
 
 
+def preserve_evidence_ids(rows, previous_rows):
+    """Merge refreshed evidence with prior retained IDs without dropping history."""
+    existing = {row['address']: set(row.get('evidence_ids', []))
+                for row in previous_rows}
+    for row in rows:
+        row['evidence_ids'] = sorted(existing.get(row['address'], set()) |
+                                     set(row.get('evidence_ids', [])))
+        row['decompilation'] = 'retained' if row['evidence_ids'] else 'not-indexed'
+    return rows
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--enumeration', type=Path, default=ROOT/'docs/recovery/function-enumeration.json')
@@ -195,14 +206,11 @@ def main():
     reviews = load_reviews(ROOT)
     triage = load_triage(ROOT)
     rows = generate(ROOT, enumeration, args.evidence, reviews, triage)
-    # On public checkouts preserve the already indexed evidence identities.
+    # Preserve prior evidence identities when refreshing from a partial private
+    # session export; a refreshed export is not the complete historical corpus.
     previous = output/'functions.json'
-    if args.evidence is None and previous.exists():
-        existing = {r['address']: r for r in json.loads(previous.read_text())['functions']}
-        for row in rows:
-            prior = existing.get(row['address'], {})
-            row['evidence_ids'] = prior.get('evidence_ids', [])
-            row['decompilation'] = 'retained' if row['evidence_ids'] else 'not-indexed'
+    if previous.exists():
+        preserve_evidence_ids(rows, json.loads(previous.read_text())['functions'])
     bulk_path = output/'modules'/(TARGET+'.json')
     bulk = {}
     if bulk_path.exists():

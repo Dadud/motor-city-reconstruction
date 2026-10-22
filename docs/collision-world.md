@@ -478,6 +478,22 @@ two-byte odd-count alignment. In 256 direct original calls, all supplied image
 bytes and the final global cursor matched across 1,165 rows and 24 empty
 sections. The caller's file-buffer and section ownership logic remain open.
 
+The next loader stage, per-world-object initialization at `0x426d50`, now has a
+bounded source translation in
+[`client/world_body_initialization.py`](../client/world_body_initialization.py).
+It normalizes descriptor mass and extents, maps shape/material selectors,
+constructs the base body, initializes the surface-query record, restores the
+descriptor pose, handles optional point rotation, and applies the final body
+scalars. 256 executions of the original matched every byte of the 0x4f8-byte
+object, including cases that execute the original 0.5-turn matrix builder and
+inline point transform. The surface query (`0x42e760`), contact setup
+(`0x51e460`) and selected geometry callback (`0x6f28f0`) were intercepted as
+child boundaries; their effects and actual world data remain unresolved. Their
+interfaces stay explicit in the Python implementation. The oracle's stack tail
+for the 0x44-byte query record is zero-initialized; the translation accepts an
+explicit initial image because the native initializer itself writes only the
+first eight words before invoking the query child.
+
 The response child `0x459b90` is translated in
 [`client/collision_pair_surface.py`](../client/collision_pair_surface.py).
 It transforms the body's 8- or 22-point set, selects the deepest eligible
