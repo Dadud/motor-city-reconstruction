@@ -59,6 +59,15 @@ class SkyResourceTests(unittest.TestCase):
         self.assertEqual(mesh[0], (0.0, 0.0, 0x80808080))
         self.assertEqual(mesh[27], (2.0, 1.0, 0x80808080))
 
+    def test_material_mesh_texture_override_averages_and_preserves_pixel(self):
+        texture = bytes((1, 2, 3, 4)) * 676
+        positions, mesh = sky_material_mesh_outputs(
+            [200.0] * 676, angle=0.0, row_scale=1.0, column_scale=1.0,
+            base_offset=1.0, amplitude=0.0, color_scale=1.0,
+            texture_rgba=texture)
+        self.assertEqual(len(positions), 676)
+        self.assertEqual(mesh[0][2], 0x04030201)
+
 
     def test_material_triangle_index_topology(self):
         indices = sky_material_triangle_indices()

@@ -96,7 +96,8 @@ def sky_material_smooth_grid(values, *, upper_bound, passes=20):
 
 
 def sky_material_mesh_outputs(heights, *, angle, row_scale, column_scale,
-                             base_offset, amplitude, color_scale, invert=False):
+                             base_offset, amplitude, color_scale, invert=False,
+                             texture_rgba=None):
     """Build the two transposed vertex arrays emitted by 0x4943f0.
 
     The first array contains rotated world positions. The second contains
@@ -104,6 +105,9 @@ def sky_material_mesh_outputs(heights, *, angle, row_scale, column_scale,
     """
     if len(heights) != 26 * 26:
         raise ValueError('sky material height grid must contain 676 values')
+    if texture_rgba is not None and (not isinstance(texture_rgba, bytes) or
+                                     len(texture_rgba) != 26 * 26 * 4):
+        raise ValueError('texture override must contain 676 RGBA pixels')
     angle = _f32(angle)
     row_scale, column_scale = _f32(row_scale), _f32(column_scale)
     base_offset, amplitude, color_scale = map(_f32, (base_offset, amplitude, color_scale))
@@ -118,14 +122,18 @@ def sky_material_mesh_outputs(heights, *, angle, row_scale, column_scale,
             radius = math.sqrt(x * x + z * z)
             radial_angle = _f32(radius * 0.25 * 0.00033333333)
             profile = _f32(math.cos(radial_angle * (2.0 * math.pi)) * amplitude + base_offset)
-            height = _f32(heights[column * 26 + row])
+            index = column * 26 + row
+            pixel = (None if texture_rgba is None else
+                     texture_rgba[index*4:(index+1)*4])
+            height = (_f32(heights[index]) if pixel is None else
+                      float(sum(pixel) // 4))
             fraction = _f32(height * _f32(0.003921569))
             if invert:
                 fraction = -fraction
             profile = _f32(profile - amplitude * color_scale * fraction * 0.5)
             shade = int(round(height)) & 0xff
-            packed = shade * 0x01010101
-            index = column * 26 + row
+            packed = (shade * 0x01010101 if pixel is None else
+                      int.from_bytes(pixel, 'little'))
             positions[index] = (_f32(x), profile, z)
             mesh[index] = (_f32(column * column_scale * 0.5),
                            _f32(row * row_scale * 0.5), packed)

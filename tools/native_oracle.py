@@ -95,7 +95,8 @@ class DynoOracle:
     def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
                                  row_scale, column_scale, random_state,
                                  base_offset=0.0, amplitude=0.0,
-                                 color_scale=1.0, invert=False):
+                                 color_scale=1.0, invert=False,
+                                 texture_rgba=None):
         """Capture the kernel's local 26x26 grid at a specific verified stage."""
         stops = {'raw': 0x4945f5, 'normalized': 0x49466f,
                  'smoothed': 0x49480e, 'output': 0x49492a}
@@ -116,6 +117,11 @@ class DynoOracle:
         struct.pack_into('<f', block, 0xc11c, row_scale)
         struct.pack_into('<f', block, 0xc120, angle)
         struct.pack_into('<I', block, 0xc124, int(invert))
+        if texture_rgba is not None:
+            if not isinstance(texture_rgba, bytes) or len(texture_rgba) != 26*26*4:
+                raise ValueError('texture override must contain 676 RGBA pixels')
+            struct.pack_into('<I', block, 0xc12c, 1)
+            block[0x93e0:0x93e0+len(texture_rgba)] = texture_rgba
         self.cpu.mem_write(self.inputs, bytes(block))
         for address, word in zip((0x8c89d0, 0x8c89d4, 0x8c89d8,
                                   0x8c89dc, 0x8c89e0, 0x8c89e4), random_state):

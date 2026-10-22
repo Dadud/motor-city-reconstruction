@@ -42,9 +42,13 @@ error. The output pass now builds both 676-vertex arrays: rotated world
 positions and grid coordinates with repeated-byte grayscale colors. Across the
 same four synthetic parameter sets, all secondary-array and grayscale bytes
 match exactly; world positions differ by at most 0.00036 due to x87 versus
-Python math precision. The texture-driven color/height override when
-`block[0xc12c]` is enabled remains unresolved. The shared generator at
-`0x6f0fa0` is separately translated and compared across 1,024 states.
+Python math precision. With `block[0xc12c]` enabled, the output stage floors
+the mean of each RGBA pixel's four bytes to derive height and copies that pixel
+unchanged into mesh color. Patterned source buffers compare exactly for the
+height and color outputs across all four parameter sets. How the runtime caller
+fills `block+0x93e0` remains a separate interface question. The shared
+generator at `0x6f0fa0` is separately translated and compared across 1,024
+states.
 
 Evidence on `mcity.exe` SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`, Ghidra

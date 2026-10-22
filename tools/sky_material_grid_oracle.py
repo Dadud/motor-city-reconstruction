@@ -78,13 +78,43 @@ def verify(executable):
         actual_mesh_bytes = actual_output[0x1fb0:0x1fb0+len(expected_mesh_bytes)]
         if actual_mesh_bytes != expected_mesh_bytes:
             raise AssertionError(('mesh coordinates or packed grayscale differ', bound))
+        texture = bytes((index*13 + channel*47 + bound) & 0xff
+                        for index in range(676) for channel in range(4))
+        expected_positions, expected_mesh = sky_material_mesh_outputs(
+            expected_smoothed, angle=angle, row_scale=row_scale,
+            column_scale=column_scale, base_offset=base, amplitude=amplitude,
+            color_scale=color_scale, invert=invert, texture_rgba=texture)
+        actual_output = oracle.sky_material_height_grid(
+            'output', upper_bound=bound, modulus=modulus, angle=angle,
+            row_scale=row_scale, column_scale=column_scale, random_state=_INITIAL,
+            base_offset=base, amplitude=amplitude, color_scale=color_scale,
+            invert=invert, texture_rgba=texture)
+        actual_positions = struct.unpack_from('<2028f', actual_output, 0)
+        for index, vertex in enumerate(expected_positions):
+            for axis, expected in enumerate(vertex):
+                error = abs(actual_positions[index*3+axis] - expected)
+                max_vertex_error = max(max_vertex_error, error)
+                if not math.isfinite(error) or error > 0.001:
+                    raise AssertionError(('texture override position', bound, index, axis,
+                                          actual_positions[index*3+axis], expected, error))
+        expected_mesh_bytes = b''.join(
+            struct.pack('<ffI', *vertex) for vertex in expected_mesh)
+        actual_mesh_bytes = actual_output[0x1fb0:0x1fb0+len(expected_mesh_bytes)]
+        if actual_mesh_bytes != expected_mesh_bytes:
+            for offset in range(0, len(expected_mesh_bytes), 4):
+                actual_word = struct.unpack_from('<I', actual_mesh_bytes, offset)[0]
+                expected_word = struct.unpack_from('<I', expected_mesh_bytes, offset)[0]
+                if actual_word != expected_word:
+                    raise AssertionError(('texture override mesh', bound, offset//12,
+                                          offset%12//4, hex(actual_word), hex(expected_word)))
+            raise AssertionError(('texture override output differs', bound))
         cases += 1
     return {'parameter_sets': cases, 'raw_values': cases*676,
             'normalized_values': cases*676,
             'maximum_normalization_error': max(errors),
             'maximum_smoothing_error': max_smoothing_error,
             'maximum_position_error': max_vertex_error,
-            'mesh_and_grayscale_bytes_match': True,
+            'mesh_grayscale_and_texture_bytes_match': True,
             'scope': 'full local sky-material output arrays including 20 in-place smoothing passes; synthetic execution'}
 
 

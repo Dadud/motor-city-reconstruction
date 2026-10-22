@@ -2738,7 +2738,7 @@
   "0x4943f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The procedural sky-material kernel is translated for the 1,250 deterministic grid indices including native row padding, transposed 26x26 random-height field, signed-square-root normalization, 20 in-place weighted 5x5 smoothing passes, and both final 676-vertex arrays. Original comparisons cover the full index buffer and four parameter sets; raw, normalized and smoothed grid values plus secondary-array and grayscale output bytes match exactly, while rotated world positions differ by at most 0.00036. The texture-driven height/color override when block[0xc12c] is enabled remains unresolved.",
+    "scope": "The procedural sky-material kernel is translated for the 1,250 deterministic grid indices including native row padding, transposed 26x26 random-height field, signed-square-root normalization, 20 in-place weighted 5x5 smoothing passes, and both final 676-vertex arrays. Original comparisons cover the full index buffer and four parameter sets; raw, normalized and smoothed grid values plus secondary-array, grayscale, and patterned RGBA override outputs match exactly, while rotated world positions differ by at most 0.00036. The runtime caller's source for block+0x93e0 remains an unresolved interface.",
     "sources": [
       "client/sky.py",
       "tests/test_sky.py",
