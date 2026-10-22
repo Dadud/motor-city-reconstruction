@@ -2595,5 +2595,21 @@
       "ev_a07b400532dd485cd1a030c4775df1b81beebb775d1c89c3e470cbfbe12c038b",
       "ev_6f7155f05885f9d07e80573b50fb8c92ec89afc62789ed3e3c5f530a2de0fb35"
     ]
+  },
+  "0x4287a0": {
+    "translation": "python-bounded",
+    "verification": "static-analysis-only",
+    "scope": "The cleanup ordering in 0x4287a0 and its 0x42ce30 wrapper are represented over an explicit global-address mapping: clear the count, conditionally release and clear two resource pointers, clear the base pointer, then conditionally release and clear the wrapper auxiliary pointer after clearing the mode flag. The native allocator and pointer ownership remain explicit boundaries; no original-runtime comparison was performed.",
+    "sources": [
+      "client/track_resource_cleanup.py",
+      "tests/test_track_resource_cleanup.py",
+      "docs/recovery/track-resource-cleanup.md"
+    ],
+    "evidence_ids": [
+      "ev_9503df83fe1bc312308478a2e459d30fa650e87289fcbaf65c7b14f337256f78",
+      "ev_5d5793ffd0b3e652f77e7a64134f2fd174caaf86911c572d3b2536e770fe0c48",
+      "ev_685145d3daf3f87b594e683803f22cd32a0d48d933ce79d4284d20d18de28f88",
+      "ev_16c8798794d11884dd1d26f5fcdd79d5bc6c5c5c2b8ac33666e2d349158e7571"
+    ]
   }
 }
