@@ -3,6 +3,7 @@ import unittest
 
 from client.body_constructor import construct_body
 from client.collision_world_candidate import (CollisionWorldSample,
+                                              allocate_trigger_slot,
                                               classify_world_contact,
                                               decode_collision_world_sample,
                                               world_sample_overlaps_body)
@@ -90,6 +91,42 @@ class CollisionWorldSampleTests(unittest.TestCase):
         struct.pack_into('<f', self.body, 0x3c0, 0.)
         result = classify_world_contact(self.body, self.contact_record(2), -1)
         self.assertEqual((result.decision, result.trigger_tier), (-1, 3))
+
+    def test_classifier_computes_heading_for_successful_slot(self):
+        self.body[6] = 1
+        self.body[0x474] = 2
+        struct.pack_into('<f', self.body, 0x14, 1.)
+        struct.pack_into('<f', self.body, 0x1c, 0.)
+        result = classify_world_contact(self.body, self.contact_record(2), -1,
+                                        allocation_result=5)
+        self.assertEqual((result.decision, result.trigger_tier), (-1, 3))
+        self.assertEqual((result.trigger_state_after, result.trigger_angle_after,
+                          result.trigger_substate_after), (5, 0x40, 0))
+
+    def test_trigger_slot_allocation_initializes_only_the_free_record_fields(self):
+        slots = bytearray(0x1800)
+        slots[8:0x18] = bytes(range(1, 17))
+        resources = [0] * 256
+        resources[2] = 0x12345678
+        result = allocate_trigger_slot(slots, resources, 2, 0x87654321)
+        self.assertEqual(result.result, 0)
+        self.assertEqual(struct.unpack_from('<II', result.slots, 0),
+                         (0x12345678, 0x87654321))
+        self.assertEqual(struct.unpack_from('<III', result.slots, 0x0c), (2, 1, 0))
+        self.assertEqual(result.slots[8:0x0c], bytes(range(1, 5)))
+
+    def test_trigger_slot_failure_sentinels_preserve_the_slot_table(self):
+        resources = [1] * 256
+        empty = bytes(0x1800)
+        self.assertEqual(allocate_trigger_slot(empty, resources, 256, 1).result, 0xff)
+        full = bytearray(empty)
+        for index in range(256):
+            struct.pack_into('<I', full, index * 0x18, index + 1)
+        result = allocate_trigger_slot(full, resources, 2, 1)
+        self.assertEqual(result.result, 0x1ff)
+        self.assertEqual(result.slots, bytes(full))
+        resources[2] = 0
+        self.assertEqual(allocate_trigger_slot(empty, resources, 2, 1).slots, empty)
 
 
 if __name__ == '__main__':

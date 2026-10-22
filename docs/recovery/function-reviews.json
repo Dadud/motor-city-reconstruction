@@ -1,23 +1,54 @@
 {
+  "0x407710": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The 256-entry runtime trigger slot scan is translated, including raw 32-bit failure sentinels, invalid categories, missing resource IDs, and exact writes to the selected 0x18-byte record. 128 original calls compare both return values and all 0x1800 table bytes. Resource data itself remains a supplied runtime input.",
+    "sources": [
+      "client/collision_world_candidate.py",
+      "tests/test_collision_world_candidate.py",
+      "tools/collision_trigger_slot_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_1fc62bee4bb96955164d683b40e8efd30e167ca68d4f92d818105f47699ec40a"
+    ],
+    "verification_refs": [
+      "tools/collision_trigger_slot_oracle.py",
+      "tests/test_collision_world_candidate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
   "0x42d9f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and the exhausted-allocation 0xfe state update are translated. 128 original calls match with the resource allocator stubbed to return 0xff. Successful slot allocation, heading lookup and notification calls remain outside the translation.",
+    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and trigger-state transitions are translated. 128 original calls match with allocation results controlled and the heading byte computed by the translated 0x6f2cc0 lookup. The allocator is separately translated; resource table contents remain supplied.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
       "tools/collision_world_classifier_oracle.py",
-      "docs/collision-world.md"
+      "tools/collision_trigger_slot_oracle.py",
+      "docs/collision-world.md",
+      "client/collision_heading.py",
+      "tests/test_collision_heading.py",
+      "tools/collision_heading_oracle.py"
     ],
     "evidence_ids": [
       "ev_d09a06a7ee2100329b216861b76be32a690125ccb087bc12ccea9b1e67d32d73",
       "ev_1fc62bee4bb96955164d683b40e8efd30e167ca68d4f92d818105f47699ec40a",
       "ev_646646541460605df153cf0999b7cac45ab88f2915d9d2aaa0db529ed7481b28",
-      "ev_a1560b2d11d2f62bafa6451881026acdf409fb45d494f41aadee8d6f92422b41"
+      "ev_a1560b2d11d2f62bafa6451881026acdf409fb45d494f41aadee8d6f92422b41",
+      "ev_14e2213c297f683faf8b589f0daa55b2f416c4ef04025a735e9c5af8a44b0118",
+      "ev_4e38e82401d138ab78e2db02a11cda6604616eb12346b628da1ba2adb7f83b2c",
+      "ev_792ebf8adbd8a8da20d37072a0576d2f658a3d61a013138fd0454009b3e88eb3",
+      "ev_d1235e464bb2b08047606037ab52105f2db295cc304a4a359f74cb41e55a40de"
     ],
     "verification_refs": [
       "tools/collision_world_classifier_oracle.py",
-      "tests/test_collision_world_candidate.py"
+      "tools/collision_trigger_slot_oracle.py",
+      "tests/test_collision_world_candidate.py",
+      "tools/collision_heading_oracle.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"
@@ -174,7 +205,7 @@
   "0x46d1d0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The ordinary unboosted engine finalizer matches eight installed catalogue engines (101–108) on complete configuration bytes. Carburetor-kind-six behavior is additionally compared after changing only the carburetor-kind field on those same eight engine inputs: the original builder inputs, both solver-call records, and final 2,080-byte configurations match exactly. Five additional configured-capacity values on vehicle 101 verify the initial helper cap and second-pass ceiling. This covers the rerun and reuse of first-pass solver outputs as second-pass input. Boost and additional induction branches, native/C++ curve implementation, full component assembly and integrated driving remain unresolved.",
+    "scope": "The ordinary unboosted engine finalizer matches eight installed catalogue engines (101\u2013108) on complete configuration bytes. Carburetor-kind-six behavior is additionally compared after changing only the carburetor-kind field on those same eight engine inputs: the original builder inputs, both solver-call records, and final 2,080-byte configurations match exactly. Five additional configured-capacity values on vehicle 101 verify the initial helper cap and second-pass ceiling. This covers the rerun and reuse of first-pass solver outputs as second-pass input. Boost and additional induction branches, native/C++ curve implementation, full component assembly and integrated driving remain unresolved.",
     "sources": [
       "client/engine_curve.py",
       "client/cylinder_solver.py",
@@ -633,7 +664,7 @@
   "0x52df00": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "Driver and driver-head selection/render records match 33 original calls over the 33 selector archives, including complete modified FCE origins. The special rear-suspension marker branch matches five direct calls across all four LODs and a missing-part case. The generic :PP branch matches four direct calls, and a two-level L/R component graph matches through original 0x52df00 recursion and 0x52dd70 final sorting/linking, including both complete mutated synthetic component FCE images and render records. The composed driver/head, engine gate, rear suspension and wheel branches have graph unit coverage. A direct wheel-marker comparison covers all four corners and four LODs (32 records). Installed stock owners for all eight catalogue vehicles 101–108 match their available installed component FCEs, body records and links at five LOD requests (837 records and 3,950 component-origin checks). Other special branches, runtime vertex-stream equivalence, full-call equivalence and actual allocation/resource lifetime remain open.",
+    "scope": "Driver and driver-head selection/render records match 33 original calls over the 33 selector archives, including complete modified FCE origins. The special rear-suspension marker branch matches five direct calls across all four LODs and a missing-part case. The generic :PP branch matches four direct calls, and a two-level L/R component graph matches through original 0x52df00 recursion and 0x52dd70 final sorting/linking, including both complete mutated synthetic component FCE images and render records. The composed driver/head, engine gate, rear suspension and wheel branches have graph unit coverage. A direct wheel-marker comparison covers all four corners and four LODs (32 records). Installed stock owners for all eight catalogue vehicles 101\u2013108 match their available installed component FCEs, body records and links at five LOD requests (837 records and 3,950 component-origin checks). Other special branches, runtime vertex-stream equivalence, full-call equivalence and actual allocation/resource lifetime remain open.",
     "sources": [
       "client/scene.py",
       "tests/test_scene.py",
@@ -1941,6 +1972,32 @@
       "docs/calculations/collision-helpers.md",
       "docs/collision-world.md",
       "docs/calculations/collision-helpers.md"
+    ]
+  },
+  "0x6f2cc0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The fixed-angle heading helper is translated with its 257-entry first-quadrant table, Q32 ratio division, 16-bit table interpolation, and signed octant reflection. 4,096 direct original calls match exactly over axes, octants, zero, and signed 32-bit coordinates. Its successful trigger-state caller path is checked in 128 0x42d9f0 calls.",
+    "sources": [
+      "client/collision_heading.py",
+      "tests/test_collision_heading.py",
+      "tools/collision_heading_oracle.py",
+      "tools/collision_world_classifier_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_14e2213c297f683faf8b589f0daa55b2f416c4ef04025a735e9c5af8a44b0118",
+      "ev_4e38e82401d138ab78e2db02a11cda6604616eb12346b628da1ba2adb7f83b2c",
+      "ev_792ebf8adbd8a8da20d37072a0576d2f658a3d61a013138fd0454009b3e88eb3",
+      "ev_d1235e464bb2b08047606037ab52105f2db295cc304a4a359f74cb41e55a40de"
+    ],
+    "verification_refs": [
+      "tools/collision_heading_oracle.py",
+      "tools/collision_world_classifier_oracle.py",
+      "tests/test_collision_heading.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
     ]
   }
 }

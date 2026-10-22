@@ -98,14 +98,33 @@ The `0x45d1f0` prefilter matches 512 original calls, with 348 reaching a stubbed
 [`tools/collision_world_prefilter_oracle.py`](../tools/collision_world_prefilter_oracle.py).
 The classifier maps sample kinds 1 and 3 to distinct response codes; kind 2
 uses a per-sample state byte and a speed gate to decide whether to request a
-runtime trigger. The allocation-exhaustion path and thresholds are translated
-in `classify_world_contact`; 128 original calls match while the allocator is
-stubbed to return its `0xff` failure sentinel. Successful resource allocation,
-heading lookup, and notification through `0x4077a0` remain open, as do the later
-terrain/pair response branches. REA evidence for the decoder is
+runtime trigger. The classifier's success/failure state transition is
+translated in `classify_world_contact`; 128 original calls cover both an
+exhausted slot and a successful slot update, with the translated heading
+helper. The 256-entry allocator at
+`0x407710` is translated in the same module and matches 128 original calls
+across its return value and all `0x1800` slot bytes. The heading helper
+`0x6f2cc0` is translated in
+[`client/collision_heading.py`](../client/collision_heading.py), including its
+257-entry table at `0x8c8d10`, Q32 ratio, interpolation and signed octant
+folding. Its result matches 4,096 direct original calls, including zero, axes,
+all octants and full-range signed coordinates. The classifier now derives the
+saved angle byte itself; its 128-case original comparison includes successful
+trigger updates with varied coordinates. The allocator resource table contents
+and later terrain/pair response branches remain open. REA evidence for the
+allocator is
+`ev_1fc62bee4bb96955164d683b40e8efd30e167ca68d4f92d818105f47699ec40a`; evidence
+for the decoder is
 `ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817`; the
 parent scan dossier is `ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3`,
 and the classifier dossier is `ev_d09a06a7ee2100329b216861b76be32a690125ccb087bc12ccea9b1e67d32d73`.
+The heading implementation, shift/divide helpers and lookup table are
+documented by REA evidence `ev_14e2213c297f683faf8b589f0daa55b2f416c4ef04025a735e9c5af8a44b0118`,
+`ev_4e38e82401d138ab78e2db02a11cda6604616eb12346b628da1ba2adb7f83b2c`,
+`ev_792ebf8adbd8a8da20d37072a0576d2f658a3d61a013138fd0454009b3e88eb3`
+and `ev_d1235e464bb2b08047606037ab52105f2db295cc304a4a359f74cb41e55a40de`.
+Run `python -m tools.collision_heading_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 4096`
+to compare the integer heading helper directly.
 
 ## Scheduler placement
 
@@ -319,7 +338,7 @@ terrain query and full collision contact-producer chain remain open.
 - Integrate the independently verified `0x458530` response with dynamic-pair
   retries and recover dynamic candidate-record production; complete the
   `0x45d1f0` sampled world-contact response branches and the successful
-  resource-allocation path in `0x42d9f0`;
+  resource-table/heading lookup integration in `0x42d9f0`;
   recover `0x45c3e0`, task-list execution, and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
