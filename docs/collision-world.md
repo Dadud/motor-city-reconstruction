@@ -139,6 +139,21 @@ outside the translation. The original `0x54f0e0` and `0x6f1320` analysis records
 Run
 `python -m tools.terrain_specialized_quad_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 128`.
 
+The `0x54f2a0` worker's four-corner surface sampling and height acceptance are
+also translated. `sample_specialized_quad_heights` composes the bounded track
+lookup and plane queries with `specialized_quad_height_gate`: gaps outside
+`[-0.5, 0.5]` use the owning object's plane, then the minimum gap is compared
+with the forwarded geometry extent. Sixty-four direct original calls vary
+corner heights, XZ positions and the extent; all reject with minimum gaps from
+`0.5` to `1.5`. Together they make 256 `0x42e760` lookups, 256 `0x42dc50`
+plane queries and 458 `0x4b71a0` evaluations, skip the motion/response helpers,
+and clear the worker's 24-byte six-word record on each rejection. Run
+`python -m tools.terrain_specialized_height_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe"`.
+Evidence for the original worker is
+`ev_83bcd3e2b0527b9514e1e7da31cd7cdb3affb0a023a110e4700f17b7ec14fb30`.
+The worker's contact selection, response construction, body correction and
+successful return behavior remain open.
+
 The three triangle tables at `0x88c9d4`, `0x88ca64` and `0x88c7f4` contain 12
 ordered triangles for shapes 0/2, 6 for shape 1, and 40 for shapes 3/4. Their
 indices are retained in `terrain_shape_triangle_indices`; the REA byte reads

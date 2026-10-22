@@ -277,15 +277,39 @@ def triangle_candidate_height_gate(vertices, surface_heights, object_heights):
                                         minimum <= f32(0.1016))
 
 
-def sample_triangle_candidate_heights(world, vertices, query_seed,
-                                      object_plane_normal, object_plane_point):
-    """Compose track lookup, quad-plane sampling and the candidate height gate.
+def specialized_quad_height_gate(vertices, surface_heights, object_heights,
+                                maximum_gap):
+    """Translate ``0x54f2a0``'s four-corner height acceptance stage.
 
-    The world and each mutable 0x44-byte seed are bounded caller-supplied
-    observations. Row-only lookup results have no plane normal in the recovered
-    0x42dc50 adapter, so they are rejected as unsupported instead of assigning
-    an inferred normal.
+    Samples that differ from a corner by more than 0.5 are replaced by the
+    owning object's plane height. The worker accepts when the minimum signed
+    corner gap is no greater than its supplied geometry extent.
     """
+    if len(vertices) != 4 or any(len(vertex) != 3 for vertex in vertices):
+        raise ValueError('four XYZ quad corners are required')
+    if len(surface_heights) != 4 or len(object_heights) != 4:
+        raise ValueError('four sampled and four object-plane heights are required')
+    selected = []
+    gaps = []
+    for index, vertex in enumerate(vertices):
+        y = f32(vertex[1])
+        height = f32(surface_heights[index])
+        gap = f32(y - height)
+        if gap < -0.5 or gap > 0.5:
+            height = f32(object_heights[index])
+            gap = f32(y - height)
+        selected.append(height)
+        gaps.append(gap)
+    minimum = gaps[0]
+    for gap in gaps[1:]:
+        if gap < minimum:
+            minimum = gap
+    return TerrainCandidateHeightResult(tuple(selected), tuple(gaps), minimum,
+                                        minimum <= f32(maximum_gap))
+
+
+def _sample_candidate_planes(world, vertices, query_seed,
+                             object_plane_normal, object_plane_point):
     if not isinstance(world, TrackSurfaceWorld):
         raise TypeError('a bounded TrackSurfaceWorld is required')
     if len(query_seed) < 0x44:
@@ -322,9 +346,33 @@ def sample_triangle_candidate_heights(world, vertices, query_seed,
         sampled_heights.append(plane_height(normal, reference, vertex))
         normals.append(tuple(f32(value) for value in normal))
 
+    return object_heights, tuple(sampled_heights), tuple(records), tuple(normals)
+
+
+def sample_triangle_candidate_heights(world, vertices, query_seed,
+                                      object_plane_normal, object_plane_point):
+    """Compose track lookup, quad-plane sampling and the triangle height gate.
+
+    The world and each mutable 0x44-byte seed are bounded caller-supplied
+    observations. Unsupported row-only plane records raise instead of
+    assigning an inferred normal.
+    """
+    object_heights, sampled_heights, records, normals = _sample_candidate_planes(
+        world, vertices, query_seed, object_plane_normal, object_plane_point)
     candidate = triangle_candidate_height_gate(vertices, sampled_heights,
                                                object_heights)
-    return TerrainCandidateSamplingResult(candidate, tuple(records), tuple(normals))
+    return TerrainCandidateSamplingResult(candidate, records, normals)
+
+
+def sample_specialized_quad_heights(world, vertices, query_seed,
+                                    object_plane_normal, object_plane_point,
+                                    maximum_gap):
+    """Compose native terrain queries and the four-corner 0x54f2a0 gate."""
+    object_heights, sampled_heights, records, normals = _sample_candidate_planes(
+        world, vertices, query_seed, object_plane_normal, object_plane_point)
+    candidate = specialized_quad_height_gate(vertices, sampled_heights,
+                                              object_heights, maximum_gap)
+    return TerrainCandidateSamplingResult(candidate, records, normals)
 
 
 def terrain_contact_velocity_gate(vertices, normals, position, linear_velocity,

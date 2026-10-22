@@ -10,7 +10,9 @@ from client.collision_terrain import (triangle_candidate_gate,
                                       projected_shape_candidates,
                                       terrain_contact_velocity_gate,
                                       specialized_quad_projection_gate,
-                                      specialized_quad_projection_candidate)
+                                      specialized_quad_projection_candidate,
+                                      specialized_quad_height_gate,
+                                      sample_specialized_quad_heights)
 from tests.test_track_surface_sample import _world
 from tools.track_surface_cases import fixture
 
@@ -85,6 +87,31 @@ class TerrainTriangleGateTests(unittest.TestCase):
                           (5., 2., 8.), (5., 2., 6.)))
         self.assertEqual(result.forwarded_extent, .5)
         self.assertTrue(result.intersects)
+
+    def test_specialized_quad_height_fallback_and_extent_gate(self):
+        corners = ((0., 1., 0.), (0., 1., 1.),
+                   (1., 1., 1.), (1., 1., 0.))
+        result = specialized_quad_height_gate(
+            corners, (0., 0., 0., 0.), (0., 0., 0., 0.), .25)
+        self.assertEqual(result.heights, (0., 0., 0., 0.))
+        self.assertEqual(result.gaps, (1., 1., 1., 1.))
+        self.assertFalse(result.accepted)
+        shallow = specialized_quad_height_gate(
+            corners, (.9, .9, .9, .9), (0., 0., 0., 0.), .25)
+        self.assertTrue(shallow.accepted)
+        self.assertEqual(shallow.minimum_gap, .10000002384185791)
+
+    def test_specialized_quad_samples_four_track_planes_before_height_gate(self):
+        arena, root, seed = fixture(2, 0, 0, 0, 7, 8, 8, 1)
+        world = _world(arena, root)
+        corners = ((6., 1., 6.), (6., 1., 10.),
+                   (10., 1., 10.), (10., 1., 6.))
+        result = sample_specialized_quad_heights(
+            world, corners, seed, (0., 1., 0.), (0., 0., 0.), .25)
+        self.assertEqual(len(result.query_records), 4)
+        self.assertEqual(len(result.normals), 4)
+        self.assertEqual(result.candidate.minimum_gap, 1.)
+        self.assertFalse(result.candidate.accepted)
 
     def test_degenerate_consecutive_vertices_fail(self):
         degenerate = (self.triangle[0], self.triangle[0], self.triangle[2])

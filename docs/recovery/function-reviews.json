@@ -1782,7 +1782,7 @@
   "0x45a320": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The ordered shape-index tables for shapes 0/2, 1 and 3/4 are translated in Python and compared word-for-word against the executable; direct calls of 0x45a320 on degenerate meshes visit 12, 6, 12, 40 and 40 triangle candidates for shape values 0 through 4. The early candidate gates, three-vertex height filter, response normal, supplied-body terrain impulse, and three-vertex point-motion predictor are translated. Five direct original cases verify projected-edge and degenerate-edge rejection; one supplied flat-world case verifies height rejection after three real terrain lookups and plane queries. A separate accepted triangle executes the actual 0x45a320 entry through three 0x42e760 lookups, three 0x42dc50 plane queries, two 0x459e30 normal constructions and one 0x457550 response; the normal, response status, velocity changes and tangential contact record match the translated composition and no other supplied body fields change. An additional 64 direct original executions vary linear/angular velocity, COM and orientation; all candidate decisions and helper paths match, and accepted-case velocity cleanup and final linear/angular velocities match. Independent helper comparisons cover 261 original 0x459e30 cases (maximum error 1.4901161193847656e-7) and 260 original 0x457550 cases (maximum error 0.0001220703125 under a magnitude-scaled tolerance). The specialized 0x54f0e0 transform and projected quad gate are separately translated and compared over 128 original-entry cases; every transformed corner and delegation decision matches, with 105 direct returns and 23 handoffs to stubbed 0x54f2a0. That inner worker, shape candidate selection and live terrain behavior remain unported.",
+    "scope": "The ordered shape-index tables for shapes 0/2, 1 and 3/4 are translated in Python and compared word-for-word against the executable; direct calls of 0x45a320 on degenerate meshes visit 12, 6, 12, 40 and 40 triangle candidates for shape values 0 through 4. The early candidate gates, three-vertex height filter, response normal, supplied-body terrain impulse, and three-vertex point-motion predictor are translated. Five direct original cases verify projected-edge and degenerate-edge rejection; one supplied flat-world case verifies height rejection after three real terrain lookups and plane queries. A separate accepted triangle executes the actual 0x45a320 entry through three 0x42e760 lookups, three 0x42dc50 plane queries, two 0x459e30 normal constructions and one 0x457550 response; the normal, response status, velocity changes and tangential contact record match the translated composition and no other supplied body fields change. An additional 64 direct original executions vary linear/angular velocity, COM and orientation; all candidate decisions and helper paths match, and accepted-case velocity cleanup and final linear/angular velocities match. Independent helper comparisons cover 261 original 0x459e30 cases (maximum error 1.4901161193847656e-7) and 260 original 0x457550 cases (maximum error 0.0001220703125 under a magnitude-scaled tolerance). The specialized 0x54f0e0 transform and projected quad gate are separately translated and compared over 128 original-entry cases; every transformed corner and delegation decision matches, with 105 direct returns and 23 handoffs to stubbed 0x54f2a0. The initial four-corner sampling and height rejection of 0x54f2a0 are also translated and directly checked; its successful contact/response phase, shape candidate selection and live terrain behavior remain unported.",
     "sources": [
       "client/collision_terrain.py",
       "tests/test_collision_terrain.py",
@@ -1799,11 +1799,22 @@
   "0x54f0e0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The four-point mode-6 transform and projected XZ guard are translated by specialized_quad_projection_candidate. A 128-case direct original-entry harness compares all transformed corners against the original at the post-transform point, compares delegation against the translated gate, verifies forwarded corner data and the larger stored geometry extent in 23 delegated cases, and confirms 105 cases return without reaching the worker. The inner 0x54f2a0 worker is stubbed; its collision behavior, other CPU-specific math-dispatch variants and live-world behavior are not translated or established.",
+    "scope": "The four-point mode-6 transform and projected XZ guard are translated by specialized_quad_projection_candidate. A 128-case direct original-entry harness compares all transformed corners against the original at the post-transform point, compares delegation against the translated gate, verifies forwarded corner data and the larger stored geometry extent in 23 delegated cases, and confirms 105 cases return without reaching the worker. The inner 0x54f2a0 worker is stubbed for this caller test; its successful contact/response behavior, other CPU-specific math-dispatch variants and live-world behavior remain open.",
     "sources": [
       "client/collision_terrain.py",
       "tests/test_collision_terrain.py",
       "tools/terrain_specialized_quad_oracle.py",
+      "docs/collision-world.md"
+    ]
+  },
+  "0x54f2a0": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The worker's four-point sampled-height stage is translated in sample_specialized_quad_heights and specialized_quad_height_gate. Sixty-four supplied-world direct original calls vary corner heights, XZ positions and geometry extent; all return at the translated height rejection with minimum gaps from 0.5 to 1.5. The runs make 256 0x42e760 lookups, 256 0x42dc50 plane queries and 458 0x4b71a0 height evaluations, enter none of 0x457910/0x459e30/0x457550, and each clears the six-word record at +0xc64. Successful contact selection, response construction, body correction and live-world behavior remain untranslated.",
+    "sources": [
+      "client/collision_terrain.py",
+      "tests/test_collision_terrain.py",
+      "tools/terrain_specialized_height_oracle.py",
       "docs/collision-world.md"
     ]
   },
