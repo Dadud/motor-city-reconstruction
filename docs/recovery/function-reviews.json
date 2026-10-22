@@ -23,7 +23,7 @@
   "0x42d9f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and trigger-state transitions are translated. 128 original calls match with allocator results controlled and the heading byte computed by the translated 0x6f2cc0 lookup. The trigger archive loader and coordinate conversion are translated and checked against synthetic and installed records; live pointer assignment into the collision pass remains supplied.",
+    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and trigger-state transitions are translated. The composed 0x42d9f0 -> 0x407710 -> 0x6f2cc0 -> 0x4077a0 path matches 128 direct original calls, including return/type, all three sample-state bytes and the full trigger slot table. Resource pointer values, owner pointer and world sample records remain explicit runtime inputs.",
     "sources": [
       "client/collision_world_candidate.py",
       "tests/test_collision_world_candidate.py",
@@ -32,7 +32,10 @@
       "docs/collision-world.md",
       "client/collision_heading.py",
       "tests/test_collision_heading.py",
-      "tools/collision_heading_oracle.py"
+      "tools/collision_heading_oracle.py",
+      "client/collision_trigger_resources.py",
+      "tests/test_collision_trigger_resources.py",
+      "tools/collision_world_trigger_update_oracle.py"
     ],
     "evidence_ids": [
       "ev_d09a06a7ee2100329b216861b76be32a690125ccb087bc12ccea9b1e67d32d73",
@@ -48,7 +51,8 @@
       "tools/collision_world_classifier_oracle.py",
       "tools/collision_trigger_slot_oracle.py",
       "tests/test_collision_world_candidate.py",
-      "tools/collision_heading_oracle.py"
+      "tools/collision_heading_oracle.py",
+      "tools/collision_world_trigger_update_oracle.py"
     ],
     "doc_refs": [
       "docs/collision-world.md"

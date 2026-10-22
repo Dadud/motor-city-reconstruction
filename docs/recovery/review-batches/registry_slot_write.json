@@ -6,10 +6,10 @@
       "verification": "original-comparison-bounded",
       "subsystem": "utilities-global-state",
       "owner": "wave0-utilities",
-      "scope": "Complete body emulated against the original through the shared call stub and matched directly by the generated native comparison runner. See tools.w0_cell_corpus for the current synthetic corpus.",
+      "scope": "The native generic slot writer remains covered by its 8-case wave0 corpus. Its 0x42d9f0 role writes trigger mode 2, zero, and the fixed-angle byte at slot offsets +0x0c/+0x10/+0x14; the Python composition is checked in 128 full caller executions including all 0x1800 trigger-slot bytes.",
       "supported_domain": "Documented per routine: table and image arguments outside the registered span are rejected rather than emulated.",
       "acceptance": "Met: 8 fresh original-execution cases matched bit-exact by the native runner; self-test registered in ctest. See docs/recovery/cell-comparisons.md.",
-      "translation": "native-bounded",
+      "translation": "python-and-native-bounded",
       "comparison_corpus": "docs/recovery/corpora/wave0",
       "comparison_cases": 8,
       "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
@@ -22,7 +22,11 @@
         "native/tests/registry_slot_write_test.cpp",
         "tools/cell_corpus.py",
         "tools/native_registry_slot_write_compare.py",
-        "tools/w0_cell_corpus.py"
+        "tools/w0_cell_corpus.py",
+        "client/collision_world_candidate.py",
+        "tests/test_collision_world_candidate.py",
+        "tools/collision_world_trigger_update_oracle.py",
+        "docs/collision-world.md"
       ],
       "dependencies": []
     }

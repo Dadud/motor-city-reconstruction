@@ -98,19 +98,20 @@ The `0x45d1f0` prefilter matches 512 original calls, with 348 reaching a stubbed
 [`tools/collision_world_prefilter_oracle.py`](../tools/collision_world_prefilter_oracle.py).
 The classifier maps sample kinds 1 and 3 to distinct response codes; kind 2
 uses a per-sample state byte and a speed gate to decide whether to request a
-runtime trigger. The classifier's success/failure state transition is
-translated in `classify_world_contact`; 128 original calls cover both an
-exhausted slot and a successful slot update, with the translated heading
-helper. The 256-entry allocator at
+runtime trigger. `update_world_contact` composes classification, allocation
+and sample-state writes. 128 direct original calls now execute the real
+allocator, heading helper and writer; the translated path matches the return
+decision, type code, all three sample-state bytes, and all `0x1800` trigger-slot
+bytes, including missing resources and signed-byte slot-index boundaries. The
+256-entry allocator at
 `0x407710` is translated in the same module and matches 128 original calls
 across its return value and all `0x1800` slot bytes. The heading helper
 `0x6f2cc0` is translated in
 [`client/collision_heading.py`](../client/collision_heading.py), including its
 257-entry table at `0x8c8d10`, Q32 ratio, interpolation and signed octant
 folding. Its result matches 4,096 direct original calls, including zero, axes,
-all octants and full-range signed coordinates. The classifier now derives the
-saved angle byte itself; its 128-case original comparison includes successful
-trigger updates with varied coordinates.
+all octants and full-range signed coordinates. The classifier derives and
+stores the saved angle byte itself.
 
 The table loader `0x407570` reads seven `TRxx.CAN` archives and converts the
 first three signed words of each 20-byte record. The portable decoder in
@@ -118,12 +119,12 @@ first three signed words of each 20-byte record. The portable decoder in
 matches the original x87 precision and spill order. Direct tests run 128
 synthetic loader cases plus the seven installed game files through the original
 entry, covering 833 synthetic archive loads and the full record arrays in all
-of them, plus 7 real archives. The installed files declare 51, 41, 6, 17, 94, 51 and 41
-records in `TR00A.CAN`, `TR01.CAN` through `TR06.CAN`. The loader's path
-formatting and file-system calls are supplied at the oracle boundary; archive
-bytes and loader conversion run against original code. Resource pointer
-assignment into the collision pass and later terrain/pair response branches
-remain open. REA evidence for the allocator is
+of them, plus 7 real archives. The installed files declare 51, 41, 6, 17, 94,
+51 and 41 records in `TR00A.CAN`, `TR01.CAN` through `TR06.CAN`. The
+loader's path formatting and file-system calls are supplied at the oracle
+boundary; archive bytes and loader conversion run against original code.
+Resource pointer assignment into a running world-contact pass and later
+terrain/pair response branches remain open. REA evidence for the allocator is
 `ev_1fc62bee4bb96955164d683b40e8efd30e167ca68d4f92d818105f47699ec40a`; evidence
 for the decoder is
 `ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817`; the
@@ -138,6 +139,8 @@ Run `python -m tools.collision_heading_oracle "C:/Program Files (x86)/EA Games/M
 to compare the integer heading helper directly. Run
 `python -m tools.collision_trigger_resources_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 128 --data-root "C:/Program Files (x86)/EA Games/Motor City Online/Data/GameArt"`
 to compare archive loading and coordinate conversion with the original entry.
+Run `python -m tools.collision_world_trigger_update_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 128`
+to compare the composed trigger allocation and notification state.
 
 ## Scheduler placement
 

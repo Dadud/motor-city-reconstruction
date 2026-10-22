@@ -35,6 +35,13 @@ class TriggerSlotAllocation:
     slots: bytes
 
 
+@dataclass(frozen=True)
+class WorldContactUpdate:
+    classification: WorldContactClassification
+    trigger_slots: bytes
+    sample_state: bytes
+
+
 def allocate_trigger_slot(slots, resource_ids, category, owner_pointer):
     """Translate the 256-entry, 0x18-byte runtime trigger slot allocator at 0x407710."""
     slots = bytes(slots)
@@ -156,3 +163,33 @@ def classify_world_contact(body, record, trigger_state, allocation_result=0xff):
         return WorldContactClassification(-1, 0x19, sample_id, tier,
                                           allocated_byte, heading_byte, 0)
     return WorldContactClassification(-1, 0x19, sample_id, tier, 0xfe)
+
+
+def update_world_contact(body, record, sample_state, trigger_slots,
+                         resource_ids, owner_pointer):
+    """Compose 0x42d9f0 classification, 0x407710 allocation and 0x4077a0 writes."""
+    sample_state = bytes(sample_state)
+    if len(sample_state) != 3:
+        raise ValueError('world-contact sample state must contain exactly three bytes')
+    classification = classify_world_contact(body, record, sample_state[0])
+    trigger_slots = bytes(trigger_slots)
+    if classification.trigger_tier is None:
+        if len(trigger_slots) != 0x1800:
+            raise ValueError('trigger slot image must contain exactly 256 0x18-byte records')
+        return WorldContactUpdate(classification, trigger_slots, sample_state)
+
+    allocation = allocate_trigger_slot(
+        trigger_slots, resource_ids, classification.trigger_tier, owner_pointer)
+    classification = classify_world_contact(
+        body, record, sample_state[0], allocation_result=allocation.result)
+    updated_slots = bytearray(allocation.slots)
+    if classification.trigger_angle_after is not None:
+        slot_index = classification.trigger_state_after
+        struct.pack_into('<III', updated_slots, slot_index * 0x18 + 0x0c,
+                         2, 0, classification.trigger_angle_after)
+        updated_state = bytes((slot_index, classification.trigger_angle_after, 0))
+    elif classification.trigger_state_after == 0xfe:
+        updated_state = bytes((0xfe,)) + sample_state[1:]
+    else:
+        updated_state = sample_state
+    return WorldContactUpdate(classification, bytes(updated_slots), updated_state)

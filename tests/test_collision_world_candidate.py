@@ -6,6 +6,7 @@ from client.collision_world_candidate import (CollisionWorldSample,
                                               allocate_trigger_slot,
                                               classify_world_contact,
                                               decode_collision_world_sample,
+                                              update_world_contact,
                                               world_sample_overlaps_body)
 
 
@@ -127,6 +128,46 @@ class CollisionWorldSampleTests(unittest.TestCase):
         self.assertEqual(result.slots, bytes(full))
         resources[2] = 0
         self.assertEqual(allocate_trigger_slot(empty, resources, 2, 1).slots, empty)
+
+    def test_world_contact_composes_resource_allocation_and_angle_write(self):
+        self.body[6] = 1
+        self.body[0x474] = 2
+        struct.pack_into('<f', self.body, 0x14, 1.)
+        resources = [0] * 256
+        resources[3] = 0x12345678
+        result = update_world_contact(
+            self.body, self.contact_record(2), b'\xff\x11\x22',
+            bytes(0x1800), resources, 0x87654321)
+        self.assertEqual(result.sample_state, b'\x00\x40\x00')
+        self.assertEqual(struct.unpack_from('<III', result.trigger_slots, 0x0c),
+                         (2, 0, 0x40))
+        self.assertEqual(struct.unpack_from('<II', result.trigger_slots, 0),
+                         (0x12345678, 0x87654321))
+
+    def test_missing_resource_sets_failure_sentinel_and_preserves_state_tail(self):
+        self.body[6] = 1
+        self.body[0x474] = 2
+        resources = [0] * 256
+        result = update_world_contact(
+            self.body, self.contact_record(2), b'\xff\x33\x44',
+            bytes(0x1800), resources, 0x87654321)
+        self.assertEqual(result.sample_state, b'\xfe\x33\x44')
+        self.assertEqual(result.trigger_slots, bytes(0x1800))
+
+    def test_signed_slot_index_boundary_retains_allocator_initialization(self):
+        self.body[6] = 1
+        self.body[0x474] = 2
+        resources = [0] * 256
+        resources[3] = 0x12345678
+        slots = bytearray(0x1800)
+        for index in range(128):
+            struct.pack_into('<I', slots, index * 0x18, index + 1)
+        result = update_world_contact(
+            self.body, self.contact_record(2), b'\xff\x00\x00',
+            slots, resources, 0x87654321)
+        self.assertEqual(result.sample_state, b'\xfe\x00\x00')
+        self.assertEqual(struct.unpack_from('<III', result.trigger_slots,
+                                            128 * 0x18 + 0x0c), (2, 1, 0))
 
 
 if __name__ == '__main__':
