@@ -59,6 +59,22 @@ class Assets:
         # candidate exists; preserve that behavior for downstream open calls.
         return self.root / 'Data' / 'Tracks' / track_name / f'Tr{suffix}'
 
+    def load_sky_resources(self, track_name, *, night=False, wet=False,
+                            cloud_count=0, clouds_enabled=True):
+        """Decode the track sky archive using the native lighting-mode table."""
+        from .sky import load_sky_resources
+        if (not isinstance(track_name, str) or not track_name
+                or track_name in {'.', '..'}
+                or any(char in track_name for char in '/\\:')):
+            raise ValueError(f'invalid track name: {track_name!r}')
+        key = f'data/tracks/{track_name}/sky.fsh'.casefold()
+        path = self.paths.get(key)
+        if path is None:
+            return None
+        return load_sky_resources(path.read_bytes(), night=night, wet=wet,
+                                  cloud_count=cloud_count,
+                                  clouds_enabled=clouds_enabled)
+
     def load_vehicle(self, path):
         return decode(self.load_vehicle_bytes(path))
 

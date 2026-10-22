@@ -1,0 +1,89 @@
+import struct
+import tempfile
+import unittest
+from pathlib import Path
+
+from client.assets import Assets
+from client.sky import load_sky_resources, sky_resource_names
+
+
+def fsh(entries):
+    """Build a small SHPI archive containing uncompressed BGRA images."""
+    directory_size = 16 + len(entries) * 8
+    payloads, offsets = [], []
+    cursor = directory_size
+    for name, width, height, bgra in entries:
+        payload = struct.pack('<IHH', 0x7d, width, height) + b'\0' * 8 + bgra
+        payloads.append(payload)
+        offsets.append(cursor)
+        cursor += len(payload)
+    result = bytearray(b'SHPI' + struct.pack('<II', cursor, len(entries)) + b'\0' * 4)
+    for (name, _, _, _), offset in zip(entries, offsets):
+        result.extend(name.encode('ascii').ljust(4, b' ')[:4])
+        result.extend(struct.pack('<I', offset))
+    return bytes(result) + b''.join(payloads)
+
+
+class SkyResourceTests(unittest.TestCase):
+    def test_exact_native_table_order_for_each_mode(self):
+        self.assertEqual(sky_resource_names(),
+                         ('CLDD', 'CLD2', 'CHRD', 'SUND', 'VAMD', 'VMD2', 'HDC%d', None))
+        self.assertEqual(sky_resource_names(wet=True),
+                         ('CLWD', 'CL2W', 'CHRW', 'SUNW', 'VADW', 'VDW2', 'HDW%d', 'CLDD'))
+        self.assertEqual(sky_resource_names(night=True),
+                         ('CLDN', 'CL2N', 'CHRN', 'SUNN', 'VAMN', 'VMN2', 'HNC%d', 'CLWD'))
+        self.assertEqual(sky_resource_names(night=True, wet=True),
+                         ('CLWN', 'C2WN', 'CHNW', 'SNNW', 'VMNW', 'VNW2', 'HNW%d', 'CLDN'))
+
+    def test_native_26_grid_uses_dimension_over_26_and_clamps(self):
+        width = height = 27
+        bgra = bytearray()
+        for y in range(height):
+            for x in range(width):
+                bgra.extend((x, y, 0, 255))
+        archive = fsh([('VAMD', width, height, bytes(bgra))])
+        resources = load_sky_resources(archive)
+        grid = resources.lookups[0]
+        self.assertEqual(grid.name, 'VAMD')
+        self.assertEqual(grid.table_index, 4)
+        self.assertEqual(len(grid.rgba), 26 * 26 * 4)
+        # Native width/26 scaling reaches and clamps at the last source pixel.
+        self.assertEqual(grid.rgba[:4], bytes((0, 0, 0, 255)))
+        self.assertEqual(grid.rgba[-4:], bytes((0, 26, 26, 255)))
+        self.assertIsNone(resources.lookups[2])
+
+    def test_cloud_template_expansion_stops_at_first_missing_image(self):
+        image = bytes((0, 0, 0, 255))
+        archive = fsh([
+            ('HDC0', 1, 1, image), ('HDC1', 1, 1, image),
+            ('HDC3', 1, 1, image),
+        ])
+        resources = load_sky_resources(archive, cloud_count=4)
+        self.assertEqual(resources.cloud_pattern, 'HDC%d')
+        self.assertEqual(resources.clouds, ('HDC0', 'HDC1'))
+        self.assertEqual(load_sky_resources(archive, cloud_count=4,
+                                            clouds_enabled=False).clouds, ())
+        lower_case = fsh([('hdc0', 1, 1, image)])
+        self.assertEqual(load_sky_resources(lower_case, cloud_count=1).clouds, ())
+
+    def test_assets_loads_case_insensitive_track_archive(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            track = Path(tmp) / 'Data' / 'Tracks' / 'TrackA'
+            track.mkdir(parents=True)
+            (track / 'Sky.FSH').write_bytes(fsh([]))
+            assets = Assets(tmp)
+            self.assertIsNotNone(assets.load_sky_resources('tracka'))
+            self.assertIsNone(assets.load_sky_resources('missing'))
+            with self.assertRaises(ValueError):
+                assets.load_sky_resources('../outside')
+
+    def test_rejects_invalid_mode_and_cloud_count(self):
+        with self.assertRaises(ValueError):
+            sky_resource_names(night=1)
+        for count in (-1, 257, True):
+            with self.assertRaises(ValueError):
+                load_sky_resources(fsh([]), cloud_count=count)
+
+
+if __name__ == '__main__':
+    unittest.main()
