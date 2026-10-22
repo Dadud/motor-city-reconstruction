@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 import struct
 
+from client.collision_pair_solver import resolve_collision_pair
+
 
 def _f32(value):
     return struct.unpack('<f', struct.pack('<f', value))[0]
@@ -17,6 +19,15 @@ class DynamicPairCandidate:
     center: tuple
     radius: float
     within_radius: bool
+
+
+@dataclass(frozen=True)
+class DynamicPairRetryResult:
+    owner: object
+    target: object
+    attempts: int
+    accepted_attempts: int
+    response_due: bool
 
 
 def dynamic_pair_candidate(owner, record):
@@ -51,3 +62,26 @@ def dynamic_pair_candidate(owner, record):
                              _f32(delta[2] * delta[2]))
     within = eligible and distance_squared <= _f32(radius * radius)
     return DynamicPairCandidate(eligible, center, radius, within)
+
+
+def resolve_dynamic_pair_retries(owner, target, max_attempts=33):
+    """Translate the ``0x45cf70`` retry loop around the ``0x45af30`` solver.
+
+    Each accepted solver call updates both body states before the next attempt.
+    A rejection exits immediately; any prior acceptance schedules exactly one
+    pair-response call in the original caller. The native loop permits 33 calls.
+    """
+    if type(max_attempts) is not int or not 1 <= max_attempts <= 33:
+        raise ValueError('dynamic-pair attempts must be between 1 and 33')
+    accepted = 0
+    attempts = 0
+    current_owner, current_target = owner, target
+    while attempts < max_attempts:
+        result = resolve_collision_pair(current_owner, current_target)
+        attempts += 1
+        current_owner, current_target = result.owner, result.target
+        if not result.collided:
+            break
+        accepted += 1
+    return DynamicPairRetryResult(current_owner, current_target, attempts,
+                                  accepted, accepted != 0)

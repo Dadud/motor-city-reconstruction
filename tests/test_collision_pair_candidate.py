@@ -1,7 +1,11 @@
 import struct
 import unittest
 
-from client.collision_pair_candidate import dynamic_pair_candidate
+from client.body_geometry import body_samples
+from client.collision_pair_candidate import (dynamic_pair_candidate,
+                                             resolve_dynamic_pair_retries)
+from client.collision_pair_geometry import OrientedCollisionBox
+from client.collision_pair_solver import CollisionPairBody
 
 
 def owner(position=(0., 0., 0.), radius=.75):
@@ -24,6 +28,15 @@ def record(origin=(0., 0., 0.), local=(0., 0., 0.), radius=1.,
 
 
 class DynamicPairCandidateTests(unittest.TestCase):
+    @staticmethod
+    def body(center, extents=(1., 1., 1.), mode=0):
+        axes = ((1., 0., 0.), (0., 1., 0.), (0., 0., 1.))
+        vertices = tuple(value for point in body_samples(0, extents)
+                         for value in point)
+        return CollisionPairBody(
+            OrientedCollisionBox(center, axes, extents), mode=mode,
+            local_vertices=vertices)
+
     def test_transformed_center_and_inclusive_sphere_boundary(self):
         result = dynamic_pair_candidate(owner((1.75, 0., 0.)), record())
         self.assertEqual(result.center, (0., 0., 0.))
@@ -50,6 +63,25 @@ class DynamicPairCandidateTests(unittest.TestCase):
     def test_distance_outside_sphere_is_rejected(self):
         result = dynamic_pair_candidate(owner((1.751, 0., 0.)), record())
         self.assertFalse(result.within_radius)
+
+    def test_retry_stops_after_separation_and_schedules_one_response(self):
+        result = resolve_dynamic_pair_retries(
+            self.body((.5, 0., 0.)), self.body((0., 0., 0.), (.4, .2, .1), mode=1))
+        self.assertEqual((result.attempts, result.accepted_attempts), (2, 1))
+        self.assertTrue(result.response_due)
+        self.assertAlmostEqual(result.owner.box.center[0], 1.40625)
+
+    def test_retry_caps_unresolved_coincident_pair_at_33_calls(self):
+        result = resolve_dynamic_pair_retries(self.body((0., 0., 0.)),
+                                              self.body((0., 0., 0.)))
+        self.assertEqual((result.attempts, result.accepted_attempts), (33, 33))
+        self.assertTrue(result.response_due)
+
+    def test_first_rejection_does_not_schedule_response(self):
+        result = resolve_dynamic_pair_retries(self.body((5., 0., 0.)),
+                                              self.body((0., 0., 0.)))
+        self.assertEqual((result.attempts, result.accepted_attempts), (1, 0))
+        self.assertFalse(result.response_due)
 
 
 if __name__ == '__main__':

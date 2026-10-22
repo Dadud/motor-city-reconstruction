@@ -68,10 +68,16 @@ is no greater than the square of owner radius `+0xd8` plus record radius
 [`client/collision_pair_candidate.py`](../client/collision_pair_candidate.py).
 The direct original harness executes the real `0x45cf70` path for 512 varied
 records and body positions; 134 reach `0x45af30`, and all eligibility, boundary
-and first-rejection outcomes match. The harness stops the pair resolver at its
-entry, so it does not cover accepted pair response or candidate-record
-production. Original function dossier: `ev_bc440ea786fb8140385b6eb99b24d3af70ca0fa66b5794d68152e16e25b75471`.
-Run `python -m tools.collision_pair_candidate_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 512`.
+and first-rejection outcomes match. With `--execute-pair-resolver`, the same
+original path runs the real `0x45af30` resolver: 35 pairs produced 83 calls and
+33 response calls, matching the translated retry loop and final body centers.
+This includes the 33-call cap when a coincident pair cannot separate. The
+response function's state effects and candidate-record production remain
+untranslated. Original function dossier:
+`ev_bc440ea786fb8140385b6eb99b24d3af70ca0fa66b5794d68152e16e25b75471`.
+Run `python -m tools.collision_pair_candidate_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 512`
+for the broadphase, or add `--execute-pair-resolver --cases 128` to check
+resolver retries and response scheduling against native execution.
 
 ## Scheduler placement
 
@@ -282,9 +288,9 @@ terrain query and full collision contact-producer chain remain open.
 
 - Recover the data types and producers for collision object shapes, triangles,
   terrain queries, rotations, global candidates and shared contact records.
-- Finish the `0x45cf70` pair-filter setup/retry/response path and recover
-  `0x45d1f0`, `0x45c3e0`, task-list execution, and the recurring game-frame
-  caller.
+- Recover `0x458530` response state effects and dynamic candidate-record
+  production; recover `0x45d1f0`, `0x45c3e0`, task-list execution, and the
+  recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
 - Integrate it with the force vehicle state and test wall/resting impacts,
