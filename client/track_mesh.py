@@ -9,6 +9,7 @@ from .track_spatial import (SpatialIndex, decode_relocated_spatial,
                             decode_spatial)
 from .world_grid import (PAYLOAD_OFFSET, WorldGridFixup, fixup_world_grid)
 from .track_surface_lookup import TrackSurfaceMemory, TrackSurfaceWorld
+from .track_checksum import track_checksum
 from .world_dataset_layout import layout_pointer_record_section
 
 
@@ -24,6 +25,7 @@ class DecodedTrackWorld:
     object_meshes: tuple[Model, ...] = ()
     query_world: TrackSurfaceWorld | None = None
     surface_blocks: tuple = ()
+    loader_checksum: int = 0
 
     def sample_object_poses(self, tick):
         """Sample the animation payload for each animated type-3 object."""
@@ -316,7 +318,7 @@ def decode_track_world(data, image_address=0x71000000, *, retain_block_headers=T
                                              image_address)
     return DecodedTrackWorld(mesh, grid, relocated, end, headers, sections,
                              tuple(objects), object_meshes, query_world,
-                             tuple(surface_blocks))
+                             tuple(surface_blocks), track_checksum(data))
 
 
 def _build_track_surface_world(data, track, runtime_layout, image_address):

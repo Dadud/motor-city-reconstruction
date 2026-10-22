@@ -4,6 +4,7 @@ from client.track_spatial import (Node, SpatialIndex, decode_relocated_spatial,
                                   decode_spatial)
 from client.world_grid import fixup_world_grid
 from client.track_mesh import decode_track_world, decode_track_with_spatial
+from client.track_checksum import track_checksum
 
 
 def fixture():
@@ -44,6 +45,7 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(world.spatial.cells[0].identifiers, ())
         self.assertEqual(len(world.block_headers), 1)
         self.assertIsNotNone(world.query_world)
+        self.assertEqual(world.loader_checksum, track_checksum(combined))
         self.assertEqual(world.query_world.path_count, 2)
         self.assertEqual(world.query_world.last_block, 0)
         self.assertEqual(world.object_sections, ((0, (0, 0, 0, 0)),))

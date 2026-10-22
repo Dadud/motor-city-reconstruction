@@ -2566,14 +2566,16 @@
   "0x428150": {
     "translation": "partial",
     "verification": "static-analysis-only",
-    "scope": "The track query-memory adapter reconstructs the loader-observed block header pointers for vertex, color, descriptor and 11 face arrays, composes per-block 0x428680 object-record pointer fixups, and relocates the world-grid payload into one bounded address view. It is integrated into DecodedTrackWorld and the vehicle world object; 27 installed tracks decode, and 81 sampled road-slice support queries run without unmapped accesses. This does not reproduce the original allocator/resource lifecycle, both global object groups, all post-load side effects, or prove loader equivalence. The streamed cursor and field sequence come from Ghidra Evidence; runtime behavior remains partially reconstructed.",
+    "scope": "The adapter reconstructs loader-observed block pointers, per-block object record fixups, and the relocated grid payload, and composes the verified checksum child 0x658280 over the supplied complete FRD bytes. The loader checksum is retained on DecodedTrackWorld. All 27 installed tracks decode; 81 sampled road-slice support queries run without unmapped accesses. This remains a partial loader translation: original allocation/resource lifecycle, both global object groups, all post-load side effects, and full loader equivalence remain open.",
     "sources": [
       "client/track_mesh.py",
       "client/world.py",
       "client/driving_support.py",
       "tests/test_track_spatial.py",
       "tests/test_driving_support.py",
-      "docs/recovery/spatial-query-progress.md"
+      "docs/recovery/spatial-query-progress.md",
+      "client/track_checksum.py",
+      "docs/recovery/track-checksum.md"
     ],
     "evidence_ids": [
       "ev_8202d7e5585c1226abc8c107ee46dff1257949b71581840b8c556bc69dde6ebb"
@@ -2628,6 +2630,31 @@
     ],
     "verification_refs": [
       "tools/track_template_oracle.py"
+    ]
+  },
+  "0x658280": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "A shared raw reflected CRC-32 accumulator over explicit byte count and data pointer, initialized to 0xffffffff and returned without a final XOR. It supports both executable identity and complete FRD loader checksums. Original execution matched seven deterministic buffers plus every byte of all 27 installed Tr.frd files (85,754,464 bytes total). The Ghidra pseudocode signature is incomplete; argument and return behavior were corrected from instructions. Native file/API behavior and any semantic use of the loader checksum remain outside the translation.",
+    "sources": [
+      "client/crc32.py",
+      "client/nps_identity.py",
+      "client/track_checksum.py",
+      "client/track_mesh.py",
+      "tests/test_nps_identity.py",
+      "tests/test_track_checksum.py",
+      "tests/test_track_spatial.py",
+      "tools/nps_identity_oracle.py",
+      "tools/track_checksum_oracle.py",
+      "docs/recovery/track-checksum.md"
+    ],
+    "evidence_ids": [
+      "ev_97524b85b651018e3f88bbf578cc26b32eca01425d125a90c1b7922a19d1f32f",
+      "ev_701254f081887d565f531a574d179a3f4d7bc3d19116e665339eb3605e618b02",
+      "ev_25db498ca7a1e8d8c65babeec0b59e2c04d6c37683657b57b56703b20df688de"
+    ],
+    "verification_refs": [
+      "tools/track_checksum_oracle.py"
     ]
   }
 }
