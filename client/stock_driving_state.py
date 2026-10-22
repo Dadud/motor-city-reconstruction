@@ -87,6 +87,7 @@ class StockDrivingBindings:
     authored_placement: dict
     unresolved: dict
     assembled_mechanics: dict=field(default_factory=dict)
+    tire_curves: dict=field(default_factory=dict)
 
     @property
     def ready_for_recovered_driving(self):
@@ -161,19 +162,26 @@ def build_stock_driving_bindings(catalogue, vehicle, world, body_configuration=N
         engine='Ordinary unboosted curves and idle/max RPM are recovered in Python; bind complete engine inputs and initialized dispatcher fields. Transmission/rear-end and tire loaders supply gear inputs; complete assembly before final gear binding. Special carburetor and boost remain open.',
         drivetrain='Supply original clutch/gear/differential state, assembled ratios and effect consumers; do not substitute prototype gearing.',
         brakes='Bind original brake material, thermal/cooling/capacity parameters, distribution, quality, component codes and initial temperatures/countdowns.',
-        tires='Bind two complete 26-knot axle response curves, angle coefficients, grip/quality/wear, steering limits and native spin scales.',
+        tires='Native grip/quality/wear, steering limits and spin scales remain required; front/rear 26-knot curves are available from the assembled tires when mechanical assembly succeeds.',
         observations='Supply original input/service gates, counters/flags, track weather/mode queries and ordered nearby vehicle records.',
         controller='Connect recovered children on shared owner state and recover remaining stages; every callback must execute real recovered behavior.')
     assembled={}
+    tire_curves={}
     if mechanical_assembly is not None:
         from client.mechanical_assembly import assembly_report
         assembled=assembly_report(mechanical_assembly)
         if mechanical_assembly.status==1:
+            from client.tire_update import TireCurves
+            tire_curves = {
+                axle: TireCurves.from_assembled_configuration(
+                    mechanical_assembly.configuration, axle)
+                for axle in ('front', 'rear')}
             unresolved.pop('configuration')
             unresolved['mass_inertia']='Assembled mass and axle levers are recovered; supply original model half extents, centre of mass and owner inertia initialization.'
             unresolved['engine']='Assembled ordinary unboosted curve and RPM limits are available; bind dispatcher, clutch and limiter state. Special carburetor and boost remain open.'
             unresolved['drivetrain']='Final gear tables are available; bind original clutch/gear/differential state and effect consumers.'
-    return StockDrivingBindings(vehicle.branded_id, vehicle.name, components, body, geometry, placement, unresolved,assembled)
+    return StockDrivingBindings(vehicle.branded_id, vehicle.name, components, body,
+        geometry, placement, unresolved, assembled, tire_curves)
 
 
 def load_stock_driving_bindings(game, vehicle_id=101, track='drag'):

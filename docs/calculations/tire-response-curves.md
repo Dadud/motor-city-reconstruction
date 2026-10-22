@@ -3,8 +3,26 @@
 The original active tire path calls two related 26-knot response consumers:
 `0x53f630` and `0x53f830`. Their interpolation, load corrections, angle term,
 surface multiplier and sign conventions are now implemented in
-`client/tire_response.py`. This does not recover the complete tire update.
-The tables are explicit inputs; original table data is not distributed.
+`client/tire_response.py`. The table rows live in the installation's
+`Online.mdb` `Pacejka_TireModel` auxiliary table and are not copied into this
+repository. The native tire loader places each row's 25 lateral-force and 25
+aligning-moment values into assembled front/rear configuration arrays. Each
+26-knot response table has the loader's leading zero followed by those 25
+values. `TireCurves.from_assembled_configuration()` reads the four assembled
+arrays and angle coefficients, and successful stock startup bindings expose
+typed `front` and `rear` curves. This recovers their source-to-consumer data
+path, not the complete tire update or all tire operating state.
+
+The native `0x54e170` tire loader clears 26 float slots then copies 25
+auxiliary values after the leading zero. Front primary/secondary arrays begin
+at configuration offsets `+0x150/+0x1b8`; rear arrays begin at
+`+0x254/+0x2bc`. The associated coefficient words are at `+0x148/+0x24c`.
+The active update `0x53ecf0` passes those exact pointers to `0x53f630` and
+`0x53f830`. Evidence: loader `ev_26b183b8337b86ceaa037a0aaca0e300f6d27317fdc788dacae02a355336f985`;
+active caller `ev_4bcef5c8191a2c6cfb0b9b95b70eb516424d33159574889d8913f4cfa82cca3b`.
+The [tire-loader oracle](../../tools/tire_loader_oracle.py) matched 631 full
+original calls exactly, including four installed stock tire components loaded
+from the original `Online.mdb`.
 
 ## Inputs and equations
 

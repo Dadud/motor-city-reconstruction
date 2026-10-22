@@ -1,10 +1,34 @@
 import unittest
 from dataclasses import replace
-from client.tire_update import update_tires
+import struct
+from client.tire_update import TireCurves, update_tires
 from tools.tire_update_oracle import cases
 
 
 class TireUpdateTests(unittest.TestCase):
+    def test_curves_are_bound_from_native_front_and_rear_configuration_slots(self):
+        image = bytearray(0x820)
+        for axle, base, scale in (('front', 0x148, 1), ('rear', 0x24c, 2)):
+            struct.pack_into('<f', image, base, .01 * scale)
+            struct.pack_into('<26f', image, base + 8,
+                             0., *(scale * i for i in range(1, 26)))
+            struct.pack_into('<26f', image, base + 0x70,
+                             0., *(-scale * i for i in range(1, 26)))
+            curves = TireCurves.from_assembled_configuration(image, axle)
+            self.assertEqual(curves.primary, (0., *(scale * i for i in range(1, 26))))
+            self.assertEqual(curves.secondary, (0., *(-scale * i for i in range(1, 26))))
+            self.assertAlmostEqual(curves.angle_coefficient, .01 * scale, places=7)
+
+    def test_curve_binding_rejects_invalid_assembly_shape_or_values(self):
+        with self.assertRaisesRegex(ValueError, '0x820-byte'):
+            TireCurves.from_assembled_configuration(bytes(8), 'front')
+        with self.assertRaisesRegex(ValueError, 'axle'):
+            TireCurves.from_assembled_configuration(bytes(0x820), 'left')
+        image = bytearray(0x820)
+        struct.pack_into('<f', image, 0x148, float('nan'))
+        with self.assertRaisesRegex(ValueError, 'non-finite'):
+            TireCurves.from_assembled_configuration(image, 'front')
+
     def state(self, **values):
         state = next(cases())
         wheels = tuple(replace(w, normal_load=4000, contact=True, projected_speed=20) for w in state.wheels)

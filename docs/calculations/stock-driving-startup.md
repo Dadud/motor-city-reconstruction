@@ -140,7 +140,7 @@ outside the bounded comparison.
 | Wheels and suspension | Stock tire dimensions/radius, springs, shocks; decoded marker spacing | Verified owner/configuration dimensions, initial compression, support flags/scales and surface lookup |
 | Body and forces | Recovered force consumers and body catalogue initializer | Final whole-car mass, centre of mass, inertia, area/height and initialized transforms |
 | Engine and transmission | Engine-block geometry, core dyno reconstruction, recovered consumers | Complete assembled torque table, RPM limits, inertia, gearing/clutch/differential initialization |
-| Tires and brakes | Recovered update calculations | Assembled axle curves and coefficients; brake material, capacity, cooling, distribution and initialized state |
+| Tires and brakes | Front/rear 26-knot response curves and angle coefficients are read from a successful mechanical assembly | Native grip/quality/wear, steering limits, spin scales; brake material, capacity, cooling, distribution and initialized state |
 | Session and controller | Recovered scheduler/controller order and selected connected stages | Real service/input observations and remaining child implementations on shared state |
 
 The [gear-table binder](gear-binding.md) now recovers speed-per-RPM, wheel

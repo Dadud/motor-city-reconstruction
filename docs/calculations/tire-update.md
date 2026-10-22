@@ -115,8 +115,10 @@ The original oracle executes actual steering, trigonometric, curve and predicate
 helpers. Only the external interface's virtual operation 5 is supplied; its
 receiver, operation number, owner argument and four calls are checked.
 
-This remains a bounded calculation with synthetic tables and supplied state.
-Actual curve construction, secondary-angle production, surface scaling,
+This remains a bounded calculation with supplied state. Successful stock
+mechanical assembly now supplies the front/rear 26-knot response arrays from
+the installed tire auxiliary data through `TireCurves.from_assembled_configuration()`.
+Secondary-angle production, surface scaling,
 predicate producer and counter scheduling, drivetrain/brake inputs, force
 integration, collisions and repeated authentic driving traces remain required.
 The comparison tolerance is `max(0.00025, abs(original) × 3e-7)`; observed errors

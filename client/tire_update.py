@@ -5,6 +5,7 @@ global mode-query delivery are external; this is not a complete vehicle tick.
 """
 from dataclasses import dataclass, replace
 import math
+import struct
 from client.steering_response import steering_response
 from client.tire_response import WheelCurveInput, wheel_response, f32
 
@@ -14,6 +15,27 @@ class TireCurves:
     primary: tuple[float, ...]
     secondary: tuple[float, ...]
     angle_coefficient: float
+
+    @classmethod
+    def from_assembled_configuration(cls, image, axle):
+        """Read the 26-knot curves produced by the native tire loader.
+
+        The first curve begins at configuration +0x150 (front) or +0x254
+        (rear); its companion begins at +0x1b8 or +0x2bc. Each includes the
+        loader's leading zero followed by 25 Pacejka auxiliary values.
+        """
+        if len(image) != 0x820:
+            raise ValueError('expected assembled 0x820-byte vehicle configuration')
+        if axle not in ('front', 'rear'):
+            raise ValueError("axle must be 'front' or 'rear'")
+        base = 0x148 if axle == 'front' else 0x24c
+        coefficient = struct.unpack_from('<f', image, base)[0]
+        primary = struct.unpack_from('<26f', image, base + 8)
+        secondary = struct.unpack_from('<26f', image, base + 0x70)
+        if not all(math.isfinite(value) for value in
+                   (coefficient, *primary, *secondary)):
+            raise ValueError('assembled tire response contains a non-finite value')
+        return cls(primary, secondary, coefficient)
 
 
 @dataclass(frozen=True)

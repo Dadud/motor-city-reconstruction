@@ -1,6 +1,8 @@
 import unittest
 from dataclasses import fields
+import struct
 from types import SimpleNamespace
+from unittest.mock import patch
 from client.contact import Pose, WheelRig
 from client.engine import EngineBlock
 from client.stock_driving_state import (MissingDrivingInputs, build_stock_driving_bindings,
@@ -32,6 +34,23 @@ class StockDrivingBindingTests(unittest.TestCase):
         with self.assertRaises(MissingDrivingInputs):
             bindings.require_recovered_driving()
         self.assertIn('mass', bindings.report()['required_explicit_fields']['controller'])
+
+        configuration = bytearray(0x820)
+        for base in (0x148, 0x24c):
+            struct.pack_into('<f', configuration, base, .02)
+            struct.pack_into('<26f', configuration, base + 8, 0., *range(1, 26))
+            struct.pack_into('<26f', configuration, base + 0x70, 0., *range(26, 51))
+        assembly = SimpleNamespace(status=1, configuration=bytes(configuration))
+        with patch('client.mechanical_assembly.assembly_report', return_value={}):
+            assembled = build_stock_driving_bindings(
+                catalogue, vehicle, world, mechanical_assembly=assembly)
+        self.assertEqual(len(assembled.tire_curves['front'].primary), 26)
+        self.assertEqual(assembled.tire_curves['front'].primary[1], 1.)
+        self.assertEqual(assembled.tire_curves['rear'].secondary[-1], 50.)
+        self.assertAlmostEqual(assembled.report()['tire_curves']['front']['angle_coefficient'], .02)
+        self.assertIn('tires', assembled.unresolved)
+        self.assertNotIn('two complete 26-knot axle response curves',
+                         assembled.unresolved['tires'])
 
     def test_research_defaults_cannot_silently_initialize_a_car(self):
         with self.assertRaises(MissingDrivingInputs) as raised:
