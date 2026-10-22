@@ -121,6 +121,20 @@ still need bounded direct-call coverage. The separate support-correction
 caller `0x459150` is translated and validated below; most of the `0x45a320`
 query remains unported.
 
+The `0x54f0e0` specialized branch now has a Python translation of its projected
+four-corner XZ gate in `specialized_quad_projection_gate`. It checks the quad as
+two triangles split across corners 0 and 2, preserving the original inclusive
+edge rejection. A 128-case original-entry harness checks the translated gate
+against the four original-transformed corners at the inner-worker handoff for
+delegated cases: 105 cases return before the worker and 23 delegate. In this harness only, the
+`0x54f2a0` inner worker is stubbed to return true, so the test establishes the
+gate and forwarding behavior, not collision response inside that worker. The
+original `0x54f0e0` and `0x6f1320` analysis records are
+`ev_fa6ee44ac7b009dcafb034957c75ce2a9af35ef938230fd7a3f15cf32b01382f` and
+`ev_65a4dbd1df45dd1b34e1e7da31cd7cdb3affb0a023a110e4700f17b7ec14fb30`.
+Run
+`python -m tools.terrain_specialized_quad_oracle "C:/Program Files (x86)/EA Games/Motor City Online/mcity.exe" --cases 128`.
+
 The three triangle tables at `0x88c9d4`, `0x88ca64` and `0x88c7f4` contain 12
 ordered triangles for shapes 0/2, 6 for shape 1, and 40 for shapes 3/4. Their
 indices are retained in `terrain_shape_triangle_indices`; the REA byte reads

@@ -99,6 +99,31 @@ def projected_shape_candidates(shape, projected_point, vertices):
     return tuple(candidates)
 
 
+def specialized_quad_projection_gate(projected_point, vertices):
+    """Translate the projected four-corner gate in ``0x54f0e0``.
+
+    The routine splits the transformed quad along the 0-to-2 diagonal and
+    continues when the projected object point lies strictly inside either
+    triangle. Coordinates are the transformed world-space XZ pairs. As in the
+    original, points on the tested edges are rejected by the inclusive
+    ``<=`` edge predicates.
+    """
+    if len(projected_point) != 2 or len(vertices) != 4 or any(len(v) != 3 for v in vertices):
+        raise ValueError('one projected point and four XYZ corners are required')
+    x, z = (f32(value) for value in projected_point)
+    points = tuple((f32(vertex[0]), f32(vertex[2])) for vertex in vertices)
+
+    def outside(a, b):
+        left = f32(f32(z - b[1]) * f32(a[0] - b[0]))
+        right = f32(f32(x - b[0]) * f32(a[1] - b[1]))
+        return left <= right
+
+    a, b, c, d = points
+    first = not (outside(a, b) or outside(b, c) or outside(c, a))
+    second = not (outside(a, c) or outside(c, d) or outside(d, a))
+    return first or second
+
+
 def terrain_response_normal(vertices):
     """Recover the upward-facing response normal from three accepted points.
 
