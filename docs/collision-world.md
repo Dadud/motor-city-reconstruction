@@ -96,10 +96,16 @@ and matches 256 original calls, including 204 valid indices, in
 The `0x45d1f0` prefilter matches 512 original calls, with 348 reaching a stubbed
 `0x42d9f0` classifier, in
 [`tools/collision_world_prefilter_oracle.py`](../tools/collision_world_prefilter_oracle.py).
-The stateful classifier, callbacks, and terrain/pair response branches remain
-to be translated. REA evidence for the decoder is
+The classifier maps sample kinds 1 and 3 to distinct response codes; kind 2
+uses a per-sample state byte and a speed gate to decide whether to request a
+runtime trigger. The allocation-exhaustion path and thresholds are translated
+in `classify_world_contact`; 128 original calls match while the allocator is
+stubbed to return its `0xff` failure sentinel. Successful resource allocation,
+heading lookup, and notification through `0x4077a0` remain open, as do the later
+terrain/pair response branches. REA evidence for the decoder is
 `ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817`; the
-parent scan dossier is `ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3`.
+parent scan dossier is `ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3`,
+and the classifier dossier is `ev_d09a06a7ee2100329b216861b76be32a690125ccb087bc12ccea9b1e67d32d73`.
 
 ## Scheduler placement
 
@@ -312,7 +318,8 @@ terrain query and full collision contact-producer chain remain open.
   terrain queries, rotations, global candidates and shared contact records.
 - Integrate the independently verified `0x458530` response with dynamic-pair
   retries and recover dynamic candidate-record production; complete the
-  `0x45d1f0` sampled world-contact pass and `0x42d9f0` stateful classifier;
+  `0x45d1f0` sampled world-contact response branches and the successful
+  resource-allocation path in `0x42d9f0`;
   recover `0x45c3e0`, task-list execution, and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.

@@ -1,4 +1,28 @@
 {
+  "0x42d9f0": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "Contact kind result codes, signed per-sample trigger sentinel, owner speed thresholds, tier selection, and the exhausted-allocation 0xfe state update are translated. 128 original calls match with the resource allocator stubbed to return 0xff. Successful slot allocation, heading lookup and notification calls remain outside the translation.",
+    "sources": [
+      "client/collision_world_candidate.py",
+      "tests/test_collision_world_candidate.py",
+      "tools/collision_world_classifier_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_d09a06a7ee2100329b216861b76be32a690125ccb087bc12ccea9b1e67d32d73",
+      "ev_1fc62bee4bb96955164d683b40e8efd30e167ca68d4f92d818105f47699ec40a",
+      "ev_646646541460605df153cf0999b7cac45ab88f2915d9d2aaa0db529ed7481b28",
+      "ev_a1560b2d11d2f62bafa6451881026acdf409fb45d494f41aadee8d6f92422b41"
+    ],
+    "verification_refs": [
+      "tools/collision_world_classifier_oracle.py",
+      "tests/test_collision_world_candidate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
   "0x45d1f0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",

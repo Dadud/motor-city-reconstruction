@@ -17,6 +17,15 @@ class CollisionWorldSample:
     kind: int
 
 
+@dataclass(frozen=True)
+class WorldContactClassification:
+    decision: int
+    type_code: int
+    sample_id: int
+    trigger_tier: int | None
+    trigger_state_after: int
+
+
 def decode_collision_world_sample(record):
     """Decode one 0x14-byte packed sample, matching the pure 0x42db70 path."""
     if len(record) < 0x14:
@@ -67,3 +76,33 @@ def world_sample_overlaps_body(body, sample):
         if not abs(f32(projection)) < f32(sample.vertical_value + extent):
             return False
     return True
+
+
+def classify_world_contact(body, record, trigger_state):
+    """Translate the classifier decisions and trigger-state failure path at 0x42d9f0.
+
+    Successful engine trigger allocation and its angle/update callbacks are
+    kept outside this state transition; the result identifies when they are
+    requested and preserves the original exhausted-slot update (0xfe).
+    """
+    if len(body) < 0x478 or len(record) < 0x14:
+        raise ValueError('body and world-contact record images are too short')
+    if type(trigger_state) is not int or not -128 <= trigger_state <= 255:
+        raise ValueError('trigger state must fit an unsigned or signed byte')
+    kind = record[0x13] & 3
+    sample_id = struct.unpack_from('<H', record, 0x0e)[0]
+    if kind == 3:
+        return WorldContactClassification(2, 0x1a, sample_id, None, trigger_state)
+    if kind != 2:
+        return WorldContactClassification(1, 0x1d, sample_id, None, trigger_state)
+
+    state = trigger_state - 256 if trigger_state > 127 else trigger_state
+    if state != -1:
+        return WorldContactClassification(0, 0x19, sample_id, None, trigger_state)
+    active_trigger = body[6] != 0 and (body[0x474] & 2) != 0
+    speed_gate = 0. if active_trigger else 18750.
+    object_gate = struct.unpack_from('<f', body, 0x3c0)[0]
+    if speed_gate > object_gate:
+        return WorldContactClassification(1, 0x19, sample_id, None, trigger_state)
+    tier = 3 if speed_gate + speed_gate <= object_gate else 2
+    return WorldContactClassification(-1, 0x19, sample_id, tier, 0xfe)
