@@ -25,6 +25,14 @@ class DecodedTrackWorld:
     objects: tuple['TrackObjectGroup', ...] = ()
     object_meshes: tuple[Model, ...] = ()
 
+    def sample_object_poses(self, tick):
+        """Sample the animation payload for each animated type-3 object."""
+        from client.track_object_animation import evaluate_track_object_animation
+        return tuple(tuple(
+            evaluate_track_object_animation(obj.animation, tick)
+            if obj.animation and (obj.descriptor[2] & 0xf) == 3 else None
+            for obj in group.objects) for group in self.objects)
+
 
 @dataclass(frozen=True)
 class TrackObject:

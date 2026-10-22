@@ -111,3 +111,7 @@ class SpatialTests(unittest.TestCase):
         self.assertEqual(sum(len(model.parts) for model in world.object_meshes),
                          sum(len(group.objects) for group in world.objects))
         self.assertGreater(sum(model.triangle_count for model in world.object_meshes), 0)
+        poses = world.sample_object_poses(0)
+        self.assertEqual(tuple(map(len, poses)),
+                         tuple(len(group.objects) for group in world.objects))
+        self.assertTrue(any(pose is not None for group in poses for pose in group))

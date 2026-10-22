@@ -1,6 +1,7 @@
 import struct
 import unittest
 from client.track_object_bounds import build_track_object_bounds
+from client.track_object_animation import evaluate_track_object_animation
 from client.track_object_mesh import decode_track_object_group
 from client.track_mesh import (TrackObject, TrackObjectGroup, decode_mesh)
 from test_track import fixture as road_fixture
@@ -103,6 +104,24 @@ class TrackMeshTests(unittest.TestCase):
         self.assertEqual((first.texture_page, first.flags), (7, 0x8000))
         self.assertEqual(second.indices, (3, 1, 0))
         self.assertEqual(model.parts[0].normals[0][2], -1.0)
+
+    def test_object_animation_interpolates_and_loops_native_samples(self):
+        animation = bytearray(8 + 2 * 20)
+        struct.pack_into('<HH', animation, 4, 2, 4)
+        struct.pack_into('<3i4h', animation, 8, 0, 0, 0, 0, 0, 0, 16383)
+        struct.pack_into('<3i4h', animation, 28, 65535, 131070, -65535,
+                         0, 0, 0, 16383)
+        start = evaluate_track_object_animation(animation, 0)
+        middle = evaluate_track_object_animation(animation, 2)
+        looped = evaluate_track_object_animation(animation, 4)
+        self.assertEqual(start.translation, (0.0, 0.0, 0.0))
+        self.assertEqual(start.rotation, (1.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+                                          0.0, 0.0, 1.0))
+        self.assertEqual(middle.translation, (0.5, 1.0, -0.5))
+        self.assertEqual(middle.sample_index, 0)
+        self.assertEqual(middle.fraction, 0.5)
+        self.assertEqual(looped, start)
+        self.assertIsNone(evaluate_track_object_animation(animation, 4, mode=2))
 
     def test_invalid_indices_and_truncated_object_are_rejected(self):
         source=fixture()

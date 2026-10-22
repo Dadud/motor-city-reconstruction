@@ -628,6 +628,18 @@ native renderer call. Object transforms, animation playback, visibility,
 materials and draw ordering remain unresolved, so these are local meshes rather
 than a complete rendered scenery scene.
 
+The renderer dispatch path `0x58cc10` uses type-3 animation rows as a 20-byte
+sample stream. [`client/track_object_animation.py`](../client/track_object_animation.py)
+implements the fixed-point translation/quaternion interpolation in `0x407940`
+and the quaternion-to-matrix conversion in `0x553710`; `DecodedTrackWorld`
+exposes aligned per-object samples with `sample_object_poses(tick)`. The native
+oracle [`tools/track_object_animation_oracle.py`](../tools/track_object_animation_oracle.py)
+compared 1,046 sampled calls over all 226 installed animation payloads plus 226
+end-of-sequence checks. Maximum absolute output error was `6.11e-5` across
+float outputs; results matched within a scale-aware tolerance. Applying these
+poses to mesh vertices and recovering renderer material/visibility state remain
+open.
+
 ## Sampled world vertex response
 
 The response routine `0x459940` receives a plane normal, a plane point, a
