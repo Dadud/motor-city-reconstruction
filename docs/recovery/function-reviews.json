@@ -2815,5 +2815,26 @@
     "doc_refs": [
       "docs/recovery/vector-sequence.md"
     ]
+  },
+  "0x4956e0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The complete ARGB blend routine and bypass branch are translated. 1,024 deterministic calls match the original exactly for bypass inputs and finite divisors from 1 through 16, including binary32 staging, x87 nearest-even integer conversion, byte clamps, and forced opaque alpha. Other divisor/global-state ranges remain unverified.",
+    "sources": [
+      "client/track_colors.py",
+      "tests/test_track_colors.py",
+      "tools/verify_track_color_blend.py",
+      "tools/native_oracle.py",
+      "docs/recovery/track-color-blend.md"
+    ],
+    "evidence_ids": [
+      "ev_c8a393dd970cc0fa74bcc56b29f6fd0efdc0d3d0fc0e19307a1c2f38622bc4a4"
+    ],
+    "verification_refs": [
+      "tools/verify_track_color_blend.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-color-blend.md"
+    ]
   }
 }

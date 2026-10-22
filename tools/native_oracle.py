@@ -151,6 +151,20 @@ class DynoOracle:
         return tuple(tuple(row) for row in struct.iter_unpack(
             '<3f', self.cpu.mem_read(output, count*12)))
 
+    def blend_track_color(self, argb, base_argb, divisor, *, bypass=False):
+        """Run the original 0x4956e0 track color transform."""
+        if (type(argb) is not int or not 0 <= argb <= 0xffffffff or
+                type(base_argb) is not int or not 0 <= base_argb <= 0xffffffff):
+            raise ValueError('colors must be unsigned 32-bit ARGB words')
+        if type(bypass) is not bool:
+            raise ValueError('bypass must be a boolean')
+        self._reset()
+        self.cpu.mem_write(0x00a55484, struct.pack('<I', int(bypass)))
+        self.cpu.mem_write(0x009af064, struct.pack('<I', base_argb))
+        self.cpu.mem_write(0x009af068, struct.pack('<f', divisor))
+        self.call(0x4956e0, (argb,), instruction_limit=2000)
+        return self.cpu.reg_read(self.reg.UC_X86_REG_EAX)
+
     def sky_material_height_grid(self, stage, *, upper_bound, modulus, angle,
                                  row_scale, column_scale, random_state,
                                  base_offset=0.0, amplitude=0.0,
