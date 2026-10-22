@@ -1,4 +1,25 @@
 {
+  "0x42db70": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Pure packed collision-world sample decoding is translated: signed 16.16 coordinates, type-dependent signed-short scaling and radii, and upper-bound rejection. 256 original executions (204 valid) match the Python result. The stateful classifier and enclosing world-contact scan are not included.",
+    "sources": [
+      "client/collision_world_candidate.py",
+      "tests/test_collision_world_candidate.py",
+      "tools/collision_world_sample_oracle.py",
+      "docs/collision-world.md"
+    ],
+    "evidence_ids": [
+      "ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817"
+    ],
+    "verification_refs": [
+      "tools/collision_world_sample_oracle.py",
+      "tests/test_collision_world_candidate.py"
+    ],
+    "doc_refs": [
+      "docs/collision-world.md"
+    ]
+  },
   "0x45abe0": {
     "translation": "partial",
     "verification": "static-analysis-only",

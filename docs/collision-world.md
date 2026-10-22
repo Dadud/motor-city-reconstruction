@@ -81,6 +81,22 @@ Run `python -m tools.collision_pair_candidate_oracle "C:/Program Files (x86)/EA 
 for the broadphase, or add `--execute-pair-resolver --cases 128` to check
 resolver retries and integrated pair response against native execution.
 
+## Sampled world-contact pass
+
+`0x45d1f0` scans the sampled candidate records owned by the selected world
+object, checks horizontal distance and projections against the object's three
+local extents, then dispatches on the candidate classification from `0x42d9f0`.
+Its pure decoder `0x42db70` reads signed 16.16 coordinates from each 0x14-byte
+record, converts a signed short field according to the low two type bits, and
+returns a type-dependent radius (3, 12, 2, or 1). That decoder is translated in
+[`client/collision_world_candidate.py`](../client/collision_world_candidate.py)
+and matches 256 original calls, including 204 valid indices, in
+[`tools/collision_world_sample_oracle.py`](../tools/collision_world_sample_oracle.py).
+The enclosing scan, stateful classification, callbacks, and terrain/pair
+response branches remain to be translated. REA evidence for the decoder is
+`ev_749a6f637a87befe4bb4b17391d5da66a1df08fcc17d6cd2aa928b5584d1f817`; the
+parent scan dossier is `ev_015e1c891236317830cd6ece8baeca1407618a691fc1217708d18d4b55588cc3`.
+
 ## Scheduler placement
 
 `0x567940` constructs two task lists. `0x565d20` inserts each callback into a
@@ -291,8 +307,9 @@ terrain query and full collision contact-producer chain remain open.
 - Recover the data types and producers for collision object shapes, triangles,
   terrain queries, rotations, global candidates and shared contact records.
 - Integrate the independently verified `0x458530` response with dynamic-pair
-  retries and recover dynamic candidate-record production; recover `0x45d1f0`,
-  `0x45c3e0`, task-list execution, and the recurring game-frame caller.
+  retries and recover dynamic candidate-record production; complete the
+  `0x45d1f0` sampled world-contact pass and `0x42d9f0` stateful classifier;
+  recover `0x45c3e0`, task-list execution, and the recurring game-frame caller.
 - Integrate the dispatcher and pair paths with ordered callbacks and byte-level
   contact-record checks; then compare controlled original trajectories.
 - Integrate it with the force vehicle state and test wall/resting impacts,
