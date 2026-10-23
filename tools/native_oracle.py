@@ -138,6 +138,17 @@ class DynoOracle:
         self._run(self.stub, self.stop, timeout=0, count=1000)
         return struct.unpack('<f', self.cpu.mem_read(self.inputs+16, 4))[0]
 
+    def normalized_cross3(self, left, right):
+        """Run the original 0x6f10d0 cross-and-normalize helper."""
+        if len(left) != 3 or len(right) != 3:
+            raise ValueError('native cross product requires two 3D vectors')
+        self._reset()
+        output = self.inputs+0x100
+        self.cpu.mem_write(self.inputs, struct.pack('<6f', *(tuple(left)+tuple(right))))
+        self.call(0x6f10d0, (self.inputs, self.inputs+12, output),
+                  instruction_limit=2000)
+        return struct.unpack('<3f', self.cpu.mem_read(output, 12))
+
     def linear_vector_sequence(self, count, first, second):
         """Run 0x4954c0 and return its complete count-point output buffer."""
         if type(count) is not int or not 2 <= count <= 65536:

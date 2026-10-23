@@ -2836,5 +2836,26 @@
     "doc_refs": [
       "docs/recovery/track-color-blend.md"
     ]
+  },
+  "0x6f10d0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The shared cross-product and normalization body is translated, including each binary32 intermediate store and the original NaN output for zero cross products. 512 deterministic finite-vector calls match all three output floats bit-for-bit. Cross-product overflow remains outside the tested domain.",
+    "sources": [
+      "client/matrix_math.py",
+      "tests/test_normalized_cross.py",
+      "tools/verify_normalized_cross.py",
+      "tools/native_oracle.py",
+      "docs/recovery/normalized-cross.md"
+    ],
+    "evidence_ids": [
+      "ev_7b1bd95013f2546fef3945bf78d72699c9c474ee0f52cf3a4f7c4f003206a4d4"
+    ],
+    "verification_refs": [
+      "tools/verify_normalized_cross.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/normalized-cross.md"
+    ]
   }
 }

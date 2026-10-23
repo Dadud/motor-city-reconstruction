@@ -1,7 +1,15 @@
 """Bit-preserving matrix helpers recovered from the client math library."""
-from math import cos, sin, sqrt
+from math import cos, inf, sin, sqrt
+import struct
 
 from .tire_response import f32
+
+
+_F32 = struct.Struct('<f')
+
+
+def _round_binary32(value):
+    return _F32.unpack(_F32.pack(value))[0]
 
 
 def transpose_3x3_words(values):
@@ -44,6 +52,19 @@ def vector_length3(values):
         raise ValueError('three-component vector required')
     x, y, z = values
     return sqrt((z*z + y*y) + x*x)
+
+
+def normalized_cross3(left, right):
+    """Translate 0x6f10d0's cross product and x87 length normalization."""
+    left, right = tuple(f32(v) for v in left), tuple(f32(v) for v in right)
+    if len(left) != 3 or len(right) != 3:
+        raise ValueError('cross product requires two three-component vectors')
+    cross = (f32(left[1] * right[2] - left[2] * right[1]),
+             f32(left[2] * right[0] - left[0] * right[2]),
+             f32(left[0] * right[1] - left[1] * right[0]))
+    length = vector_length3(cross)
+    inverse = inf if length == 0.0 else 1.0 / length
+    return tuple(_round_binary32(component * inverse) for component in cross)
 
 
 def linear_vector_sequence(first, second, count):
