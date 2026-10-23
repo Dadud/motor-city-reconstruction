@@ -1,6 +1,7 @@
 import unittest
 
-from client.track_cross_section import build_track_cross_section
+from client.track_cross_section import (build_track_cross_section,
+                                        build_track_grid_strips)
 
 
 class TrackMeshTests(unittest.TestCase):
@@ -26,6 +27,26 @@ class TrackMeshTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_track_cross_section([0] * 13, (1, 0, 0), 0, 1,
                                       (0, 1, 0), (0, 0, 0), 1, 0)
+
+    def test_grid_builder_emits_two_seventeen_point_strips(self):
+        transform = [0.0] * 14
+        transform[5] = 1.0
+        centerline, outer, angle = build_track_grid_strips(
+            transform, (1, 0, 0), 0.25, 3.0,
+            (0, 1, 0), (0, 0, 0), 2.0, 0.0)
+        self.assertEqual(len(centerline), 17)
+        self.assertEqual(len(outer), 17)
+        self.assertEqual(centerline[0], (2.0, 0.25, -6.283180236816406))
+        self.assertEqual(centerline[-1], (2.0, 0.25, 6.283180236816406))
+        self.assertEqual(outer[0], centerline[0])
+        self.assertEqual(angle, 0.75)
+
+    def test_grid_builder_rejects_unverified_wrapped_angles(self):
+        transform = [0.0] * 14
+        transform[5] = 1.0
+        with self.assertRaises(ValueError):
+            build_track_grid_strips(transform, (1, 0, 0), 0, 1,
+                                    (0, 1, 0), (0, 0, 0), 1, 0.5)
 
 
 if __name__ == '__main__':

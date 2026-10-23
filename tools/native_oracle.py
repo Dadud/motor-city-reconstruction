@@ -173,6 +173,34 @@ class DynoOracle:
         angle_result, = struct.unpack('<f', self.cpu.mem_read(angle, 4))
         return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), result, angle_result
 
+    def track_grid_strips(self, object_transform, basis, height, origin_scale,
+                          view_reference, world_origin, radius, angle_offset=0.0):
+        """Run native track generator 0x495800 and capture both 17-point strips."""
+        if len(object_transform) != 14 or any(len(v) != 3 for v in
+                (basis, view_reference, world_origin)):
+            raise ValueError('track strip inputs have invalid dimensions')
+        self._reset()
+        obj, angle = self.inputs+0x1000, self.inputs+0x2000
+        first, second = self.inputs+0x3000, self.inputs+0x4000
+        raw = bytearray(0x38)
+        struct.pack_into('<14f', raw, 0, *object_transform)
+        self.cpu.mem_write(obj, bytes(raw))
+        self.cpu.mem_write(0x8915a8, struct.pack('<3f', *world_origin))
+        self.cpu.mem_write(0x8915b8, struct.pack('<3f', *basis))
+        self.cpu.mem_write(0x9c77b0, struct.pack('<3f', *view_reference))
+        self.cpu.mem_write(0x9aefe0, struct.pack('<f', radius))
+        word = lambda v: struct.unpack('<I', struct.pack('<f', v))[0]
+        self.call(0x495800, (obj, word(height), word(origin_scale), angle,
+                             first, second, word(angle_offset)),
+                  instruction_limit=100_000)
+        first_points = struct.unpack('<51f', self.cpu.mem_read(first, 204))
+        second_points = struct.unpack('<51f', self.cpu.mem_read(second, 204))
+        angle_result, = struct.unpack('<f', self.cpu.mem_read(angle, 4))
+        return (self.cpu.reg_read(self.reg.UC_X86_REG_EAX),
+                tuple(tuple(first_points[i:i+3]) for i in range(0, 51, 3)),
+                tuple(tuple(second_points[i:i+3]) for i in range(0, 51, 3)),
+                angle_result)
+
     def linear_vector_sequence(self, count, first, second):
         """Run 0x4954c0 and return its complete count-point output buffer."""
         if type(count) is not int or not 2 <= count <= 65536:

@@ -2821,8 +2821,8 @@
     "verification": "original-comparison-bounded",
     "scope": "The 3D direction projection, zero-direction fallback, normalization, turn output, normalized perpendicular and three emitted points are translated. 512 randomized calls match all angles exactly and all nine position outputs within 1.91e-6 absolute error. The original angle-wrap helper is unchanged in the compared zero-offset domain; other wrapped-angle inputs remain unverified.",
     "sources": [
-      "client/track_mesh.py",
-      "tests/test_track_mesh.py",
+      "client/track_cross_section.py",
+      "tests/test_track_cross_section.py",
       "tools/verify_track_cross_section.py",
       "tools/native_oracle.py",
       "docs/recovery/track-cross-section.md"
@@ -2856,6 +2856,27 @@
     ],
     "doc_refs": [
       "docs/recovery/track-color-blend.md"
+    ]
+  },
+  "0x495800": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The caller composes 0x495240, applies the 16-cell fractional phase using truncating __ftol semantics, and emits both complete 17-point float32 strips. 256 deterministic direct calls compare all 8,704 point coordinates and angles; maximum position error is 2.45e-4 and all angles match exactly. Finite randomized transforms, zero angle offset and the native no-wrap path are covered; wrapped-angle cases remain unverified.",
+    "sources": [
+      "client/track_cross_section.py",
+      "tests/test_track_cross_section.py",
+      "tools/verify_track_grid_strips.py",
+      "tools/native_oracle.py",
+      "docs/recovery/track-cross-section.md"
+    ],
+    "evidence_ids": [
+      "ev_032b6180253ad1117c37e229b63e759dcd86d09e35d615c5f3f5fad645ea0e56"
+    ],
+    "verification_refs": [
+      "tools/verify_track_grid_strips.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-cross-section.md"
     ]
   },
   "0x6f10d0": {
