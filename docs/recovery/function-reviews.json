@@ -2473,11 +2473,11 @@
     "scope": "The section helper assigns the 0x38-byte record-table pointer, nullable payload pointers, vertex-array pointers, trailing per-vertex data pointers, triangle-array cursor and odd-count two-byte alignment. 256 synthetic original calls matched every supplied image byte; an additional corpus comparison ran all 2,242 object groups and 5,783 actual descriptors from 27 installed Tr.frd tracks, matching every descriptor mutation and final cursor. The mesh decoder now retains animation bytes, raw 16-byte vertex records, and raw 30-byte faces; their rendering semantics remain open.",
     "sources": [
       "client/world_dataset_layout.py",
-      "client/track_mesh.py",
+      "client/track_cross_section.py",
       "tests/test_world_dataset_layout.py",
       "tools/world_dataset_layout_oracle.py",
       "tools/track_object_layout_corpus_oracle.py",
-      "tests/test_track_mesh.py",
+      "tests/test_track_cross_section.py",
       "docs/collision-world.md"
     ],
     "evidence_ids": [
@@ -2814,6 +2814,27 @@
     ],
     "doc_refs": [
       "docs/recovery/vector-sequence.md"
+    ]
+  },
+  "0x495240": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The 3D direction projection, zero-direction fallback, normalization, turn output, normalized perpendicular and three emitted points are translated. 512 randomized calls match all angles exactly and all nine position outputs within 1.91e-6 absolute error. The original angle-wrap helper is unchanged in the compared zero-offset domain; other wrapped-angle inputs remain unverified.",
+    "sources": [
+      "client/track_mesh.py",
+      "tests/test_track_mesh.py",
+      "tools/verify_track_cross_section.py",
+      "tools/native_oracle.py",
+      "docs/recovery/track-cross-section.md"
+    ],
+    "evidence_ids": [
+      "ev_683e3a85b3a542a68284aadadd85f600b761b0e7cb5f50a984abe8c7c05cb1cd"
+    ],
+    "verification_refs": [
+      "tools/verify_track_cross_section.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-cross-section.md"
     ]
   },
   "0x4956e0": {

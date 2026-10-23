@@ -149,6 +149,30 @@ class DynoOracle:
                   instruction_limit=2000)
         return struct.unpack('<3f', self.cpu.mem_read(output, 12))
 
+    def track_cross_section(self, object_transform, basis, vertical_offset,
+                             origin_scale, view_reference, world_origin,
+                             radius, angle_offset):
+        """Run the native 0x495240 track cross-section builder."""
+        if len(object_transform) != 14 or any(len(v) != 3 for v in
+                (basis, view_reference, world_origin)):
+            raise ValueError('track cross-section inputs have invalid dimensions')
+        self._reset()
+        obj, output, angle = self.inputs+0x1000, self.inputs+0x2000, self.inputs+0x3000
+        raw = bytearray(0x38)
+        struct.pack_into('<14f', raw, 0, *object_transform)
+        self.cpu.mem_write(obj, bytes(raw))
+        self.cpu.mem_write(0x8915a8, struct.pack('<3f', *world_origin))
+        self.cpu.mem_write(0x8915b8, struct.pack('<3f', *basis))
+        self.cpu.mem_write(0x9c77b0, struct.pack('<3f', *view_reference))
+        self.cpu.mem_write(0x9aefe0, struct.pack('<f', radius))
+        float_word = lambda value: struct.unpack('<I', struct.pack('<f', value))[0]
+        self.call(0x495240, (obj, float_word(vertical_offset), float_word(origin_scale),
+                             output, angle, float_word(angle_offset)),
+                  instruction_limit=100_000)
+        result = struct.unpack('<9f', self.cpu.mem_read(output, 36))
+        angle_result, = struct.unpack('<f', self.cpu.mem_read(angle, 4))
+        return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), result, angle_result
+
     def linear_vector_sequence(self, count, first, second):
         """Run 0x4954c0 and return its complete count-point output buffer."""
         if type(count) is not int or not 2 <= count <= 65536:
