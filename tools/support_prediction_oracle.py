@@ -36,7 +36,7 @@ def _address(identity):return 0 if identity is None else 0x71008000+identity*8
 def record_bytes(record):
     return struct.pack('<ii6I',record.sector,record.group,record.status,_address(record.surface_id),*map(_address,record.vertex_ids))
 
-def encode(s):
+def encode(s, *, raw_addresses=False):
     image=bytearray(b'\x5a'*0x2000)
     struct.pack_into('<3f',image,8,*s.position);struct.pack_into('<3f',image,0x14,*s.velocity)
     struct.pack_into('<9f',image,0xc10,*s.to_world)
@@ -44,7 +44,11 @@ def encode(s):
     struct.pack_into('<i',image,0xc08,s.support_count)
     for i,w in enumerate(s.wheels):
         base=0x5fc+i*0x10c
-        image[base+0x14:base+0x34]=record_bytes(w.record)
+        record = (struct.pack('<ii6I',w.record.sector,w.record.group,w.record.status,
+                    w.record.surface_id or 0,*(value or 0 for value in w.record.vertex_ids))
+                  if raw_addresses else record_bytes(w.record))
+        image[base+0x14:base+0x34]=record
+        if w.query_tail is not None: image[base+0x40:base+0x58]=w.query_tail
         struct.pack_into('<3f',image,base+0x34,*w.world_point);struct.pack_into('<3f',image,base+0x100,*w.local_point)
         struct.pack_into('<f',image,base+0xb8,w.clear_reference);struct.pack_into('<f',image,base+0xe8,w.support_delta)
         struct.pack_into('<I',image,base+0x58,w.surface_class);image[base+0xec]=int(w.contact)
@@ -63,7 +67,8 @@ def verify(executable):
         if not 0<=slot<4 or record!=owner+0x610+slot*0x10c:raise AssertionError('terrain record target differs')
         from client.support_prediction import SupportQuery
         p=struct.unpack('<3f',cpu.mem_read(point,12));previous=struct.unpack('<3f',cpu.mem_read(record+0x20,12))
-        query=SupportQuery(slot,p,context,previous);queries.append(query)
+        query=SupportQuery(slot,p,context,previous,s.wheels[slot].record,
+                           s.wheels[slot].query_tail);queries.append(query)
         result=projection(query,current)
         cpu.mem_write(record,record_bytes(result.record)+struct.pack('<3f',*result.reference_position))
         cpu.mem_write(point,struct.pack('<3f',*result.point))

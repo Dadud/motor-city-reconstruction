@@ -45,6 +45,26 @@ class SupportPredictionTests(unittest.TestCase):
         self.assertEqual(out.queries[0].context,-17)
         self.assertEqual(out.queries[0].previous_world,(9,100,9))
 
+    def test_query_carries_input_record_and_aliased_tail(self):
+        tail=bytes(range(24))
+        record=SupportRecord(3,4,5,0x100,(1,2,3,4),0xa6)
+        wheel=replace(self.state().wheels[0],record=record,query_tail=tail)
+        s=replace(self.state(),wheels=(wheel,*self.state().wheels[1:]))
+        seen=[]
+        out=predict_support(s,lambda q:(seen.append(q) or
+            SupportProjection(q.point,q.previous_world,SupportRecord(),None)))
+        self.assertEqual(seen[0].record,record)
+        self.assertEqual(seen[0].query_tail,tail)
+        self.assertEqual(out.state.wheels[0].query_tail,tail)
+        out=predict_support(s,lambda q:SupportProjection(q.point,q.previous_world,
+            SupportRecord(),bytes(reversed(range(24)))))
+        self.assertEqual(out.state.wheels[0].query_tail,bytes(reversed(range(24))))
+
+    def test_projection_tail_must_be_exactly_24_bytes(self):
+        with self.assertRaisesRegex(ValueError,'24-byte'):
+            predict_support(self.state(),lambda q:SupportProjection(
+                q.point,q.previous_world,SupportRecord(),b'bad'))
+
     def test_supplied_reference_write_changes_contact(self):
         def project(q):return SupportProjection(q.point,(q.point[0],1.,q.point[2]),SupportRecord())
         out=predict_support(self.state(),project).state

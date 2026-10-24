@@ -53,7 +53,8 @@ SupportPredictionOutput predict_support(SupportPredictionState state,
       const double z = f32(wheel.local_point[2] * state.to_world[6 + i]);
       point[i] = f32(f32(f32(x + y) + z) + lookahead[i]);
     }
-    SupportQuery query{static_cast<std::uint32_t>(slot), point, wheel.world_point, state.context};
+    SupportQuery query{static_cast<std::uint32_t>(slot), point, wheel.world_point,
+                       state.context, wheel.record, wheel.query_tail};
     queries.push_back(query);
     auto projection = project(query);
     normalize(projection.point);
@@ -67,6 +68,7 @@ SupportPredictionOutput predict_support(SupportPredictionState state,
                               : state.fallback_surface;
     wheel.world_point = projection.point;
     wheel.record = projection.record;
+    if (projection.query_tail) wheel.query_tail = projection.query_tail;
   }
   state.support_count = support_count;
   return {std::move(state), std::move(queries)};

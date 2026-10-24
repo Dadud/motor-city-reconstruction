@@ -57,13 +57,13 @@ def _read_point(data, offset):
     return struct.unpack_from('<3f', data, offset)
 
 
-def plane_from_query_record(record, *, read_memory, path_rows=None):
+def plane_from_query_record(record, *, read_memory, path_rows=None, query_point=None):
     """Memory-image adapter for the native 0x42dc50 query record.
 
-    Triangle records carry pointers at +0x10..+0x1c and integer X/Z query
-    coordinates at +0x20/+0x28. Row records (field +0x0c == 0) return their
-    path point and intentionally leave the caller's normal untouched; callers
-    that need that branch must supply the referenced path row.
+    Triangle records carry pointers at +0x10..+0x1c. Standalone 0x42dc50
+    observations can use integer X/Z at +0x20/+0x28; the composed 0x42e010
+    caller supplies its actual float query point. Row records (field +0x0c ==
+    0) return their path point and leave the caller's normal untouched.
     """
     if len(record) < 0x2c or not callable(read_memory):
         raise ValueError('query record must contain fields through +0x28')
@@ -77,8 +77,13 @@ def plane_from_query_record(record, *, read_memory, path_rows=None):
     pointers = struct.unpack_from('<4I', record, 0x10)
     points = tuple(struct.unpack('<3f', read_memory(pointer, 12))
                    for pointer in pointers)
-    x = float(struct.unpack_from('<i', record, 0x20)[0])
-    z = float(struct.unpack_from('<i', record, 0x28)[0])
+    if query_point is None:
+        x = float(struct.unpack_from('<i', record, 0x20)[0])
+        z = float(struct.unpack_from('<i', record, 0x28)[0])
+    else:
+        if len(query_point) != 3:
+            raise ValueError('three-component terrain query point required')
+        x, z = map(f32, (query_point[0], query_point[2]))
     return track_plane(x, z, points)
 
 

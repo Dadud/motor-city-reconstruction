@@ -1,5 +1,6 @@
 import struct
 import unittest
+from unittest.mock import patch
 
 from client.track_surface_lookup import TrackSurfaceMemory, TrackSurfaceWorld
 from client.track_surface_sample import (initialize_track_query_state,
@@ -35,6 +36,19 @@ class TrackSurfaceSampleTests(unittest.TestCase):
         self.assertEqual(struct.unpack('<3f', point), (8.0, -0.5, 8.0))
         self.assertNotEqual(struct.unpack_from('<I', query, 12)[0], 0)
 
+    def test_sample_uses_fractional_runtime_query_coordinates(self):
+        arena, root, query = fixture(2, 0, 0, 0, 7, 8, 8, 1)
+        vertices = ((0, 0, 0), (16, 1, 0), (16, 3, 16), (0, -2, 16))
+        for block in range(3):
+            for index, vertex in enumerate(vertices):
+                struct.pack_into('<3f', arena,
+                    GEOMETRY - BASE + block * 0x200 + index * 12, *vertex)
+        point = bytearray(struct.pack('<3f', 7.58333349, 6.99479151, 7.70833349))
+        self.assertTrue(sample_track_surface(_world(arena, root), query, point, 0))
+        self.assertEqual(struct.unpack('<3f', point),
+                         (7.583333492279053, -0.4895833432674408,
+                          7.708333492279053))
+
     def test_miss_preserves_point_height_and_updates_query_state(self):
         arena, root, query = fixture(0, 0, 0, 0, 0, 8, 8, 2)
         point = bytearray(struct.pack('<3f', 8, 7, 8))
@@ -43,6 +57,24 @@ class TrackSurfaceSampleTests(unittest.TestCase):
         self.assertEqual(bytes(point), before)
         self.assertEqual(struct.unpack_from('<i', query, 0)[0], 5)
         self.assertEqual(struct.unpack_from('<i', query, 4)[0], 0)
+
+    def test_row_mode_preserves_explicit_stack_normal_seed(self):
+        arena, root, query = fixture(0, 0, 0, 0, 0, 8, 8, 2)
+        struct.pack_into('<3f', arena, PATH - BASE, 0, 2, 0)
+        world = _world(arena, root)
+        def row_lookup(_world, _position, state):
+            struct.pack_into('<I', state, 0, 0)
+            struct.pack_into('<I', state, 12, 0)
+            return True
+        point = bytearray(struct.pack('<3f', 8, 7, 8))
+        with patch('client.track_surface_sample.track_surface_lookup', row_lookup):
+            with self.assertRaisesRegex(ValueError, 'stack normal'):
+                sample_track_surface(world, query, point, 0)
+            query = bytearray(0x44)
+            self.assertTrue(sample_track_surface(world, query, point, 0,
+                                                 normal_seed=(0, 1, 0)))
+        self.assertEqual(struct.unpack('<3f', point), (8, 2, 8))
+        self.assertEqual(struct.unpack_from('<I', query, 12)[0], 0)
 
 
 if __name__ == '__main__':

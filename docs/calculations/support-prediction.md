@@ -7,11 +7,9 @@ same bounded calculation in the native library. The native/Python comparison
 checks all 722 support cases byte-for-byte for owner state and exactly for the
 four ordered query contexts, transformed points, and previous world points.
 The original comparison below separately checks the Python model against all
-722 original calls. Terrain projection remains a required supplied boundary in
-both ports.
-The terrain service at `0x42e010` remains an explicit required boundary. This
-distinction preserves the actual contact calculation without substituting the
-prototype wheel-radius/nearest-height contact rules.
+722 original calls with terrain projection supplied. A second original-binary
+check runs the bounded terrain service through `0x53d320` and compares complete
+owner memory across 722 synthetic four-wheel track cases.
 
 Retained evidence:
 `ev_f04dec3c392ad24344e59e34d5c69e17e64ee1532b5945b4ef2c74bb0683da4b`
@@ -37,7 +35,8 @@ consecutive records, preserving the original rear-wheel ordering.
 | Fallback surface class | owner `+0x404` |
 | Terrain projection record | wheel `+0x14`, eight words |
 | Surface descriptor reference | wheel `+0x20`, projection-record word 3 |
-| World support point | wheel `+0x34`, `+0x38`, `+0x3c` |
+| World support point / terrain-query alias | wheel `+0x34`, `+0x38`, `+0x3c` |
+| Retained query coefficients | wheel `+0x40` through `+0x57`, 24 bytes |
 | Contact reference | wheel `+0xb8` |
 | Support difference | wheel `+0xe8` |
 | Contact byte | wheel `+0xec` |
@@ -84,12 +83,15 @@ road height minus incoming wheel height, rather than road height minus the
 previous tick's road height. Reading retained pseudocode without following
 the query's writes loses this distinction.
 
-The typed boundary receives `SupportQuery(slot, point, context, previous_world)`
-and must return `SupportProjection(point, reference_position, record)`.
-`reference_position` explicitly represents those aliased child writes. The
-predictor consumes its returned Y and later overwrites the stored wheel world
-point with the projected point. Missing terrain and special query paths must
-be supplied explicitly; the reconstruction does not invent their behavior.
+The typed boundary receives the slot, transformed point and context together
+with the incoming wheel record, prior world point and retained 24-byte query
+tail. It returns `SupportProjection(point, reference_position, record,
+query_tail)`; the tail models writes through query-record `+0x2c..+0x43` that
+alias wheel `+0x40..+0x57`. The predictor preserves the returned record,
+reference point and aliased tail. The composition matches 722 complete original
+`0x53d320` owner images when driven through the bounded triangle-mode terrain
+query. The row-mode stack normal remains an explicit input because its producer
+has not yet been recovered.
 
 `SupportRecord` carries sector/group/status observations, a nullable stable
 surface identity, four nullable vertex identities and the observed descriptor

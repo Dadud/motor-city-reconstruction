@@ -23,6 +23,12 @@ def verify(directory):
     runner=directory/'mco_support_prediction_compare'
     if not runner.is_file(): runner=runner.with_suffix('.exe')
     results['support_prediction']=importlib.import_module('tools.native_support_prediction_compare').verify(runner)
+    runner=directory/'mco_track_plane_compare'
+    if not runner.is_file(): runner=runner.with_suffix('.exe')
+    results['track_plane']=importlib.import_module('tools.native_track_plane_compare').verify(runner)
+    runner=directory/'mco_track_surface_sample_compare'
+    if not runner.is_file(): runner=runner.with_suffix('.exe')
+    results['track_surface_sample']=importlib.import_module('tools.native_track_surface_sample_compare').verify(runner)
     orientation=directory/'mco_wheel_force_orientation_compare'
     if not orientation.is_file(): orientation=orientation.with_suffix('.exe')
     results['wheel_force_orientation']=importlib.import_module('tools.native_body_moments_compare').verify(orientation,'orientation')

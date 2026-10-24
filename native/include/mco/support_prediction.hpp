@@ -21,6 +21,7 @@ struct PredictionWheel {
   SupportRecord record{};
   bool contact = false;
   std::uint32_t surface_class = 0;
+  std::optional<std::array<std::uint8_t, 24>> query_tail;
 };
 struct SupportPredictionState {
   std::array<PredictionWheel, 4> wheels{};
@@ -34,10 +35,13 @@ struct SupportQuery {
   std::uint32_t slot = 0;
   SupportVector point{}, previous_world{};
   std::int32_t context = 0;
+  SupportRecord record{};
+  std::optional<std::array<std::uint8_t, 24>> query_tail;
 };
 struct SupportProjection {
   SupportVector point{}, reference_position{};
   SupportRecord record{};
+  std::optional<std::array<std::uint8_t, 24>> query_tail;
 };
 using SupportProjector = std::function<SupportProjection(const SupportQuery &)>;
 struct SupportPredictionOutput {

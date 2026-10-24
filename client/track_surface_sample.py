@@ -21,7 +21,7 @@ def initialize_track_query_state(query_state, track_index):
                      0, 0, 0, 0, 0, 0)
 
 
-def sample_track_surface(world, query_state, point, track_index):
+def sample_track_surface(world, query_state, point, track_index, *, normal_seed=None):
     """Port the state and output behavior of original routine 0x42e010.
 
     ``query_state`` and ``point`` are mutable native memory images. The lookup
@@ -43,11 +43,17 @@ def sample_track_surface(world, query_state, point, track_index):
         return False
 
     if struct.unpack_from('<I', query_state, 12)[0] == 0:
-        raise ValueError('native lookup succeeded without a surface plane normal')
-    reference, normal = plane_from_query_record(
-        query_state, read_memory=world.memory.read)
-    if normal is None:
-        raise ValueError('native lookup succeeded without a surface plane normal')
+        if normal_seed is None:
+            raise ValueError('row-mode stack normal must be supplied explicitly')
+        if len(normal_seed) != 3:
+            raise ValueError('row-mode normal seed must have three components')
+        index = struct.unpack_from('<I', query_state, 0)[0]
+        row = world.memory.read(world.paths_address + index * 0x54, 12)
+        reference = struct.unpack('<3f', row)
+        normal = tuple(map(f32, normal_seed))
+    else:
+        reference, normal = plane_from_query_record(
+            query_state, read_memory=world.memory.read, query_point=position)
     height = surface_height(normal, reference, position)
     struct.pack_into('<f', point, 4, float32_ieee(height))
     return True

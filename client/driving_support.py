@@ -39,7 +39,7 @@ class DrivingSupport:
             w.surface_class = support.surface_class
 
 
-def project_track_surface(world, query):
+def project_track_surface(world, query, *, normal_seed=None):
     """Run the recovered 0x42e010 terrain query for one support point."""
     if not isinstance(world, TrackSurfaceWorld):
         raise TypeError('a bounded TrackSurfaceWorld is required')
@@ -47,7 +47,16 @@ def project_track_surface(world, query):
         raise TypeError('a typed support query is required')
     point = bytearray(struct.pack('<3f', *query.point))
     state = bytearray(0x44)
-    sample_track_surface(world, state, point, query.context)
+    record = query.record
+    pointer = lambda value: 0 if value is None else value
+    struct.pack_into('<ii6I', state, 0, record.sector, record.group, record.status,
+                     pointer(record.surface_id), *(pointer(v) for v in record.vertex_ids))
+    struct.pack_into('<3f', state, 32, *query.previous_world)
+    if query.query_tail is not None:
+        if not isinstance(query.query_tail, bytes) or len(query.query_tail) != 24:
+            raise ValueError('24-byte query seed required')
+        state[44:68] = query.query_tail
+    sample_track_surface(world, state, point, query.context, normal_seed=normal_seed)
     sector, group, status, surface_id = struct.unpack_from('<4I', state)
     vertices = struct.unpack_from('<4I', state, 0x10)
     identity = surface_id if surface_id else None
@@ -59,4 +68,4 @@ def project_track_surface(world, query):
         surface_code=code)
     reference = struct.unpack_from('<3f', state, 0x20)
     projected = struct.unpack_from('<3f', point)
-    return SupportProjection(projected, reference, record)
+    return SupportProjection(projected, reference, record, bytes(state[44:68]))

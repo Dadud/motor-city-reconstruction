@@ -865,18 +865,22 @@
     ]
   },
   "0x42dc50": {
-    "translation": "partial",
+    "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "Triangle-mode plane selection and normalized normal are translated, including the first-triangle containment test, degenerate-normal fallback, and exact reference point. 512 synthetic original calls match the reference point byte-for-byte and normals within 2e-7 absolute component error. When context +0x0c is zero, the selected track row's first three float32 values are copied to the output; 512 additional direct calls match all output words across varied rows and indices. The 0x42e010 composition checks successful triangle-mode samples and heights. Row mode retains its native uninitialized-normal limitation; collision response remains open.",
+    "scope": "Triangle-mode plane selection and normalized normal are translated, including first-triangle containment, degenerate-normal fallback, and reference point. 512 synthetic original calls match the reference point byte-for-byte and normals within 2e-7. Row mode copies the selected track row and leaves the caller's normal output untouched; 512 direct row calls plus 512 native/Python row comparisons preserve this behavior with an explicit normal seed. Fractional X/Z supplied by 0x42e010 are covered through the full original support integration. Collision response remains open.",
     "sources": [
+      "client/render_projection.py",
       "client/track_plane.py",
       "client/track_surface.py",
-      "tests/test_track_plane.py",
-      "tools/verify_track_plane.py",
-      "client/render_projection.py",
+      "docs/recovery/render-projection-point.md",
+      "native/include/mco/track_surface_sample.hpp",
+      "native/src/track_surface_sample.cpp",
+      "native/tests/track_plane_compare.cpp",
       "tests/test_render_projection.py",
+      "tests/test_track_plane.py",
+      "tools/native_track_plane_compare.py",
       "tools/verify_render_projection.py",
-      "docs/recovery/render-projection-point.md"
+      "tools/verify_track_plane.py"
     ],
     "evidence_ids": [
       "ev_4c465809716e9c5ffbd41874e3fb04f6e2433610bef7be6a29485006848b2f58",
@@ -901,12 +905,19 @@
   "0x42e010": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The query-state initialization, call to 0x42e760, triangle plane selection, and output-Y write are composed in client/track_surface_sample.py. Across 1,200 synthetic original calls, return values and all 0x44 query bytes match exactly; 288 successful triangle samples match the complete output point exactly with a noncoplanar quad fixture. Successful lookup with a zero surface pointer remains unsupported because 0x42dc50 leaves its normal output unwritten in that branch.",
+    "scope": "The query-state initialization, 0x42e760 lookup, triangle plane selection, and output-Y write are composed in Python and native code. Across 1,200 synthetic original calls, Python return values and all 0x44 query bytes match exactly; native matches Python state and point output. A fractional-coordinate original call exposed an integer/float plane-selection mismatch; the composed path now supplies the runtime float query point and matches exact height, including in 722 complete 0x53d320 terrain integration calls. Successful null-descriptor row sampling still leaves the normal output unwritten; both APIs require an explicit stack-normal seed and no authentic producer is claimed.",
     "sources": [
       "client/track_plane.py",
       "client/track_surface_lookup.py",
       "client/track_surface_sample.py",
+      "native/include/mco/driving_support.hpp",
+      "native/include/mco/track_surface_sample.hpp",
+      "native/src/driving_support.cpp",
+      "native/src/track_surface_sample.cpp",
+      "native/tests/track_surface_sample_compare.cpp",
       "tests/test_track_surface_sample.py",
+      "tools/native_track_surface_sample_compare.py",
+      "tools/verify_support_track_pipeline.py",
       "tools/verify_track_surface_sample.py"
     ],
     "evidence_ids": [
@@ -2954,9 +2965,30 @@
   "0x53d320": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The four-wheel support predictor computes binary32 velocity lookahead and ordered matrix transforms, calls the required terrain projection for each wheel, stores returned points and aliased support records, computes signed support deltas and inclusive contact tests, derives surface classes, and publishes the contacting-wheel count. The Python implementation matches 722 complete calls of the original 0x53d320 with exact full-owner bytes while the terrain service is supplied. The C++ implementation matches the Python output byte-for-byte and all four ordered query contexts, points, and previous positions across the same 722 cases. The original terrain projection remains a separate required boundary; this review does not claim a recovered end-to-end track service.",
-    "sources": ["client/support_prediction.py", "native/include/mco/support_prediction.hpp", "native/src/support_prediction.cpp", "native/tests/support_prediction_compare.cpp", "tools/native_support_prediction_compare.py", "tools/support_prediction_oracle.py", "docs/calculations/support-prediction.md"],
-    "evidence_ids": ["ev_f04dec3c392ad24344e59e34d5c69e17e64ee1532b5945b4ef2c74bb0683da4b"]
+    "scope": "The four-wheel predictor computes binary32 velocity lookahead and ordered matrix transforms, calls terrain projection for each wheel, stores projected points and aliased support records, carries the 24-byte query tail at wheel +0x40, computes support deltas and inclusive contact tests, derives surface classes, and publishes the contacting-wheel count. The Python implementation matches 722 complete original calls with exact full-owner bytes while terrain is supplied; C++ matches Python across the same 722 cases. A second original-binary integration uses actual bounded triangle-mode terrain queries and matches all owner bytes over 722 four-wheel cases. Row mode still requires its explicit stack-normal seed.",
+    "sources": [
+      "client/driving_support.py",
+      "client/support_prediction.py",
+      "client/track_surface_sample.py",
+      "docs/calculations/support-prediction.md",
+      "native/include/mco/driving_support.hpp",
+      "native/include/mco/support_prediction.hpp",
+      "native/include/mco/track_surface_sample.hpp",
+      "native/src/driving_support.cpp",
+      "native/src/support_prediction.cpp",
+      "native/src/track_surface_sample.cpp",
+      "native/tests/support_prediction_compare.cpp",
+      "native/tests/track_surface_sample_compare.cpp",
+      "tests/test_support_prediction.py",
+      "tests/test_track_surface_sample.py",
+      "tools/native_support_prediction_compare.py",
+      "tools/native_track_surface_sample_compare.py",
+      "tools/support_prediction_oracle.py",
+      "tools/verify_support_track_pipeline.py"
+    ],
+    "evidence_ids": [
+      "ev_f04dec3c392ad24344e59e34d5c69e17e64ee1532b5945b4ef2c74bb0683da4b"
+    ]
   },
   "0x53d4a0": {
     "translation": "partial",

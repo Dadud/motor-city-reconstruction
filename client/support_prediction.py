@@ -26,6 +26,7 @@ class PredictionWheel:
     support_delta: float = 0
     contact: bool = False
     surface_class: int = 0
+    query_tail: bytes | None = None
 
 @dataclass(frozen=True)
 class SupportPredictionState:
@@ -43,12 +44,15 @@ class SupportQuery:
     point: tuple
     context: int
     previous_world: tuple
+    record: SupportRecord = SupportRecord()
+    query_tail: bytes | None = None
 
 @dataclass(frozen=True)
 class SupportProjection:
     point: tuple
     reference_position: tuple
     record: SupportRecord
+    query_tail: bytes | None = None
 
 @dataclass(frozen=True)
 class SupportPredictionOutput:
@@ -95,14 +99,17 @@ def predict_support(state,project):
         # each multiply and add rounds, including the final translation.
         point=tuple(f32(f32(f32(f32(local[0]*matrix[i])+f32(local[1]*matrix[3+i]))+
                                       f32(local[2]*matrix[6+i]))+lookahead[i]) for i in range(3))
-        query=SupportQuery(slot,point,state.context,previous);queries.append(query)
+        query=SupportQuery(slot,point,state.context,previous,w.record,w.query_tail);queries.append(query)
         projection=project(query)
         if not isinstance(projection,SupportProjection):raise ValueError('typed terrain projection required')
         projected=_vector(projection.point);query_reference=_vector(projection.reference_position);record=_record(projection.record)
+        tail = w.query_tail if projection.query_tail is None else projection.query_tail
+        if tail is not None and (not isinstance(tail, bytes) or len(tail) != 24):
+            raise ValueError('24-byte aliased query tail required')
         delta=f32(projected[1]-query_reference[1])
         contact=delta>=-reference;count+=int(contact)
         surface=state.fallback_surface if record.surface_id is None else record.surface_code&31
         wheels.append(replace(w,local_point=local,world_point=projected,clear_reference=reference,
-            record=record,support_delta=delta,contact=contact,surface_class=surface))
+            record=record,query_tail=tail,support_delta=delta,contact=contact,surface_class=surface))
     return SupportPredictionOutput(replace(state,wheels=tuple(wheels),position=position,velocity=velocity,
         to_world=matrix,support_count=count),tuple(queries))
