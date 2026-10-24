@@ -54,9 +54,10 @@ translated. A 1,024-case direct corpus matches callback counts and every
 eight-word output vertex, including each outside-corner position and color
 interpolation mode. The same implementation covers the isolated upper-Y
 (`0x08`) and lower-Y (`0x04`) passes, with 512 direct comparisons each across
-three outside-corner positions and color modes. These are separate
-single-plane domains; their composition and multi-plane intersections have
-not been verified. The global
+three outside-corner positions and color modes. The left-X (`0x10`) pass also
+matches 512 native comparisons across the same domains. These are separate
+single-plane checks; their composition and multi-plane intersections have not
+been verified. The global
 vertex setup writes performed before the
 shared-plane return are not modeled; other clip planes, multi-plane
 intersections, and later passes remain open.
