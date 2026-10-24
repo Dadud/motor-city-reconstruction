@@ -1,4 +1,11 @@
 {
+  "0x6f2b90": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Maps two signed coordinates to 1/1024-turn units using the original 257-byte octant table, nearest table-index rounding, and signed quadrant reflection. 4,096 direct original calls match exactly over axes, all octants, equal-coordinate diagonals, table-boundary ratios and deterministic random coordinates. INT_MIN's wrapped-absolute-value path is excluded.",
+    "sources": ["client/heading_byte.py", "tests/test_heading_byte.py", "tools/verify_heading_byte.py", "docs/recovery/heading-byte.md"],
+    "evidence_ids": []
+  },
   "0x6f2da0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
