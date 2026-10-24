@@ -1,6 +1,7 @@
 import unittest
 
-from client.render_state import replace_render_mode
+from client.render_state import (replace_render_mode,
+                                 select_rectangle_texture_state)
 
 
 class RenderStateTests(unittest.TestCase):
@@ -20,6 +21,12 @@ class RenderStateTests(unittest.TestCase):
         for value in (-1, 0x100000000, True):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 replace_render_mode(value, 0, 1)
+
+    def test_rectangle_state_selection_skips_callback_on_cache_hit(self):
+        self.assertEqual(select_rectangle_texture_state(0),(0,()))
+
+    def test_rectangle_state_selection_clears_nonzero_cache(self):
+        self.assertEqual(select_rectangle_texture_state(0x1234),(0,(0,)))
 
 
 if __name__ == '__main__':

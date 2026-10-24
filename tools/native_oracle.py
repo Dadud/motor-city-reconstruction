@@ -515,6 +515,28 @@ class DynoOracle:
                 struct.unpack('<I', self.cpu.mem_read(0x00b368cc, 4))[0],
                 struct.unpack('<I', self.cpu.mem_read(0x008c89f0, 4))[0])
 
+    def rectangle_texture_state(self, cached_state, renderer_state=0):
+        """Run the rectangle's 0x46abd0(0) state reset and capture settexture."""
+        if any(type(value) is not int or not 0<=value<=0xffffffff
+               for value in (cached_state,renderer_state)):
+            raise ValueError('texture state words must be unsigned 32-bit values')
+        self._reset()
+        capture=self.inputs+0x500
+        callback=self.stub+0x800
+        self.cpu.mem_write(capture,bytes(8))
+        code=(b'\x8b\x44\x24\x04\xa3'+struct.pack('<I',capture+4)+
+              b'\xff\x05'+struct.pack('<I',capture)+b'\xc2\x04\x00')
+        self.cpu.mem_write(callback,code)
+        self.cpu.mem_write(0x00990114,struct.pack('<I',renderer_state))
+        self.cpu.mem_write(0x00990124,struct.pack('<I',cached_state))
+        self.cpu.mem_write(0x00b42514,struct.pack('<I',callback))
+        self.call(0x46abd0,(0,),instruction_limit=10_000)
+        count=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
+        argument=(struct.unpack('<I',self.cpu.mem_read(capture+4,4))[0]
+                  if count else None)
+        updated=struct.unpack('<I',self.cpu.mem_read(0x00990124,4))[0]
+        return updated,argument,count
+
     def random_next(self, words):
         """Run the original shared 0x6f0fa0 generator on six supplied words."""
         if (len(words) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff

@@ -14,3 +14,19 @@ def replace_render_mode(mode_cache, zero_mode_cache, requested_mode):
         raise ValueError('render mode state requires unsigned 32-bit words')
     return (mode_cache, requested_mode,
             0xffffffff if requested_mode == 0 else zero_mode_cache)
+
+
+def select_rectangle_texture_state(cached_texture_state):
+    """Translate the 0x46abd0(0) state-selection call used by rectangles.
+
+    A zero cache is already selected and produces no callback. Any other
+    cached word invokes THRASH_settexture(0), then replaces the cache with 0.
+    The function's nonzero texture-state branches are not covered here.
+    Returns ``(new_cache, callback_arguments)``.
+    """
+    if (type(cached_texture_state) is not int or
+            not 0<=cached_texture_state<=0xffffffff):
+        raise ValueError('cached texture state must be an unsigned 32-bit word')
+    if cached_texture_state==0:
+        return 0,()
+    return 0,(0,)

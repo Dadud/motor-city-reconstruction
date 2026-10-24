@@ -38,3 +38,9 @@ with a no-op so its behavior is not included in the claim. Other clipping
 branches and actual device effects remain outside this recovery. Evidence for
 the parent decompilation is REA Evidence
 `ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3`.
+
+The rectangle setup's `0x46abd0(0)` state reset is translated by
+`select_rectangle_texture_state`. It preserves the cache-hit path and emits
+the `THRASH_settexture(0)` callback event on a miss. Two hundred fifty-six
+direct calls cover both cache states; nonzero texture-state selection and its
+resource side effects are not included.

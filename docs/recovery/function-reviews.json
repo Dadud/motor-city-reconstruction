@@ -1256,6 +1256,18 @@
       "tools/verify_world_object_path_reset.py"
     ]
   },
+  "0x46abd0": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "The exact 0x46abd0(0) call used by rectangle rendering is translated: a zero cache is a no-op; any nonzero cache invokes THRASH_settexture(0) and is cleared. 256 direct calls match callback count, callback argument, and cached value across cache hits and misses. Other state IDs, resource selection, and renderer effects remain external.",
+    "sources": [
+      "client/render_state.py",
+      "tests/test_render_state.py",
+      "tools/native_oracle.py",
+      "tools/verify_rectangle_texture_state.py",
+      "docs/recovery/render-rectangle-border.md"
+    ]
+  },
   "0x46d1d0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
@@ -1360,15 +1372,18 @@
   "0x47faf0": {
     "translation": "partial",
     "verification": "static-analysis-only",
-    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Its all-inside 0x474ee0 quad-dispatch branch has 256 direct original comparisons. Neither parent has a direct original comparison; provider/resource lookup, renderer-state reset, polygon clipping branches, and device effects remain external.",
+    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Its renderer reset 0x46abd0(0) and the all-inside/first-fan-triangle 0x474ee0 subregions have direct original comparisons. Neither parent has a direct original comparison; provider/resource lookup, other texture states, remaining polygon clipping branches, and device effects remain external.",
     "sources": [
-      "client/render_rectangle.py",
-      "tests/test_render_rectangle.py",
-      "docs/recovery/render-rectangle-border.md",
-      "client/render_segment_construct.py",
       "client/render_clip_code.py",
       "client/render_quad_dispatch.py",
+      "client/render_rectangle.py",
+      "client/render_segment_construct.py",
+      "client/render_state.py",
+      "docs/recovery/render-rectangle-border.md",
+      "tests/test_render_rectangle.py",
+      "tests/test_render_state.py",
       "tools/native_oracle.py",
+      "tools/verify_rectangle_texture_state.py",
       "tools/verify_render_quad_dispatch.py"
     ],
     "evidence_ids": [
