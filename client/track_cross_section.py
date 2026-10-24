@@ -13,6 +13,16 @@ def _round32(value):
     return _F32.unpack(_F32.pack(value))[0]
 
 
+def wrap_track_turn(turn):
+    """Translate 0x4b70f0's in-place wrap to the native [0, 1] turn interval."""
+    turn = _round32(turn)
+    if turn > 1.0:
+        turn = _round32(turn - math.floor(turn))
+    elif turn < 0.0:
+        turn = _round32(math.ceil(abs(turn)) + turn)
+    return turn
+
+
 def build_track_cross_section(object_transform, basis, vertical_offset, origin_scale,
                               view_reference, world_origin, radius, angle_offset):
     """Return ``(three 3D points, angle)`` for the native 0x495240 routine.
@@ -21,8 +31,8 @@ def build_track_cross_section(object_transform, basis, vertical_offset, origin_s
     offsets 0x00..0x34; the routine consumes indices 5..13. ``basis`` contains
     the three consecutive world basis floats at 0x8915b8..0x8915c0;
     ``world_origin`` corresponds to globals 0x8915a8..0x8915b0.
-    Angles are supported when the resulting normalized angle stays in [0, 1],
-    where native wrap helper 0x4b70f0 leaves the value unchanged.
+    Angles follow native wrap helper 0x4b70f0, including negative and
+    multi-turn offsets.
     """
     object_transform = tuple(f32(v) for v in object_transform)
     basis = tuple(f32(v) for v in basis)
@@ -56,9 +66,7 @@ def build_track_cross_section(object_transform, basis, vertical_offset, origin_s
 
     angle = (math.atan2(direction[0], direction[2]) *
              0.15915493667125702 + 0.5 + angle_offset)
-    angle = _round32(angle)
-    if not 0.0 <= angle <= 1.0:
-        raise ValueError('angle offset leaves the verified native no-wrap range')
+    angle = wrap_track_turn(_round32(angle))
 
     cross = normalized_cross3(tuple(view_reference[i] - direction[i]
                                    for i in range(3)),

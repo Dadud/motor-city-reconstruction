@@ -2819,7 +2819,7 @@
   "0x495240": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The 3D direction projection, zero-direction fallback, normalization, turn output, normalized perpendicular and three emitted points are translated. 512 randomized calls match all angles exactly and all nine position outputs within 1.91e-6 absolute error. The original angle-wrap helper is unchanged in the compared zero-offset domain; other wrapped-angle inputs remain unverified.",
+    "scope": "The 3D direction projection, zero-direction fallback, normalization, wrapped turn output, normalized perpendicular and three emitted points are translated. 512 randomized calls with multi-turn positive and negative angle offsets match all angles exactly and all nine position outputs within 1.91e-6 absolute error.",
     "sources": [
       "client/track_cross_section.py",
       "tests/test_track_cross_section.py",
@@ -2861,7 +2861,7 @@
   "0x495800": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The caller composes 0x495240, applies the 16-cell fractional phase using truncating __ftol semantics, and emits both complete 17-point float32 strips. 256 deterministic direct calls compare all 8,704 point coordinates and angles; maximum position error is 2.45e-4 and all angles match exactly. Finite randomized transforms, zero angle offset and the native no-wrap path are covered; wrapped-angle cases remain unverified.",
+    "scope": "The caller composes 0x495240, applies the 16-cell fractional phase using truncating __ftol semantics, and emits both complete 17-point float32 strips. 256 deterministic direct calls compare all 8,704 point coordinates and angles with multi-turn positive and negative offsets; maximum position error is 2.14e-4 and all angles match exactly.",
     "sources": [
       "client/track_cross_section.py",
       "tests/test_track_cross_section.py",
@@ -2898,6 +2898,27 @@
     ],
     "doc_refs": [
       "docs/recovery/normalized-cross.md"
+    ]
+  },
+  "0x4b70f0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The complete in-place turn wrapper is translated: above one it subtracts the floor, below zero it adds the ceiling of the absolute value, exactly one is preserved, and signed zero remains unchanged. 256 direct native calls match bit-for-bit across boundaries, negative/positive integer turns and randomized values in [-1000, 1000].",
+    "sources": [
+      "client/track_cross_section.py",
+      "tests/test_track_cross_section.py",
+      "tools/verify_track_turn_wrap.py",
+      "tools/native_oracle.py",
+      "docs/recovery/track-cross-section.md"
+    ],
+    "evidence_ids": [
+      "ev_f7e73576b4bacb1ef92dfdfb01b74b9384cf7d1ec506aa3e661ddfd0731805e7"
+    ],
+    "verification_refs": [
+      "tools/verify_track_turn_wrap.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-cross-section.md"
     ]
   }
 }

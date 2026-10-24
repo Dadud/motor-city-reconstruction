@@ -18,7 +18,7 @@ def verify(executable, cases=256):
         origin = [rng.uniform(-20.0, 20.0) for _ in range(3)]
         values = (obj, basis, rng.uniform(-5.0, 5.0),
                   rng.uniform(0.1, 10.0), view, origin,
-                  rng.uniform(0.1, 20.0), 0.0)
+                  rng.uniform(0.1, 20.0), rng.uniform(-4.0, 4.0))
         expected_outer, expected_inner, expected_angle = build_track_grid_strips(*values)
         status, actual_outer, actual_inner, actual_angle = oracle.track_grid_strips(*values)
         if status != 1:
@@ -42,7 +42,7 @@ def verify(executable, cases=256):
     return {'cases': cases, 'points_compared': cases*2*17,
             'maximum_position_error': max_position_error,
             'maximum_angle_error': max_angle_error,
-            'domain': 'finite randomized inputs; zero angle offset; native no-wrap path'}
+            'domain': 'finite randomized inputs with positive and negative wrapped angles'}
 
 
 if __name__ == '__main__':

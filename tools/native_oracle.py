@@ -201,6 +201,13 @@ class DynoOracle:
                 tuple(tuple(second_points[i:i+3]) for i in range(0, 51, 3)),
                 angle_result)
 
+    def wrap_track_turn(self, turn):
+        """Run the native in-place angle wrapper at 0x4b70f0."""
+        self._reset()
+        self.cpu.mem_write(self.inputs, struct.pack('<f', turn))
+        self.call(0x4b70f0, (self.inputs,), instruction_limit=100_000)
+        return struct.unpack('<f', self.cpu.mem_read(self.inputs, 4))[0]
+
     def linear_vector_sequence(self, count, first, second):
         """Run 0x4954c0 and return its complete count-point output buffer."""
         if type(count) is not int or not 2 <= count <= 65536:

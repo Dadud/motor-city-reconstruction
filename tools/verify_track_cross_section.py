@@ -18,7 +18,7 @@ def verify(executable, cases=128):
         origin = [rng.uniform(-20.0, 20.0) for _ in range(3)]
         vectors.append((obj, basis, rng.uniform(-5.0, 5.0),
                         rng.uniform(0.1, 10.0), view, origin,
-                        rng.uniform(0.1, 20.0), 0.0))
+                        rng.uniform(0.1, 20.0), rng.uniform(-4.0, 4.0)))
     maximum_position_error = maximum_angle_error = 0.0
     for index, args in enumerate(vectors):
         expected_points, expected_angle = build_track_cross_section(*args)
@@ -37,7 +37,7 @@ def verify(executable, cases=128):
             raise AssertionError((index, 'angle', actual_angle, expected_angle, error))
     return {'cases': len(vectors), 'maximum_position_error': maximum_position_error,
             'maximum_angle_error': maximum_angle_error,
-            'comparison': 'original 0x495240; native float stores; angle no-wrap domain'}
+            'comparison': 'original 0x495240; native float stores; wrapped angles'}
 
 
 if __name__ == '__main__':
