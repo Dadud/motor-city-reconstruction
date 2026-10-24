@@ -3917,26 +3917,14 @@
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Reconstructs all four three-component wheel-force writes: per-wheel y-axis normal loads plus exact zeroing of x/z. The complete original helper runs with unmodified sine/cosine callees over 4,032 support-mask, pitch, bank, speed, vertical-correction and signed-radius cases; all twelve components and the remaining owner/configuration image bytes match exactly. Native matches Python on the same 4,032 cases. The x87 return is excluded. Support, motion and component input production and integrated force-tick behavior remain outside this function slice.",
-    "sources": ["client/normal_load.py", "client/driving_loads.py", "native/include/mco/normal_load.hpp", "native/src/normal_load.cpp", "native/tests/normal_load_test.cpp", "native/tests/normal_load_compare.cpp", "tests/test_normal_load.py", "tools/normal_load_oracle.py", "tools/native_normal_load_compare.py", "docs/calculations/normal-load.md"],
+    "sources": ["client/normal_load.py", "client/driving_loads.py", "native/include/mco/normal_load.hpp", "native/src/normal_load.cpp", "native/tests/normal_load_test.cpp", "native/tests/normal_load_compare.cpp", "tests/test_normal_load.py", "tools/normal_load_oracle.py", "tools/native_normal_load_compare.py", "docs/calculations/normal-load.md", "native/include/mco/driving_load_stages.hpp", "native/src/driving_load_stages.cpp", "native/tests/driving_load_stages_test.cpp", "CMakeLists.txt"],
     "evidence_ids": ["ev_3ce59f9fae6e5945433fe36e417989cccb95f3593354d62e894b55e00e227174"]
   },
   "0x53e680": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Computes LF/RF/LR/RR acceleration-driven load transfer, including the strict attitude, longitudinal/lateral acceleration and speed gates, staged clamping, and the original float32 operation order. Complete original calls with unmodified callees match all four loads and the remaining owner/configuration image across 1,250 direct cases; the same Python corpus is matched exactly by C++. A 1,728-scenario shared-image sequence separately verifies handoff from 0x53d920 and into 0x53e980. Input producers and full driving-tick scheduling remain outside scope.",
-    "sources": [
-      "client/load_transfer.py",
-      "native/include/mco/load_transfer.hpp",
-      "native/src/load_transfer.cpp",
-      "native/tests/load_transfer_test.cpp",
-      "native/tests/load_transfer_compare.cpp",
-      "tests/test_load_transfer.py",
-      "tools/load_transfer_oracle.py",
-      "tools/native_load_transfer_compare.py",
-      "tools/wheel_load_pipeline_oracle.py",
-      "docs/calculations/load-transfer.md",
-      "docs/wheel-load-sequence.md"
-    ],
+    "sources": ["client/load_transfer.py", "native/include/mco/load_transfer.hpp", "native/src/load_transfer.cpp", "native/tests/load_transfer_test.cpp", "native/tests/load_transfer_compare.cpp", "tests/test_load_transfer.py", "tools/load_transfer_oracle.py", "tools/native_load_transfer_compare.py", "tools/wheel_load_pipeline_oracle.py", "docs/calculations/load-transfer.md", "docs/wheel-load-sequence.md", "native/include/mco/driving_load_stages.hpp", "native/src/driving_load_stages.cpp", "native/tests/driving_load_stages_test.cpp", "CMakeLists.txt"],
     "evidence_ids": [
       "ev_e3bc9bdc0a22a551ca6e71e8f6a44f618fd882b757ace365c3b937c0253a9159",
       "ev_f3e335bc28f50f40e5da374c23b5d94606e2e2f2aff28eac5b1242ecbd0d206c"
@@ -3946,22 +3934,17 @@
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",
     "scope": "Computes all LF/RF/LR/RR attitude- and torque-dependent load corrections, preserving the strict attitude/speed gates, supported-wheel angle corrections, independent torque-mode gate, unsigned contribution magnitude, clamping and original float32 stores. Complete original calls with unmodified sine helpers match the four loads and unchanged owner/configuration image across 1,730 direct cases; C++ matches the Python corpus exactly. A 1,728-scenario shared-image sequence verifies transfer into and out of the helper. Upstream state/component producers and full tick scheduling remain outside scope.",
-    "sources": [
-      "client/suspension_load_correction.py",
-      "native/include/mco/suspension_load_correction.hpp",
-      "native/src/suspension_load_correction.cpp",
-      "native/tests/suspension_load_test.cpp",
-      "native/tests/suspension_load_compare.cpp",
-      "tests/test_suspension_load_correction.py",
-      "tools/suspension_load_oracle.py",
-      "tools/native_suspension_load_compare.py",
-      "tools/wheel_load_pipeline_oracle.py",
-      "docs/calculations/suspension-load-correction.md",
-      "docs/wheel-load-sequence.md"
-    ],
+    "sources": ["client/suspension_load_correction.py", "native/include/mco/suspension_load_correction.hpp", "native/src/suspension_load_correction.cpp", "native/tests/suspension_load_test.cpp", "native/tests/suspension_load_compare.cpp", "tests/test_suspension_load_correction.py", "tools/suspension_load_oracle.py", "tools/native_suspension_load_compare.py", "tools/wheel_load_pipeline_oracle.py", "docs/calculations/suspension-load-correction.md", "docs/wheel-load-sequence.md", "native/include/mco/driving_load_stages.hpp", "native/src/driving_load_stages.cpp", "native/tests/driving_load_stages_test.cpp", "CMakeLists.txt"],
     "evidence_ids": [
       "ev_901762dd68045061e4da4cb117551ab19ce34b5193a1808fcfa29c70ef91fc3b",
       "ev_a4540e9362d8c616bf90fed86e0d838f7c5cfb6273bdc4d309909f8885968a7d"
     ]
+  },
+  "0x53c140": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "Translates controller-owned branch selection, state arithmetic, surface/grip preparation, force ordering and child-stage dispatch across the six observed paths. The native and Python controllers match 2,607 bounded original calls, including owner writes and actual linear-update instructions, with child mutations and remaining queries explicitly supplied. The native driving-load adapter now connects the recovered 0x53d920, 0x53e680 and 0x53e980 stages using explicit component observations; all other child stages remain delegated. Authentic support/contact, input, component, engine, brake, tire, collision and platform producers plus complete original tick integration remain missing.",
+    "sources": ["client/vehicle_update.py", "client/driving_loads.py", "native/include/mco/vehicle_update.hpp", "native/src/vehicle_update.cpp", "native/include/mco/driving_load_stages.hpp", "native/src/driving_load_stages.cpp", "native/tests/driving_load_stages_test.cpp", "tests/test_driving_loads.py", "docs/calculations/vehicle-update.md", "docs/wheel-load-sequence.md"],
+    "evidence_ids": ["ev_6691a574a2c8313463ca5c8b1ffb2fa16c4305a4463d43be27ab00b2f64f2e84", "ev_bb6ec79e0a177cd13c18ff306145a822e96ff1bc7af8ad740b422c920a10974a", "ev_07e93f4c881dfdfb041e72a77c4da190278fe07871d1fbb763170843858794c2"]
   }
 }

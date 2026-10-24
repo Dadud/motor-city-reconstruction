@@ -6,17 +6,17 @@ Main executable: **25,780 inventoried entries**, including **338 external import
 - Retained decompilation records indexed: **611 functions**.
 - Bulk private pseudocode exports: **25,434 functions**.
 - Functions with address mentions in tracked Python/native source: **586** (review candidates).
-- Explicitly reviewed entries: **410**.
+- Explicitly reviewed entries: **411**.
 - Structural triage: game candidates **16,077**, classified non-game **9,703**. **Required after dispositions: 11,767**. An entry is required when its module is in recovery scope and no published disposition removes it; see [triage](triage.md) and [dispositions](dispositions.json).
 
 | Reviewed translation label | Entries |
 | --- | ---: |
 | native-bounded | 145 |
-| partial | 58 |
+| partial | 59 |
 | python-and-native-bounded | 87 |
 | python-bounded | 119 |
 | python-complete-supported-domain;native-partial | 1 |
-| unreviewed | 25,370 |
+| unreviewed | 25,369 |
 
 These counts do not measure whole-game completion. Most entries await review.
 See [label definitions and refresh instructions](README.md) and the sortable

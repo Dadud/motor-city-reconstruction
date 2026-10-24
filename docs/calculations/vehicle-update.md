@@ -107,11 +107,14 @@ All compared numeric outputs match exactly in this corpus, under comparison
 tolerance `max(0.0005, abs(original) * 4e-7)`; the native port also matches Python
 exactly. This is not a proof of equivalence for every possible floating-point input.
 
-Other child bodies and gate observations are supplied. The actual original
-angle helper executes. Comparison coverage does not prove those missing child
-producers, authentic assembled-car inputs, collision/contact creation, component
-effects or end-to-end driving. The native controller is available in the core;
-the playable prototype is not switched to an incomplete executor.
+The native `make_driving_load_executor` connects normal-load initialization,
+acceleration transfer and suspension-load correction to the controller using
+explicit configuration observations. It delegates the other child bodies and
+gate observations. The actual original angle helper executes. Comparison
+coverage does not prove those missing child producers, authentic assembled-car
+inputs, collision/contact creation, component effects or end-to-end driving.
+The native controller is available in the core; the playable prototype is not
+switched to an incomplete executor.
 
 Evidence: controller `ev_6691a574a2c8313463ca5c8b1ffb2fa16c4305a4463d43be27ab00b2f64f2e84`;
 linear update `ev_07e93f4c881dfdfb041e72a77c4da190278fe07871d1fbb763170843858794c2`.
