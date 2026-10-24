@@ -5,6 +5,7 @@ point is launched, and no Windows imports or host services are implemented.
 Results describe emulated execution, not original hardware/runtime behavior.
 """
 import hashlib
+import math
 from pathlib import Path
 import struct
 
@@ -194,6 +195,27 @@ class DynoOracle:
         raw=bytes(self.cpu.mem_read(capture+0x10,0x30))
         return (struct.unpack_from('<6f',raw,0),
                 struct.unpack_from('<6f',raw,0x18))
+
+    def render_viewport_state(self, viewport):
+        """Run 0x6cb610 and capture its frustum globals and strided clears."""
+        if len(viewport) != 6 or any(not math.isfinite(value) for value in viewport):
+            raise ValueError('viewport oracle needs six finite float values')
+        self._reset()
+        values=tuple(struct.unpack('<I',struct.pack('<f',value))[0]
+                     for value in viewport)
+        table=self.inputs+0x1000
+        original=bytes([0xcd])*3200
+        self.cpu.mem_write(table,original)
+        self.cpu.mem_write(0x8c671c,struct.pack('<I',table))
+        self.call(0x6cb610,values,instruction_limit=100_000)
+        addresses=(0x8c672c,0xb31fbc,0xb31fc0,0x8c6730,
+                   0xb424c8,0xb424bc,0xb424c4,0xb424b8,0xb31fc4,
+                   0xb424c0,0xb424b0,0xb424a4,0xb31fc8,0xb424a0,
+                   0xb424a8,0xb424ac,0xb424b4)
+        words=tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
+                    for address in addresses)
+        records=bytes(self.cpu.mem_read(table,len(original)))
+        return words,records
 
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):

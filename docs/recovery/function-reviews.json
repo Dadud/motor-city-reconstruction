@@ -3118,5 +3118,27 @@
     "doc_refs": [
       "docs/recovery/render-segment-clip.md"
     ]
+  },
+  "0x6cb610": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The viewport/frustum state writer sets origin and far edges, both W-plane values, reciprocal plane/depth constants and repeated clip bounds, then clears the +0x14 word in 100 records at 32-byte strides. 512 randomized configurations match every global float32 word and all scratch-record bytes against direct original execution. The higher-level window/surface clamp and its other device callbacks remain caller behavior.",
+    "sources": [
+      "client/render_viewport.py",
+      "tests/test_render_viewport.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_viewport.py",
+      "docs/recovery/render-viewport.md"
+    ],
+    "evidence_ids": [
+      "ev_b77b3876cf605d6f1bc6d5f1e3c18a18e345249e3d708c06a0af3441e2dd3402",
+      "ev_a996873eac7b5bff3e610fb53fee03abcfb0f80bebaf7f25bfb1997de913d312"
+    ],
+    "verification_refs": [
+      "tools/verify_render_viewport.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-viewport.md"
+    ]
   }
 }
