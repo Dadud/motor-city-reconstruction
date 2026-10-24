@@ -605,6 +605,53 @@ class DynoOracle:
             payload+index*0x20,0x20)) for index in range(vertex_count))
         return count,payload,aux,records
 
+    def render_polygon_multi_clip(self, clip_codes, vertex_records, *,
+                                  plane_mask, plane_w=0.0, y_min=-1.0e20,
+                                  y_max=1.0e20, x_min=-1.0e20,
+                                  x_max=1.0e20, near_w=1.0, far_w=0.0):
+        """Run selected 0x475de0 passes and capture its draw-trifan payload."""
+        if (len(clip_codes)!=3 or len(vertex_records)!=3 or
+            any(type(code) is not int or not 0<=code<=0xff
+                for code in clip_codes) or
+            any(len(record)!=10 for record in vertex_records) or
+            type(plane_mask) is not int or not 0<=plane_mask<=0xff):
+            raise ValueError('polygon oracle requires three codes, records, and a byte mask')
+        self._reset()
+        base=self.inputs+0x100
+        pointers=self.inputs+0x40
+        code_address=self.inputs+0x20
+        capture=self.inputs+0x800
+        callback=self.stub+0x800
+        self.cpu.mem_write(code_address,bytes(clip_codes))
+        for index,record in enumerate(vertex_records):
+            address=base+index*0x40
+            self.cpu.mem_write(address,struct.pack('<10I',*record))
+            self.cpu.mem_write(pointers+index*4,struct.pack('<I',address))
+        code=(b'\x8b\x44\x24\x04\xa3'+struct.pack('<I',capture+4)+
+              b'\x8b\x44\x24\x08\xa3'+struct.pack('<I',capture+8)+
+              b'\x8b\x44\x24\x0c\xa3'+struct.pack('<I',capture+12)+
+              b'\xff\x05'+struct.pack('<I',capture)+b'\xc2\x0c\x00')
+        self.cpu.mem_write(capture,bytes(16))
+        self.cpu.mem_write(callback,code)
+        self.cpu.mem_write(0xb4254c,struct.pack('<I',callback))
+        for address,value in ((0x83b634,near_w),(0x83b638,far_w),
+                              (0x9938a8,plane_w),(0x9938ac,y_min),
+                              (0x9938b0,x_max),(0x993bb0,y_max),
+                              (0x993848,x_min)):
+            self.cpu.mem_write(address,struct.pack('<f',value))
+        self.call(0x475de0,(pointers,code_address,plane_mask),
+                  instruction_limit=250_000)
+        calls=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
+        if not calls:
+            return None
+        count,payload,aux=struct.unpack('<3I',self.cpu.mem_read(capture+4,12))
+        vertex_count=count+2
+        if not 0<=vertex_count<=8:
+            raise ValueError('native polygon callback returned invalid vertex count')
+        records=tuple(struct.unpack('<8I',self.cpu.mem_read(
+            payload+index*0x20,0x20)) for index in range(vertex_count))
+        return count,payload,aux,records
+
     def render_polygon_axis_clip(self, clip_codes, vertex_records,
                                  boundary, near_w=1.0, far_w=0.0, *,
                                  axis, upper):

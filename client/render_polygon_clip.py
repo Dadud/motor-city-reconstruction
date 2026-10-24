@@ -97,6 +97,97 @@ def _pack_clipped_polygon(output,near_w,far_value):
     return len(callback_vertices)-2,tuple(callback_vertices)
 
 
+def _clip_polygon_plane(vertices, codes, bit, axis, boundary,
+                        vary_alpha, vary_rgb, vary_color, *, near_w=0.0,
+                        far_w=0.0, x_min=-1.0e20, x_max=1.0e20):
+    """Clip an ordered polygon once, retaining the native edge traversal."""
+    count=len(vertices)
+    output=[]
+    output_codes=[]
+    current=count-1
+    previous=0
+    for _ in range(count):
+        current_code=codes[current]
+        previous_code=codes[previous]
+        current_out=bool(current_code&bit)
+        previous_out=bool(previous_code&bit)
+        if not current_out:
+            output.append(vertices[current])
+            output_codes.append(current_code)
+        if current_out!=previous_out:
+            a,b=vertices[current],vertices[previous]
+            field={'x':0,'y':1,'w':3}[axis]
+            av,bv=a[field],b[field]
+            if axis=='w':
+                reciprocal=near_w/(av-bv)
+                t=_f32((av-boundary)*reciprocal)
+                if t>near_w or t<far_w:
+                    t=_f32(reciprocal*av)
+            else:
+                t=_f32((av-boundary)/(av-bv))
+            intersection=_interpolate_edge(a,b,t,vary_alpha,
+                                           vary_rgb,vary_color)
+            intersection[field]=boundary
+            code=0
+            if axis=='w':
+                code=1
+                if intersection[1]<-1.0e20:
+                    code|=4
+                if intersection[1]>1.0e20:
+                    code|=8
+                if intersection[0]<x_min:
+                    code|=0x10
+                if intersection[0]>x_max:
+                    code|=0x20
+            elif axis=='y':
+                code=(current_code&0xcb)|bit
+                if intersection[0]<x_min:
+                    code|=0x10
+                if intersection[0]>x_max:
+                    code|=0x20
+            else:
+                code=(current_code&0xc7)|bit
+                if intersection[0]<x_min:
+                    code|=0x10
+                if intersection[0]>x_max:
+                    code|=0x20
+            output.append(intersection)
+            output_codes.append(code)
+        current,previous=previous,(previous+1)%count
+    return output,output_codes
+
+
+def clip_triangle_near_then_y_max(clip_codes, vertex_records, *,
+                                  plane_w, y_max, near_w=1.0, far_w=0.0,
+                                  x_min=-1.0e20, x_max=1.0e20,
+                                  y_min=-1.0e20):
+    """Translate near-W followed by upper-Y clipping for an input triangle."""
+    if (len(clip_codes)!=3 or len(vertex_records)!=3 or
+        any(type(code) is not int or not 0<=code<=0xff for code in clip_codes) or
+        any(not isinstance(record,(tuple,list)) or len(record)!=10 for record in vertex_records)):
+        raise ValueError('combined clipping requires three codes and 10-word vertices')
+    plane_w=_f32(float(plane_w)); near_w=_f32(float(near_w))
+    far_w=_f32(float(far_w)); y_max=_f32(float(y_max))
+    transformed,vary_alpha,vary_rgb,vary_color=_prepare_triangle(vertex_records)
+    vertices=list(transformed); codes=list(clip_codes)
+    if any(code&0x01 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,0x01,'w',plane_w,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w)
+        codes=[]
+        for vertex in vertices:
+            code=0
+            if vertex[1]<y_min: code|=0x04
+            if vertex[1]>y_max: code|=0x08
+            if vertex[0]<x_min: code|=0x10
+            if vertex[0]>x_max: code|=0x20
+            codes.append(code)
+    if any(code&0x08 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,0x08,'y',y_max,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max)
+    return _pack_clipped_polygon(vertices,near_w,far_w)
+
+
 def clip_triangle_near_plane(clip_codes, vertex_records, *,
                              plane_w, near_w=1.0, far_w=0.0):
     """Clip one triangle against W=plane_w and pack the draw-trifan records.
