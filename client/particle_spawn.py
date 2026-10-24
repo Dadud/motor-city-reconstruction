@@ -72,13 +72,16 @@ def _signed_short(value):
 
 def construct_particle(config, source_token, position, scale, velocity_a,
                        velocity_b, acceleration, random_state, pool, *,
-                       frame_counter=0, effect_mode=0, cadence_flag=0):
+                       frame_counter=0, effect_mode=0, cadence_flag=0,
+                       acceleration_alias_index=None):
     """Create/update one 0x6c-byte particle slot, or return ``None``.
 
     ``config`` is the original 0x60-byte emitter record. The pool contains
     exactly 600 mutable record byte strings; its six-word RNG and global
     cadence/mode are supplied explicitly. This models the constructor's
     writes and gating, not the surrounding particle simulation or rendering.
+    ``acceleration_alias_index`` preserves native in-place write/read order
+    when the acceleration vector aliases the chosen output slot during respawn.
     """
     if not isinstance(config, (bytes, bytearray, memoryview)) or len(config) < 0x60:
         raise ValueError('particle configuration must contain at least 0x60 bytes')
@@ -96,6 +99,10 @@ def construct_particle(config, source_token, position, scale, velocity_a,
         raise ValueError('effect mode must be 0, 1 or 2')
     if type(cadence_flag) is not int:
         raise ValueError('cadence flag must be an integer')
+    if (acceleration_alias_index is not None and
+            (type(acceleration_alias_index) is not int or
+             not 0 <= acceleration_alias_index < POOL_CAPACITY)):
+        raise ValueError('acceleration alias index must identify a particle slot')
 
     lifetime = struct.unpack_from('<h', config, 8)[0]
     divisor = struct.unpack_from('<i', config, 0xc)[0] + 1
@@ -150,23 +157,53 @@ def construct_particle(config, source_token, position, scale, velocity_a,
     component_a = _x87_f32(_x87_mul(
         _x87_add(_x87_mul(_x87_add(_exact_float(random_b), Fraction(-1, 2)), config_1c),
                  Fraction(1)), config_14))
-    velocity = []
-    for axis in range(3):
-        value = _x87_f32(_x87_mul(_x87_mul(component_b, velocity_b[axis]), scale))
-        if axis == 1:
-            extra_coefficient = _x87_f32(_x87_mul(
-                _x87_add(_x87_mul(_x87_add(_exact_float(random_a), Fraction(-1, 2)),
-                                  config_1c), Fraction(1)), config_10))
+    extra_coefficient = _x87_f32(_x87_mul(
+        _x87_add(_x87_mul(_x87_add(_exact_float(random_a), Fraction(-1, 2)),
+                          config_1c), Fraction(1)), config_10))
+    if index == acceleration_alias_index:
+        # Parent respawn can choose the expiring slot itself. The native
+        # constructor writes each velocity stage in place before its final
+        # acceleration stage reads the same +0x18 vector through its pointer.
+        for axis in range(3):
+            struct.pack_into('<f', slot, 0x18 + axis * 4,
+                             _x87_f32(_x87_mul(
+                                 _x87_mul(component_b, velocity_b[axis]), scale)))
+        vertical = struct.unpack_from('<f', slot, 0x1c)[0]
+        struct.pack_into('<f', slot, 0x1c, _x87_f32(_x87_add(
+            _x87_mul(_exact_float(extra_coefficient), scale),
+            _exact_float(vertical))))
+        for axis in range(3):
+            current = _exact_float(struct.unpack_from(
+                '<f', slot, 0x18 + axis * 4)[0])
+            contribution = _x87_mul(
+                _x87_mul(_exact_float(component_a), velocity_a[axis]), scale)
+            struct.pack_into('<f', slot, 0x18 + axis * 4,
+                             _x87_f32(_x87_add(contribution, current)))
+        acceleration_rate = _exact_float(_float_at(config, 0x34))
+        for axis in range(3):
+            live_component = _exact_float(struct.unpack_from(
+                '<f', slot, 0x18 + axis * 4)[0])
+            current = _exact_float(struct.unpack_from(
+                '<f', slot, 0x18 + axis * 4)[0])
+            struct.pack_into('<f', slot, 0x18 + axis * 4,
+                             _x87_f32(_x87_add(
+                                 _x87_mul(acceleration_rate, live_component), current)))
+    else:
+        velocity = []
+        for axis in range(3):
+            value = _x87_f32(_x87_mul(_x87_mul(component_b, velocity_b[axis]), scale))
+            if axis == 1:
+                value = _x87_f32(_x87_add(
+                    _x87_mul(_exact_float(extra_coefficient), scale),
+                    _exact_float(value)))
             value = _x87_f32(_x87_add(
-                _x87_mul(_exact_float(extra_coefficient), scale), _exact_float(value)))
-        value = _x87_f32(_x87_add(
-            _x87_mul(_x87_mul(_exact_float(component_a), velocity_a[axis]), scale),
-            _exact_float(value)))
-        value = _x87_f32(_x87_add(
-            _x87_mul(_exact_float(_float_at(config, 0x34)), acceleration[axis]),
-            _exact_float(value)))
-        velocity.append(value)
-    struct.pack_into('<3f', slot, 0x18, *velocity)
+                _x87_mul(_x87_mul(_exact_float(component_a), velocity_a[axis]), scale),
+                _exact_float(value)))
+            value = _x87_f32(_x87_add(
+                _x87_mul(_exact_float(_float_at(config, 0x34)), acceleration[axis]),
+                _exact_float(value)))
+            velocity.append(value)
+        struct.pack_into('<3f', slot, 0x18, *velocity)
 
     random_size = random_state.next_unit_fraction()
     size_product = _x87_mul(_exact_float(_float_at(config, 0x48)),

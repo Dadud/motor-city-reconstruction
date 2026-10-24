@@ -15,14 +15,22 @@ When the source-direction flag is set, the rate at `+0x34` is forced negative
 for selectors above `+0.25`, positive below `-0.25`, and left unchanged inside
 the strict dead zone.
 
-1,024 direct parent calls compare the complete particle pool, 200 trail records
-and all 52 counters exactly. The tested inputs cover both values of the
+On expiry, a nonzero respawn count with nonzero velocity normalizes that
+velocity and attempts the requested number of child particles. Each attempt
+uses a shared-RNG scale from `0.25` to `1.0`; successful spawns have their
+lifetime halved and respawn count cleared. If the allocator reuses the expiring
+slot, the constructor's staged velocity stores alias its acceleration input,
+so the model preserves the native in-place read/write order.
+
+1,024 direct parent calls compare the complete particle pool, 200 trail records,
+all 52 counters, and six shared-RNG words exactly. The tested inputs cover both values of the
 frame's animation bit, active/inactive and source-less records, varied source
 lifetime factors, spin phase/rate/radius combinations, enabled and disabled
 color fade with varied base colors and channel limits, direction flags with
-selectors around both dead-zone boundaries, and trail type counting. All
-particle, trail and counter bytes match exactly. The parent's child-emitter
-and respawn branches remain untranslated.
+selectors around both dead-zone boundaries, expiry respawn counts, in-place
+slot reuse and cadence suppression, and trail type counting. All compared
+particle, trail, counter and RNG bytes match exactly. Child-emitter expansion
+remains untranslated.
 
 Static provenance: retained Ghidra pseudocode and direct x86 instruction
 inspection for `mcity.exe`, SHA-256

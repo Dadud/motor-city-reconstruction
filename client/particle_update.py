@@ -4,7 +4,8 @@ from fractions import Fraction
 import math
 
 from .particle_spawn import _exact_float, _x87_add, _x87_f32, _x87_mul
-from .particle_spawn import POOL_CAPACITY, RECORD_BYTES
+from .particle_spawn import POOL_CAPACITY, RECORD_BYTES, construct_particle
+from .random_state import RandomState
 
 _MASK32 = 0xffffffff
 _TAU_F32 = struct.unpack('<f', struct.pack('<I', 0x40c90fdb))[0]
@@ -126,20 +127,24 @@ def advance_particle_trails(records, definitions, type_counts):
 
 
 def advance_particle_frame_core(pool, sources, trail_records, type_counts,
-                               frame_counter):
+                               frame_counter, *, random_state=None,
+                               effect_mode=0):
     """Translate the direct update slice of parent routine 0x527490.
 
     It clears the per-frame type counters, ages the selected trail pool, and
     applies source-direction selection, frame-gated spin/orbit and color fade,
-    lifetime-factor scaling, and lifetime decrement. Child-emitter and
-    respawn branches remain outside this core; inputs selecting those paths
-    are rejected rather than silently approximated.
+    lifetime-factor scaling, lifetime decrement and expiry respawns. Child
+    emitter expansion remains outside this core.
     """
     if len(pool) != POOL_CAPACITY or any(
             not isinstance(slot, bytearray) or len(slot) != RECORD_BYTES for slot in pool):
         raise ValueError('particle pool must contain 600 records of 0x6c bytes')
     if len(type_counts) != 52:
         raise ValueError('particle type-counter block must contain 52 entries')
+    if random_state is not None and not isinstance(random_state, RandomState):
+        raise TypeError('random_state must be a RandomState')
+    if effect_mode not in (0, 1, 2):
+        raise ValueError('effect mode must be 0, 1 or 2')
     if type(frame_counter) is not int or not -0x80000000 <= frame_counter <= 0x7fffffff:
         raise ValueError('frame counter must fit signed int32')
     if any(not isinstance(record, bytearray) or len(record) != TRAIL_RECORD_BYTES
@@ -160,9 +165,15 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
             raise ValueError(f'missing particle source for token {token:#x}') from exc
         if len(source) < 0x6c:
             raise ValueError('particle source must contain at least 0x6c bytes')
-        if (struct.unpack_from('<I', source, 0x68)[0] != 0 or
-                slot[0x68] != 0):
-            raise ValueError('child-emitter or respawn branch is outside core scope')
+        if struct.unpack_from('<I', source, 0x68)[0] != 0:
+            raise ValueError('child-emitter branch is outside core scope')
+        if slot[0x68] and random_state is None:
+            raise ValueError('respawn records require the shared RandomState')
+        if slot[0x68] and struct.unpack_from('<h', slot, 4)[0] == 1:
+            lifetime = struct.unpack_from('<h', source, 8)[0]
+            cadence_divisor = struct.unpack_from('<i', source, 0xc)[0] + 1
+            if lifetime == 0 or cadence_divisor <= 0:
+                raise ValueError('respawn source has invalid lifetime or cadence')
         factors[token] = _exact_float(struct.unpack_from('<f', source, 0x38)[0])
 
     for record in trail_records:
@@ -180,7 +191,7 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
     advance_particle_trails(trail_records, sources, trail_counts)
     type_counts[:26] = trail_counts
 
-    for slot in pool:
+    for slot_index, slot in enumerate(pool):
         if struct.unpack_from('<h', slot, 4)[0] == 0:
             continue
         token = struct.unpack_from('<I', slot, 0)[0]
@@ -237,4 +248,27 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
             struct.pack_into('<f', slot, offset, _x87_f32(_x87_mul(factor, value)))
         remaining = struct.unpack_from('<h', slot, 4)[0]
         struct.pack_into('<h', slot, 4, (remaining - 1) & 0xffff)
+        if slot[0x68] != 0 and struct.unpack_from('<h', slot, 4)[0] == 0:
+            velocity = struct.unpack_from('<3f', slot, 0x18)
+            if any(component != 0.0 for component in velocity):
+                from .matrix_math import normalize_vector3
+                direction = normalize_vector3(velocity)
+                position = struct.unpack_from('<3i', slot, 0xc)
+                respawns = slot[0x68]
+                for _ in range(respawns):
+                    random_fraction = random_state.next_unit_fraction()
+                    scale = _x87_f32(_x87_add(
+                        _x87_mul(_exact_float(random_fraction), _exact_float(0.75)),
+                        _exact_float(0.25)))
+                    spawned = construct_particle(
+                        sources[token], token, position, scale, direction,
+                        (0.0, 0.0, 0.0), velocity, random_state, pool,
+                        frame_counter=frame_counter, effect_mode=effect_mode,
+                        cadence_flag=1,
+                        acceleration_alias_index=slot_index)
+                    if spawned is not None:
+                        child = pool[spawned]
+                        life = struct.unpack_from('<h', child, 4)[0]
+                        struct.pack_into('<h', child, 4, life >> 1)
+                        child[0x68] = 0
     return tuple(type_counts)
