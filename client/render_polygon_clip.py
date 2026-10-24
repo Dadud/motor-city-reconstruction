@@ -287,3 +287,46 @@ def clip_triangle_x_min_plane(clip_codes, vertex_records, *,
             output.append(intersection)
         current,previous=previous,(previous+1)%3
     return _pack_clipped_polygon(output,near_w,far_value)
+
+
+def clip_triangle_x_max_plane(clip_codes, vertex_records, *,
+                              x_max, near_w=1.0, far_w=0.0):
+    """Clip one triangle against the right-X plane (clip-code bit 0x20)."""
+    if (not isinstance(clip_codes,(tuple,list)) or len(clip_codes)!=3 or
+        any(type(code) is not int or not 0<=code<=0xff for code in clip_codes)):
+        raise ValueError('X clipping requires three byte clip codes')
+    if (not isinstance(vertex_records,(tuple,list)) or len(vertex_records)!=3 or
+        any(not isinstance(record,(tuple,list)) or len(record)!=10 or any(
+            type(word) is not int or not 0<=word<=0xffffffff
+            for word in record) for record in vertex_records)):
+        raise ValueError('X clipping requires three ten-word vertices')
+    flags=tuple(code&0x20 for code in clip_codes)
+    if sum(bool(flag) for flag in flags)!=1:
+        raise ValueError('exactly one vertex must be outside the right-X plane')
+    if any(code&0xdf for code in clip_codes):
+        raise ValueError('other clip planes must be inactive')
+    x_max=_f32(float(x_max))
+    near_w=_f32(float(near_w))
+    far_value=_f32(float(far_w))
+    transformed,vary_alpha,vary_rgb,vary_color=_prepare_triangle(vertex_records)
+
+    output=[]
+    current=2
+    previous=0
+    for _ in range(3):
+        current_inside=not flags[current]
+        if current_inside:
+            output.append(transformed[current])
+        if flags[current]!=flags[previous]:
+            a=transformed[current]
+            b=transformed[previous]
+            delta_x=a[0]-b[0]
+            if delta_x==0:
+                raise ValueError('X-plane crossing has a zero denominator')
+            t=_f32((a[0]-x_max)/delta_x)
+            intersection=_interpolate_edge(
+                a,b,t,vary_alpha,vary_rgb,vary_color)
+            intersection[0]=x_max
+            output.append(intersection)
+        current,previous=previous,(previous+1)%3
+    return _pack_clipped_polygon(output,near_w,far_value)

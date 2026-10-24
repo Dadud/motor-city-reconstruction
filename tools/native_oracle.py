@@ -677,6 +677,11 @@ class DynoOracle:
         return self.render_polygon_axis_clip(clip_codes,vertex_records,x_min,
                                              near_w,far_w,axis='x',upper=False)
 
+    def render_polygon_x_max_clip(self, clip_codes, vertex_records,
+                                  x_max, near_w=1.0, far_w=0.0):
+        return self.render_polygon_axis_clip(clip_codes,vertex_records,x_max,
+                                             near_w,far_w,axis='x',upper=True)
+
     def random_next(self, words):
         """Run the original shared 0x6f0fa0 generator on six supplied words."""
         if (len(words) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff

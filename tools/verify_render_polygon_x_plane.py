@@ -1,9 +1,10 @@
-"""Compare isolated left-X polygon clipping with MCO execution."""
+"""Compare isolated left/right-X polygon clipping with MCO execution."""
 import argparse
 import random
 import struct
 
-from client.render_polygon_clip import clip_triangle_x_min_plane
+from client.render_polygon_clip import (
+    clip_triangle_x_max_plane, clip_triangle_x_min_plane)
 from tools.native_oracle import DynoOracle
 
 
@@ -46,9 +47,32 @@ def verify(executable,cases=256):
             codes,records,x_min=x_min,near_w=1.,far_w=0.)
         if actual is None or (actual[0],actual[3])!=expected:
             raise AssertionError(
-                f'case {index}: expected {expected!r}, got {actual!r}; '
+                f'left-X case {index}: expected {expected!r}, got {actual!r}; '
                 f'x_min={x_min!r}, codes={codes!r}')
-    return {'native-matching-left-X-polygons':cases}
+
+        x_max=rng.uniform(-4.,4.)
+        right_codes=tuple(0x20 if i==outside else 0 for i in range(3))
+        right_records=[]
+        for vertex in range(3):
+            x=(x_max+rng.uniform(.01,5.) if vertex==outside else
+               x_max-rng.uniform(.01,5.))
+            right_records.append((_word(x),_word(rng.uniform(-20.,20.)),
+                                 _word(rng.uniform(-1.,1.)),
+                                 _word(rng.uniform(.2,.95)),colors[vertex],
+                                 rng.getrandbits(32),_word(rng.random()),
+                                 _word(rng.random()),rng.getrandbits(32),
+                                 rng.getrandbits(32)))
+        right_records=tuple(right_records)
+        expected_right=clip_triangle_x_max_plane(
+            right_codes,right_records,x_max=x_max,near_w=1.,far_w=0.)
+        actual_right=oracle.render_polygon_x_max_clip(
+            right_codes,right_records,x_max=x_max,near_w=1.,far_w=0.)
+        if actual_right is None or (actual_right[0],actual_right[3])!=expected_right:
+            raise AssertionError(
+                f'right-X case {index}: expected {expected_right!r}, '
+                f'got {actual_right!r}; x_max={x_max!r}')
+    return {'native-matching-left-X-polygons':cases,
+            'native-matching-right-X-polygons':cases}
 
 
 def main():
@@ -56,7 +80,7 @@ def main():
     parser.add_argument('executable')
     parser.add_argument('--cases',type=int,default=256)
     args=parser.parse_args()
-    print(f'0x475de0 left-X clipping matches {verify(args.executable,args.cases)}')
+    print(f'0x475de0 X-plane clipping matches {verify(args.executable,args.cases)}')
 
 
 if __name__=='__main__':

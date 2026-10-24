@@ -2,7 +2,8 @@ import struct
 import unittest
 
 from client.render_polygon_clip import (
-    clip_triangle_near_plane, clip_triangle_x_min_plane,
+    clip_triangle_near_plane, clip_triangle_x_max_plane,
+    clip_triangle_x_min_plane,
     clip_triangle_y_max_plane,
     clip_triangle_y_min_plane, reject_triangle_on_shared_near_plane)
 
@@ -86,6 +87,21 @@ class RenderPolygonClipTests(unittest.TestCase):
             (0x10,0,0),vertices,x_min=-1.)
         self.assertEqual(count,2)
         self.assertTrue(all(vertex[0]==_word(-1.)
+                            for vertex in clipped[1:3]))
+
+    def test_right_x_plane_clips_one_outside_vertex(self):
+        vertices=(
+            (_word(3.),_word(-2.),_word(.2),_word(.5),
+             0xff0000ff,0,_word(.1),_word(.2),0,0),
+            (_word(0.),_word(2.),_word(.2),_word(.6),
+             0xff00ff00,0,_word(.8),_word(.2),0,0),
+            (_word(-2.),_word(0.),_word(.2),_word(.75),
+             0xffff0000,0,_word(.4),_word(.9),0,0),
+        )
+        count,clipped=clip_triangle_x_max_plane(
+            (0x20,0,0),vertices,x_max=1.)
+        self.assertEqual(count,2)
+        self.assertTrue(all(vertex[0]==_word(1.)
                             for vertex in clipped[1:3]))
 
 
