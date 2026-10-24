@@ -3006,6 +3006,27 @@
     "doc_refs": [
       "docs/recovery/render-dispatch.md"
     ]
+  },
+  "0x495c00": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The first pair of 17-point loops transforms each strip point through the object 3x3 matrix as three x87 dot products stored to binary32. This component is translated in transform_track_vertex and its 512 cases compare all outputs bit-for-bit through 1,536 direct calls to original 0x6f1140. The rest of 0x495c00 remains untranslated: per-vertex descriptor setup via 0x6f3090, allocator/display-list traversal via 0x55e8f0, and material/draw dispatch via 0x494e90.",
+    "sources": [
+      "client/track_vertex_transform.py",
+      "tests/test_track_vertex_transform.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_vertex_transform.py",
+      "docs/recovery/track-vertex-transform.md"
+    ],
+    "evidence_ids": [
+      "ev_dcc86e9d961638fd6f67dd5764628d275474b782a277931813db07e845e520d6",
+      "ev_7da7390f05033eab8468235013ec85f193b7a2455a95c5e4f075cc937a0cf149"
+    ],
+    "verification_refs": [
+      "tools/verify_track_vertex_transform.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-vertex-transform.md"
+    ]
   }
 }
-

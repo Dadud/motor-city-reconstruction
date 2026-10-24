@@ -183,6 +183,19 @@ class DynoOracle:
                 struct.unpack_from('<f', block, 0xc0e0)[0],
                 struct.unpack_from('<f', block, 0xc0e4)[0])
 
+    def dot3(self, left, right):
+        """Capture the original 0x6f1140 x87 dot-product result at float store."""
+        if len(left) != 3 or len(right) != 3:
+            raise ValueError('dot product oracle requires two 3-vectors')
+        self._reset()
+        left_address, right_address, output = self.inputs, self.inputs+0x20, self.inputs+0x40
+        self.cpu.mem_write(left_address, struct.pack('<3f', *left))
+        self.cpu.mem_write(right_address, struct.pack('<3f', *right))
+        self.cpu.mem_write(output, bytes(4))
+        self.call(0x6f1140, (left_address, right_address),
+                  tail=b'\xd9\x1d'+struct.pack('<I', output), instruction_limit=1000)
+        return struct.unpack('<f', self.cpu.mem_read(output, 4))[0]
+
     def vector_length3(self, values):
         """Capture 0x6f1210's x87 result as a binary32 output word."""
         if len(values) != 3:
