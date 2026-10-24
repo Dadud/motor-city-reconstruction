@@ -1,4 +1,17 @@
 {
+  "0x42e490": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "A present surface descriptor selects a quad index, whose four vertex indices address packed color words; the low three channels are averaged independently with integer truncation and returned with opaque alpha. A null descriptor returns fixed opaque gray. 512 randomized direct calls match exact native return words, and every case also checks the null-descriptor branch. Block ownership, renderer scheduling, and invalid original pointers remain outside this function-level check.",
+    "sources": [
+      "client/track_surface.py",
+      "tests/test_track_surface_color.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_surface_color.py",
+      "docs/recovery/track-surface-color.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d780": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

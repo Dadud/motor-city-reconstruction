@@ -9,6 +9,38 @@ from .track_spatial import decode_spatial
 from .track_plane import surface_height, track_plane
 
 
+def average_surface_vertex_color(block_index, descriptor, vertex_colors, quads):
+    """Average the four packed colors referenced by one surface descriptor.
+
+    ``descriptor`` stores the quad-table index at slot 3 and ``quads`` contains
+    the corresponding four vertex indices. The original emits opaque gray when
+    the descriptor pointer is absent; callers represent that case with None.
+    """
+    if descriptor is None:
+        return 0xff7f7f7f
+    if (type(block_index) is not int or not 0 <= block_index <= 0xffffffff or
+            not isinstance(descriptor, (tuple, list)) or len(descriptor) < 4 or
+            not isinstance(vertex_colors, (tuple, list)) or
+            not isinstance(quads, (tuple, list))):
+        raise ValueError('invalid surface color inputs')
+    quad_index = descriptor[3]
+    if type(quad_index) is not int or not 0 <= quad_index < len(quads):
+        raise ValueError('surface descriptor quad index is outside the table')
+    indices = quads[quad_index]
+    if (len(indices) != 4 or any(type(index) is not int or
+                                 not 0 <= index < len(vertex_colors)
+                                 for index in indices)):
+        raise ValueError('surface quad must reference four supplied vertex colors')
+    colors = [vertex_colors[index] for index in indices]
+    if any(type(color) is not int or not 0 <= color <= 0xffffffff
+           for color in colors):
+        raise ValueError('vertex colors must be uint32 packed words')
+    r = sum((color >> 16) & 0xff for color in colors) >> 2
+    g = sum((color >> 8) & 0xff for color in colors) >> 2
+    b = sum(color & 0xff for color in colors) >> 2
+    return 0xff000000 | (r << 16) | (g << 8) | b
+
+
 def find_surface_quad_candidate(x, z, candidates, blocks):
     """Return the first containing ``(block, descriptor)`` candidate.
 
