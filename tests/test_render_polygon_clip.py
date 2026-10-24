@@ -2,7 +2,8 @@ import struct
 import unittest
 
 from client.render_polygon_clip import (
-    clip_triangle_near_plane, reject_triangle_on_shared_near_plane)
+    clip_triangle_near_plane, clip_triangle_y_max_plane,
+    reject_triangle_on_shared_near_plane)
 
 
 def _word(value):
@@ -39,6 +40,22 @@ class RenderPolygonClipTests(unittest.TestCase):
     def test_shared_near_plane_rejection_remains_available(self):
         self.assertEqual(reject_triangle_on_shared_near_plane(
             (1,0x11,0x21)),0xffffffff)
+
+    def test_upper_y_plane_clips_one_outside_vertex(self):
+        vertices=(
+            (_word(-2.),_word(0.),_word(.2),_word(.5),
+             0xff0000ff,0,_word(.1),_word(.2),0,0),
+            (_word(2.),_word(3.),_word(.2),_word(.6),
+             0xff00ff00,0,_word(.8),_word(.2),0,0),
+            (_word(0.),_word(-1.),_word(.2),_word(.75),
+             0xffff0000,0,_word(.4),_word(.9),0,0),
+        )
+        count,clipped=clip_triangle_y_max_plane(
+            (0,8,0),vertices,y_max=1.)
+        self.assertEqual(count,2)
+        self.assertEqual(len(clipped),4)
+        self.assertTrue(all(vertex[1]==_word(1.)
+                            for vertex in clipped[2:4]))
 
 
 if __name__=='__main__':
