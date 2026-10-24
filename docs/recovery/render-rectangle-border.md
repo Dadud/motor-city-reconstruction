@@ -9,9 +9,10 @@ The four raw attributes advance cyclically across those edges.
 geometry and 32-bit signed arithmetic. `construct_rectangle_border` can feed
 those edges through the translated segment constructor when the caller
 provides the renderer clip bounds and untouched stack residue for each native
-call. The segment constructor has 512 direct original comparisons. This
-rectangle-level geometry is based on static decompilation and unit tests; the
-parent routine has not yet been compared directly against the executable.
+call. The segment constructor has 512 direct original comparisons. The
+rectangle-level parent geometry is still based on static decompilation and
+unit tests; its MFC/provider setup has not yet been bounded by a direct parent
+comparison.
 
 Provider/resource lookup and its side effects remain outside this recovery.
 The filled rectangle routine `0x482700` is partly recovered:
@@ -52,8 +53,8 @@ interpolation mode. The same implementation covers the isolated upper-Y
 (`0x08`) and lower-Y (`0x04`) passes, with 512 direct comparisons each across
 three outside-corner positions and color modes. The left-X (`0x10`) and
 right-X (`0x20`) passes also match 512 native comparisons each across the same
-domains. These are separate single-plane checks; their composition and
-multi-plane intersections have not been verified. The global
-vertex setup writes performed before the
-shared-plane return are not modeled; other clip planes, multi-plane
-intersections, and later passes remain open.
+domains. These single-plane checks are complemented by the ordered multi-plane
+composition in clip_triangle_planes, which compares 512 inputs spanning all
+31 nonempty subsets of the five clip planes. The global vertex setup writes
+performed before the shared-plane return are not modeled; later passes remain
+open.
