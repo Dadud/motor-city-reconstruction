@@ -9,6 +9,46 @@ from .track_spatial import decode_spatial
 from .track_plane import surface_height, track_plane
 
 
+def find_surface_quad_candidate(x, z, candidates, blocks):
+    """Return the first containing ``(block, descriptor)`` candidate.
+
+    ``candidates`` is the ordered identifier list emitted by the spatial
+    lookup. Each decoded block is ``(vertices, quads, descriptors)`` as
+    returned by ``decode_surface``. The edge products retain the native order
+    and have no tolerance or height/normal filtering.
+    """
+    if not math.isfinite(x) or not math.isfinite(z):
+        raise ValueError('surface query coordinates must be finite')
+    if not isinstance(candidates, (tuple, list)):
+        raise ValueError('surface candidates must be ordered')
+    if not isinstance(blocks, (tuple, list)):
+        raise ValueError('surface blocks must be ordered')
+    for candidate in candidates:
+        if (not isinstance(candidate, (tuple, list)) or len(candidate) != 2 or
+                any(type(value) is not int or not 0 <= value <= 0xffff
+                    for value in candidate)):
+            raise ValueError('each candidate must contain uint16 block and descriptor IDs')
+        block_index, descriptor_index = candidate
+        if block_index >= len(blocks):
+            raise ValueError('candidate block is outside the supplied blocks')
+        vertices, quads, descriptors = blocks[block_index]
+        if descriptor_index >= len(descriptors):
+            raise ValueError('candidate descriptor is outside its block')
+        polygon_index = descriptors[descriptor_index][3] & 0xffff
+        if polygon_index >= len(quads):
+            raise ValueError('descriptor polygon is outside its block quad table')
+        indices = quads[polygon_index]
+        if len(indices) != 4 or any(index >= len(vertices) for index in indices):
+            raise ValueError('surface quad must reference four supplied vertices')
+        a, b, c, d = (vertices[index] for index in indices)
+        if (((a[0] - b[0]) * (z - b[2]) <= (x - b[0]) * (a[2] - b[2])) and
+            ((b[0] - c[0]) * (z - c[2]) <= (b[2] - c[2]) * (x - c[0])) and
+            ((c[0] - d[0]) * (z - d[2]) <= (x - d[0]) * (c[2] - d[2])) and
+            ((d[0] - a[0]) * (z - a[2]) <= (d[2] - a[2]) * (x - a[0]))):
+            return (block_index, descriptor_index)
+    return None
+
+
 @dataclass(frozen=True)
 class SurfaceHit:
     block: int

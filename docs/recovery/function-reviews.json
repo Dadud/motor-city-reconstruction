@@ -40,6 +40,21 @@
     ],
     "evidence_ids": []
   },
+  "0x42eed0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Ordered block/descriptor quad decoding and four inclusive XZ edge tests are translated over explicit candidates. 512 original calls compare the exact returned candidate pointer, while 0x552880 is replaced by a supplied spatial leaf. Grid leaf generation remains outside this function's check.",
+    "sources": [
+      "client/track_surface.py",
+      "tests/test_track_surface_candidate_lookup.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_surface_quad_lookup.py",
+      "docs/recovery/track-surface-quad-lookup.md"
+    ],
+    "evidence_ids": [
+      "ev_1eb8d3339c16e9066d7fb8242c18c69a1545079d029b90195671227eb7d05a7c"
+    ]
+  },
   "0x42e0a0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
