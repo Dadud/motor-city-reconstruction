@@ -1,4 +1,25 @@
 {
+  "0x6f1530": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Builds the row-major X-axis turn rotation matrix using the client's sine/cosine helpers. 512 direct original matrices match within absolute float tolerance 2e-7 over exact quarter-turn and randomized positive/negative inputs; exceptional values and caller composition are outside this constructor-level check.",
+    "sources": ["client/matrix_math.py", "tests/test_matrix_math.py", "tools/verify_axis_rotation_matrices.py", "docs/recovery/axis-rotation-matrices.md"],
+    "evidence_ids": []
+  },
+  "0x6f1590": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Builds the row-major Y-axis turn rotation matrix using the client's sine/cosine helpers. 512 direct original matrices match within absolute float tolerance 2e-7 over exact quarter-turn and randomized positive/negative inputs; exceptional values and caller composition are outside this constructor-level check.",
+    "sources": ["client/matrix_math.py", "tests/test_matrix_math.py", "tools/verify_axis_rotation_matrices.py", "docs/recovery/axis-rotation-matrices.md"],
+    "evidence_ids": []
+  },
+  "0x6f15f0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Builds the row-major Z-axis turn rotation matrix using the client's sine/cosine helpers. 512 direct original matrices match within absolute float tolerance 2e-7 over exact quarter-turn and randomized positive/negative inputs; exceptional values and caller composition are outside this constructor-level check.",
+    "sources": ["client/matrix_math.py", "tests/test_matrix_math.py", "tools/verify_axis_rotation_matrices.py", "docs/recovery/axis-rotation-matrices.md"],
+    "evidence_ids": []
+  },
   "0x6f12a0": {
     "translation": "python-and-native-bounded",
     "verification": "original-comparison-bounded",

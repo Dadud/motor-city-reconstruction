@@ -46,6 +46,28 @@ def rotation_x_turns(turns):
             0.0, -sine, cosine)
 
 
+def rotation_y_turns(turns):
+    """Translate 0x6f1590's 3x3 Y-axis turn matrix builder."""
+    turns = f32(turns)
+    angle_scale = f32(6.2831854820251465)
+    sine = f32(sin(turns * angle_scale))
+    cosine = f32(cos(turns * angle_scale))
+    return (cosine, 0.0, -sine,
+            0.0, 1.0, 0.0,
+            sine, 0.0, cosine)
+
+
+def rotation_z_turns(turns):
+    """Translate 0x6f15f0's 3x3 Z-axis turn matrix builder."""
+    turns = f32(turns)
+    angle_scale = f32(6.2831854820251465)
+    sine = f32(sin(turns * angle_scale))
+    cosine = f32(cos(turns * angle_scale))
+    return (cosine, sine, 0.0,
+            -sine, cosine, 0.0,
+            0.0, 0.0, 1.0)
+
+
 def dot_3_f32(left, right):
     """Translate 0x6f1140/0x6f3b51 and round the x87 result on float storage."""
     left, right = tuple(left), tuple(right)

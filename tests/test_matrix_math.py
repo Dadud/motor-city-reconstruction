@@ -2,6 +2,7 @@ import unittest
 
 from client.matrix_math import (atan2_turns, cross_product3, dot_3_f32, dot_product_batch, integrate_rotation_matrix,
                                 normalize_vector3, repair_rotation_matrix, scale_matrix_rows,
+                                rotation_y_turns, rotation_z_turns,
                                 transpose_3x3_words)
 
 
@@ -64,6 +65,10 @@ class MatrixMathTests(unittest.TestCase):
         result=integrate_rotation_matrix(identity,(0.25,0,0))
         self.assertAlmostEqual(result[4],0.0,places=6)
         self.assertAlmostEqual(result[5],1.0,places=6)
+
+    def test_y_and_z_axis_turn_matrices(self):
+        self.assertEqual(rotation_y_turns(0), (1., 0., -0., 0., 1., 0., 0., 0., 1.))
+        self.assertEqual(rotation_z_turns(0), (1., 0., 0., -0., 1., 0., 0., 0., 1.))
 
     def test_rotation_matrix_repair_preserves_identity_and_corrects_drift(self):
         identity=(1,0,0,0,1,0,0,0,1)
