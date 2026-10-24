@@ -190,11 +190,20 @@ def triage_module(document, image=None, disassembler=None,
     module = module_disposition or {}
     regions = region_dispositions or {}
     for entry in document['functions']:
-        klass, rule = classify(entry, image, disassembler)
+        if entry.get('boundary_origin') == 'supplement':
+            # A supplement records an independently evidenced callable
+            # boundary. Keep it in the candidate work set until normal
+            # structural review can classify it from an exported body.
+            klass, rule = 'game-candidate', 'evidenced-callable-supplement'
+        else:
+            klass, rule = classify(entry, image, disassembler)
         address = entry['address']
         block = f'{int(address, 16) & ~0x3ffff:#x}' if ':' not in address else ''
         region = regions.get(block, {})
-        if klass != 'game-candidate':
+        evidenced_callback = entry.get('boundary_origin') == 'supplement'
+        if evidenced_callback:
+            required, disposition = True, 'evidenced-game-callback'
+        elif klass != 'game-candidate':
             required, disposition = False, module.get('disposition', 'unclassified')
         elif module.get('counts_toward_required') is False:
             required, disposition = False, module['disposition']

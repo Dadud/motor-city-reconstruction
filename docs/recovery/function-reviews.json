@@ -3053,5 +3053,27 @@
     "doc_refs": [
       "docs/recovery/render-vertex-descriptor.md"
     ]
+  },
+  "0x6f1d60": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The table-selected mode-8 callback converts each XYZ source record to XYZW: reciprocal depth (using the 10000 fallback at z=0), viewport-scaled/inverted screen X/Y, and scaled depth. It advances independent source and destination pointers by their configured strides and writes exactly four binary32 words per vertex. 512 deterministic vertices match all four native output words bit-for-bit across three source/destination stride pairs; output padding and final pointer advances also match.",
+    "sources": [
+      "client/track_renderer_callbacks.py",
+      "tests/test_track_renderer_callbacks.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_renderer_callback.py",
+      "docs/recovery/track-render-position.md"
+    ],
+    "evidence_ids": [
+      "ev_9f163d383d12674533c72615c2a05ac4146e3dcb3f60d2e6a50d02eff10b1052",
+      "ev_317b4270335a2d62bf7616b60de9b4f779b20c65baf8beb7503dca542e853975"
+    ],
+    "verification_refs": [
+      "tools/verify_track_renderer_callback.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-render-position.md"
+    ]
   }
 }

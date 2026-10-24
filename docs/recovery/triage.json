@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "totals": {
-  "game-candidate": 64588,
+  "game-candidate": 64589,
   "thunk": 827,
   "crt-runtime": 848,
   "import": 3817,
@@ -86,7 +86,7 @@
     "mcity.exe"
    ],
    "totals": {
-    "game-candidate": 16076,
+    "game-candidate": 16077,
     "linker-artifact": 9092,
     "thunk": 109,
     "eh-artifact": 115,
@@ -95,10 +95,10 @@
     "import": 338
    },
    "review": {
-    "no_direct_callers": 6534,
-    "required_entries": 11760,
-    "required_skeletons": 6569,
-    "cloned_entries": 4494,
+    "no_direct_callers": 6541,
+    "required_entries": 11767,
+    "required_skeletons": 6575,
+    "cloned_entries": 4495,
     "pending_disposition": 0
    }
   },
@@ -14333,7 +14333,7 @@
     "required": true,
     "disposition": "game",
     "skeleton": "50e64c14ccbd",
-    "clone_count": 2
+    "clone_count": 3
    },
    {
     "address": "0x461c70",
@@ -43637,7 +43637,7 @@
     "required": true,
     "disposition": "game",
     "skeleton": "50e64c14ccbd",
-    "clone_count": 2
+    "clone_count": 3
    },
    {
     "address": "0x582dc0",
@@ -284026,79 +284026,92 @@
     "address": "0x6efa60",
     "name": "input_mouse_wheel",
     "class": "game-candidate",
-    "rule": "residual",
+    "rule": "evidenced-callable-supplement",
     "direct_callers": 0,
-    "required": false,
-    "disposition": "library-region",
+    "required": true,
+    "disposition": "evidenced-game-callback",
     "boundary_origin": "supplement",
     "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
     "skeleton": "463d91e54564",
-    "clone_count": 0
+    "clone_count": 1
    },
    {
     "address": "0x6efad0",
     "name": "input_mouse_shutdown",
     "class": "game-candidate",
-    "rule": "residual",
+    "rule": "evidenced-callable-supplement",
     "direct_callers": 0,
-    "required": false,
-    "disposition": "library-region",
+    "required": true,
+    "disposition": "evidenced-game-callback",
     "boundary_origin": "supplement",
     "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
     "skeleton": "1689ec590454",
-    "clone_count": 0
+    "clone_count": 1
    },
    {
     "address": "0x6f0350",
     "name": "input_device_shutdown",
     "class": "game-candidate",
-    "rule": "residual",
+    "rule": "evidenced-callable-supplement",
     "direct_callers": 0,
-    "required": false,
-    "disposition": "library-region",
+    "required": true,
+    "disposition": "evidenced-game-callback",
     "boundary_origin": "supplement",
     "boundary_evidence": "Initialization registers 0x6f0350 at 0x6f02e7; instructions call 0x6f0310, clear initialized global, and RET at 0x6f035f. Complete original entry is executed in lifetime comparison mode 1.",
     "skeleton": "eb6a77324d89",
-    "clone_count": 0
+    "clone_count": 1
    },
    {
     "address": "0x6f0670",
     "name": "input_mouse_report",
     "class": "game-candidate",
-    "rule": "residual",
+    "rule": "evidenced-callable-supplement",
     "direct_callers": 0,
-    "required": false,
-    "disposition": "library-region",
+    "required": true,
+    "disposition": "evidenced-game-callback",
     "boundary_origin": "supplement",
     "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
     "skeleton": "09a27542d2ea",
-    "clone_count": 0
+    "clone_count": 1
    },
    {
     "address": "0x6f06a0",
     "name": "input_mouse_counter_increment",
     "class": "game-candidate",
-    "rule": "residual",
+    "rule": "evidenced-callable-supplement",
     "direct_callers": 0,
-    "required": false,
-    "disposition": "library-region",
+    "required": true,
+    "disposition": "evidenced-game-callback",
     "boundary_origin": "supplement",
     "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
     "skeleton": "50e64c14ccbd",
-    "clone_count": 0
+    "clone_count": 3
    },
    {
     "address": "0x6f06b0",
     "name": "input_mouse_counter_decrement",
     "class": "game-candidate",
-    "rule": "residual",
+    "rule": "evidenced-callable-supplement",
     "direct_callers": 0,
-    "required": false,
-    "disposition": "library-region",
+    "required": true,
+    "disposition": "evidenced-game-callback",
     "boundary_origin": "supplement",
     "boundary_evidence": "Registered callback identity in initializer/setup; exact-address REA instruction control-flow walk reaches all returns within stated range. Complete original entry is executed in callback comparison fixture. See mouse-callbacks-progress.md for Evidence IDs and ownership limitation.",
     "skeleton": "68245915f54b",
-    "clone_count": 0
+    "clone_count": 1
+   },
+   {
+    "address": "0x6f1d60",
+    "name": "render_position_callback_mode8",
+    "class": "game-candidate",
+    "rule": "evidenced-callable-supplement",
+    "direct_callers": 0,
+    "required": true,
+    "disposition": "evidenced-game-callback",
+    "boundary_origin": "supplement",
+    "boundary_evidence": "The original callback table slot at 0x8c8a20 references 0x6f1d60. Decoded instructions consume count and the renderer source/output globals, write four binary32 outputs per point, advance by the configured source/output strides, update both pointers, and return at 0x6f1de6. 512-case batches execute the callback directly against the installed binary.",
+    "skeleton": "b250a3c9f8a3",
+    "clone_count": 1
    }
   ]
  }

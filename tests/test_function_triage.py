@@ -51,6 +51,21 @@ class FunctionTriageTests(unittest.TestCase):
         self.assertEqual(rows[0]['direct_callers'], 1)
         self.assertEqual(rows[1]['direct_callers'], 0)
 
+    def test_evidenced_supplement_remains_in_required_candidate_set(self):
+        document = dict(functions=[dict(
+            address='0x6f1d60', name='render_position_callback_mode8',
+            external=False, thunk=False, body_bytes=0x87, direct_callees=[],
+            boundary_origin='supplement', boundary_evidence='native callback table')])
+        rows, totals, review = triage_module(
+            document, region_dispositions={'0x6c0000':
+                dict(disposition='library')})
+        self.assertEqual(rows[0]['class'], 'game-candidate')
+        self.assertEqual(rows[0]['rule'], 'evidenced-callable-supplement')
+        self.assertTrue(rows[0]['required'])
+        self.assertEqual(rows[0]['disposition'], 'evidenced-game-callback')
+        self.assertEqual(totals['game-candidate'], 1)
+        self.assertEqual(review['required_entries'], 1)
+
     def test_dispositions_decide_what_counts_as_work(self):
         document = dict(functions=[
             dict(address='0x401000', name='FUN_00401000', external=False,

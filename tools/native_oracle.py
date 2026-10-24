@@ -108,6 +108,36 @@ class DynoOracle:
         captured=struct.unpack('<8I', self.cpu.mem_read(capture,32))
         return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), output, captured
 
+    def render_positions(self, vertices, *, source_stride=12, output_stride=16):
+        """Run callback entry 0x6f1d60 over XYZ records and capture XYZW stores."""
+        if (type(source_stride) is not int or source_stride < 12 or
+            type(output_stride) is not int or output_stride < 16 or
+            source_stride * len(vertices) > 0x8000 or
+            output_stride * len(vertices) > 0x7000 or
+            any(len(v) != 3 for v in vertices)):
+            raise ValueError('renderer position records or strides are invalid')
+        self._reset()
+        source=self.inputs+0x1000;output=self.inputs+0x9000
+        source_data=bytearray(source_stride*len(vertices))
+        for index,vertex in enumerate(vertices):
+            struct.pack_into('<3f',source_data,index*source_stride,*vertex)
+        self.cpu.mem_write(source,bytes(source_data))
+        output_data=bytearray(b'\xcd'*output_stride*len(vertices))
+        self.cpu.mem_write(output,bytes(output_data))
+        self.cpu.mem_write(0xb368b8,struct.pack('<I',source))
+        self.cpu.mem_write(0xb368a8,struct.pack('<I',output))
+        self.cpu.mem_write(0x8c89f4,struct.pack('<I',source_stride))
+        self.cpu.mem_write(0x8c89f8,struct.pack('<I',output_stride))
+        self.call(0x6f1d60,(len(vertices),),instruction_limit=1_000_000)
+        raw=bytes(self.cpu.mem_read(output,output_stride*len(vertices)))
+        positions=tuple(struct.unpack_from('<4f',raw,index*output_stride)
+                        for index in range(len(vertices)))
+        padding=tuple(raw[index*output_stride+16:(index+1)*output_stride]
+                      for index in range(len(vertices)))
+        final_source=struct.unpack('<I',self.cpu.mem_read(0xb368b8,4))[0]
+        final_output=struct.unpack('<I',self.cpu.mem_read(0xb368a8,4))[0]
+        return positions,padding,final_source,final_output
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

@@ -76,6 +76,20 @@
           "docs/recovery/mouse-callbacks-progress.md"
         ],
         "direct_callees": []
+      },
+      {
+        "address": "0x6f1d60",
+        "end_exclusive": "0x6f1de7",
+        "name": "render_position_callback_mode8",
+        "evidence": "The original callback table slot at 0x8c8a20 references 0x6f1d60. Decoded instructions consume count and the renderer source/output globals, write four binary32 outputs per point, advance by the configured source/output strides, update both pointers, and return at 0x6f1de6. 512-case batches execute the callback directly against the installed binary.",
+        "sources": [
+          "client/track_renderer_callbacks.py",
+          "tests/test_track_renderer_callbacks.py",
+          "tools/native_oracle.py",
+          "tools/verify_track_renderer_callback.py",
+          "docs/recovery/track-render-position.md"
+        ],
+        "direct_callees": []
       }
     ]
   }

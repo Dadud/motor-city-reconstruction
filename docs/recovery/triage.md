@@ -6,7 +6,7 @@ is a review signal rather than a deadness finding.
 
 | Binary | Role | Entries | Required | Distinct shapes |
 | --- | --- | ---: | ---: | ---: |
-| mcity.exe | game-client | 25,779 | 11,760 | 6,569 |
+| mcity.exe | game-client | 25,780 | 11,767 | 6,575 |
 | nps/mco.exe | online-support-investigation | 2,985 | 2,708 | 0 |
 | ip.exe | online-support-investigation | 2,377 | 1,711 | 0 |
 | IFC22.dll | input-library-investigation | 899 | 792 | 0 |
@@ -37,7 +37,7 @@ is a review signal rather than a deadness finding.
 
 | Class | Entries |
 | --- | ---: |
-| game-candidate | 64,588 |
+| game-candidate | 64,589 |
 | linker-artifact | 9,092 |
 | import | 3,817 |
 | crt-runtime | 848 |
@@ -45,12 +45,12 @@ is a review signal rather than a deadness finding.
 | eh-artifact | 324 |
 | tool-artifact | 27 |
 
-Review signal — `game-candidate` entries with no direct caller: **9,549**. Indirect dispatch is not recorded by this pass, so this is a work queue, not dead code.
+Review signal — `game-candidate` entries with no direct caller: **9,556**. Indirect dispatch is not recorded by this pass, so this is a work queue, not dead code.
 
 ## Required set
 
-- Required entries after dispositions: **17,799**
-- Distinct code shapes behind them (lower bound on behaviors): **6,569**
+- Required entries after dispositions: **17,806**
+- Distinct code shapes behind them (lower bound on behaviors): **6,575**
 - Entries still awaiting a disposition: **0**
 - Of which in modules whose internals have not had region treatment: **6,039** (their module role is reviewed, their contents are not)
 
@@ -63,8 +63,8 @@ was supplied to this run, so the shape total understates the full set.
 
 ## Wave order (region-level first cut)
 
-Wave execution: W0 67/658, W1 0/1,189, W2 13/437, W4 6/1,078, W5 16/6,635, W6 3/1,763
-105 of 11,760 required entries covered across 5 active wave(s).
+Wave execution: W0 67/658, W1 0/1,189, W2 13/437, W4 6/1,078, W5 16/6,635, W6 3/1,763, unassigned 6/7
+111 of 11,767 required entries covered across 6 active wave(s).
 
 | Wave | Required entries |
 | --- | ---: |
@@ -74,6 +74,7 @@ Wave execution: W0 67/658, W1 0/1,189, W2 13/437, W4 6/1,078, W5 16/6,635, W6 3/
 | W4 | 1,078 |
 | W5 | 6,635 |
 | W6 | 1,763 |
+| unassigned | 7 |
 
 ## Address-region work queue: mcity.exe
 
@@ -96,6 +97,7 @@ is real. Known-good reviewed functions all fall in 0x430000-0x550000.
 | `0x5c0000` | 767 | 502 | 1.5x |  |
 | `0x600000` | 896 | 533 | 1.7x |  |
 | `0x640000` | 1,189 | 814 | 1.5x |  |
+| `0x6c0000` | 7 | 7 | 1.0x |  |
 | `0x740000` | 1,301 | 911 | 1.4x |  |
 | `0x780000` | 1,078 | 764 | 1.4x |  |
 | `0x800000` | 2,008 | 166 | 12.1x | inventory density anomaly: review before counting |
