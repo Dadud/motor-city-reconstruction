@@ -9,6 +9,40 @@ from .track_spatial import decode_spatial
 from .track_plane import surface_height, track_plane
 
 
+def build_track_camera_state(row, track_index, movement_mode, vertical_offset,
+                            initial_state=bytes(0x4c)):
+    """Populate the position/orientation portion written by native 0x42f0c0.
+
+    ``row`` is one 0x54-byte (21-float) track record. The native optional
+    matrix normalization is a separate 0x6f1850 path and is not enabled here.
+    """
+    import struct
+    if (not isinstance(row, (tuple, list)) or len(row) < 14 or
+            any(not math.isfinite(value) for value in row[:14]) or
+            type(track_index) is not int or not 0 <= track_index <= 0xffffffff or
+            movement_mode not in (0, 1, 2) or
+            not math.isfinite(vertical_offset) or
+            not isinstance(initial_state, bytes) or len(initial_state) < 0x4c):
+        raise ValueError('invalid track camera state inputs')
+    result = bytearray(initial_state)
+    x, y, z = row[0], row[1] + vertical_offset, row[2]
+    if movement_mode == 1:
+        distance = row[13] - 0.5
+        x += row[9] * distance
+        y += row[10] * distance
+        z += row[11] * distance
+    elif movement_mode == 0:
+        distance = row[12] - 0.5
+        x -= row[9] * distance
+        y -= row[10] * distance
+        z -= row[11] * distance
+    struct.pack_into('<3f', result, 0x0c, x, y, z)
+    struct.pack_into('<9f', result, 0x18, *row[9:12], *row[3:9])
+    struct.pack_into('<f', result, 0x3c, 1.0)
+    struct.pack_into('<II', result, 0x44, track_index, track_index >> 3)
+    return bytes(result)
+
+
 def surface_quad_vertex_indices(block_index, descriptor_index, descriptors, quads):
     """Resolve one surface descriptor to its four vertex indices."""
     if (type(block_index) is not int or not 0 <= block_index <= 0xffff or

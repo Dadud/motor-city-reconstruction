@@ -1,4 +1,17 @@
 {
+  "0x42f0c0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "When optional matrix normalization is disabled, the routine copies position/orientation from a 0x54-byte track row, applies forward, reverse, or neutral position logic, stores track index/group and unit scale, and sets the dirty flag. 512 randomized direct calls compare all float fields within scale-aware tolerance and all discrete/untouched bytes exactly. The 0x6f1850 normalization path and live camera scheduling remain outside scope.",
+    "sources": [
+      "client/track_surface.py",
+      "tests/test_track_camera_state.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_camera_state.py",
+      "docs/recovery/track-camera-state.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42e590": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
