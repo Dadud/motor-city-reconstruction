@@ -130,10 +130,10 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
     """Translate the direct update slice of parent routine 0x527490.
 
     It clears the per-frame type counters, ages the selected trail pool, and
-    applies frame-gated spin/orbit, lifetime-factor scaling and lifetime
-    decrement. The parent's child-emitter, source-direction, color-fade and
-    respawn branches are outside this core; inputs selecting those paths are
-    rejected rather than silently approximated.
+    applies source-direction selection, frame-gated spin/orbit and color fade,
+    lifetime-factor scaling, and lifetime decrement. Child-emitter and
+    respawn branches remain outside this core; inputs selecting those paths
+    are rejected rather than silently approximated.
     """
     if len(pool) != POOL_CAPACITY or any(
             not isinstance(slot, bytearray) or len(slot) != RECORD_BYTES for slot in pool):
