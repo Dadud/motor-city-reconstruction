@@ -1,4 +1,25 @@
 {
+  "0x6f19d0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Replaces the first capability global, returns its prior value, marks the associated dirty global only for nonzero requests, and invalidates the render-mode cache for zero. 512 direct calls compare EAX and all six related globals exactly across zero, one and random uint32 states.",
+    "sources": ["client/render_state.py", "tests/test_render_capability_state.py", "tools/verify_render_capability_state.py", "docs/recovery/renderer-capability-state.md"],
+    "evidence_ids": []
+  },
+  "0x6f1a00": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Replaces the second capability global, returns its prior value, marks the associated dirty global only for nonzero requests, and invalidates the render-mode cache for zero. 512 direct calls compare EAX and all six related globals exactly across zero, one and random uint32 states.",
+    "sources": ["client/render_state.py", "tests/test_render_capability_state.py", "tools/verify_render_capability_state.py", "docs/recovery/renderer-capability-state.md"],
+    "evidence_ids": []
+  },
+  "0x6f1a70": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Replaces the vertex-format cache, returns its prior value, and invalidates the render-mode cache only for zero requests. 512 direct calls compare EAX and all six related globals exactly across zero, one and random uint32 states.",
+    "sources": ["client/render_state.py", "tests/test_render_capability_state.py", "tools/verify_render_capability_state.py", "docs/recovery/renderer-capability-state.md"],
+    "evidence_ids": []
+  },
   "0x6f1650": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
