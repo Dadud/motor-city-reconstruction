@@ -671,6 +671,29 @@ class DynoOracle:
                   instruction_limit=10_000)
         return struct.unpack('<f',self.cpu.mem_read(output,4))[0]
 
+    def track_surface_cached_quad(self, point, quad):
+        """Run the early cached-quad branch of 0x42e760."""
+        if len(point)!=3 or len(quad)!=4 or any(len(vertex)!=3 for vertex in quad):
+            raise ValueError('cached-quad oracle requires XYZ point and quad')
+        self._reset()
+        point_address=self.inputs+0x100
+        context=self.inputs+0x200
+        vertex_addresses=tuple(self.inputs+0x400+index*0x20
+                               for index in range(4))
+        self.cpu.mem_write(point_address,struct.pack('<3f',*point))
+        for address,vertex in zip(vertex_addresses,quad):
+            self.cpu.mem_write(address,struct.pack('<3f',*vertex))
+        words=[0xdeadbeef]*17
+        words[3]=1
+        for index,address in enumerate(vertex_addresses):
+            words[4+index]=address
+        context_before=struct.pack('<17I',*words)
+        self.cpu.mem_write(context,context_before)
+        self.call(0x42e760,(point_address,context),instruction_limit=10_000)
+        result=self.cpu.reg_read(self.reg.UC_X86_REG_EAX)
+        context_after=bytes(self.cpu.mem_read(context,68))
+        return result,context_before,context_after
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""
