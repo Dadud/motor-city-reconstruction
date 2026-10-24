@@ -9,6 +9,13 @@ class QuadDispatchResult:
     callback_words: object
 
 
+@dataclass(frozen=True)
+class QuadDispatchTrace:
+    quad_callback: object
+    triangle_callbacks: tuple
+    clip_requests: tuple
+
+
 def _float_from_word(word):
     return struct.unpack('<f',struct.pack('<I',word))[0]
 
@@ -43,11 +50,7 @@ def dispatch_inside_quad(vertices, near_w, far_w):
     output=[]
     for vertex in vertices:
         words=list(vertex)
-        w=words[3]
-        if not w&0x80000000 and _float_from_word(w)<=near_w:
-            words[2]=_float_word(near_w-_float_from_word(w))
-        else:
-            words[2]=far_word
+        words[2]=_adjusted_depth_word(words[3],near_w,far_word)
         output.append(tuple(words))
     return QuadDispatchResult(tuple(output),tuple(output))
 
@@ -67,6 +70,62 @@ def dispatch_second_fan_triangle(vertices, near_w, far_w):
     """Translate the fan branch emitting vertices 0, 2, 3 when vertex 1 is outside."""
     _validate_quad(vertices,near_w,far_w)
     return _dispatch_fan_triangle(vertices,(0,2,3),1,near_w,far_w)
+
+
+def dispatch_quad(vertices, near_w=1.0, far_w=0.0):
+    """Translate 0x474ee0's quad rejection, fan split and clipper routing.
+
+    Clipping is reported as explicit requests to 0x475de0; its algorithm and
+    the renderer callbacks remain separate recovered components. Direct
+    quad/triangle callback records include the depth-word updates performed
+    in place by the native parent before dispatch.
+    """
+    _validate_quad(vertices,near_w,far_w)
+    original=tuple(tuple(vertex) for vertex in vertices)
+    codes=tuple(vertex[5]&0xff for vertex in original)
+    if codes[0]&codes[1]&codes[2]&codes[3]:
+        return QuadDispatchTrace(None,(),())
+    if not any(codes):
+        quad=_depth_adjust(original,(0,1,2,3),near_w,far_w)
+        return QuadDispatchTrace(quad,(),())
+    triangles=((0,1,2),(0,2,3))
+    callbacks=[]
+    clips=[]
+    for indices in triangles:
+        triangle_codes=tuple(codes[index] for index in indices)
+        if triangle_codes[0]&triangle_codes[1]&triangle_codes[2]:
+            continue
+        mask=triangle_codes[0]|triangle_codes[1]|triangle_codes[2]
+        if mask:
+            clips.append((indices,triangle_codes,mask))
+            continue
+        adjusted=_depth_adjust(original,indices,near_w,far_w)
+        triangle=tuple(adjusted[index] for index in indices)
+        checked=(0,1,2,3,6,7)
+        if not any((vertex[word]|0x80000000)==0xffc00000
+                   for vertex in triangle for word in checked):
+            callbacks.append(triangle)
+    return QuadDispatchTrace(None,tuple(callbacks),tuple(clips))
+
+
+def _depth_adjust(vertices,indices,near_w,far_w):
+    near_word=_float_word(float(near_w))
+    near=_float_from_word(near_word)
+    far_word=_float_word(float(far_w))
+    output=[list(vertex) for vertex in vertices]
+    for index in indices:
+        words=output[index]
+        words[2]=_adjusted_depth_word(words[3],near,far_word)
+    return tuple(tuple(vertex) for vertex in output)
+
+
+def _adjusted_depth_word(w,near,far_word):
+    value=_float_from_word(w)
+    # Native uses sign-bit and ordered-greater-than branches. For a positive
+    # NaN, `value > near` is false and x87 subtraction preserves its payload.
+    if w&0x80000000 or value>near:
+        return far_word
+    return _float_word(near-value)
 
 
 def _validate_quad(vertices,near_w,far_w):
@@ -91,11 +150,7 @@ def _dispatch_fan_triangle(vertices, triangle_indices, outside_index,
     for index in triangle_indices:
         vertex=vertices[index]
         words=list(vertex)
-        w=words[3]
-        if not w&0x80000000 and _float_from_word(w)<=near_w:
-            words[2]=_float_word(near_w-_float_from_word(w))
-        else:
-            words[2]=far_word
+        words[2]=_adjusted_depth_word(words[3],near_w,far_word)
         output.append(tuple(words))
     checked=(0,1,2,3,6,7)
     if any((vertex[index]|0x80000000)==0xffc00000

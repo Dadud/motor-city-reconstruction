@@ -1754,14 +1754,26 @@
     ]
   },
   "0x474ee0": {
-    "translation": "partial",
-    "verification": "original-comparison-subregions",
-    "scope": "The all-four-clip-codes-zero branch is translated through depth adjustment, far-depth fallback, and the four-vertex draw-quad callback boundary; direct original calls match all eight words of all four callback records, including canonical-NaN inputs. Both trivial fan branches (0,1,2 when vertex 3 is outside; 0,2,3 when vertex 1 is outside) are translated and compared, with the complementary 0x475de0 clipping call replaced by a no-op to isolate the triangle callback subregions. Other polygon clipping branches and device rendering remain external.",
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The full parent branch router is translated: a clip bit shared by all four corners rejects the quad; all-zero clip codes update depth and dispatch the quad; each fan triangle is either trivially rejected, depth-adjusted and sent to drawtri, or routed to 0x475de0 with the original vertex order, packed code bytes and combined mask. 1,024 direct original calls with 0x475de0 stubbed capture and compare every drawquad/drawtri record and both clipper requests exactly, across exhaustive per-corner code-byte values, isolated corners, arbitrary code combinations, depth encodings, and canonical-NaN payloads. The clipper's effects are recovered and verified separately; actual GPU/resource callbacks remain external.",
     "sources": [
       "client/render_quad_dispatch.py",
       "tests/test_render_rectangle.py",
       "tools/native_oracle.py",
       "tools/verify_render_quad_dispatch.py",
+        "tools/verify_render_quad_routing.py",
+      "docs/recovery/render-rectangle-border.md"
+    ],
+    "evidence_ids": [
+      "ev_66df9863fec9d9a4b721f719e85227fe1c22253cbb9bdde2980d0a77fb001844",
+      "ev_2c0a78676f9b255779fca8cf1de72797c836f1ae8e8b6450a95f5cadec4c0203"
+    ],
+    "verification_refs": [
+      "tools/verify_render_quad_dispatch.py",
+      "tools/verify_render_quad_routing.py"
+    ],
+    "doc_refs": [
       "docs/recovery/render-rectangle-border.md"
     ]
   },

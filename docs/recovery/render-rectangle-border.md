@@ -21,23 +21,19 @@ tail at each vertex. `0x6cb810` overwrites only the low byte of the first tail
 word with its clip code; the upper bytes and following words remain explicit
 stack-residue inputs.
 
-The all-inside branch of `0x474ee0` is translated in
-`client/render_quad_dispatch.py`. A 256-case direct comparison captures the
-four records at the quad callback boundary, including depth adjustment,
-fallback depth, raw attributes, untouched tail words, and canonical-NaN
-inputs. The native binary dispatches those canonical-NaN records even though
-the retained Ghidra pseudocode appears to reject them; the translation follows
-the direct observation.
+The full branch router in `0x474ee0` is translated in
+`client/render_quad_dispatch.py`. Its 1,024-call direct-original corpus checks
+the all-inside quad callback, shared-outcode rejection, both fan triangles,
+canonical-NaN suppression, and the two calls into `0x475de0`. The oracle
+captures every direct draw record plus each clip call's vertex order, packed
+clip codes, and active mask. The clipper itself is a controlled stub for this
+parent-only comparison; its ordered five-plane implementation has a separate
+512-case original comparison in [polygon clipping](render-polygon-clip.md).
+The older isolated all-inside and fan corpora remain in place. Actual GPU
+effects and resource callbacks remain external.
 
-The same module translates both trivial fan branches: vertices 0, 1, 2 when
-vertex 3 is outside, and vertices 0, 2, 3 when vertex 1 is outside. In 256
-direct comparisons of each branch, the triangle callback payload and
-canonical-NaN suppression matched. For these subregion checks, the oracle
-replaces the complementary polygon clipper `0x475de0` with a no-op so its
-behavior is not included in the claim. Other clipping branches and actual
-device effects remain outside this recovery. Evidence for
-the parent decompilation is REA Evidence
-`ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3`.
+REA decompilation Evidence: `ev_66df9863fec9d9a4b721f719e85227fe1c22253cbb9bdde2980d0a77fb001844`.
+Focused pseudocode Evidence: `ev_2c0a78676f9b255779fca8cf1de72797c836f1ae8e8b6450a95f5cadec4c0203`.
 
 The rectangle setup's `0x46abd0(0)` state reset is translated by
 `select_rectangle_texture_state`. It preserves the cache-hit path and emits

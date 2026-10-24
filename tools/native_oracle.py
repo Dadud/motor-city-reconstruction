@@ -471,6 +471,92 @@ class DynoOracle:
         return tuple(struct.unpack('<8I',self.cpu.mem_read(
             capture+0x10+index*0x20,0x20)) for index in range(3))
 
+    def render_quad_routing(self, vertices, near_w=1.0, far_w=0.0):
+        """Run 0x474ee0, capturing direct draws and 0x475de0 call inputs."""
+        if (len(vertices)!=4 or any(len(vertex)!=8 for vertex in vertices) or
+            any(type(word) is not int or not 0<=word<=0xffffffff
+                for vertex in vertices for word in vertex)):
+            raise ValueError('quad routing oracle requires four eight-word records')
+        self._reset()
+        base=self.inputs+0x100
+        captures=(self.inputs+0x800,self.inputs+0xa00,self.inputs+0xc00)
+        quad_cap,tri_cap,clip_cap=captures
+        for address in captures:
+            self.cpu.mem_write(address,bytes(0x200))
+        for index,vertex in enumerate(vertices):
+            self.cpu.mem_write(base+index*0x40,struct.pack('<8I',*vertex))
+
+        def capture_records_stub(address,capture,pointer_count,ret_bytes):
+            code=bytearray(b'\x56\x57')
+            code.extend(b'\xff\x05'+struct.pack('<I',capture))
+            code.extend(b'\xa1'+struct.pack('<I',capture))
+            code.extend(b'\x48\x6b\xc0\x80\x05'+
+                        struct.pack('<I',capture+0x10))
+            code.extend(b'\x89\xc7')
+            for index in range(pointer_count):
+                stack_offset=12+index*4
+                code.extend(b'\x8b\x74\x24'+bytes((stack_offset,)))
+                code.extend(b'\xb9\x08\x00\x00\x00\xf3\xa5')
+            code.extend(b'\x5f\x5e\xc2'+struct.pack('<H',ret_bytes))
+            self.cpu.mem_write(address,bytes(code))
+
+        capture_records_stub(self.stub+0x800,quad_cap,4,0x10)
+        capture_records_stub(self.stub+0x900,tri_cap,3,0x0c)
+        self.cpu.mem_write(0xb42568,struct.pack('<I',self.stub+0x800))
+        self.cpu.mem_write(0xb424e4,struct.pack('<I',self.stub+0x900))
+
+        clip_code=bytearray(b'\x56\x57')
+        clip_code.extend(b'\xff\x05'+struct.pack('<I',clip_cap))
+        clip_code.extend(b'\xa1'+struct.pack('<I',clip_cap))
+        clip_code.extend(b'\x48\x6b\xc0\x20\x05'+
+                         struct.pack('<I',clip_cap+0x10))
+        clip_code.extend(b'\x89\xc7')
+        # Save the mask, packed byte codes, and three vertex pointers.
+        clip_code.extend(b'\x8b\x44\x24\x14\x89\x07')
+        clip_code.extend(b'\x8b\x44\x24\x10\x8b\x00\x89\x47\x04')
+        clip_code.extend(b'\x8b\x74\x24\x0c')
+        for index,offset in enumerate((8,12,16)):
+            clip_code.extend(b'\x8b\x46'+bytes((index*4,)))
+            clip_code.extend(b'\x89\x47'+bytes((offset,)))
+        clip_code.extend(b'\x5f\x5e\xc3')
+        self.cpu.mem_write(0x475de0,bytes(clip_code))
+        self.cpu.mem_write(0x83b634,struct.pack('<f',near_w))
+        self.cpu.mem_write(0x83b638,struct.pack('<f',far_w))
+        pointers=tuple(base+index*0x40 for index in range(4))
+        if hasattr(self.cpu,'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self.call(0x474ee0,pointers,instruction_limit=200_000)
+
+        def read_records(capture,pointer_count):
+            count=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
+            result=[]
+            for call_index in range(count):
+                start=capture+0x10+call_index*0x80
+                result.append(tuple(struct.unpack('<8I',self.cpu.mem_read(
+                    start+index*0x20,0x20)) for index in range(pointer_count)))
+            return tuple(result)
+        quads=read_records(quad_cap,4)
+        triangles=read_records(tri_cap,3)
+        clip_count=struct.unpack('<I',self.cpu.mem_read(clip_cap,4))[0]
+        clip_calls=[]
+        for call_index in range(clip_count):
+            start=clip_cap+0x10+call_index*0x20
+            raw_mask,packed=struct.unpack('<2I',self.cpu.mem_read(start,8))
+            # 0x474ee0 reuses a vertex-pointer local for this byte mask;
+            # only its low byte contains the combined clip codes.
+            mask=raw_mask&0xff
+            ptrs=struct.unpack('<3I',self.cpu.mem_read(start+8,12))
+            try:
+                indices=tuple((pointer-base)//0x40 for pointer in ptrs)
+                if any(pointer!=base+index*0x40 for pointer,index in zip(ptrs,indices)):
+                    indices=()
+            except (ZeroDivisionError,OverflowError):
+                indices=()
+            codes=tuple((packed>>(8*index))&0xff for index in range(3))
+            clip_calls.append((indices,codes,mask))
+        return {'quad_callbacks':quads,'triangle_callbacks':triangles,
+                'clip_calls':tuple(clip_calls)}
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

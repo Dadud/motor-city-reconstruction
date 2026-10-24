@@ -4,7 +4,7 @@ from client.render_rectangle import (
     plan_filled_rectangle_vertices, plan_rectangle_border_edges)
 from client.render_clip_code import RenderClipBounds
 from client.render_quad_dispatch import (
-    dispatch_first_fan_triangle, dispatch_inside_quad,
+    dispatch_first_fan_triangle, dispatch_inside_quad, dispatch_quad,
     dispatch_second_fan_triangle)
 from client.render_polygon_clip import reject_triangle_on_shared_near_plane
 import struct
@@ -77,6 +77,30 @@ class RenderRectangleTests(unittest.TestCase):
         vertices[2][7]=0xffc00000
         result=dispatch_inside_quad(vertices,1.,99.)
         self.assertEqual(result.callback_words,result.vertices)
+
+    def test_positive_nan_uses_native_ordered_depth_branch(self):
+        vertices=[list((0,0,0,0,0,0,0,0)) for _ in range(4)]
+        vertices[0][3]=0x7fcced5b
+        result=dispatch_inside_quad(vertices,10.,99.)
+        self.assertEqual(result.vertices[0][2],0x7fcced5b)
+
+    def test_quad_router_composes_clipper_and_direct_fan_requests(self):
+        vertices=tuple((index,10,0,0x3f000000,index,0,20+index,30+index)
+                       for index in range(4))
+        vertices=(vertices[0],vertices[1][:5]+(1,)+vertices[1][6:],
+                  vertices[2],vertices[3])
+        trace=dispatch_quad(vertices)
+        self.assertIsNone(trace.quad_callback)
+        self.assertEqual(trace.clip_requests,(((0,1,2),(0,1,0),1),))
+        self.assertEqual(len(trace.triangle_callbacks),1)
+        self.assertEqual(tuple(vertex[0] for vertex in
+                               trace.triangle_callbacks[0]),(0,2,3))
+
+    def test_quad_router_rejects_a_clip_bit_shared_by_every_corner(self):
+        vertices=tuple((0,0,0,0,0,4,0,0) for _ in range(4))
+        trace=dispatch_quad(vertices)
+        self.assertEqual((trace.quad_callback,trace.triangle_callbacks,
+                          trace.clip_requests),(None,(),()))
 
     def test_first_fan_triangle_emits_when_last_corner_is_outside(self):
         word=lambda value: struct.unpack('<I',struct.pack('<f',value))[0]

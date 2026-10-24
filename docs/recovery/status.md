@@ -12,9 +12,9 @@ Main executable: **25,780 inventoried entries**, including **338 external import
 | Reviewed translation label | Entries |
 | --- | ---: |
 | native-bounded | 144 |
-| partial | 56 |
+| partial | 55 |
 | python-and-native-bounded | 81 |
-| python-bounded | 117 |
+| python-bounded | 118 |
 | python-complete-supported-domain;native-partial | 1 |
 | unreviewed | 25,381 |
 
