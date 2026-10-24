@@ -1,4 +1,11 @@
 {
+  "0x6f2a60": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Computes a row-major 3x3 product, preserving native multiply/add ordering and supporting output aliasing either input or both identical input pointers. 512 randomized cases compare all nine binary32 output words exactly across four pointer arrangements (2,048 calls), with a guard checking the 36-byte output boundary. Partial overlap and exceptional values are outside scope.",
+    "sources": ["client/matrix_math.py", "tests/test_matrix_math.py", "tools/verify_matrix_product.py", "docs/recovery/matrix-product.md"],
+    "evidence_ids": []
+  },
   "0x6f19d0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

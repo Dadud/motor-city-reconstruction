@@ -3,7 +3,7 @@ import unittest
 from client.matrix_math import (axis_angle_rotation_matrix, atan2_turns, cross_product3, dot_3_f32, dot_product_batch, integrate_rotation_matrix,
                                 normalize_vector3, repair_rotation_matrix, rotate_matrix_rows_x,
                                 rotate_matrix_rows_y, rotate_matrix_rows_z, scale_matrix_rows,
-                                rotation_y_turns, rotation_z_turns,
+                                multiply_3x3, rotation_y_turns, rotation_z_turns,
                                 transpose_3x3_words)
 
 
@@ -29,6 +29,14 @@ class MatrixMathTests(unittest.TestCase):
                          (2., 4., 6., 12., 15., 18., 28., 32., 36.))
         with self.assertRaises(ValueError):
             scale_matrix_rows((1.,) * 8, (1., 1., 1.))
+
+    def test_multiply_three_by_three_matrices(self):
+        left = tuple(float(value) for value in range(1, 10))
+        right = tuple(float(value) for value in range(10, 19))
+        self.assertEqual(multiply_3x3(left, right),
+                         (84., 90., 96., 201., 216., 231., 318., 342., 366.))
+        with self.assertRaises(ValueError):
+            multiply_3x3((1.,) * 8, (1.,) * 9)
 
     def test_rejects_wrong_shape_and_width(self):
         for words in ((1, 2), (0,) * 8, (0,) * 10, (0,)*8 + (-1,), (0,)*8 + (1 << 32,)):
