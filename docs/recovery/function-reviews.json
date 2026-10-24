@@ -1345,6 +1345,20 @@
       "docs/recovery/render-rectangle-copy.md"
     ]
   },
+  "0x47faf0": {
+    "translation": "partial",
+    "verification": "static-analysis-only",
+    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from the retained decompilation. Edges can be composed with the directly compared 0x482610 segment translation. The parent has no direct original comparison; provider/resource lookup, filled branch 0x482700, and device effects remain external.",
+    "sources": [
+      "client/render_rectangle.py",
+      "tests/test_render_rectangle.py",
+      "docs/recovery/render-rectangle-border.md",
+      "client/render_segment_construct.py"
+    ],
+    "evidence_ids": [
+      "ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3"
+    ]
+  },
   "0x482610": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
