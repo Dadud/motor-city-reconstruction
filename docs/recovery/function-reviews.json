@@ -1,4 +1,11 @@
 {
+  "0x6f2c50": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Converts a signed int32 ratio into wrapped 16.16 fixed point by combining truncation-toward-zero integer quotient and remainder-scaled fractional quotient. 512 direct calls match EAX exactly across signed and large operands. Divide-by-zero and INT_MIN/-1 fault cases are outside the normal-return domain.",
+    "sources": ["client/fixed_math.py", "tests/test_fixed_math.py", "tools/verify_signed_ratio_16_16.py", "docs/recovery/signed-ratio-16-16.md"],
+    "evidence_ids": []
+  },
   "0x6f2a60": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
