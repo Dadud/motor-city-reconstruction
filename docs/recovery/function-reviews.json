@@ -2985,5 +2985,27 @@
     "doc_refs": [
       "docs/recovery/render-mode-state.md"
     ]
+  },
+  "0x6f28f0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The render-mode cache branch, capability-based flag filtering, default vertex layout, primary/secondary callback table selection, argument validation, draw-state globals and callback argument order are translated. 512 direct calls compare EAX, all affected state globals and both callback argument tuples exactly. Callback bodies are represented as explicit events; GPU/device behavior and the callbacks themselves are outside this function translation.",
+    "sources": [
+      "client/render_mode_dispatch.py",
+      "tests/test_render_mode_dispatch.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_dispatch.py",
+      "docs/recovery/render-dispatch.md"
+    ],
+    "evidence_ids": [
+      "ev_61a4e6ccff1ff1e4617ca2e51c8aea0625a89b15ff52197f611e4758fe98a860"
+    ],
+    "verification_refs": [
+      "tools/verify_render_dispatch.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-dispatch.md"
+    ]
   }
 }
+

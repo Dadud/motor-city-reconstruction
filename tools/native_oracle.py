@@ -57,6 +57,57 @@ class DynoOracle:
         self.cpu.reg_write(self.reg.UC_X86_REG_ESP, self.frame-0x1000)
         self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
 
+    def render_dispatch(self, state, mode, vertex_count, vertices, indices):
+        """Run 0x6f28f0 with inert callbacks and capture its state/arguments."""
+        from client.render_mode_dispatch import RenderDispatchState
+        if not isinstance(state, RenderDispatchState):
+            raise TypeError('state must be a RenderDispatchState')
+        words = (mode, vertex_count, vertices, indices)
+        if any(type(v) is not int or not 0 <= v <= 0xffffffff for v in words):
+            raise ValueError('dispatch oracle arguments must be unsigned words')
+        self._reset()
+        primary_stub, secondary_stub = self.stub+0x100, self.stub+0x180
+        capture = self.inputs+0x500
+        self.cpu.mem_write(capture, bytes(32))
+        def callback_code(address, count_offset, args):
+            code = bytearray(b'\xff\x05'+struct.pack('<I',capture+count_offset))
+            for index, offset in enumerate(args):
+                code.extend(b'\x8b\x44\x24'+bytes([4+index*4]))
+                code.extend(b'\xa3'+struct.pack('<I',capture+offset))
+            code.append(0xc3)
+            self.cpu.mem_write(address, bytes(code))
+        callback_code(primary_stub, 0, (4,8,12))
+        callback_code(secondary_stub, 16, (20,24))
+        globals_in = {
+            0x8c89f0:state.cached_mode, 0xb368c4:state.capability_bit_4,
+            0xb368c8:state.capability_bit_2, 0xb368cc:state.capability_bit_0x10000,
+            0xb368d4:state.capability_bit_0x20000_a,
+            0xb368d8:state.capability_bit_0x20000_b,
+            0xb368dc:state.capability_both_0x30000, 0xb368e0:state.capability_bit0,
+            0xb368e4:state.callback_context_b, 0x8c89f4:state.vertex_stride,
+            0x8c89f8:state.vertex_format, 0xb368b0:state.draw_context_a,
+            0xb368b4:state.draw_context_b, 0xb368b8:state.draw_param3,
+            0xb368a8:state.draw_param4, 0xb368d0:state.render_flags,
+            0xb368ac:(primary_stub if state.primary_callback else 0),
+            0xb3689c:(secondary_stub if state.secondary_callback else 0)}
+        for address, value in globals_in.items():
+            self.cpu.mem_write(address, struct.pack('<I', value))
+        primary_table = tuple(primary_stub if value else 0 for value in state.primary_callbacks)
+        secondary_table = tuple(secondary_stub if value else 0 for value in state.secondary_callbacks)
+        self.cpu.mem_write(0x8c8a00, struct.pack('<32I', *primary_table))
+        self.cpu.mem_write(0x8c8a80, struct.pack('<8I', *secondary_table))
+        self.call(0x6f28f0, words, instruction_limit=100_000)
+        read = lambda address: struct.unpack('<I', self.cpu.mem_read(address, 4))[0]
+        output = {
+            'cached_mode':read(0x8c89f0), 'vertex_stride':read(0x8c89f4),
+            'vertex_format':read(0x8c89f8), 'render_flags':read(0xb368d0),
+            'primary_callback':int(read(0xb368ac)!=0),
+            'secondary_callback':int(read(0xb3689c)!=0),
+            'draw_context_a':read(0xb368b0), 'draw_context_b':read(0xb368b4),
+            'draw_param3':read(0xb368b8), 'draw_param4':read(0xb368a8)}
+        captured=struct.unpack('<8I', self.cpu.mem_read(capture,32))
+        return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), output, captured
+
     def render_mode_state(self, mode_cache, zero_mode_cache, requested_mode):
         """Run 0x6f1a30 and capture its return and two global state words."""
         words = (mode_cache, zero_mode_cache, requested_mode)
@@ -791,3 +842,5 @@ class DynoOracle:
         if not 0x72000000 <= pointer <= 0x72010000-1004:
             raise ValueError('native builder returned a dyno pointer outside stack memory')
         return bytes(self.cpu.mem_read(pointer, 1004))
+
+
