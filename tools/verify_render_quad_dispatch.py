@@ -3,7 +3,8 @@ import argparse
 import random
 import struct
 
-from client.render_quad_dispatch import dispatch_inside_quad
+from client.render_quad_dispatch import (
+    dispatch_first_fan_triangle, dispatch_inside_quad)
 from tools.native_oracle import DynoOracle
 
 
@@ -16,7 +17,7 @@ def verify(executable,cases=256):
         raise ValueError('cases must be between 1 and 10000')
     oracle=DynoOracle(executable)
     rng=random.Random(0x474ee0)
-    counts={'callback':0}
+    counts={'quad-callback':0,'triangle-callback':0,'triangle-rejected':0}
     for index in range(cases):
         near=10.0
         far=-100.0
@@ -37,7 +38,22 @@ def verify(executable,cases=256):
         actual=oracle.render_quad_inside(vertices,near,far)
         if expected!=actual:
             raise AssertionError(f'case {index}: expected {expected!r}, got {actual!r}')
-        counts['callback']+=1
+        counts['quad-callback']+=1
+
+        triangle=list(vertices)
+        triangle[3]=tuple(triangle[3][:5]+(0x10,)+triangle[3][6:])
+        if index%7==0:
+            changed=list(triangle[1]); changed[7]=0xffc00000
+            triangle[1]=tuple(changed)
+        triangle=tuple(triangle)
+        expected_triangle=dispatch_first_fan_triangle(triangle,near,far).callback_words
+        actual_triangle=oracle.render_quad_first_triangle(triangle,near,far)
+        if expected_triangle!=actual_triangle:
+            raise AssertionError(
+                f'triangle case {index}: expected {expected_triangle!r}, '
+                f'got {actual_triangle!r}')
+        counts['triangle-callback' if expected_triangle is not None else
+               'triangle-rejected']+=1
     return counts
 
 
@@ -46,7 +62,7 @@ def main():
     parser.add_argument('executable')
     parser.add_argument('--cases',type=int,default=256)
     args=parser.parse_args()
-    print(f'0x474ee0 all-inside branch matches {verify(args.executable,args.cases)}')
+    print(f'0x474ee0 verified branches match {verify(args.executable,args.cases)}')
 
 
 if __name__=='__main__':

@@ -3,7 +3,8 @@ import unittest
 from client.render_rectangle import (
     plan_filled_rectangle_vertices, plan_rectangle_border_edges)
 from client.render_clip_code import RenderClipBounds
-from client.render_quad_dispatch import dispatch_inside_quad
+from client.render_quad_dispatch import (
+    dispatch_first_fan_triangle, dispatch_inside_quad)
 import struct
 
 
@@ -74,6 +75,26 @@ class RenderRectangleTests(unittest.TestCase):
         vertices[2][7]=0xffc00000
         result=dispatch_inside_quad(vertices,1.,99.)
         self.assertEqual(result.callback_words,result.vertices)
+
+    def test_first_fan_triangle_emits_when_last_corner_is_outside(self):
+        word=lambda value: struct.unpack('<I',struct.pack('<f',value))[0]
+        vertices=tuple((word(float(i)),word(2.),0x3f7fff00,word(.25),
+                        i+1,0,0x100+i,0x200+i)
+                       for i in range(4))
+        vertices=vertices[:3]+(vertices[3][:5]+(0x10,)+vertices[3][6:],)
+        result=dispatch_first_fan_triangle(vertices,1.,99.)
+        self.assertEqual(result.callback_words,result.vertices)
+        self.assertEqual(tuple(v[2] for v in result.vertices),(word(.75),)*3)
+        self.assertEqual(tuple(v[4] for v in result.vertices),(1,2,3))
+
+    def test_first_fan_triangle_suppresses_canonical_nan_payload(self):
+        vertices=tuple((0,0,0,0,0,0,0,0) for _ in range(3))
+        outside=(0,0,0,0,0,0x10,0,0)
+        vertices=vertices+(outside,)
+        vertices=(vertices[0],vertices[1][:7]+(0xffc00000,),
+                  vertices[2],vertices[3])
+        result=dispatch_first_fan_triangle(vertices,1.,99.)
+        self.assertIsNone(result.callback_words)
 
     def test_input_words_are_range_checked(self):
         with self.assertRaises(ValueError):

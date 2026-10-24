@@ -413,6 +413,48 @@ class DynoOracle:
         return tuple(struct.unpack('<8I',self.cpu.mem_read(
             capture+0x10+index*0x20,0x20)) for index in range(4))
 
+    def render_quad_first_triangle(self, vertices, near_w, far_w):
+        """Run the one-outside fan branch of 0x474ee0 with a tri callback."""
+        if (len(vertices)!=4 or any(len(vertex)!=8 for vertex in vertices) or
+            any(type(word) is not int or not 0<=word<=0xffffffff
+                for vertex in vertices for word in vertex) or
+            tuple(vertex[5]&0xff for vertex in vertices[:3])!=(0,0,0) or
+            not vertices[3][5]&0xff):
+            raise ValueError('triangle oracle requires three inside vertices and an outside fourth')
+        self._reset()
+        base=self.inputs+0x100
+        capture=self.inputs+0x800
+        callback=self.stub+0x800
+        self.cpu.mem_write(base,b'\x00'*0x200)
+        for index,vertex in enumerate(vertices):
+            self.cpu.mem_write(base+index*0x40,struct.pack('<8I',*vertex))
+        self.cpu.mem_write(capture,bytes(0x40))
+        code=bytearray(b'\x56\x57')
+        for index,offset in enumerate((12,16,20)):
+            code.extend(b'\x8b\x74\x24'+bytes((offset,)))
+            code.extend(b'\xbf'+struct.pack('<I',capture+0x10+index*0x20))
+            code.extend(b'\xb9\x08\x00\x00\x00\xf3\xa5')
+        code.extend(b'\xff\x05'+struct.pack('<I',capture))
+        code.extend(b'\x5f\x5e\xc2\x0c\x00')
+        self.cpu.mem_write(callback,bytes(code))
+        self.cpu.mem_write(0xb424e4,struct.pack('<I',callback))
+        # The complementary triangle intersects the outside corner and calls
+        # this separate polygon clipper after the in-bounds triangle returns.
+        # Replace that downstream entry with a cdecl no-op to isolate the
+        # independently observed in-bounds triangle callback.
+        self.cpu.mem_write(0x475de0,b'\xc3')
+        self.cpu.mem_write(0x83b634,struct.pack('<f',near_w))
+        self.cpu.mem_write(0x83b638,struct.pack('<f',far_w))
+        pointers=tuple(base+index*0x40 for index in range(4))
+        if hasattr(self.cpu,'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self.call(0x474ee0,pointers,instruction_limit=100_000)
+        count=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
+        if not count:
+            return None
+        return tuple(struct.unpack('<8I',self.cpu.mem_read(
+            capture+0x10+index*0x20,0x20)) for index in range(3))
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

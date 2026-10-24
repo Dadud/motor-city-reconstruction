@@ -28,6 +28,13 @@ four records at the quad callback boundary, including depth adjustment,
 fallback depth, raw attributes, untouched tail words, and canonical-NaN
 inputs. The native binary dispatches those canonical-NaN records even though
 the retained Ghidra pseudocode appears to reject them; the translation follows
-the direct observation. Other clipping branches and actual device effects
-remain outside this recovery. Evidence for the parent decompilation is REA Evidence
+the direct observation.
+
+The same module translates the fan branch that emits vertices 0, 1, and 2
+when only vertex 3 is outside. In 128 direct comparisons the triangle callback
+payload and the canonical-NaN suppression matched. For this subregion check,
+the oracle replaces the subsequent complementary-polygon clipper `0x475de0`
+with a no-op so its behavior is not included in the claim. Other clipping
+branches and actual device effects remain outside this recovery. Evidence for
+the parent decompilation is REA Evidence
 `ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3`.
