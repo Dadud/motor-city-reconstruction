@@ -34,10 +34,10 @@ def verify(executable, cases=128):
             source = bytearray(0x84)
             struct.pack_into('<i', source, 0, rng.choice((-1, 0, 1, 3, 25, 26)))
             struct.pack_into('<f', source, 0x38, _f32(rng.uniform(0.1, 1.5)))
-            # Keep child-emitter, source-direction and color-fade branches
-            # disabled while exercising frame-gated particle spin.
-            struct.pack_into('<I', source, 0x3c, 0)
-            struct.pack_into('<I', source, 0x50, 0)
+            # Keep child emission disabled while varying source direction and
+            # the frame-gated color-fade flag alongside spin inputs.
+            struct.pack_into('<I', source, 0x3c, rng.choice((0, 0, 1)))
+            struct.pack_into('<I', source, 0x50, rng.choice((0, 0, 1)))
             struct.pack_into('<I', source, 0x68, 0)
             struct.pack_into('<i', source, 0x70, rng.randint(1, 500))
             source[0x83] = rng.randrange(256)
@@ -49,7 +49,10 @@ def verify(executable, cases=128):
             slot = bytearray(rng.getrandbits(8) for _ in range(RECORD_BYTES))
             active = rng.randrange(4) != 0
             token = rng.choice(tokens) if active and rng.randrange(5) else 0
-            struct.pack_into('<Ih', slot, 0, token, rng.randint(1, 5) if active else 0)
+            remaining = rng.randint(1, 5) if active else 0
+            initial = rng.randint(max(remaining, 1), 500)
+            struct.pack_into('<Ihhf', slot, 0, token, remaining, initial,
+                             _f32(1.0 / initial))
             for offset in (0xc, 0x10, 0x14, 0x18, 0x1c, 0x20,
                            0x24, 0x2c, 0x30, 0x34, 0x38, 0x40, 0x44):
                 struct.pack_into('<f', slot, offset, _f32(rng.uniform(-20., 20.)))
@@ -95,7 +98,7 @@ def verify(executable, cases=128):
     return {'entry': '0x527490', 'cases': cases,
             'scope': 'direct update slice: exact comparison of the full particle '
                      'pool, trail pool and type counters; '
-                     'child-emitter/source-direction/color-fade/respawn disabled',
+                     'child-emitter/respawn disabled; source-direction and color fade varied',
             'float_tolerance': 0}
 
 

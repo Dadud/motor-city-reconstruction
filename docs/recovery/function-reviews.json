@@ -2,7 +2,7 @@
   "0x527490": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "The supported direct update slice clears the 52 frame counters, ages group-zero trail records, applies frame-gated spin/orbit to X/Z velocity and phase/rate/radius fields, scales active particle velocity/rate fields by source lifetime factor, and decrements lifetimes. 512 direct parent calls compare the complete particle pool, 200 trail records and all counters exactly, including both animation-bit values and varied spin inputs. Child-emitter, source-direction, color-fade and respawn paths remain untranslated.",
+    "scope": "The supported direct update slice clears the 52 frame counters, ages group-zero trail records, applies source-direction sign selection at the strict +/-0.25 boundaries, frame-gated spin/orbit to X/Z velocity and phase/rate/radius fields, fades enabled particle colors from base word +0x4c into +0x48 with x87 nearest-even channel conversion, scales active particle velocity/rate fields by source lifetime factor, and decrements lifetimes. 1,024 direct parent calls compare the complete particle pool, 200 trail records and all counters exactly, including direction flags, both animation-bit values, varied spin inputs and enabled/disabled color fade. Child-emitter and respawn paths remain untranslated.",
     "sources": ["client/particle_update.py", "tests/test_particle_update.py", "tools/verify_particle_frame_core.py", "docs/recovery/particle-frame-core.md"],
     "evidence_ids": []
   },

@@ -92,6 +92,48 @@ class ParticleUpdateTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from('<f', slot, 0x40)[0], 4.)
         self.assertEqual(struct.unpack_from('<f', slot, 0x44)[0], 2.)
 
+    def test_parent_frame_core_fades_from_base_color_into_current_color(self):
+        pool = [bytearray(RECORD_BYTES) for _ in range(POOL_CAPACITY)]
+        source = bytearray(0x84)
+        struct.pack_into('<f', source, 0x38, 1.)
+        struct.pack_into('<I', source, 0x50, 1)
+        token = 0x9876
+        slot = pool[0]
+        struct.pack_into('<Ihhf', slot, 0, token, 5, 10, .1)
+        slot[0x4c:0x50] = bytes((200, 100, 50, 255))
+        slot[0x50:0x54] = bytes((100, 50, 25, 255))
+        trails = [bytearray(TRAIL_RECORD_BYTES) for _ in range(TRAIL_CAPACITY)]
+        counts = [0] * 52
+
+        advance_particle_frame_core(pool, {token: bytes(source)}, trails,
+                                    counts, 2)
+
+        self.assertEqual(slot[0x48:0x4c], bytes((150, 75, 38, 127)))
+        self.assertEqual(slot[0x4c:0x54],
+                         bytes((200, 100, 50, 255, 100, 50, 25, 255)))
+
+    def test_parent_frame_core_source_direction_uses_strict_quarter_dead_zone(self):
+        pool = [bytearray(RECORD_BYTES) for _ in range(POOL_CAPACITY)]
+        source = bytearray(0x84)
+        struct.pack_into('<f', source, 0x38, 1.)
+        struct.pack_into('<I', source, 0x3c, 1)
+        token = 0x9877
+        cases = ((.25, -2., -2.), (.2501, 2., -2.),
+                 (-.25, -2., -2.), (-.2501, -2., 2.))
+        for index, (selector, rate, _) in enumerate(cases):
+            slot = pool[index]
+            struct.pack_into('<Ihhf', slot, 0, token, 1, 1, 1.)
+            struct.pack_into('<ff', slot, 0x30, selector, rate)
+        trails = [bytearray(TRAIL_RECORD_BYTES) for _ in range(TRAIL_CAPACITY)]
+        counts = [0] * 52
+
+        advance_particle_frame_core(pool, {token: bytes(source)}, trails,
+                                    counts, 0)
+
+        self.assertEqual(tuple(struct.unpack_from('<f', pool[index], 0x34)[0]
+                               for index in range(len(cases))),
+                         tuple(expected for _, _, expected in cases))
+
 
 if __name__ == '__main__':
     unittest.main()

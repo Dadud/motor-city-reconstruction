@@ -160,11 +160,9 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
             raise ValueError(f'missing particle source for token {token:#x}') from exc
         if len(source) < 0x6c:
             raise ValueError('particle source must contain at least 0x6c bytes')
-        if (struct.unpack_from('<I', source, 0x3c)[0] != 0 or
-                struct.unpack_from('<I', source, 0x68)[0] != 0 or
-                (animate and struct.unpack_from('<I', source, 0x50)[0] != 0) or
+        if (struct.unpack_from('<I', source, 0x68)[0] != 0 or
                 slot[0x68] != 0):
-            raise ValueError('child-emitter, source-direction, color-fade, or respawn branch is outside core scope')
+            raise ValueError('child-emitter or respawn branch is outside core scope')
         factors[token] = _exact_float(struct.unpack_from('<f', source, 0x38)[0])
 
     for record in trail_records:
@@ -189,7 +187,26 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
         if token == 0:
             continue
         factor = factors[token]
+        if struct.unpack_from('<I', sources[token], 0x3c)[0] != 0:
+            selector = struct.unpack_from('<f', slot, 0x30)[0]
+            signed_rate = struct.unpack_from('<f', slot, 0x34)[0]
+            if selector > 0.25:
+                struct.pack_into('<f', slot, 0x34, -abs(signed_rate))
+            elif selector < -0.25:
+                struct.pack_into('<f', slot, 0x34, abs(signed_rate))
         if animate:
+            if struct.unpack_from('<I', sources[token], 0x50)[0] != 0:
+                initial = struct.unpack_from('<h', slot, 6)[0]
+                remaining = struct.unpack_from('<h', slot, 4)[0]
+                age_ratio = _f32((initial - remaining) *
+                                 struct.unpack_from('<f', slot, 8)[0])
+                base_color = bytes(slot[0x4c:0x50])
+                limits = bytes(slot[0x50:0x54])
+                for index, (channel, limit) in enumerate(zip(base_color, limits)):
+                    # x87 FISTP rounds the binary32 product to nearest-even;
+                    # subtraction is byte-sized and wraps modulo 256.
+                    decrement = round(_f32(limit * age_ratio))
+                    slot[0x48 + index] = (channel - decrement) & 0xff
             spin_rate = struct.unpack_from('<f', slot, 0x3c)[0]
             if spin_rate != 0.0:
                 angle = struct.unpack_from('<f', slot, 0x38)[0]
