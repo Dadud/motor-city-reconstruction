@@ -60,6 +60,8 @@ three outside-corner positions and color modes. The left-X (`0x10`) and
 right-X (`0x20`) passes also match 512 native comparisons each across the same
 domains. These single-plane checks are complemented by the ordered multi-plane
 composition in clip_triangle_planes, which compares 512 inputs spanning all
-31 nonempty subsets of the five clip planes. The global vertex setup writes
-performed before the shared-plane return are not modeled; later passes remain
-open.
+31 nonempty subsets of the five clip planes. An additional 64 direct calls
+confirm the independent depth-only (`0x02`) flag passes through without
+changing triangle records; mixed depth and clipping flags remain outside that
+corpus. The global vertex setup writes performed before the shared-plane
+return are not modeled; later passes remain open.

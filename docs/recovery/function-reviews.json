@@ -1780,7 +1780,7 @@
   "0x475de0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "The near-W, upper/lower-Y, and left/right-X clipping passes are translated in native order, including isolated crossing domains, generated intersections, callback packing, and selected compositions. 512 direct original calls exercise all 31 nonempty subsets of those five planes with multiple outside input vertices and later passes consuming generated intersections; all callback triangle counts and eight-word output records match exactly. Separate corpora also compare the all-three-shared-near sentinel (256 calls), near-W crossing (1,024 calls), each isolated axis pass and supported two-/three-plane compositions (512 calls each), including color modes. The supported mask domain excludes the independent far-depth outcode bit; caller setup writes and actual device rendering remain external.",
+    "scope": "The near-W, upper/lower-Y, and left/right-X clipping passes are translated in native order, including isolated crossing domains, generated intersections, callback packing, and selected compositions. 512 direct original calls exercise all 31 nonempty subsets of those five planes with multiple outside input vertices and later passes consuming generated intersections; all callback triangle counts and eight-word output records match exactly. Separate corpora also compare the all-three-shared-near sentinel (256 calls), near-W crossing (1,024 calls), each isolated axis pass and supported two-/three-plane compositions (512 calls each), including color modes. The independent far-depth 0x02 flag is modeled as pass-through; 64 direct depth-only calls match the unchanged triangle records. Mixed depth-plus-clipping masks remain outside that check. Caller setup writes and actual device rendering remain external.",
     "sources": [
       "client/render_polygon_clip.py",
       "tests/test_render_polygon_clip.py",
@@ -1789,9 +1789,13 @@
       "tools/verify_render_polygon_near_plane.py",
       "tools/verify_render_polygon_y_plane.py",
       "tools/verify_render_polygon_x_plane.py",
-    "tools/verify_render_polygon_multiplane.py",
+      "tools/verify_render_polygon_multiplane.py",
       "docs/recovery/render-rectangle-border.md",
       "docs/recovery/render-polygon-clip.md"
+    ],
+    "evidence_ids": [
+      "ev_ac111242473578f4549776df99ea4212e51bfa7d51c7e81f6782d165955beedc",
+      "ev_eaa44efee23196f7c1756dbb606ec8c7a42bd2a5be749d09ed517c3edfcaf65d"
     ]
   },
   "0x478610": {

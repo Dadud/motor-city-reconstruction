@@ -20,10 +20,15 @@ exercise later passes.
 near-W, upper/lower-Y, and left/right-X. A 512-call direct-original corpus
 covers all 31 nonempty subsets of those planes, multiple outside input vertices,
 and generated intersections consumed by later passes. Each call compares the
-callback triangle count and all eight words of every output vertex. The native
-caller supplies the active mask; enabled bits without matching outcodes are
-outside this comparison contract. The independent far-depth outcode and
-`0x474ee0` quad-dispatch branches remain separate.
+callback triangle count and all eight words of every output vertex. The
+independent `0x02` depth flag is preserved as an inert mask/outcode bit; a
+separate 64-call corpus confirms that depth-only calls emit the unchanged
+triangle records. Mixed depth-flag plus clipping-plane combinations remain
+outside this comparison contract. `0x474ee0` quad dispatch and actual device
+rendering remain separate.
 
 Caller setup effects outside the supplied records and bounds, and actual device
 rendering remain unrecovered.
+
+REA pseudocode Evidence: `ev_eaa44efee23196f7c1756dbb606ec8c7a42bd2a5be749d09ed517c3edfcaf65d`;
+assembly Evidence: `ev_ac111242473578f4549776df99ea4212e51bfa7d51c7e81f6782d165955beedc`.

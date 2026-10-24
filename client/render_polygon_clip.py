@@ -172,9 +172,9 @@ def clip_triangle_planes(clip_codes, vertex_records, *, plane_mask,
     """Translate the ordered multi-plane branch in 0x475de0.
 
     Enabled passes follow the native order: near-W, upper-Y, lower-Y,
-    left-X, right-X. The input records and clip codes are the caller's
-    renderer state; this function preserves vertex traversal and callback
-    packing while applying any selected subset of those five planes.
+    left-X, right-X. The independent 0x02 depth outcode is preserved as an
+    inert mask bit; the five passes do not clip against it. Input records and
+    clip codes are caller renderer state.
     """
     if (not isinstance(clip_codes,(tuple,list)) or len(clip_codes)!=3 or
         any(type(code) is not int or not 0<=code<=0xff for code in clip_codes)):
@@ -184,8 +184,8 @@ def clip_triangle_planes(clip_codes, vertex_records, *, plane_mask,
             type(word) is not int or not 0<=word<=0xffffffff
             for word in record) for record in vertex_records)):
         raise ValueError('polygon clipping requires three ten-word vertices')
-    if type(plane_mask) is not int or plane_mask&~0x3d:
-        raise ValueError('polygon mask may select only the five clipping planes')
+    if type(plane_mask) is not int or plane_mask&~0x3f:
+        raise ValueError('polygon mask may select only known clip/depth bits')
     near_w,far_w,plane_w,y_min,y_max,x_min,x_max=tuple(
         _f32(float(value)) for value in
         (near_w,far_w,plane_w,y_min,y_max,x_min,x_max))

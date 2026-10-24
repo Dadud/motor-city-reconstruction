@@ -22,8 +22,8 @@ def verify(executable,cases=512):
         raise ValueError('cases must be between 1 and 20000')
     rng=random.Random(0x475de018)
     oracle=DynoOracle(executable)
-    # Include every nonempty plane subset and a broad range of simultaneous
-    # outcodes, so generated intersections feed later native clipping passes.
+    # Include every nonempty subset of the five clipping planes, with
+    # simultaneous outcodes and generated intersections feeding later passes.
     masks=tuple(mask for mask in range(1,0x40) if not mask&~0x3d)
     for index in range(cases):
         plane_mask=masks[index%len(masks)]
@@ -54,9 +54,9 @@ def verify(executable,cases=512):
         records=tuple(records); codes=tuple(codes)
         plane_mask &= (codes[0]|codes[1]|codes[2])
         if plane_mask==0:
-            plane_mask=masks[(index+1)%len(masks)]
-            # Regenerate only the near bit when a sampled subset had no
-            # outcode; an all-inside pass is covered by the quad dispatcher.
+            # Regenerate the near-plane crossing when a sampled mask has no
+            # matching active outcode; the all-inside path is covered by the
+            # quad-dispatch corpus.
             plane_mask=1
             codes=tuple((code&~1) | (1 if i==0 else 0)
                         for i,code in enumerate(codes))
@@ -77,7 +77,24 @@ def verify(executable,cases=512):
                 f'case {index}: mask={plane_mask:#x}; codes={codes!r}; '
                 f'expected={expected!r}; actual={actual!r}; '
                 f'records={records!r}; bounds={(x_min,x_max,y_min,y_max)!r}')
-    return cases
+    depth_cases=min(cases,64)
+    for index in range(depth_cases):
+        records=tuple((
+            _word(x),_word(y),_word(.25),_word(.5),rng.getrandbits(32),
+            rng.getrandbits(32),_word(rng.random()),_word(rng.random()),
+            rng.getrandbits(32),rng.getrandbits(32))
+            for x,y in ((-.5,-.5),(.5,-.5),(0.,.5)))
+        codes=(2,2,2)
+        kwargs=dict(plane_w=.1,y_min=-1.,y_max=1.,x_min=-1.,x_max=1.,
+                    near_w=1.,far_w=0.)
+        expected=clip_triangle_planes(codes,records,plane_mask=0x02,**kwargs)
+        actual=oracle.render_polygon_multi_clip(
+            codes,records,plane_mask=0x02,**kwargs)
+        if actual is None or (actual[0],actual[3])!=expected:
+            raise AssertionError(
+                f'depth pass-through case {index}: '
+                f'expected={expected!r}; actual={actual!r}')
+    return {'five-plane-cases':cases,'depth-pass-through-cases':depth_cases}
 
 
 def main():
