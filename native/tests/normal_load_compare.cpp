@@ -17,8 +17,10 @@ int main() {
               s.curvature_scale >> s.vertical_correction)) return 2;
         for (auto& scale : s.wheel_scales) if (!(std::cin >> scale)) return 2;
         try {
-            const auto r = mco::normal_load(s);
-            std::cout << r[0] << ' ' << r[1] << ' ' << r[2] << ' ' << r[3] << '\n';
+            const auto forces = mco::normal_force_vectors(s);
+            for (const auto& force : forces)
+                std::cout << force[0] << ' ' << force[1] << ' ' << force[2] << ' ';
+            std::cout << '\n';
         } catch (const std::invalid_argument&) { return 3; }
     }
 }

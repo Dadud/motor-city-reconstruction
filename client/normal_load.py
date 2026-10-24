@@ -68,3 +68,8 @@ def normal_load(state: NormalLoadInput):
     banking = min(6.0, abs(f32(math.sin(bank * turn) * speed * speed / curvature)))
     return tuple(max(0.0, f32(((scale - vertical) + banking) * load))
                  for scale, load in zip(scales, loads))
+
+
+def normal_force_vectors(state: NormalLoadInput):
+    """Return the four complete force vectors written by 0x53d920 (LF/RF/LR/RR)."""
+    return tuple((0.0, load, 0.0) for load in normal_load(state))

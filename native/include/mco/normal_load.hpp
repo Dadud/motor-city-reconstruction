@@ -8,4 +8,5 @@ struct NormalLoadInput {
     std::array<double, 4> wheel_scales;
 };
 std::array<float, 4> normal_load(const NormalLoadInput& state);
+std::array<std::array<float, 3>, 4> normal_force_vectors(const NormalLoadInput& state);
 }

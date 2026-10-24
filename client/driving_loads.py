@@ -4,7 +4,7 @@ Configuration/context values absent from VehicleUpdateState remain explicit.
 No stock defaults, suspension model or component effects are invented here.
 """
 from dataclasses import dataclass, replace
-from client.normal_load import NormalLoadInput, normal_load
+from client.normal_load import NormalLoadInput, normal_force_vectors
 from client.load_transfer import LoadTransferInput, transfer_load
 from client.suspension_load_correction import SuspensionLoadInput, correct_suspension_load
 from client.wheel_speed import WheelSpeedInput, WheelSpeedState, project_wheel_speeds
@@ -62,10 +62,10 @@ class DrivingLoads:
         self.resistance_mode = resistance_mode
 
     @staticmethod
-    def _write_loads(s, loads):
-        for index, load in zip(LOAD_ORDER, loads):
+    def _write_loads(s, forces):
+        for index, force in zip(LOAD_ORDER, forces):
             w = s.wheels[index]
-            w.force = (w.force[0], load, w.force[2])
+            w.force = force
 
     def __call__(self, call, s, force_inputs):
         if call.stage not in self.stages:
@@ -80,12 +80,11 @@ class DrivingLoads:
             front_track=p.front_track, rear_track=p.rear_track, height_parameter=p.height_parameter)
         wheels = tuple(s.wheels[index] for index in LOAD_ORDER)
         if call.stage == 'normal_loads':
-            loads = normal_load(NormalLoadInput(tuple(w.contact for w in wheels), p.pitch, p.bank,
+            forces = normal_force_vectors(NormalLoadInput(tuple(w.contact for w in wheels), p.pitch, p.bank,
                 p.configuration_mass, p.wheelbase, p.front_track, p.rear_track, p.height_parameter,
                 s.front_lever, s.rear_lever, s.speed, s.turning_radius_y, s.local_acceleration[1],
                 tuple(f.moments.wheels[index].support_correction for index in LOAD_ORDER)))
-            for index, load in zip(LOAD_ORDER, loads):
-                s.wheels[index].force = (0., load, 0.)
+            self._write_loads(s, forces)
         elif call.stage == 'project_wheels':
             speeds = project_wheel_speeds(WheelSpeedState(tuple(WheelSpeedInput(w.primary_angle,
                 w.contact, w.spin, w.spin_scale) for w in s.wheels), s.local_linear[0],
@@ -98,7 +97,7 @@ class DrivingLoads:
                 s.local_acceleration[2], s.local_acceleration[0], s.speed, p.configuration_mass,
                 p.wheelbase, p.front_track, p.rear_track, p.height_parameter,
                 f.spin.front_scale, f.spin.rear_scale))
-            self._write_loads(s, loads)
+            self._write_loads(s, forces)
         elif call.stage == 'suspension_loads':
             loads = correct_suspension_load(SuspensionLoadInput(tuple(w.force[1] for w in wheels),
                 tuple(w.contact for w in wheels), p.pitch, s.support_count != 0, s.speed,

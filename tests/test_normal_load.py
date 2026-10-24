@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import replace
-from client.normal_load import NormalLoadInput, normal_load
+from client.normal_load import NormalLoadInput, normal_force_vectors, normal_load
 
 
 class NormalLoadTests(unittest.TestCase):
@@ -40,6 +40,13 @@ class NormalLoadTests(unittest.TestCase):
         positive=normal_load(replace(self.state,bank=.07,speed=18,curvature_scale=40))
         negative=normal_load(replace(self.state,bank=.07,speed=18,curvature_scale=-40))
         self.assertEqual(negative,positive)
+
+    def test_force_vectors_clear_non_load_components(self):
+        forces = normal_force_vectors(self.state)
+        self.assertEqual(len(forces), 4)
+        self.assertTrue(all(len(force) == 3 for force in forces))
+        self.assertTrue(all(force[0] == 0 and force[2] == 0 for force in forces))
+        self.assertEqual(tuple(force[1] for force in forces), normal_load(self.state))
 
 
 if __name__ == '__main__':

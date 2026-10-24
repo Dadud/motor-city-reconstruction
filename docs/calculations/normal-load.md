@@ -1,10 +1,11 @@
 # Support-mask initial wheel loads
 
 The original helper `0x53d920` initializes the four wheel-force vectors before
-later load corrections. `client/normal_load.py` reproduces its normal-load
-outputs from explicit support, attitude, component and motion observations.
-The helper clears each vector's other two components; a driver using the typed
-load-only API must perform those clears separately.
+later load corrections. `client/normal_load.py` reproduces all four 3D
+force-vector writes from explicit support, attitude, component and motion
+observations. `normal_load` exposes the four y-axis loads;
+`normal_force_vectors` also returns the x/z zeros written by the original into
+every vector.
 
 Source `mcity.exe`, SHA-256
 `28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164`.
@@ -90,9 +91,12 @@ other owner/configuration byte. The decompiler's x87 return is not used as a
 semantic output; the comparison excludes it. Cases cover every support mask,
 both pitch signs and the exact attitude gate, both bank signs, banking saturation
 and negative final-load clamping. The expanded corpus includes both radius signs.
-Five unit tests cover masks, redistribution, gates and invalid observations.
+Six unit tests cover masks, redistribution, gates and invalid observations.
 The C++ port matches all 4,032 Python corpus
-cases exactly; its comparison is included in Windows/Linux CI.
+cases exactly, including all twelve vector components; its comparison is
+included in Windows/Linux CI. The original comparison asserts the x/z clears
+and unchanged remainder of the owner/configuration images against the translated
+output rather than accepting the original's values for those components.
 
 The authored API rejects malformed support masks, nonfinite values and invalid
 mass/dimensions. These are API safeguards, not recovered original errors.

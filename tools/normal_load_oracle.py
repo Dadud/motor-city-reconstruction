@@ -3,7 +3,7 @@ import argparse
 import itertools
 import json
 import struct
-from client.normal_load import NormalLoadInput, normal_load
+from client.normal_load import NormalLoadInput, normal_force_vectors
 from tools.native_oracle import DynoOracle
 
 
@@ -47,19 +47,21 @@ def verify(executable):
         cpu.reg_write(reg.UC_X86_REG_ESP,stack)
         o._run(0x53d920,o.stop,count=20000)
         actual=bytes(cpu.mem_read(owner,len(image)))
-        expected=normal_load(state)
+        expected=normal_force_vectors(state)
         for force,target in zip(forces,expected):
-            x,value,z=struct.unpack_from('<3f',actual,force)
-            error=abs(value-target)
-            if x != 0 or z != 0 or error > max(0.00025,abs(value)*3e-7):
-                raise AssertionError((count,state,hex(force),x,value,z,target,error))
-            maximum=max(maximum,error)
-            struct.pack_into('<3f',image,force,x,value,z)
+            observed=struct.unpack_from('<3f',actual,force)
+            for component,(value,wanted) in enumerate(zip(observed,target)):
+                error=abs(value-wanted)
+                tolerance=max(0.00025,abs(value)*3e-7)
+                if (component != 1 and value != wanted) or error > tolerance:
+                    raise AssertionError((count,state,hex(force),component,value,wanted,error))
+                maximum=max(maximum,error)
+            struct.pack_into('<3f',image,force,*target)
         if actual != image or cpu.mem_read(config,len(configuration)) != configuration:
             raise AssertionError('unexpected owner/configuration mutation')
         count+=1
     return {'cases':count,'maximum_absolute_error':maximum,
-            'scope':'complete 0x53d920; original sine/cosine helpers; no substituted calls; synthetic owner state; unused x87 return excluded'}
+            'scope':'all four complete force vectors written by 0x53d920; original sine/cosine helpers; no substituted calls; synthetic owner state; unused x87 return excluded'}
 
 
 if __name__ == '__main__':

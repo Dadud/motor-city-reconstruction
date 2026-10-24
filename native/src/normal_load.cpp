@@ -64,4 +64,10 @@ std::array<float, 4> normal_load(const NormalLoadInput& state) {
         loads[i] = std::max(0.0f, stored(((scales[i] - vertical) + banking) * loads[i]));
     return loads;
 }
+std::array<std::array<float, 3>, 4> normal_force_vectors(const NormalLoadInput& state) {
+    const auto loads = normal_load(state);
+    std::array<std::array<float, 3>, 4> forces{};
+    for (std::size_t i = 0; i < forces.size(); ++i) forces[i][1] = loads[i];
+    return forces;
+}
 }

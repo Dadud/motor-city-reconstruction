@@ -3912,5 +3912,12 @@
     "scope": "Models byte-level section/key/value parsing and the flat parallel-vector table shape for supported files, preserving source order, duplicate sections, and the original preceding-byte removal at LF. Static helper evidence covers vector insertion/assignment mechanics, but the Python lists do not reproduce allocator capacity, pointer relocation, global reset, exact string ownership, the Win32 file lifecycle, malformed overlong-line effects, or exception cleanup. Root-key count carryover is an inference; no direct original-loader comparison has been done.",
     "sources": ["client/ini_config.py", "tests/test_ini_config.py", "docs/recovery/ini-config-loader.md"],
     "evidence_ids": ["ev_337162f0381b81e0b2e8c99085eef7cadfb832dbe1ca45630b4087076c11d666", "ev_9a1600aa15c91c9d3ddfd693d338de812a2851f5a0c252eb62077563b9aa20cf", "ev_a03dc18d607b14d2e8a67997de2870f3862824895cb5284991c751709c85ec36", "ev_0618a2eb973e6f64b8e55fae8e7a6b77de335f1945187a22ee256bdd43508975", "ev_81f1428409894cbd43b196fe9106195343d9b2548cf230f0a8ed9bf99cb96591", "ev_16cd081c5f9ef424545ca9dbb2e381feb570983933841a1e4dcb074466527ba7", "ev_f5927e52a886c8924ca9309609e3faa8958c69686ca46dc44c38553ee05fffb1", "ev_fbdb5b598977041e7085e27c33bb74b5e6c9d3d3950d37ad09bc2e7e400b301b"]
+  },
+  "0x53d920": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Reconstructs all four three-component wheel-force writes: per-wheel y-axis normal loads plus exact zeroing of x/z. The complete original helper runs with unmodified sine/cosine callees over 4,032 support-mask, pitch, bank, speed, vertical-correction and signed-radius cases; all twelve components and the remaining owner/configuration image bytes match exactly. Native matches Python on the same 4,032 cases. The x87 return is excluded. Support, motion and component input production and integrated force-tick behavior remain outside this function slice.",
+    "sources": ["client/normal_load.py", "client/driving_loads.py", "native/include/mco/normal_load.hpp", "native/src/normal_load.cpp", "native/tests/normal_load_test.cpp", "native/tests/normal_load_compare.cpp", "tests/test_normal_load.py", "tools/normal_load_oracle.py", "tools/native_normal_load_compare.py", "docs/calculations/normal-load.md"],
+    "evidence_ids": ["ev_3ce59f9fae6e5945433fe36e417989cccb95f3593354d62e894b55e00e227174"]
   }
 }

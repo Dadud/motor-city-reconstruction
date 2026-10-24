@@ -16,6 +16,9 @@ int main() {
                           0.55, 1.2, 1.5, 15, 40, 0, {9.8, 10, 9.5, 9.9}};
     const auto all = mco::normal_load(s);
     check(all[0] > 0 && all[1] > 0 && all[2] > 0 && all[3] > 0, "all-wheel resting load failed");
+    const auto vectors = mco::normal_force_vectors(s);
+    for (std::size_t i = 0; i < vectors.size(); ++i)
+        check(vectors[i] == std::array<float, 3>{0, all[i], 0}, "force vector was not fully initialized");
     for (unsigned mask = 0; mask < 16; ++mask) {
         auto t = s; unsigned count = 0;
         for (std::size_t i = 0; i < 4; ++i) { t.support[i] = (mask & (1u << i)) != 0; count += t.support[i]; }
