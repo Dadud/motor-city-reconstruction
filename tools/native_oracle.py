@@ -303,6 +303,20 @@ class DynoOracle:
         return tuple(struct.unpack('<I',self.cpu.mem_read(self.inputs+0x800+i*4,4))[0]
                      if output_mask&(1<<i) else None for i in range(4))
 
+    def copy_render_rect_fields(self, memory, source_offset, destination_offset):
+        """Run stdcall member helper 0x47f990 over an explicit memory region."""
+        if (not isinstance(memory,(bytes,bytearray)) or len(memory)>0x8000 or
+            type(source_offset) is not int or type(destination_offset) is not int or
+            source_offset<0 or destination_offset<0 or
+            source_offset+0x14>len(memory) or destination_offset+0x14>len(memory)):
+            raise ValueError('rectangle copy memory or offsets are invalid')
+        self._reset()
+        base=self.inputs+0x100
+        self.cpu.mem_write(base,bytes(memory))
+        self.call(0x47f990,(base+source_offset,),cleanup=b'',
+                  this_pointer=base+destination_offset,instruction_limit=1000)
+        return bytes(self.cpu.mem_read(base,len(memory)))
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

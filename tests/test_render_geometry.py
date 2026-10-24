@@ -2,6 +2,7 @@ import struct
 import unittest
 
 from client.render_geometry import (RenderPolygonData,
+                                    copy_render_rect_fields,
                                     extract_render_polygon_bounds)
 
 
@@ -32,6 +33,28 @@ class RenderGeometryTests(unittest.TestCase):
         polygon=RenderPolygonData(((1.,2.),),1.,1.)
         with self.assertRaises(ValueError):
             extract_render_polygon_bounds(polygon)
+
+    def test_rectangle_copy_writes_only_the_four_native_fields(self):
+        memory=bytearray(range(64))
+        original=bytes(memory)
+        copy_render_rect_fields(memory,0,32)
+        for offset in (4,8,12,16):
+            self.assertEqual(memory[32+offset:36+offset],
+                             original[offset:offset+4])
+        self.assertEqual(memory[32:36],original[32:36])
+        self.assertEqual(memory[52:64],original[52:64])
+
+    def test_overlapping_rectangle_copy_uses_instruction_order(self):
+        memory=bytearray(range(64))
+        expected=bytearray(memory)
+        for offset in (8,4):
+            expected[4+offset:8+offset]=bytes(expected[8+offset:12+offset])
+        saved_12=bytes(expected[20:24])
+        word_16=bytes(expected[24:28])
+        expected[20:24]=word_16
+        expected[16:20]=saved_12
+        copy_render_rect_fields(memory,8,4)
+        self.assertEqual(memory,expected)
 
 
 if __name__=='__main__':

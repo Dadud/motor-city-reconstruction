@@ -18,6 +18,30 @@ class RenderPolygonData:
     header_min_x: float
 
 
+def copy_render_rect_fields(memory, source_offset, destination_offset):
+    """Translate the ordered 16-byte member copy in native 0x47f990.
+
+    Four words at offsets 4, 8, 12 and 16 are copied. Address offsets let the
+    caller model overlapping pointers; reads and writes occur in the original
+    instruction order rather than through a temporary whole-structure copy.
+    """
+    if not isinstance(memory,bytearray):
+        raise TypeError('render rectangle memory must be a bytearray')
+    if (type(source_offset) is not int or type(destination_offset) is not int or
+        source_offset < 0 or destination_offset < 0 or
+        source_offset+0x14 > len(memory) or
+        destination_offset+0x14 > len(memory)):
+        raise ValueError('render rectangle offsets must address 20 bytes')
+    for offset in (8,4):
+        word=bytes(memory[source_offset+offset:source_offset+offset+4])
+        memory[destination_offset+offset:destination_offset+offset+4]=word
+    saved_12=bytes(memory[source_offset+12:source_offset+16])
+    word_16=bytes(memory[source_offset+16:source_offset+20])
+    memory[destination_offset+16:destination_offset+20]=word_16
+    memory[destination_offset+12:destination_offset+16]=saved_12
+    return memory
+
+
 def extract_render_polygon_bounds(polygon, outputs=(None,None,None,None)):
     """Translate 0x478610, including its optional output-pointer writes.
 

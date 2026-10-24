@@ -1324,6 +1324,27 @@
       "docs/recovery/render-polygon-bounds.md"
     ]
   },
+  "0x47f990": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The four member-word stores at offsets +0x04,+0x08,+0x0c,+0x10 are translated with the native load/store order. 512 direct calls compare the entire shared memory region, including overlapping source/destination ranges. Caller-owned object memory is explicit.",
+    "sources": [
+      "client/render_geometry.py",
+      "tests/test_render_geometry.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_rectangle_copy.py",
+      "docs/recovery/render-rectangle-copy.md"
+    ],
+    "evidence_ids": [
+      "ev_ef3bddfc76ecaa24d720a93794085bb80dae04a5b6788a6c6a15904a832123bf"
+    ],
+    "verification_refs": [
+      "tools/verify_render_rectangle_copy.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-rectangle-copy.md"
+    ]
+  },
   "0x4836f0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
