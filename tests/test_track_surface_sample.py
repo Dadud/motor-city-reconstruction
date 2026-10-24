@@ -2,7 +2,8 @@ import struct
 import unittest
 
 from client.track_surface_lookup import TrackSurfaceMemory, TrackSurfaceWorld
-from client.track_surface_sample import sample_track_surface
+from client.track_surface_sample import (initialize_track_query_state,
+    sample_track_surface)
 from tools.track_surface_cases import BASE, BLOCKS, GEOMETRY, PATH, fixture
 
 
@@ -14,6 +15,13 @@ def _world(arena, root):
 
 
 class TrackSurfaceSampleTests(unittest.TestCase):
+    def test_query_initializer_clears_only_first_eight_dwords(self):
+        query = bytearray([0xA5] * 0x44)
+        initialize_track_query_state(query, -17)
+        self.assertEqual(struct.unpack_from('<8I', query),
+                         (0xFFFFFFEF, 0xFFFFFFFD, 0, 0, 0, 0, 0, 0))
+        self.assertEqual(query[0x20:], bytes([0xA5]) * 0x24)
+
     def test_successful_quad_lookup_writes_sampled_height(self):
         arena, root, query = fixture(2, 0, 0, 0, 7, 8, 8, 1)
         vertices = ((0, 0, 0), (16, 1, 0), (16, 3, 16), (0, -2, 16))

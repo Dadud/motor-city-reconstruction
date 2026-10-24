@@ -10,6 +10,17 @@ from .track_surface_lookup import TrackSurfaceWorld, track_surface_lookup
 QUERY_SIZE = 0x44
 
 
+def initialize_track_query_state(query_state, track_index):
+    """Apply the eight dword writes made by native routine 0x42d8d0."""
+    if not isinstance(query_state, bytearray) or len(query_state) < QUERY_SIZE:
+        raise ValueError('a mutable 0x44-byte surface query is required')
+    if type(track_index) is not int or not -0x80000000 <= track_index <= 0x7fffffff:
+        raise ValueError('track index must fit a signed native dword')
+    struct.pack_into('<8I', query_state, 0,
+                     track_index & 0xffffffff, (track_index >> 3) & 0xffffffff,
+                     0, 0, 0, 0, 0, 0)
+
+
 def sample_track_surface(world, query_state, point, track_index):
     """Port the state and output behavior of original routine 0x42e010.
 
@@ -26,9 +37,7 @@ def sample_track_surface(world, query_state, point, track_index):
     if type(track_index) is not int or not -0x80000000 <= track_index <= 0x7fffffff:
         raise ValueError('track index must fit a signed native dword')
 
-    struct.pack_into('<i', query_state, 0, track_index)
-    struct.pack_into('<i', query_state, 4, track_index >> 3)
-    struct.pack_into('<6I', query_state, 8, 0, 0, 0, 0, 0, 0)
+    initialize_track_query_state(query_state, track_index)
     position = struct.unpack_from('<3f', point)
     if not track_surface_lookup(world, position, query_state):
         return False

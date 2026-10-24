@@ -1,4 +1,19 @@
 {
+  "0x42d8d0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The query initializer writes the signed index, arithmetic index shift, and six zero dwords while preserving the remaining record bytes. 512 direct original calls match the complete 0x44-byte output image for signed 32-bit indices and randomized prior contents.",
+    "sources": [
+      "client/track_surface_sample.py",
+      "tests/test_track_surface_sample.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_query_initializer.py",
+      "docs/recovery/track-query-initializer.md"
+    ],
+    "evidence_ids": [
+      "ev_4d3e79aab0e43dcee39c1918c452e7b0837c97430ea628bfb03a75699749c23e"
+    ]
+  },
   "0x42d810": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
