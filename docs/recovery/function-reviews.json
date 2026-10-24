@@ -1303,6 +1303,27 @@
       "docs/recovery/render-viewport.md"
     ]
   },
+  "0x478610": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The polygon XY bound scan, header X extrema merge, sentinel defaults, binary32 width/height stores, and independent optional output pointers are translated. 512 direct original calls match every requested output word across randomized 32-byte point records, null and empty structures, and all 16 output masks. The enclosing UI drawing routine remains outside scope.",
+    "sources": [
+      "client/render_geometry.py",
+      "tests/test_render_geometry.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_geometry.py",
+      "docs/recovery/render-polygon-bounds.md"
+    ],
+    "evidence_ids": [
+      "ev_75a1e6bf5d1ce7f93a6655150e053e26b8ab606410f8e24995599e56a945e858"
+    ],
+    "verification_refs": [
+      "tools/verify_render_geometry.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-polygon-bounds.md"
+    ]
+  },
   "0x4836f0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",

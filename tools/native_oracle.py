@@ -270,6 +270,39 @@ class DynoOracle:
         return words,bytes(self.cpu.mem_read(table,3200)),struct.unpack(
             '<I',self.cpu.mem_read(count,4))[0]
 
+    def render_polygon_bounds(self, point_records, header_max_x, header_min_x,
+                              *, output_mask=0xf, null_polygon=False):
+        """Run native 0x478610 over caller-built 32-byte point records."""
+        if (type(output_mask) is not int or not 0 <= output_mask < 16 or
+            (point_records is not None and len(point_records)>1000)):
+            raise ValueError('polygon-bound oracle arguments are outside supported limits')
+        self._reset()
+        structure=self.inputs+0x400
+        points=self.inputs+0x1000
+        outputs=tuple(self.inputs+0x800+index*4
+                      if output_mask&(1<<index) else 0 for index in range(4))
+        self.cpu.mem_write(structure,bytes(0x20))
+        self.cpu.mem_write(points,bytes(max(32,32*(len(point_records or ())))))
+        if not null_polygon:
+            records=bytearray(32*len(point_records or ()))
+            for index,record in enumerate(point_records or ()):
+                if len(record)!=8:
+                    raise ValueError('each point record requires eight float values')
+                struct.pack_into('<8f',records,index*32,*record)
+            if records:
+                self.cpu.mem_write(points,bytes(records))
+            self.cpu.mem_write(structure+4,struct.pack('<I',len(point_records or ())))
+            self.cpu.mem_write(structure+8,struct.pack('<I',points))
+            self.cpu.mem_write(structure+0x14,struct.pack('<f',header_max_x))
+            self.cpu.mem_write(structure+0x18,struct.pack('<f',header_min_x))
+        for index,pointer in enumerate(outputs):
+            if pointer:
+                self.cpu.mem_write(pointer,b'\xcd'*4)
+        self.call(0x478610,(0 if null_polygon else structure,*outputs),
+                  instruction_limit=100_000)
+        return tuple(struct.unpack('<I',self.cpu.mem_read(self.inputs+0x800+i*4,4))[0]
+                     if output_mask&(1<<i) else None for i in range(4))
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""
