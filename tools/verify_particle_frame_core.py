@@ -34,7 +34,8 @@ def verify(executable, cases=128):
             source = bytearray(0x84)
             struct.pack_into('<i', source, 0, rng.choice((-1, 0, 1, 3, 25, 26)))
             struct.pack_into('<f', source, 0x38, _f32(rng.uniform(0.1, 1.5)))
-            # Keep child-emitter, direction and fade branches disabled.
+            # Keep child-emitter, source-direction and color-fade branches
+            # disabled while exercising frame-gated particle spin.
             struct.pack_into('<I', source, 0x3c, 0)
             struct.pack_into('<I', source, 0x50, 0)
             struct.pack_into('<I', source, 0x68, 0)
@@ -50,9 +51,10 @@ def verify(executable, cases=128):
             token = rng.choice(tokens) if active and rng.randrange(5) else 0
             struct.pack_into('<Ih', slot, 0, token, rng.randint(1, 5) if active else 0)
             for offset in (0xc, 0x10, 0x14, 0x18, 0x1c, 0x20,
-                           0x24, 0x2c, 0x30, 0x34):
+                           0x24, 0x2c, 0x30, 0x34, 0x38, 0x40, 0x44):
                 struct.pack_into('<f', slot, offset, _f32(rng.uniform(-20., 20.)))
-            struct.pack_into('<f', slot, 0x3c, 0.)
+            struct.pack_into('<f', slot, 0x3c,
+                             0. if rng.randrange(3) == 0 else _f32(rng.uniform(-2., 2.)))
             slot[0x68] = 0
             particles.append(slot)
 
@@ -72,13 +74,29 @@ def verify(executable, cases=128):
         native_particles = bytes(oracle.cpu.mem_read(PARTICLES, POOL_CAPACITY * RECORD_BYTES))
         native_trails = bytes(oracle.cpu.mem_read(TRAILS, TRAIL_CAPACITY * TRAIL_RECORD_BYTES))
         native_counters = struct.unpack('<52I', oracle.cpu.mem_read(TYPE_COUNTS, 52 * 4))
-        if (native_particles != b''.join(particles) or
-                native_trails != b''.join(trails) or
-                native_counters != tuple(value & 0xffffffff for value in counters)):
-            raise AssertionError(f'case {case}: parent update state differed')
+        expected_particles = b''.join(particles)
+        expected_trails = b''.join(trails)
+        expected_counters = tuple(value & 0xffffffff for value in counters)
+        if (native_particles != expected_particles or native_trails != expected_trails or
+                native_counters != expected_counters):
+            def first_difference(actual, expected):
+                return next((i for i, pair in enumerate(zip(actual, expected))
+                             if pair[0] != pair[1]), None)
+            particle_diff = first_difference(native_particles, expected_particles)
+            aligned = particle_diff & ~3 if particle_diff is not None else 0
+            raise AssertionError(
+                f'case {case}: particle byte {particle_diff}; '
+                f'actual={native_particles[aligned:aligned+4].hex()} '
+                f'({struct.unpack_from("<f", native_particles, aligned)[0]}); '
+                f'expected={expected_particles[aligned:aligned+4].hex()} '
+                f'({struct.unpack_from("<f", expected_particles, aligned)[0]}); '
+                f'trail byte {first_difference(native_trails, expected_trails)}; '
+                f'counter equal={native_counters == expected_counters}')
     return {'entry': '0x527490', 'cases': cases,
-            'scope': 'supported direct update slice, all 600 particle slots, '
-                     '200 trails and 52 counters; child-emitter/spin/fade/respawn disabled'}
+            'scope': 'direct update slice: exact comparison of the full particle '
+                     'pool, trail pool and type counters; '
+                     'child-emitter/source-direction/color-fade/respawn disabled',
+            'float_tolerance': 0}
 
 
 def main():

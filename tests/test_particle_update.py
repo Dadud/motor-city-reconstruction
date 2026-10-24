@@ -66,6 +66,32 @@ class ParticleUpdateTests(unittest.TestCase):
         self.assertEqual(counts[3], 1)
         self.assertEqual(counts[26:], [0] * 26)
 
+    def test_parent_frame_core_applies_frame_gated_spin(self):
+        pool = [bytearray(RECORD_BYTES) for _ in range(POOL_CAPACITY)]
+        source = bytearray(0x84)
+        struct.pack_into('<f', source, 0x38, 0.5)
+        struct.pack_into('<i', source, 0x70, 10)
+        token = 0x4321
+        slot = pool[0]
+        struct.pack_into('<Ih', slot, 0, token, 3)
+        struct.pack_into('<3f', slot, 0x18, 0., 0., 0.)
+        struct.pack_into('<f', slot, 0x34, 8.)
+        struct.pack_into('<f', slot, 0x38, 0.25)
+        struct.pack_into('<f', slot, 0x3c, 0.2)
+        struct.pack_into('<f', slot, 0x40, 2.)
+        struct.pack_into('<f', slot, 0x44, 4.)
+        trails = [bytearray(TRAIL_RECORD_BYTES) for _ in range(TRAIL_CAPACITY)]
+        counts = [0] * 52
+        advance_particle_frame_core(pool, {token: bytes(source)}, trails, counts, 2)
+        self.assertEqual(struct.unpack_from('<h', slot, 4)[0], 2)
+        self.assertAlmostEqual(struct.unpack_from('<f', slot, 0x18)[0], 1.0, places=6)
+        self.assertAlmostEqual(struct.unpack_from('<f', slot, 0x20)[0], 0.0, places=6)
+        self.assertEqual(struct.unpack_from('<f', slot, 0x34)[0], 4.)
+        self.assertAlmostEqual(struct.unpack_from('<f', slot, 0x38)[0], 0.35, places=6)
+        self.assertAlmostEqual(struct.unpack_from('<f', slot, 0x3c)[0], 0.1, places=6)
+        self.assertEqual(struct.unpack_from('<f', slot, 0x40)[0], 4.)
+        self.assertEqual(struct.unpack_from('<f', slot, 0x44)[0], 2.)
+
 
 if __name__ == '__main__':
     unittest.main()

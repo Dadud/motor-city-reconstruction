@@ -1,13 +1,19 @@
 """Particle simulation state transitions recovered from the MCO client."""
 import struct
 from fractions import Fraction
+import math
 
 from .particle_spawn import _exact_float, _x87_add, _x87_f32, _x87_mul
 from .particle_spawn import POOL_CAPACITY, RECORD_BYTES
 
 _MASK32 = 0xffffffff
+_TAU_F32 = struct.unpack('<f', struct.pack('<I', 0x40c90fdb))[0]
 TRAIL_CAPACITY = 200
 TRAIL_RECORD_BYTES = 0x3c
+
+
+def _f32(value):
+    return struct.unpack('<f', struct.pack('<f', value))[0]
 
 
 def _signed32(value):
@@ -124,9 +130,9 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
     """Translate the direct update slice of parent routine 0x527490.
 
     It clears the per-frame type counters, ages the selected trail pool, and
-    applies lifetime-factor scaling to active particle velocities. The parent
-    routine's emitter spawning, spin/orbit, color fade and respawn branches
-    are explicitly outside this core; inputs selecting those paths are
+    applies frame-gated spin/orbit, lifetime-factor scaling and lifetime
+    decrement. The parent's child-emitter, source-direction, color-fade and
+    respawn branches are outside this core; inputs selecting those paths are
     rejected rather than silently approximated.
     """
     if len(pool) != POOL_CAPACITY or any(
@@ -157,9 +163,8 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
         if (struct.unpack_from('<I', source, 0x3c)[0] != 0 or
                 struct.unpack_from('<I', source, 0x68)[0] != 0 or
                 (animate and struct.unpack_from('<I', source, 0x50)[0] != 0) or
-                (animate and struct.unpack_from('<f', slot, 0x3c)[0] != 0.0) or
                 slot[0x68] != 0):
-            raise ValueError('emitter, spin/color, or respawn branch is outside core scope')
+            raise ValueError('child-emitter, source-direction, color-fade, or respawn branch is outside core scope')
         factors[token] = _exact_float(struct.unpack_from('<f', source, 0x38)[0])
 
     for record in trail_records:
@@ -184,6 +189,32 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
         if token == 0:
             continue
         factor = factors[token]
+        if animate:
+            spin_rate = struct.unpack_from('<f', slot, 0x3c)[0]
+            if spin_rate != 0.0:
+                angle = struct.unpack_from('<f', slot, 0x38)[0]
+                radians = _f32(angle * _TAU_F32)
+                sine, cosine = _f32(math.sin(radians)), _f32(math.cos(radians))
+                radius = struct.unpack_from('<f', slot, 0x40)[0]
+                velocity_x = struct.unpack_from('<f', slot, 0x18)[0]
+                velocity_z = struct.unpack_from('<f', slot, 0x20)[0]
+                struct.pack_into('<f', slot, 0x18,
+                                 _x87_f32(_x87_add(
+                                     _x87_mul(_exact_float(sine), _exact_float(radius)),
+                                     _exact_float(velocity_x))))
+                struct.pack_into('<f', slot, 0x20,
+                                 _x87_f32(_x87_add(
+                                     _x87_mul(_exact_float(cosine), _exact_float(radius)),
+                                     _exact_float(velocity_z))))
+                vertical = _exact_float(struct.unpack_from('<f', slot, 0x44)[0])
+                struct.pack_into('<f', slot, 0x44,
+                                 _x87_f32(_x87_mul(factor, vertical)))
+                updated_rate = _x87_f32(_x87_mul(factor, _exact_float(spin_rate)))
+                struct.pack_into('<f', slot, 0x3c, updated_rate)
+                struct.pack_into('<f', slot, 0x40,
+                                 _f32(struct.unpack_from('<f', slot, 0x44)[0] + radius))
+                struct.pack_into('<f', slot, 0x38,
+                                 _f32(updated_rate + struct.unpack_from('<f', slot, 0x38)[0]))
         for offset in (0x34, 0x18, 0x1c, 0x20):
             value = _exact_float(struct.unpack_from('<f', slot, offset)[0])
             struct.pack_into('<f', slot, offset, _x87_f32(_x87_mul(factor, value)))
