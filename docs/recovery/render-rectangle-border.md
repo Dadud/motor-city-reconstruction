@@ -30,12 +30,13 @@ inputs. The native binary dispatches those canonical-NaN records even though
 the retained Ghidra pseudocode appears to reject them; the translation follows
 the direct observation.
 
-The same module translates the fan branch that emits vertices 0, 1, and 2
-when only vertex 3 is outside. In 128 direct comparisons the triangle callback
-payload and the canonical-NaN suppression matched. For this subregion check,
-the oracle replaces the subsequent complementary-polygon clipper `0x475de0`
-with a no-op so its behavior is not included in the claim. Other clipping
-branches and actual device effects remain outside this recovery. Evidence for
+The same module translates both trivial fan branches: vertices 0, 1, 2 when
+vertex 3 is outside, and vertices 0, 2, 3 when vertex 1 is outside. In 256
+direct comparisons of each branch, the triangle callback payload and
+canonical-NaN suppression matched. For these subregion checks, the oracle
+replaces the complementary polygon clipper `0x475de0` with a no-op so its
+behavior is not included in the claim. Other clipping branches and actual
+device effects remain outside this recovery. Evidence for
 the parent decompilation is REA Evidence
 `ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3`.
 

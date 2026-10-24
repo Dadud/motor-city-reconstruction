@@ -26,12 +26,8 @@ def dispatch_inside_quad(vertices, near_w, far_w):
     Each vertex is eight raw dwords. Word 5's low byte is its clip code;
     words 6 and 7 remain stack residue. This branch updates word 2 to
     ``near_w - W`` for nonnegative W no farther than near, otherwise far_w.
-    It dispatches the four records unless a checked coordinate/depth/residue
-    word is the original canonical quiet-NaN pattern.
-    Other polygon clipping branches are intentionally separate. The retained
-    Ghidra pseudocode appears to guard the callback against canonical NaNs,
-    but direct execution of the installed binary dispatches those records;
-    this translation follows that measured behavior.
+    It dispatches all four records, including canonical-NaN inputs observed
+    in direct execution. Other polygon clipping branches are separate.
     """
     if not isinstance(vertices,(tuple,list)) or len(vertices)!=4 or any(
         not isinstance(vertex,(tuple,list)) or len(vertex)!=8 or any(
@@ -63,18 +59,37 @@ def dispatch_first_fan_triangle(vertices, near_w, far_w):
     adjusted and sent to THRASH_drawtri. Other clip-code patterns belong to
     separate clipping paths and return no event here.
     """
+    _validate_quad(vertices,near_w,far_w)
+    return _dispatch_fan_triangle(vertices,(0,1,2),3,near_w,far_w)
+
+
+def dispatch_second_fan_triangle(vertices, near_w, far_w):
+    """Translate the fan branch emitting vertices 0, 2, 3 when vertex 1 is outside."""
+    _validate_quad(vertices,near_w,far_w)
+    return _dispatch_fan_triangle(vertices,(0,2,3),1,near_w,far_w)
+
+
+def _validate_quad(vertices,near_w,far_w):
     if not isinstance(vertices,(tuple,list)) or len(vertices)!=4 or any(
         not isinstance(vertex,(tuple,list)) or len(vertex)!=8 or any(
             type(word) is not int or not 0<=word<=0xffffffff
             for word in vertex) for vertex in vertices):
         raise ValueError('quad dispatch requires four eight-word vertices')
+    if any(not isinstance(value,(int,float)) for value in (near_w,far_w)):
+        raise ValueError('depth limits must be numeric')
+
+
+def _dispatch_fan_triangle(vertices, triangle_indices, outside_index,
+                           near_w, far_w):
     codes=tuple(vertex[5]&0xff for vertex in vertices)
-    if codes[:3]!=(0,0,0) or codes[3]==0:
+    if (any(codes[index]!=0 for index in triangle_indices) or
+            codes[outside_index]==0):
         return None
     near_w=_float_from_word(_float_word(float(near_w)))
     far_word=_float_word(float(far_w))
     output=[]
-    for vertex in vertices[:3]:
+    for index in triangle_indices:
+        vertex=vertices[index]
         words=list(vertex)
         w=words[3]
         if not w&0x80000000 and _float_from_word(w)<=near_w:

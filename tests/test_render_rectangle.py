@@ -4,7 +4,8 @@ from client.render_rectangle import (
     plan_filled_rectangle_vertices, plan_rectangle_border_edges)
 from client.render_clip_code import RenderClipBounds
 from client.render_quad_dispatch import (
-    dispatch_first_fan_triangle, dispatch_inside_quad)
+    dispatch_first_fan_triangle, dispatch_inside_quad,
+    dispatch_second_fan_triangle)
 import struct
 
 
@@ -86,6 +87,14 @@ class RenderRectangleTests(unittest.TestCase):
         self.assertEqual(result.callback_words,result.vertices)
         self.assertEqual(tuple(v[2] for v in result.vertices),(word(.75),)*3)
         self.assertEqual(tuple(v[4] for v in result.vertices),(1,2,3))
+
+    def test_second_fan_triangle_emits_when_second_corner_is_outside(self):
+        vertices=tuple((0,0,0,0,0,0,10+i,20+i) for i in range(4))
+        vertices=(vertices[0],vertices[1][:5]+(0x10,)+vertices[1][6:],
+                  vertices[2],vertices[3])
+        result=dispatch_second_fan_triangle(vertices,1.,99.)
+        self.assertEqual(tuple(v[6:] for v in result.callback_words),
+                         ((10,20),(12,22),(13,23)))
 
     def test_first_fan_triangle_suppresses_canonical_nan_payload(self):
         vertices=tuple((0,0,0,0,0,0,0,0) for _ in range(3))

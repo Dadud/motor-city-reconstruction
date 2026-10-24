@@ -4,7 +4,8 @@ import random
 import struct
 
 from client.render_quad_dispatch import (
-    dispatch_first_fan_triangle, dispatch_inside_quad)
+    dispatch_first_fan_triangle, dispatch_inside_quad,
+    dispatch_second_fan_triangle)
 from tools.native_oracle import DynoOracle
 
 
@@ -17,7 +18,8 @@ def verify(executable,cases=256):
         raise ValueError('cases must be between 1 and 10000')
     oracle=DynoOracle(executable)
     rng=random.Random(0x474ee0)
-    counts={'quad-callback':0,'triangle-callback':0,'triangle-rejected':0}
+    counts={'quad-callback':0,'triangle-callback':0,'triangle-rejected':0,
+            'second-triangle-callback':0,'second-triangle-rejected':0}
     for index in range(cases):
         near=10.0
         far=-100.0
@@ -47,13 +49,33 @@ def verify(executable,cases=256):
             triangle[1]=tuple(changed)
         triangle=tuple(triangle)
         expected_triangle=dispatch_first_fan_triangle(triangle,near,far).callback_words
-        actual_triangle=oracle.render_quad_first_triangle(triangle,near,far)
+        actual_triangle=oracle.render_quad_fan_triangle(
+            triangle,(0,1,2),near,far)
         if expected_triangle!=actual_triangle:
             raise AssertionError(
                 f'triangle case {index}: expected {expected_triangle!r}, '
                 f'got {actual_triangle!r}')
         counts['triangle-callback' if expected_triangle is not None else
                'triangle-rejected']+=1
+
+        second=list(vertices)
+        second[3]=tuple(second[3][:5]+(0,)+second[3][6:])
+        second[1]=tuple(second[1][:5]+(0x10,)+second[1][6:])
+        if index%7==0:
+            changed=list(second[2]); changed[7]=0xffc00000
+            second[2]=tuple(changed)
+        second=tuple(second)
+        expected_second=dispatch_second_fan_triangle(second,near,far)
+        expected_second=(expected_second.callback_words
+                         if expected_second is not None else None)
+        actual_second=oracle.render_quad_fan_triangle(
+            second,(0,2,3),near,far)
+        if expected_second!=actual_second:
+            raise AssertionError(
+                f'second triangle case {index}: expected {expected_second!r}, '
+                f'got {actual_second!r}')
+        counts['second-triangle-callback' if expected_second is not None else
+               'second-triangle-rejected']+=1
     return counts
 
 

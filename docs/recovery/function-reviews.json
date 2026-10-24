@@ -1318,7 +1318,7 @@
   "0x474ee0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "The all-four-clip-codes-zero branch is translated through depth adjustment, far-depth fallback, and the four-vertex draw-quad callback boundary; 256 direct original calls match all eight words of all four callback records, including canonical-NaN inputs. The fan branch for an outside fourth vertex is translated through its first in-bounds triangle callback; 128 direct runs match, with the complementary clipping helper replaced by a no-op to isolate that callback subregion. Other polygon clipping branches and device rendering remain external.",
+    "scope": "The all-four-clip-codes-zero branch is translated through depth adjustment, far-depth fallback, and the four-vertex draw-quad callback boundary; direct original calls match all eight words of all four callback records, including canonical-NaN inputs. Both trivial fan branches (0,1,2 when vertex 3 is outside; 0,2,3 when vertex 1 is outside) are translated and compared, with the complementary 0x475de0 clipping call replaced by a no-op to isolate the triangle callback subregions. Other polygon clipping branches and device rendering remain external.",
     "sources": [
       "client/render_quad_dispatch.py",
       "tests/test_render_rectangle.py",

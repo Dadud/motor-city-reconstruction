@@ -413,14 +413,18 @@ class DynoOracle:
         return tuple(struct.unpack('<8I',self.cpu.mem_read(
             capture+0x10+index*0x20,0x20)) for index in range(4))
 
-    def render_quad_first_triangle(self, vertices, near_w, far_w):
-        """Run the one-outside fan branch of 0x474ee0 with a tri callback."""
+    def render_quad_fan_triangle(self, vertices, triangle_indices,
+                                 near_w, far_w):
+        """Run one isolated in-bounds fan triangle through 0x474ee0."""
+        if triangle_indices not in ((0,1,2),(0,2,3)):
+            raise ValueError('unsupported quad fan triangle order')
+        outside_index=3 if triangle_indices==(0,1,2) else 1
         if (len(vertices)!=4 or any(len(vertex)!=8 for vertex in vertices) or
             any(type(word) is not int or not 0<=word<=0xffffffff
                 for vertex in vertices for word in vertex) or
-            tuple(vertex[5]&0xff for vertex in vertices[:3])!=(0,0,0) or
-            not vertices[3][5]&0xff):
-            raise ValueError('triangle oracle requires three inside vertices and an outside fourth')
+            any(vertices[index][5]&0xff for index in triangle_indices) or
+            not vertices[outside_index][5]&0xff):
+            raise ValueError('triangle oracle requires three inside vertices and one outside corner')
         self._reset()
         base=self.inputs+0x100
         capture=self.inputs+0x800
