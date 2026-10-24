@@ -2,10 +2,12 @@
 
 The direct state-update slice of parent routine `0x527490` clears the frame's
 52 type counters, ages group-zero trail records through `0x527360`, and then
-visits the 600 particle records. Active records without child emitters or
-respawn effects have their velocity/rate fields scaled by
-the source lifetime factor and their remaining lifetime decremented. When the
-frame animation bit is set, spin/orbit adjusts X/Z velocity and advances the
+visits the 600 particle records. Active records have their velocity/rate
+fields scaled by the source lifetime factor and their remaining lifetime
+decremented. A configured child emitter normalizes the parent's velocity when
+nonzero, attempts its configured number of particles with unit scale, and
+stops when the constructor returns no slot. When the frame animation bit is
+set, spin/orbit adjusts X/Z velocity and advances the
 per-record phase/rate/radius fields. The same frame gate applies color fade
 when enabled by the source: it scales the per-channel limits by normalized
 particle age, subtracts them with nearest-even x87 integer conversion from the
@@ -23,14 +25,14 @@ slot, the constructor's staged velocity stores alias its acceleration input,
 so the model preserves the native in-place read/write order.
 
 1,024 direct parent calls compare the complete particle pool, 200 trail records,
-all 52 counters, and six shared-RNG words exactly. The tested inputs cover both values of the
-frame's animation bit, active/inactive and source-less records, varied source
+all 52 counters, and six shared-RNG words exactly. The corpus covers both frame
+animation-bit values, active/inactive and source-less records, varied source
 lifetime factors, spin phase/rate/radius combinations, enabled and disabled
-color fade with varied base colors and channel limits, direction flags with
-selectors around both dead-zone boundaries, expiry respawn counts, in-place
-slot reuse and cadence suppression, and trail type counting. All compared
-particle, trail, counter and RNG bytes match exactly. Child-emitter expansion
-remains untranslated.
+color fade with varied base colors and channel limits, direction selectors
+around both dead-zone boundaries, expiry respawn counts, in-place slot reuse,
+cadence suppression, and configured child emitters. It exercises 57,659 child
+constructor attempts. All compared particle, trail, counter and RNG bytes
+match exactly for the supplied valid source/configuration domain.
 
 Static provenance: retained Ghidra pseudocode and direct x86 instruction
 inspection for `mcity.exe`, SHA-256

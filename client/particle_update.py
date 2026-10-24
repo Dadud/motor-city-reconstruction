@@ -132,9 +132,9 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
     """Translate the direct update slice of parent routine 0x527490.
 
     It clears the per-frame type counters, ages the selected trail pool, and
-    applies source-direction selection, frame-gated spin/orbit and color fade,
-    lifetime-factor scaling, lifetime decrement and expiry respawns. Child
-    emitter expansion remains outside this core.
+    applies child emitter expansion, source-direction selection, frame-gated
+    spin/orbit and color fade, lifetime-factor scaling, lifetime decrement,
+    and expiry respawns.
     """
     if len(pool) != POOL_CAPACITY or any(
             not isinstance(slot, bytearray) or len(slot) != RECORD_BYTES for slot in pool):
@@ -153,28 +153,50 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
 
     animate = bool(frame_counter & 2)
     factors = {}
+    checked_sources = set()
     for slot in pool:
         if struct.unpack_from('<h', slot, 4)[0] == 0:
             continue
         token = struct.unpack_from('<I', slot, 0)[0]
         if token == 0:
             continue
-        try:
-            source = sources[token]
-        except KeyError as exc:
-            raise ValueError(f'missing particle source for token {token:#x}') from exc
-        if len(source) < 0x6c:
-            raise ValueError('particle source must contain at least 0x6c bytes')
-        if struct.unpack_from('<I', source, 0x68)[0] != 0:
-            raise ValueError('child-emitter branch is outside core scope')
         if slot[0x68] and random_state is None:
             raise ValueError('respawn records require the shared RandomState')
-        if slot[0x68] and struct.unpack_from('<h', slot, 4)[0] == 1:
-            lifetime = struct.unpack_from('<h', source, 8)[0]
-            cadence_divisor = struct.unpack_from('<i', source, 0xc)[0] + 1
-            if lifetime == 0 or cadence_divisor <= 0:
-                raise ValueError('respawn source has invalid lifetime or cadence')
-        factors[token] = _exact_float(struct.unpack_from('<f', source, 0x38)[0])
+        pending = [token]
+        while pending:
+            source_token = pending.pop()
+            if source_token in checked_sources:
+                continue
+            source = sources.get(source_token)
+            if source is None:
+                raise ValueError(f'missing particle source for token {source_token:#x}')
+            if len(source) < 0x6c:
+                raise ValueError('particle source must contain at least 0x6c bytes')
+            checked_sources.add(source_token)
+            factors[source_token] = _exact_float(
+                struct.unpack_from('<f', source, 0x38)[0])
+            child_token = struct.unpack_from('<I', source, 0x68)[0]
+            if child_token:
+                child_config = sources.get(child_token)
+                if child_config is None or len(child_config) < 8:
+                    raise ValueError(f'missing child-emitter definition {child_token:#x}')
+                child_count = struct.unpack_from('<i', child_config, 4)[0]
+                if child_count > 0:
+                    if random_state is None:
+                        raise ValueError('child emitters require the shared RandomState')
+                    if len(child_config) < 0x6c:
+                        raise ValueError('child-emitter definition must contain at least 0x6c bytes')
+                    child_lifetime = struct.unpack_from('<h', child_config, 8)[0]
+                    child_cadence = struct.unpack_from('<i', child_config, 0xc)[0] + 1
+                    if child_lifetime == 0 or child_cadence <= 0:
+                        raise ValueError('child-emitter definition has invalid lifetime or cadence')
+                    pending.append(child_token)
+            if (source_token == token and slot[0x68] and
+                    struct.unpack_from('<h', slot, 4)[0] == 1):
+                lifetime = struct.unpack_from('<h', source, 8)[0]
+                cadence_divisor = struct.unpack_from('<i', source, 0xc)[0] + 1
+                if lifetime == 0 or cadence_divisor <= 0:
+                    raise ValueError('respawn source has invalid lifetime or cadence')
 
     for record in trail_records:
         if struct.unpack_from('<i', record, 4)[0] == 0:
@@ -197,7 +219,29 @@ def advance_particle_frame_core(pool, sources, trail_records, type_counts,
         token = struct.unpack_from('<I', slot, 0)[0]
         if token == 0:
             continue
+        source = sources[token]
+        if token not in factors:
+            factors[token] = _exact_float(struct.unpack_from('<f', source, 0x38)[0])
         factor = factors[token]
+        child_token = struct.unpack_from('<I', source, 0x68)[0]
+        if child_token:
+            child_config = sources[child_token]
+            child_count = struct.unpack_from('<i', child_config, 4)[0]
+            if child_count > 0:
+                from .matrix_math import normalize_vector3, vector_length3
+                velocity = struct.unpack_from('<3f', slot, 0x18)
+                direction = (normalize_vector3(velocity)
+                             if vector_length3(velocity) != 0.0 else velocity)
+                position = struct.unpack_from('<3i', slot, 0xc)
+                for _ in range(child_count):
+                    spawned = construct_particle(
+                        child_config, child_token, position, 1.0, direction,
+                        (0.0, 0.0, 0.0), velocity, random_state, pool,
+                        frame_counter=frame_counter, effect_mode=effect_mode,
+                        cadence_flag=1,
+                        acceleration_alias_index=slot_index)
+                    if spawned is None:
+                        break
         if struct.unpack_from('<I', sources[token], 0x3c)[0] != 0:
             selector = struct.unpack_from('<f', slot, 0x30)[0]
             signed_rate = struct.unpack_from('<f', slot, 0x34)[0]

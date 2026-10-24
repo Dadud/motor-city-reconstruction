@@ -1,8 +1,8 @@
 {
   "0x527490": {
-    "translation": "partial",
-    "verification": "original-comparison-subregions",
-    "scope": "The supported direct update slice clears the 52 frame counters, ages group-zero trail records, applies source-direction sign selection at the strict +/-0.25 boundaries, frame-gated spin/orbit to X/Z velocity and phase/rate/radius fields, fades enabled particle colors from base word +0x4c into +0x48 with x87 nearest-even channel conversion, scales active particle velocity/rate fields by source lifetime factor, decrements lifetimes, and composes expiry respawns through the translated constructor with native in-place acceleration aliasing when a slot is reused. 1,024 direct parent calls compare the complete particle pool, 200 trail records, all counters and six RNG words exactly, including direction flags, both animation-bit values, varied spin inputs, enabled/disabled color fade, respawn counts and slot reuse. Child-emitter expansion remains untranslated.",
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The routine clears the 52 frame counters, ages group-zero trail records, applies source-direction sign selection at the strict +/-0.25 boundaries, frame-gated spin/orbit to X/Z velocity and phase/rate/radius fields, fades enabled particle colors from base word +0x4c into +0x48 with x87 nearest-even channel conversion, scales active particle velocity/rate fields by source lifetime factor, decrements lifetimes, expands configured child emitters, and composes expiry respawns through the translated constructor with native in-place acceleration aliasing when a slot is reused. 1,024 direct parent calls compare the complete particle pool, 200 trail records, all counters and six RNG words exactly, including direction flags, both animation-bit values, varied spin inputs, enabled/disabled color fade, child emitter attempts, respawn counts and slot reuse. The evidence covers supplied valid source/configuration definitions and the represented direct state domain.",
     "sources": ["client/particle_update.py", "tests/test_particle_update.py", "tools/verify_particle_frame_core.py", "docs/recovery/particle-frame-core.md"],
     "evidence_ids": []
   },

@@ -5,6 +5,7 @@ import random
 import struct
 
 from client.particle_spawn import POOL_CAPACITY, RECORD_BYTES
+from client import particle_update as particle_update_module
 from client.random_state import RandomState
 from client.particle_update import (TRAIL_CAPACITY, TRAIL_RECORD_BYTES,
                                     advance_particle_frame_core)
@@ -28,13 +29,16 @@ def verify(executable, cases=128):
         raise ValueError('cases must be between 1 and 1024')
     oracle = DynoOracle(executable)
     rng = random.Random(0x527490)
+    child_emitter_attempts = 0
     for case in range(cases):
         frame = rng.randrange(0, 10_000) & ~1
         if case % 2:
             frame |= 2
         sources = {}
+        child_config_tokens = set()
         tokens = tuple(oracle.inputs + 0x4000 + i * 0x100 for i in range(16))
-        for token in tokens:
+        child_tokens = tuple(oracle.inputs + 0x6000 + i * 0x100 for i in range(16))
+        for source_index, token in enumerate(tokens):
             source = bytearray(0x84)
             struct.pack_into('<i', source, 0, rng.choice((-1, 0, 1, 3, 25, 26)))
             struct.pack_into('<h', source, 8, rng.randint(20, 500))
@@ -47,11 +51,31 @@ def verify(executable, cases=128):
             # the frame-gated color-fade flag alongside spin inputs.
             struct.pack_into('<I', source, 0x3c, rng.choice((0, 0, 1)))
             struct.pack_into('<I', source, 0x50, rng.choice((0, 0, 1)))
-            struct.pack_into('<I', source, 0x68, 0)
+            child_token = child_tokens[source_index] if rng.randrange(8) == 0 else 0
+            struct.pack_into('<I', source, 0x68, child_token)
             struct.pack_into('<i', source, 0x70, rng.randint(1, 500))
             source[0x83] = rng.randrange(256)
             sources[token] = bytes(source)
             oracle.cpu.mem_write(token, bytes(source))
+            if child_token:
+                child_config_tokens.add(child_token)
+                child = bytearray(0x84)
+                struct.pack_into('<i', child, 0, rng.choice((-1, 0, 1, 3, 25, 26)))
+                struct.pack_into('<i', child, 4, rng.randint(1, 3))
+                struct.pack_into('<h', child, 8, rng.randint(20, 500))
+                struct.pack_into('<i', child, 0xc, rng.randint(0, 8))
+                for offset in (0x10, 0x14, 0x18, 0x1c, 0x30, 0x34,
+                               0x40, 0x44, 0x48):
+                    struct.pack_into('<f', child, offset,
+                                     _f32(rng.uniform(0.05, 3.0)))
+                struct.pack_into('<f', child, 0x38, _f32(rng.uniform(0.1, 1.5)))
+                struct.pack_into('<I', child, 0x3c, 0)
+                struct.pack_into('<I', child, 0x50, 0)
+                struct.pack_into('<I', child, 0x54, 0)
+                struct.pack_into('<I', child, 0x68, 0)
+                struct.pack_into('<i', child, 0x70, rng.randint(1, 500))
+                sources[child_token] = bytes(child)
+                oracle.cpu.mem_write(child_token, bytes(child))
 
         particles = []
         for _ in range(POOL_CAPACITY):
@@ -86,8 +110,18 @@ def verify(executable, cases=128):
         for address, word in zip(RANDOM_WORDS, seed):
             oracle.cpu.mem_write(address, struct.pack('<I', word))
 
-        advance_particle_frame_core(particles, sources, trails, counters, frame,
-                                    random_state=random_state)
+        original_constructor = particle_update_module.construct_particle
+        def count_child_constructor(*args, **kwargs):
+            nonlocal child_emitter_attempts
+            if args[1] in child_config_tokens:
+                child_emitter_attempts += 1
+            return original_constructor(*args, **kwargs)
+        particle_update_module.construct_particle = count_child_constructor
+        try:
+            advance_particle_frame_core(particles, sources, trails, counters, frame,
+                                        random_state=random_state)
+        finally:
+            particle_update_module.construct_particle = original_constructor
         oracle.call(0x527490, instruction_limit=2_000_000)
         native_particles = bytes(oracle.cpu.mem_read(PARTICLES, POOL_CAPACITY * RECORD_BYTES))
         native_trails = bytes(oracle.cpu.mem_read(TRAILS, TRAIL_CAPACITY * TRAIL_RECORD_BYTES))
@@ -117,7 +151,8 @@ def verify(executable, cases=128):
     return {'entry': '0x527490', 'cases': cases,
             'scope': 'direct update slice: exact comparison of the full particle '
                      'pool, trail pool and type counters; '
-                     'child-emitter disabled; source-direction, color fade and expiry respawn varied',
+                     'child emitters, source-direction, color fade and expiry respawn varied',
+            'child_emitter_attempts': child_emitter_attempts,
             'float_tolerance': 0}
 
 
