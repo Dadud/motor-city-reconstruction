@@ -8,7 +8,7 @@ velocity and color, source/configuration words, cadence byte, and the six-word
 shared RNG transition. Extended x87 intermediates and binary32 stores are
 modeled at the observed instruction boundaries.
 
-512 direct calls compare the returned slot, all 600 records (including reused
+2,048 direct calls compare the returned slot, all 600 records (including reused
 slot bytes), and all six RNG words. Cases cover empty pools, inactive-slot
 reuse, full-pool replacement, cadence/mode suppression, and deterministic
 random emitter and motion inputs. Global time, effect mode, emitter data,
