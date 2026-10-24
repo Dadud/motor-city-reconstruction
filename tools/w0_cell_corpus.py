@@ -133,6 +133,9 @@ def build(executable):
         elif name == 'window_input_initialize':
             from tools.window_initialization_cases import capture
             cases = capture(oracle)
+        elif name == 'window_focus_update':
+            from tools.window_focus_cases import capture
+            cases = capture(oracle)
         elif name == 'window_handler_register':
             from tools.window_registration_cases import capture
             cases = capture(oracle)

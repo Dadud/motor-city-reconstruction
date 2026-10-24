@@ -1,0 +1,45 @@
+{
+  "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+  "functions": {
+    "0x584070": {
+      "translation": "native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "window-dispatch",
+      "owner": "input-recovery",
+      "status": "implemented",
+      "scope": "Complete 0x584070 activation/loss handler with hook and default-window-procedure imports represented by explicit bridges; the original key-table zeroing helper runs natively.",
+      "supported_domain": "Mapped 0x530-byte queue globals, separate activation word and 128-byte raw-key table, returning API bridges and valid callback/result pointers.",
+      "acceptance": "Direct original comparisons cover activation, deactivation/minimized messages, gate rejection, existing/missing/failed hook handles, hook teardown and exact 128-byte key clearing.",
+      "comparison_cases": 18,
+      "comparison_corpus": "docs/recovery/corpora/wave0",
+      "comparison_command": "python -m tools.run_cell_comparisons BUILD_DIR --original MCITY_EXE",
+      "unresolved": [
+        "Live Win32 activation delivery, actual global hook behavior and platform integration."
+      ],
+      "evidence_ids": [
+        "ev_2d88097b8a8093fb4d5af9fe9f72ba4297faaa7b2882560a3285f80fd018c1b8",
+        "ev_5106c094e592647b6533dad33160fda840ded0f3da787904f77a59e170200ada"
+      ],
+      "sources": [
+        "native/cmds/window_focus_update.cmake",
+        "native/include/mco/layouts.hpp",
+        "native/include/mco/window_dispatch_state.hpp",
+        "native/include/mco/window_focus_state.hpp",
+        "native/include/mco/window_focus_update.hpp",
+        "native/src/window_focus_update.cpp",
+        "native/tests/cell_io.hpp",
+        "native/tests/window_focus_cases.hpp",
+        "native/tests/window_focus_update_compare.cpp",
+        "native/tests/window_focus_update_test.cpp",
+        "tools/cell_corpus.py",
+        "tools/native_window_focus_update_compare.py",
+        "tools/w0_cell_corpus.py",
+        "tools/window_focus_cases.py"
+      ],
+      "dependencies": [
+        "0x583210",
+        "0x6ee770"
+      ]
+    }
+  }
+}

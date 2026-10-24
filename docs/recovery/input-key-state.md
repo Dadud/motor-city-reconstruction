@@ -95,12 +95,17 @@ images; the separate all-cell corpus/runner checks remain intact. Layout audit
 reports 98 distinct offsets across 40 consumers, no shared unregistered offsets,
 and a current generated header.
 
-Key-down producer `0x584450` also translates characters and queues repeated
-messages under synchronization; it remains unrecovered. Focus-loss handling
-`0x584070` clears raw keys and installs/removes Windows hooks; it also remains
-unrecovered. Window dispatch, authentic message/input producers, actual camera
-handler math and collision calls, and live keyboard/camera acceptance remain
-required. No real window was driven and no PE entry point was started.
+Key-down producer `0x584450` is recovered over its caller-owned queue and
+key-state images, with original-comparison coverage. Focus-loss handler
+`0x584070` is now reconstructed with explicit bridges for
+`DefWindowProcA`, `UnhookWindowsHookEx`, `GetModuleHandleA` and
+`SetWindowsHookExA`. It matches 18 hash-checked original executions covering
+activation, deactivation/minimization, hook setup/teardown and rejected calls;
+the separate activation flag and 128-byte raw-key table are modeled directly.
+Live Win32 delivery and global hook behavior remain unverified. Window
+dispatch, authentic message/input producers, actual camera handler math and
+collision calls, and live keyboard/camera acceptance remain required. No real
+window was driven and no PE entry point was started.
 
 Replay all cells and four lifecycle groups with
 `python -m tools.run_cell_comparisons BUILD_DIR`; add `--original MCITY_EXE`

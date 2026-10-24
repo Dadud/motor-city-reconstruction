@@ -876,6 +876,16 @@
      "name": "policy_flag",
      "type": "uint32",
      "units": "opaque policy flag supplied to 0x584c80"
+    },
+    "0x508": {
+     "name": "keyboard_hook",
+     "type": "HHOOK32",
+     "units": "0x584070 keyboard hook"
+    },
+    "0x50c": {
+     "name": "mouse_hook",
+     "type": "HHOOK32",
+     "units": "0x584070 mouse hook"
     }
    }
   },

@@ -351,6 +351,9 @@
     },
     "installation_check": {
       "sha256": "27885fc0eb9e2acc05f1846f80a8cbbd456b84957d402627bf392a75e46a2cf3"
+    },
+    "window_focus_update": {
+      "sha256": "6de86ba8302f8d151164dbbc7ae76d5e441e0a61c336d8364a31b9330e02b18f"
     }
   },
   "probes": {
