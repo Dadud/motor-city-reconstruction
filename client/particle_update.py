@@ -117,3 +117,76 @@ def advance_particle_trails(records, definitions, type_counts):
         if progress == 0:
             count = 0
         struct.pack_into('<i', record, 4, count)
+
+
+def advance_particle_frame_core(pool, sources, trail_records, type_counts,
+                               frame_counter):
+    """Translate the direct update slice of parent routine 0x527490.
+
+    It clears the per-frame type counters, ages the selected trail pool, and
+    applies lifetime-factor scaling to active particle velocities. The parent
+    routine's emitter spawning, spin/orbit, color fade and respawn branches
+    are explicitly outside this core; inputs selecting those paths are
+    rejected rather than silently approximated.
+    """
+    if len(pool) != POOL_CAPACITY or any(
+            not isinstance(slot, bytearray) or len(slot) != RECORD_BYTES for slot in pool):
+        raise ValueError('particle pool must contain 600 records of 0x6c bytes')
+    if len(type_counts) != 52:
+        raise ValueError('particle type-counter block must contain 52 entries')
+    if type(frame_counter) is not int or not -0x80000000 <= frame_counter <= 0x7fffffff:
+        raise ValueError('frame counter must fit signed int32')
+    if any(not isinstance(record, bytearray) or len(record) != TRAIL_RECORD_BYTES
+           for record in trail_records) or len(trail_records) != TRAIL_CAPACITY:
+        raise ValueError('trail pool must contain 200 records of 0x3c bytes')
+
+    animate = bool(frame_counter & 2)
+    factors = {}
+    for slot in pool:
+        if struct.unpack_from('<h', slot, 4)[0] == 0:
+            continue
+        token = struct.unpack_from('<I', slot, 0)[0]
+        if token == 0:
+            continue
+        try:
+            source = sources[token]
+        except KeyError as exc:
+            raise ValueError(f'missing particle source for token {token:#x}') from exc
+        if len(source) < 0x6c:
+            raise ValueError('particle source must contain at least 0x6c bytes')
+        if (struct.unpack_from('<I', source, 0x3c)[0] != 0 or
+                struct.unpack_from('<I', source, 0x68)[0] != 0 or
+                (animate and struct.unpack_from('<I', source, 0x50)[0] != 0) or
+                (animate and struct.unpack_from('<f', slot, 0x3c)[0] != 0.0) or
+                slot[0x68] != 0):
+            raise ValueError('emitter, spin/color, or respawn branch is outside core scope')
+        factors[token] = _exact_float(struct.unpack_from('<f', source, 0x38)[0])
+
+    for record in trail_records:
+        if struct.unpack_from('<i', record, 4)[0] == 0:
+            continue
+        token = struct.unpack_from('<I', record, 0)[0]
+        definition = sources.get(token)
+        if definition is None or len(definition) < 0x84:
+            raise ValueError(f'missing complete trail definition for token {token:#x}')
+        if struct.unpack_from('<i', definition, 0x70)[0] == 0:
+            raise ValueError('zero trail duration is outside the normal domain')
+
+    type_counts[:] = [0] * 52
+    trail_counts = [0] * 26
+    advance_particle_trails(trail_records, sources, trail_counts)
+    type_counts[:26] = trail_counts
+
+    for slot in pool:
+        if struct.unpack_from('<h', slot, 4)[0] == 0:
+            continue
+        token = struct.unpack_from('<I', slot, 0)[0]
+        if token == 0:
+            continue
+        factor = factors[token]
+        for offset in (0x34, 0x18, 0x1c, 0x20):
+            value = _exact_float(struct.unpack_from('<f', slot, offset)[0])
+            struct.pack_into('<f', slot, offset, _x87_f32(_x87_mul(factor, value)))
+        remaining = struct.unpack_from('<h', slot, 4)[0]
+        struct.pack_into('<h', slot, 4, (remaining - 1) & 0xffff)
+    return tuple(type_counts)

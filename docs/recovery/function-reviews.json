@@ -1,4 +1,11 @@
 {
+  "0x527490": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "The supported direct update slice clears the 52 frame counters, ages group-zero trail records, scales active particle velocity/rate fields by source lifetime factor, and decrements lifetimes. 512 direct parent calls compare the complete particle pool, 200 trail records and all counters exactly, including both frame animation-bit values. Child-emitter, spin/orbit, color-fade and respawn paths remain untranslated.",
+    "sources": ["client/particle_update.py", "tests/test_particle_update.py", "tools/verify_particle_frame_core.py", "docs/recovery/particle-frame-core.md"],
+    "evidence_ids": []
+  },
   "0x527360": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
