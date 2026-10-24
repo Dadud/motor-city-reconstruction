@@ -40,6 +40,19 @@
     ],
     "evidence_ids": []
   },
+  "0x42d2e0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The 1,024 triplet metadata reset, inclusive block-row scan, pointed 16-bit counter clears, and 0x407550 child compose over explicit memory views. 256 direct native calls compare complete metadata, block, pointed-array and secondary-table images.",
+    "sources": [
+      "client/track_collision_state.py",
+      "tests/test_track_collision_state.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_collision_state.py",
+      "docs/recovery/track-collision-state-reset.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d5b0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
