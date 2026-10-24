@@ -1,4 +1,11 @@
 {
+  "0x527060": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Applies cadence/global-mode gates, selects the first inactive slot or replaces the lowest signed remaining lifetime, and constructs the 0x6c-byte particle record using the supplied vectors, emitter data and shared six-word RNG state. 512 direct original calls compare the return slot, all 600 records and all six RNG words exactly, covering new records, free-slot reuse, full-pool replacement and suppression gates. Parent simulation and rendering remain outside scope.",
+    "sources": ["client/particle_spawn.py", "client/random_state.py", "tests/test_particle_spawn.py", "tools/verify_particle_spawn.py", "docs/recovery/particle-spawn.md"],
+    "evidence_ids": []
+  },
   "0x6f2c90": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
