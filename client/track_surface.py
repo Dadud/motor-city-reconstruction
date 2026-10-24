@@ -9,6 +9,29 @@ from .track_spatial import decode_spatial
 from .track_plane import surface_height, track_plane
 
 
+def surface_quad_vertex_indices(block_index, descriptor_index, descriptors, quads):
+    """Resolve one surface descriptor to its four vertex indices."""
+    if (type(block_index) is not int or not 0 <= block_index <= 0xffff or
+            type(descriptor_index) is not int or
+            not 0 <= descriptor_index <= 0xffff or
+            not isinstance(descriptors, (tuple, list)) or
+            not isinstance(quads, (tuple, list))):
+        raise ValueError('invalid surface descriptor lookup inputs')
+    if descriptor_index >= len(descriptors):
+        raise ValueError('surface descriptor index is outside the block')
+    descriptor = descriptors[descriptor_index]
+    if not isinstance(descriptor, (tuple, list)) or len(descriptor) < 4:
+        raise ValueError('surface descriptor must include its quad index')
+    quad_index = descriptor[3]
+    if type(quad_index) is not int or not 0 <= quad_index < len(quads):
+        raise ValueError('surface quad index is outside the block')
+    indices = quads[quad_index]
+    if (len(indices) != 4 or any(type(index) is not int or
+                                 not 0 <= index <= 0xffff for index in indices)):
+        raise ValueError('surface quad must contain four uint16 vertex indices')
+    return tuple(indices)
+
+
 def average_surface_vertex_color(block_index, descriptor, vertex_colors, quads):
     """Average the four packed colors referenced by one surface descriptor.
 

@@ -1,4 +1,17 @@
 {
+  "0x42e3f0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The helper reads a descriptor's quad index from its block table and resolves the four uint16 vertex indices to pointers in that block's vertex array. 512 randomized direct original calls compare all four returned pointers exactly, including nonzero block offsets and descriptor-to-quad indirection. Block lifetime and callers' later vertex interpretation are outside this helper-level check.",
+    "sources": [
+      "client/track_surface.py",
+      "tests/test_surface_quad_vertex_indices.py",
+      "tools/native_oracle.py",
+      "tools/verify_surface_quad_vertex_indices.py",
+      "docs/recovery/track-surface-vertex-indices.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42e490": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
