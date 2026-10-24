@@ -57,6 +57,20 @@ class DynoOracle:
         self.cpu.reg_write(self.reg.UC_X86_REG_ESP, self.frame-0x1000)
         self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
 
+    def render_mode_state(self, mode_cache, zero_mode_cache, requested_mode):
+        """Run 0x6f1a30 and capture its return and two global state words."""
+        words = (mode_cache, zero_mode_cache, requested_mode)
+        if any(type(value) is not int or not 0 <= value <= 0xffffffff
+               for value in words):
+            raise ValueError('render mode oracle requires unsigned 32-bit words')
+        self._reset()
+        self.cpu.mem_write(0x00b368cc, struct.pack('<I', mode_cache))
+        self.cpu.mem_write(0x008c89f0, struct.pack('<I', zero_mode_cache))
+        self.call(0x6f1a30, (requested_mode,), instruction_limit=1000)
+        return (self.cpu.reg_read(self.reg.UC_X86_REG_EAX),
+                struct.unpack('<I', self.cpu.mem_read(0x00b368cc, 4))[0],
+                struct.unpack('<I', self.cpu.mem_read(0x008c89f0, 4))[0])
+
     def random_next(self, words):
         """Run the original shared 0x6f0fa0 generator on six supplied words."""
         if (len(words) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff

@@ -2964,5 +2964,26 @@
     "doc_refs": [
       "docs/recovery/vector-normalize.md"
     ]
+  },
+  "0x6f1a30": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The global render-mode replacement at 0x6f1a30 is translated as an explicit state transition: it returns the prior mode, writes the requested mode, and changes the dependent cache word to 0xffffffff only when the requested mode is zero. 512 direct original calls compare the return and both globals exactly over deterministic edge cases and random 32-bit words. This does not translate the callback dispatch in 0x6f28f0 or renderer integration.",
+    "sources": [
+      "client/render_state.py",
+      "tests/test_render_state.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_mode_state.py",
+      "docs/recovery/render-mode-state.md"
+    ],
+    "evidence_ids": [
+      "ev_ac4d4f3f089b872a82453f4ec24eb1384716cc266b1354301fce15a4471f9910"
+    ],
+    "verification_refs": [
+      "tools/verify_render_mode_state.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-mode-state.md"
+    ]
   }
 }
