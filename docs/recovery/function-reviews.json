@@ -1330,12 +1330,13 @@
   "0x475de0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "The first near-plane pass return is translated for the domain where plane mask is exactly 0x01 and all three byte clip codes share that bit. 256 direct original calls match the 0xffffffff empty-polygon sentinel. The initial global vertex/color setup writes are not modeled; intersecting edges, other plane masks, subsequent passes, and draw-trifan callback behavior remain external.",
+    "scope": "The 0x01 near-plane pass is translated for two domains: all three input clip codes share the bit and the function returns 0xffffffff; or exactly one vertex is outside and the function interpolates the two crossing edges, converts the resulting polygon, and dispatches through THRASH_drawtrifan. The shared-plane sentinel matches 256 direct calls; 1,024 additional native calls match triangle count and every eight-word callback vertex across outside-corner positions and color interpolation modes. Initial global vertex/color setup writes are not modeled, nor are other clip planes, multi-plane intersections, and later passes.",
     "sources": [
       "client/render_polygon_clip.py",
-      "tests/test_render_rectangle.py",
+      "tests/test_render_polygon_clip.py",
       "tools/native_oracle.py",
       "tools/verify_render_polygon_clip.py",
+      "tools/verify_render_polygon_near_plane.py",
       "docs/recovery/render-rectangle-border.md"
     ]
   },
@@ -1384,7 +1385,7 @@
   "0x47faf0": {
     "translation": "partial",
     "verification": "static-analysis-only",
-    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Its renderer reset 0x46abd0(0), the all-inside/two trivial-fan 0x474ee0 subregions, and the shared-near-plane empty result in 0x475de0 have direct original comparisons. Neither parent has a direct original comparison; provider/resource lookup, other texture states, polygon intersections, remaining plane passes, and device effects remain external.",
+    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Its renderer reset 0x46abd0(0), all-inside/two trivial-fan 0x474ee0 subregions, and near-plane shared-reject and single-crossing portions of 0x475de0 have direct original comparisons. Neither parent has a direct original comparison; provider/resource lookup, other texture states, side-plane clipping, multi-plane intersections, and device effects remain external.",
     "sources": [
       "client/render_clip_code.py",
       "client/render_polygon_clip.py",
@@ -1393,11 +1394,13 @@
       "client/render_segment_construct.py",
       "client/render_state.py",
       "docs/recovery/render-rectangle-border.md",
+      "tests/test_render_polygon_clip.py",
       "tests/test_render_rectangle.py",
       "tests/test_render_state.py",
       "tools/native_oracle.py",
       "tools/verify_rectangle_texture_state.py",
       "tools/verify_render_polygon_clip.py",
+      "tools/verify_render_polygon_near_plane.py",
       "tools/verify_render_quad_dispatch.py"
     ],
     "evidence_ids": [

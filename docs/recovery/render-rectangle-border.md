@@ -48,5 +48,10 @@ resource side effects are not included.
 `client/render_polygon_clip.py` also models the first-plane empty result in
 `0x475de0`: when all three polygon clip codes share active near-plane bit
 `0x01`, the original returns `0xffffffff`. This sentinel matched 256 direct
-native calls. The global vertex setup writes performed before that return are
-not yet modeled, nor are any intersecting or subsequent plane passes.
+native calls. For a triangle with exactly one vertex outside that plane, its
+intersection interpolation and final `THRASH_drawtrifan` records are also
+translated. A 1,024-case direct corpus matches callback counts and every
+eight-word output vertex, including each outside-corner position and color
+interpolation mode. The global vertex setup writes performed before the
+shared-plane return are not modeled; other clip planes, multi-plane
+intersections, and later passes remain open.
