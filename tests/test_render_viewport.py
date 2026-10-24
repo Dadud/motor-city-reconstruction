@@ -3,6 +3,8 @@ import unittest
 
 from client.render_viewport import (RenderViewport, classify_render_position,
                                     configure_render_viewport,
+                                    prepare_render_viewport_request,
+                                    RenderViewportRequest,
                                     set_alternate_render_bounds)
 
 
@@ -48,6 +50,26 @@ class RenderViewportTests(unittest.TestCase):
         self.assertEqual(globals_by_address[0x00993840],650.)
         self.assertEqual(globals_by_address[0x00993a48],20.)
         self.assertEqual(globals_by_address[0x00993bb4],500.)
+
+    def test_surface_clamping_produces_callback_edges_and_clip_state(self):
+        result=prepare_render_viewport_request(
+            RenderViewportRequest(800,600,500,450,400,300))
+        self.assertEqual(result.callback_args,(500,450,800,600))
+        self.assertEqual((result.clamped_width,result.clamped_height),(300,150))
+        self.assertEqual(result.globals_by_address[0x00b31fbc],500.)
+        self.assertEqual(result.globals_by_address[0x008c672c],800.)
+        self.assertEqual(result.globals_by_address[0x00993bb0],600.)
+
+    def test_client_rect_and_alternate_path_are_explicit(self):
+        request=RenderViewportRequest(800,600,100,80,500,400,
+                                      alternate_path=True,
+                                      client_width=300,client_height=200)
+        result=prepare_render_viewport_request(request,query_client_rect=True)
+        self.assertEqual(result.callback_args,(100,80,300,200))
+        self.assertEqual((result.clamped_width,result.clamped_height),(500,400))
+        self.assertIsNone(result.viewport_state)
+        self.assertEqual(result.globals_by_address[0x00b424a8],300.)
+        self.assertEqual(result.globals_by_address[0x00b424a0],200.)
 
 
 if __name__ == '__main__':

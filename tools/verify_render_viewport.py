@@ -5,6 +5,8 @@ import struct
 
 from client.render_viewport import (RenderViewport, classify_render_position,
                                     configure_render_viewport,
+                                    prepare_render_viewport_request,
+                                    RenderViewportRequest,
                                     set_alternate_render_bounds)
 from tools.native_oracle import DynoOracle
 
@@ -12,6 +14,21 @@ from tools.native_oracle import DynoOracle
 def _words(values):
     return tuple(struct.unpack('<I',struct.pack('<f',value))[0]
                  for value in values)
+
+
+_REQUEST_GLOBALS=(
+    0xaa43c0,0xaa43c4,0xaa43c8,0xaa43cc,
+    0x8c672c,0xb31fbc,0xb31fc0,0x8c6730,0xb424c8,0xb424bc,
+    0xb424c4,0xb424b8,0xb31fc4,0xb424c0,0xb424b0,0xb424a4,
+    0xb31fc8,0xb424a0,0xb424a8,0xb424ac,0xb424b4,
+    0x993848,0x9938b0,0x9938ac,0x993bb0,0x993a4c,0x9938a8,
+    0x99248c,0x993840,0x993a48,0x993bb4,0x993844,0x992488)
+
+
+def _word(value):
+    if type(value) is int:
+        return value & 0xffffffff
+    return struct.unpack('<I',struct.pack('<f',value))[0]
 
 
 def verify(executable,cases=512):
@@ -61,6 +78,30 @@ def verify(executable,cases=512):
                 raise AssertionError(
                     f'case {index}: viewport-derived clip code differs '
                     f'for point {point!r}')
+        surface_width=rng.randint(1,2048)
+        surface_height=rng.randint(1,1152)
+        rect=(rng.randint(-200,2200),rng.randint(-150,1300),
+              rng.randint(-100,2400),rng.randint(-100,1400))
+        alternate=bool(index&1)
+        request=RenderViewportRequest(surface_width,surface_height,*rect,
+                                      alternate_path=alternate)
+        result=prepare_render_viewport_request(request)
+        expected_request=tuple(_word(result.globals_by_address.get(address,0xcccccccc))
+                               for address in _REQUEST_GLOBALS)
+        actual_request,request_records,callback_count=oracle.render_viewport_request(
+            surface_width,surface_height,rect,alternate_path=alternate)
+        if expected_request!=actual_request:
+            raise AssertionError(
+                f'case {index}: 0x5668c0 globals differ: '
+                f'{expected_request!r} != {actual_request!r}; request={request!r}')
+        if callback_count != int(not alternate):
+            raise AssertionError(f'case {index}: viewport callback count differs')
+        expected_records=bytearray(bytes([0xcd])*3200)
+        if not alternate:
+            for slot in range(100):
+                struct.pack_into('<I',expected_records,slot*32+0x14,0)
+        if bytes(expected_records)!=request_records:
+            raise AssertionError(f'case {index}: 0x5668c0 scratch writes differ')
     return cases
 
 
@@ -69,7 +110,7 @@ def main():
     parser.add_argument('executable')
     parser.add_argument('--cases',type=int,default=512)
     args=parser.parse_args()
-    print(f'viewport setup and 0x474d00 match {verify(args.executable,args.cases)} cases')
+    print(f'0x5668c0 viewport flow matches {verify(args.executable,args.cases)} cases')
 
 
 if __name__=='__main__':

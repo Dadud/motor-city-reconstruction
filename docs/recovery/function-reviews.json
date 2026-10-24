@@ -2740,6 +2740,27 @@
       "docs/collision-world.md"
     ]
   },
+  "0x5668c0": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "Surface-size clamping, rectangle edge derivation, and alternate versus normal renderer setup are translated. 512 direct calls to the original compare affected globals, scratch writes and controlled callback counts across both branches with the optional Win32 client-rectangle query declined. The query branch is modeled using explicit client dimensions but is not in the native corpus; HWND acquisition, actual GetClientRect, and device callback effects remain external.",
+    "sources": [
+      "client/render_viewport.py",
+      "tests/test_render_viewport.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_viewport.py",
+      "docs/recovery/render-viewport.md"
+    ],
+    "evidence_ids": [
+      "ev_a996873eac7b5bff3e610fb53fee03abcfb0f80bebaf7f25bfb1997de913d312"
+    ],
+    "verification_refs": [
+      "tools/verify_render_viewport.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-viewport.md"
+    ]
+  },
   "0x567940": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

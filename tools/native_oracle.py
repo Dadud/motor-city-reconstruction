@@ -230,6 +230,46 @@ class DynoOracle:
         return tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
                      for address in addresses)
 
+    def render_viewport_request(self, surface_width, surface_height, rect,
+                                *, alternate_path=False):
+        """Run 0x5668c0 with its window-query gate disabled and callbacks stubbed."""
+        if (len(rect) != 4 or any(type(value) is not int for value in
+                                  (surface_width,surface_height,*rect)) or
+            not 1 <= surface_width <= 0x7fffffff or
+            not 1 <= surface_height <= 0x7fffffff or
+            any(not -0x80000000 <= value <= 0x7fffffff for value in rect)):
+            raise ValueError('viewport request values are outside the supported integer domain')
+        self._reset()
+        table=self.inputs+0x1000
+        self.cpu.mem_write(table,bytes([0xcd])*3200)
+        self.cpu.mem_write(0x8c671c,struct.pack('<I',table))
+        self.cpu.mem_write(0xaa43b8,struct.pack('<I',surface_width))
+        self.cpu.mem_write(0xaa43bc,struct.pack('<I',surface_height))
+        self.cpu.mem_write(0xaa455c,struct.pack('<I',int(alternate_path)))
+        addresses=(0xaa43c0,0xaa43c4,0xaa43c8,0xaa43cc,
+                   0x8c672c,0xb31fbc,0xb31fc0,0x8c6730,
+                   0xb424c8,0xb424bc,0xb424c4,0xb424b8,0xb31fc4,
+                   0xb424c0,0xb424b0,0xb424a4,0xb31fc8,0xb424a0,
+                   0xb424a8,0xb424ac,0xb424b4,
+                   0x993848,0x9938b0,0x9938ac,0x993bb0,0x993a4c,
+                   0x9938a8,0x99248c,0x993840,0x993a48,0x993bb4,
+                   0x993844,0x992488)
+        for address in addresses:
+            self.cpu.mem_write(address,struct.pack('<I',0xcccccccc))
+        gate=self.stub+0x600
+        callback=self.stub+0x700
+        count=self.inputs+0x700
+        self.cpu.mem_write(gate,b'\xb8\x00\x00\x00\x00\xc3')
+        self.cpu.mem_write(callback,b'\xff\x05'+struct.pack('<I',count)+b'\xc3')
+        self.cpu.mem_write(count,bytes(4))
+        self.cpu.mem_write(0xb42544,struct.pack('<I',gate))
+        self.cpu.mem_write(0xb42574,struct.pack('<I',callback))
+        self.call(0x5668c0,rect,instruction_limit=1_000_000)
+        words=tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
+                    for address in addresses)
+        return words,bytes(self.cpu.mem_read(table,3200)),struct.unpack(
+            '<I',self.cpu.mem_read(count,4))[0]
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

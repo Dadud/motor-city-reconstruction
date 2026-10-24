@@ -17,6 +17,15 @@ dimensions, then supplies W-plane values `10.0` and approximately
 `0.0016666667`. They are retained by Z-plane role here instead of assuming the
 usual near/far naming convention.
 
+`prepare_render_viewport_request` now translates that caller's rectangle clamp,
+surface edge calculation and alternate/normal setup branches. Five hundred
+twelve controlled original calls cover both renderer branches with the optional
+window-size query declined; the main viewport globals, duplicate aliases,
+callback count and scratch writes match. The Win32 client-rectangle query and
+device callback remain supplied environment behavior; their inputs are
+represented explicitly, and the query branch is not included in the direct
+comparison corpus.
+
 The complete Ghidra dossier is REA Evidence
 `ev_b77b3876cf605d6f1bc6d5f1e3c18a18e345249e3d708c06a0af3441e2dd3402`.
 
