@@ -1,4 +1,17 @@
 {
+  "0x6f3b75": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The helper writes the unnormalized cross product of two three-float vectors. 512 direct original calls compare all three binary32 output words exactly over finite inputs, including basis and mixed-sign vectors. Overflow and exceptional-input behavior are outside this finite-vector check.",
+    "sources": [
+      "client/matrix_math.py",
+      "tests/test_matrix_math.py",
+      "tools/native_oracle.py",
+      "tools/verify_cross_product3.py",
+      "docs/recovery/cross-product3.md"
+    ],
+    "evidence_ids": []
+  },
   "0x6f1160": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

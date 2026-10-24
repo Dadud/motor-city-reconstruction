@@ -93,6 +93,17 @@ def normalized_cross3(left, right):
     return normalize_vector3(cross)
 
 
+def cross_product3(left, right):
+    """Translate 0x6f3b75's three-component cross product."""
+    left, right = tuple(left), tuple(right)
+    if len(left) != 3 or len(right) != 3:
+        raise ValueError('cross product requires two three-component vectors')
+    left, right = tuple(f32(v) for v in left), tuple(f32(v) for v in right)
+    return (f32(left[1] * right[2] - left[2] * right[1]),
+            f32(left[2] * right[0] - left[0] * right[2]),
+            f32(left[0] * right[1] - left[1] * right[0]))
+
+
 def linear_vector_sequence(first, second, count):
     """Translate 0x4954c0's fixed-step 3D point sequence producer."""
     first, second = tuple(f32(v) for v in first), tuple(f32(v) for v in second)
