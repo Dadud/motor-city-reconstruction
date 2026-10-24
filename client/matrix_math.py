@@ -118,6 +118,21 @@ def rotate_matrix_rows_y(matrix, turns):
     return rotated0 + matrix[3:6] + rotated2
 
 
+def rotate_matrix_rows_z(matrix, turns):
+    """Translate 0x6f1910: rotate matrix rows zero and one about Z turns."""
+    matrix = tuple(f32(value) for value in matrix)
+    turns = f32(turns)
+    if len(matrix) != 9 or not isfinite(turns):
+        raise ValueError('matrix Z rotation requires nine values and finite turns')
+    angle_scale = f32(6.2831854820251465)
+    sine = f32(sin(turns * angle_scale))
+    cosine = f32(cos(turns * angle_scale))
+    row0, row1 = matrix[:3], matrix[3:6]
+    rotated0 = tuple(f32(row0[i] * cosine + row1[i] * sine) for i in range(3))
+    rotated1 = tuple(f32(row1[i] * cosine - row0[i] * sine) for i in range(3))
+    return rotated0 + rotated1 + matrix[6:]
+
+
 def dot_3_f32(left, right):
     """Translate 0x6f1140/0x6f3b51 and round the x87 result on float storage."""
     left, right = tuple(left), tuple(right)
