@@ -1364,6 +1364,19 @@
       "docs/recovery/render-polygon-bounds.md"
     ]
   },
+  "0x478950": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Each of two independent global scene-object pointers is checked for null. A non-null first object receives 1 at +0x3c; a non-null second object receives 0 at +0x3c. Four direct calls against the installed executable match for both-null, each single-null, and both-non-null cases. Pointer selection and environment setup remain caller behavior.",
+    "sources": [
+      "client/render_environment.py",
+      "tests/test_render_environment.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_environment.py",
+      "docs/recovery/render-environment-state.md"
+    ],
+    "evidence_ids": []
+  },
   "0x47f990": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

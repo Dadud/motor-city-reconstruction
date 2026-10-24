@@ -561,6 +561,21 @@ class DynoOracle:
                   instruction_limit=100_000)
         return self.cpu.reg_read(self.reg.UC_X86_REG_EAX)
 
+    def render_environment_activity(self, primary, secondary):
+        """Run 0x478950 and return both optional object activity words."""
+        if any(type(value) is not int or not 0<=value<=0xffffffff
+               for value in (primary,secondary)):
+            raise ValueError('environment pointers must be unsigned words')
+        self._reset()
+        self.cpu.mem_write(0x00993c44,struct.pack('<I',primary))
+        self.cpu.mem_write(0x00993c48,struct.pack('<I',secondary))
+        for pointer in (primary,secondary):
+            if pointer:
+                self.cpu.mem_write(pointer+0x3c,struct.pack('<I',0xdeadbeef))
+        self.call(0x478950,instruction_limit=1000)
+        return tuple(struct.unpack('<I',self.cpu.mem_read(pointer+0x3c,4))[0]
+                     if pointer else None for pointer in (primary,secondary))
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""
