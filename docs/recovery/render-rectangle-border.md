@@ -14,6 +14,12 @@ rectangle-level geometry is based on static decompilation and unit tests; the
 parent routine has not yet been compared directly against the executable.
 
 The provider/resource lookup, its side effects, the filled rectangle routine
-`0x482700`, and actual device callback effects remain outside this recovery.
-Evidence for the parent decompilation is REA Evidence
+`0x482700` is now partly recovered: `plan_filled_rectangle_vertices` builds
+the TL, TR, BR, BL records, preserves each raw attribute and the three-word
+tail at each vertex. `0x6cb810` overwrites only the low byte of the first tail
+word with its clip code; the upper bytes and following words remain explicit
+stack-residue inputs. It does not model the initial renderer-state
+reset (`0x46abd0`) or the subsequent four-vertex polygon dispatch (`0x474ee0`),
+which performs clipping and callbacks. Actual device effects remain outside
+this recovery. Evidence for the parent decompilation is REA Evidence
 `ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3`.
