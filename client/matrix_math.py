@@ -24,6 +24,17 @@ def transpose_3x3_words(values):
             values[2], values[5], values[8])
 
 
+def scale_matrix_rows(matrix, scale):
+    """Translate 0x6f1240: scale each three-float matrix row by XYZ."""
+    matrix, scale = tuple(matrix), tuple(scale)
+    if len(matrix) != 9 or len(scale) != 3:
+        raise ValueError('row scaling requires a 3x3 matrix and three scales')
+    matrix = tuple(f32(value) for value in matrix)
+    scale = tuple(f32(value) for value in scale)
+    return tuple(f32(matrix[row * 3 + column] * scale[row])
+                 for row in range(3) for column in range(3))
+
+
 def rotation_x_turns(turns):
     """Translate the 0x6f1530 matrix builder's x-axis turn parameter."""
     turns = f32(turns)

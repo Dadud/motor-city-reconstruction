@@ -1,7 +1,7 @@
 import unittest
 
 from client.matrix_math import (atan2_turns, cross_product3, dot_3_f32, dot_product_batch, integrate_rotation_matrix,
-                                normalize_vector3, repair_rotation_matrix,
+                                normalize_vector3, repair_rotation_matrix, scale_matrix_rows,
                                 transpose_3x3_words)
 
 
@@ -21,6 +21,12 @@ class MatrixMathTests(unittest.TestCase):
         self.assertEqual(transpose_3x3_words(words),
                          (words[0], words[3], words[6], words[1], words[4], words[7],
                           words[2], words[5], words[8]))
+
+    def test_scales_matrix_rows_by_xyz(self):
+        self.assertEqual(scale_matrix_rows(tuple(range(1, 10)), (2, 3, 4)),
+                         (2., 4., 6., 12., 15., 18., 28., 32., 36.))
+        with self.assertRaises(ValueError):
+            scale_matrix_rows((1.,) * 8, (1., 1., 1.))
 
     def test_rejects_wrong_shape_and_width(self):
         for words in ((1, 2), (0,) * 8, (0,) * 10, (0,)*8 + (-1,), (0,)*8 + (1 << 32,)):

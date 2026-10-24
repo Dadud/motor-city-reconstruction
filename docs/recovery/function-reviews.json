@@ -1,4 +1,17 @@
 {
+  "0x6f1240": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The routine scales each row of a row-major 3x3 binary32 matrix by the corresponding XYZ vector component. 512 randomized direct original calls compare all nine output words exactly and verify the 36-byte result boundary. Scale/output aliasing is outside the tested domain.",
+    "sources": [
+      "client/matrix_math.py",
+      "tests/test_matrix_math.py",
+      "tools/native_oracle.py",
+      "tools/verify_matrix_row_scale.py",
+      "docs/recovery/matrix-row-scale.md"
+    ],
+    "evidence_ids": []
+  },
   "0x6f3b75": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
