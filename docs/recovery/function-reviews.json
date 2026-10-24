@@ -1,4 +1,11 @@
 {
+  "0x6f1650": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Builds a row-major Rodrigues matrix from a normalized axis and an angle in turns, returning identity at exact zero angle. A zero axis with nonzero angle propagates NaNs. 512 direct original calls cover principal and random axes/turns plus the zero-axis case and match within max(3e-7, abs(native)*3e-7). Overflow and non-finite input behavior are outside scope.",
+    "sources": ["client/matrix_math.py", "tests/test_matrix_math.py", "tools/verify_axis_angle_rotation.py", "docs/recovery/axis-angle-rotation.md"],
+    "evidence_ids": []
+  },
   "0x6f1530": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

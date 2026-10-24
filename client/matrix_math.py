@@ -68,6 +68,26 @@ def rotation_z_turns(turns):
             0.0, 0.0, 1.0)
 
 
+def axis_angle_rotation_matrix(axis, turns):
+    """Translate 0x6f1650's normalized-axis Rodrigues matrix builder."""
+    axis = tuple(f32(value) for value in axis)
+    turns = f32(turns)
+    if len(axis) != 3 or any(not isfinite(value) for value in axis) or not isfinite(turns):
+        raise ValueError('axis-angle matrix requires finite axis and turn values')
+    if turns == 0.0:
+        return (1., 0., 0., 0., 1., 0., 0., 0., 1.)
+    x, y, z = normalize_vector3(axis)
+    angle_scale = f32(6.2831854820251465)
+    sine = f32(sin(turns * angle_scale))
+    cosine = f32(cos(turns * angle_scale))
+    one_minus_cosine = _round_binary32(1.0 - cosine)
+    x1, y1, z1 = (_round_binary32(component * one_minus_cosine)
+                  for component in (x, y, z))
+    return (x * x1 + cosine, y * x1 + z * sine, z * x1 - y * sine,
+            x * y1 - z * sine, y * y1 + cosine, z * y1 + x * sine,
+            x * z1 + y * sine, y * z1 - x * sine, z * z1 + cosine)
+
+
 def dot_3_f32(left, right):
     """Translate 0x6f1140/0x6f3b51 and round the x87 result on float storage."""
     left, right = tuple(left), tuple(right)
