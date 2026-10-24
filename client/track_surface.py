@@ -64,6 +64,24 @@ def average_surface_vertex_color(block_index, descriptor, vertex_colors, quads):
     return 0xff000000 | (r << 16) | (g << 8) | b
 
 
+def surface_color_from_candidate(candidate, blocks):
+    """Return the native surface color for a resolved candidate, or no-hit."""
+    if candidate is None:
+        return 0xffffffff
+    if (not isinstance(candidate, (tuple, list)) or len(candidate) != 2 or
+            any(type(value) is not int or not 0 <= value <= 0xffff
+                for value in candidate) or not isinstance(blocks, (tuple, list))):
+        raise ValueError('invalid surface color candidate')
+    block_index, descriptor_index = candidate
+    if block_index >= len(blocks):
+        raise ValueError('surface color candidate block is outside supplied blocks')
+    vertices, quads, descriptors, vertex_colors = blocks[block_index]
+    if descriptor_index >= len(descriptors):
+        raise ValueError('surface color candidate descriptor is outside its block')
+    return average_surface_vertex_color(block_index, descriptors[descriptor_index],
+                                        vertex_colors, quads)
+
+
 def find_surface_quad_candidate(x, z, candidates, blocks):
     """Return the first containing ``(block, descriptor)`` candidate.
 

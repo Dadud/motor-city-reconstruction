@@ -1,4 +1,20 @@
 {
+  "0x42e590": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The routine calls the quad candidate lookup, returns 0xffffffff on no hit, and on a hit resolves the block descriptor and averages the four referenced packed vertex colors with opaque alpha. 512 randomized direct calls, with only the candidate lookup supplied at its call boundary, match exact native return words for both hit and no-hit outcomes. Spatial leaf generation and candidate traversal remain separately bounded.",
+    "sources": [
+      "client/track_surface.py",
+      "tests/test_track_surface_color.py",
+      "tests/test_track_surface_color_query.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_surface_color.py",
+      "tools/verify_track_surface_color_query.py",
+      "docs/recovery/track-surface-color.md",
+      "docs/recovery/track-surface-color-query.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42e3f0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
