@@ -1,4 +1,17 @@
 {
+  "0x42d780": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The animated-record loop and scaled position-delta writes are translated over explicit 0x78-byte records. 512 original executions match every record byte with only the 0x407940 transform call replaced by a controlled position writer; transform interpolation and matrix behavior are separate dependencies.",
+    "sources": [
+      "client/animated_track_objects.py",
+      "tests/test_animated_track_objects.py",
+      "tools/native_oracle.py",
+      "tools/verify_animated_track_objects.py",
+      "docs/recovery/animated-track-object-update.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d8d0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
