@@ -3,7 +3,7 @@ import unittest
 import struct
 
 from client.track_surface_query import (cached_quad_hit,
-    nearest_track_neighbor,nearest_track_quarter_point)
+    nearest_track_neighbor,nearest_track_quarter_point,nearest_track_point)
 
 
 class TrackSurfaceQueryTests(unittest.TestCase):
@@ -39,6 +39,16 @@ class TrackSurfaceQueryTests(unittest.TestCase):
         struct.pack_into('<3f',rows[0],0,0.,0.,0.)
         self.assertEqual(nearest_track_quarter_point(
             (0.,0.,0.),tuple(bytes(row) for row in rows)),0)
+
+    def test_full_scan_preserves_first_candidate_on_tie(self):
+        rows=[bytearray(0x54) for _ in range(3)]
+        for row in rows:
+            struct.pack_into('<3f',row,0,1.,0.,0.)
+        self.assertEqual(nearest_track_point(
+            (0.,0.,0.),tuple(bytes(row) for row in rows)),0)
+        struct.pack_into('<3f',rows[2],0,0.,0.,0.)
+        self.assertEqual(nearest_track_point(
+            (0.,0.,0.),tuple(bytes(row) for row in rows)),2)
 
 
 if __name__=='__main__':

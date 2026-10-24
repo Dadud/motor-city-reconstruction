@@ -82,3 +82,29 @@ def nearest_track_quarter_point(point, track_rows):
             best=index
             best_distance=candidate
     return best
+
+
+def nearest_track_point(point, track_rows):
+    """Find the nearest XZ track row among every row in the track table."""
+    if (not isinstance(track_rows,(tuple,list)) or not track_rows or
+        any(not isinstance(row,(bytes,bytearray)) or len(row)!=0x54
+            for row in track_rows)):
+        raise ValueError('track scan requires nonempty 0x54-byte rows')
+    if not isinstance(point,(tuple,list)) or len(point)!=3:
+        raise ValueError('track query must contain XYZ')
+    point=tuple(struct.unpack('<f',struct.pack('<f',float(value)))[0]
+                for value in point)
+    def f32(value): return struct.unpack('<f',struct.pack('<f',value))[0]
+    def distance(index):
+        x=struct.unpack_from('<f',track_rows[index],0)[0]
+        z=struct.unpack_from('<f',track_rows[index],8)[0]
+        dx=f32(point[0]-x); dz=f32(point[2]-z)
+        return f32(dx*dx+dz*dz)
+    best=0
+    best_distance=distance(0)
+    for index in range(1,len(track_rows)):
+        candidate=distance(index)
+        if candidate<best_distance:
+            best=index
+            best_distance=candidate
+    return best

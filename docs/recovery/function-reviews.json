@@ -1,4 +1,17 @@
 {
+  "0x42d530": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "All track rows are scanned in order using squared XZ distance; strict improvement preserves the first row on ties. 512 direct original calls match the selected index across varied track sizes and query positions.",
+    "sources": [
+      "client/track_surface_query.py",
+      "tests/test_track_surface_query.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_surface_full_scan.py",
+      "docs/recovery/track-surface-full-scan.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d4b0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
