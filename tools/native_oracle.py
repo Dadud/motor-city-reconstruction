@@ -608,6 +608,36 @@ class DynoOracle:
                         for address in globals_)
         return released,remaining
 
+    def build_environment_mesh_no_projection(self, record, track_index,
+                                               track_id, reverse,
+                                               object_bytes, *,
+                                               vertical_step,segment_step,
+                                               span_scale):
+        """Run 0x478b20 with its per-row projection helper stubbed as a miss."""
+        if len(record)!=0x54 or len(object_bytes)!=0x3d0:
+            raise ValueError('mesh oracle requires a 0x54 track row and 0x3d0 object')
+        if type(reverse) is not bool or type(track_index) is not int or track_index<0:
+            raise ValueError('reverse must be boolean')
+        self._reset()
+        row=self.inputs+0x100
+        output=self.inputs+0x1000
+        self.cpu.mem_write(row,bytes(record)*(track_index+1))
+        self.cpu.mem_write(output,bytes(object_bytes))
+        self.cpu.mem_write(0x0097c38c,struct.pack('<I',row))
+        for address,value in ((0x0083c440,vertical_step),
+                              (0x0083b780,segment_step),
+                              (0x0083c444,span_scale)):
+            self.cpu.mem_write(address,struct.pack('<f',value))
+        miss=0x0042e010
+        original=bytes(self.cpu.mem_read(miss,5))
+        self.cpu.mem_write(miss,b'\x31\xc0\xc3\x90\x90')
+        try:
+            self.call(0x478b20,(output,track_index,track_id,int(reverse)),
+                      instruction_limit=250_000)
+        finally:
+            self.cpu.mem_write(miss,original)
+        return bytes(self.cpu.mem_read(output,0x3d0))
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""

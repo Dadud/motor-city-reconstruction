@@ -1390,6 +1390,19 @@
     ],
     "evidence_ids": []
   },
+  "0x478b20": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "The object header, eleven pairs of track-aligned row points, accumulated vertical offsets, per-row spacing fields, negative-NaN sentinels, orientation reversal, and preservation of untouched allocation bytes are translated. 512 complete output object images match direct original calls across varied rows, constants, initial memory, and both orientation orders. The native harness replaces the per-row projection helper with a no-op; hit-test-driven Y changes and projection internals remain external.",
+    "sources": [
+      "client/render_environment.py",
+      "tests/test_render_environment.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_environment.py",
+      "docs/recovery/render-environment-state.md"
+    ],
+    "evidence_ids": []
+  },
   "0x47f990": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

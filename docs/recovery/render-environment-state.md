@@ -17,3 +17,12 @@ calls against the original executable cover every null/non-null pointer mask.
 The native harness replaces only the downstream heap-release wrapper, so this
 comparison verifies the cleanup routine while leaving allocator internals
 outside the translation.
+
+`0x478b20` builds eleven pairs of track-aligned points in a `0x3d0` object,
+adds the vertical offset on each generated row, and writes per-row spacing and
+sentinel fields. `build_environment_mesh_no_projection` preserves all bytes
+not written by the constructor, including allocator-provided contents. Five
+hundred twelve calls match the original object image byte-for-byte with
+varied track rows, constants, allocation contents, and both orientation
+orders. The harness replaces the per-row projection helper with a no-op, so
+projection-driven Y adjustments remain outside this geometry comparison.
