@@ -40,6 +40,21 @@
     ],
     "evidence_ids": []
   },
+  "0x42d5b0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Object pose initialization, delta clearing, quarter-stride XZ selection, row index and group-index writes are composed over explicit memory views. 512 original executions compare complete object records with real tick-zero 0x407940/0x553710 children; non-float bytes match exactly and animation floats meet the declared tolerance. The routine's initial-distance binary32 store versus extended candidate comparison is retained, including tie changes.",
+    "sources": [
+      "client/track_object_indexing.py",
+      "client/track_surface_query.py",
+      "client/track_object_animation.py",
+      "tests/test_track_object_indexing.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_object_indexing.py",
+      "docs/recovery/track-object-indexing.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d8d0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

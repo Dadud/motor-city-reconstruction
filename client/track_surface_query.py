@@ -84,6 +84,41 @@ def nearest_track_quarter_point(point, track_rows):
     return best
 
 
+def nearest_track_initialization_point(point, track_rows):
+    """Select the 0,4,8,... sample with 0x42d5b0's x87 comparison order.
+
+    The initial squared distance is stored as binary32. Later candidate sums
+    remain extended until compared against that stored value, so exact XZ ties
+    can update the index when the initial float rounded upward.
+    """
+    if (not isinstance(track_rows, (tuple, list)) or not track_rows or
+            any(not isinstance(row, (bytes, bytearray)) or len(row) != 0x54
+                for row in track_rows)):
+        raise ValueError('track scan requires nonempty 0x54-byte rows')
+    if not isinstance(point, (tuple, list)) or len(point) != 3:
+        raise ValueError('track query must contain XYZ')
+    point = tuple(struct.unpack('<f', struct.pack('<f', float(value)))[0]
+                  for value in point)
+
+    def distance(index):
+        x = struct.unpack_from('<f', track_rows[index], 0)[0]
+        z = struct.unpack_from('<f', track_rows[index], 8)[0]
+        dx, dz = point[0] - x, point[2] - z
+        return dx * dx + dz * dz
+
+    def f32(value):
+        return struct.unpack('<f', struct.pack('<f', value))[0]
+
+    best = 0
+    best_distance = f32(distance(0))
+    for index in range(4, len(track_rows), 4):
+        candidate = distance(index)
+        if candidate < best_distance:
+            best = index
+            best_distance = f32(candidate)
+    return best
+
+
 def nearest_track_point(point, track_rows):
     """Find the nearest XZ track row among every row in the track table."""
     if (not isinstance(track_rows,(tuple,list)) or not track_rows or
