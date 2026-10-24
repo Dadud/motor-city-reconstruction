@@ -3872,18 +3872,9 @@
   },
   "0x415410": {
     "translation": "partial",
-    "verification": "original-comparison-bounded",
-    "scope": "The unique inline-buffer branch stores nonzero source byte ranges when capacity is below 32 and sufficient. It copies forward in four-byte units plus a byte tail, writes the length and trailing zero, and matches 512 direct original calls byte-for-byte with both observed unique-buffer header sentinels. Empty, shared-buffer, heap-allocation, exception and cleanup branches remain open.",
-    "sources": [
-      "client/string_buffer.py",
-      "native/include/mco/string_buffer.hpp",
-      "native/src/string_buffer.cpp",
-      "native/tests/string_buffer_compare.cpp",
-      "tests/test_string_buffer.py",
-      "tools/native_string_buffer_compare.py",
-      "tools/verify_string_buffer.py",
-      "docs/recovery/string-buffer.md"
-    ],
-    "evidence_ids": ["ev_c2fe650478dc9ac95ca926f4e5b9b000b3fb8183f8dd962cfc8e42c394bff43b"]
+    "verification": "original-comparison-subregions",
+    "scope": "Mapped normal assignment paths: unique inline writes, unique empty release, shared empty decrement, shared nonempty detach, and unique capacity growth. The unique inline branch matches 512 direct original executions; all mapped paths match 512 Python/native deterministic cases. Allocator failure, exception unwinding, and source pointers into storage freed during unique growth remain open; the non-inline paths are not yet directly compared with original execution.",
+    "sources": ["client/string_buffer.py", "native/include/mco/string_buffer.hpp", "native/src/string_buffer.cpp", "native/tests/string_buffer_compare.cpp", "native/tests/string_buffer_full_compare.cpp", "tests/test_string_buffer.py", "tools/native_string_buffer_compare.py", "tools/native_string_buffer_full_compare.py", "tools/verify_string_buffer.py", "docs/recovery/string-buffer.md"],
+    "evidence_ids": ["ev_c2fe650478dc9ac95ca926f4e5b9b000b3fb8183f8dd962cfc8e42c394bff43b", "ev_59be61c4dd9eaa8561597bcfa990fda5da366583031564b048f1928b635ed826", "ev_a6e5dc60668639e530995a403d003cf7de410212c8c421f58fcac2bbb990a8ad", "ev_ba723a1cfd85349eef7d64ce5c05e7498ccc1d5cff85b495b3d90ce4380d231b", "ev_e25217d6bd48def98845f4d79144d504deaf77b55600b4857658dad36d55f0c0"]
   }
 }
