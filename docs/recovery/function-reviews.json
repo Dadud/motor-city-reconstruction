@@ -1303,6 +1303,18 @@
       "docs/recovery/render-viewport.md"
     ]
   },
+  "0x474ee0": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "The all-four-clip-codes-zero branch is translated through depth adjustment, far-depth fallback, and the four-vertex draw-quad callback boundary. 256 direct original calls match all eight words of all four callback records, including random finite inputs and canonical-NaN cases. Polygon clipping branches, the triangle callback path, and device rendering remain external.",
+    "sources": [
+      "client/render_quad_dispatch.py",
+      "tests/test_render_rectangle.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_quad_dispatch.py",
+      "docs/recovery/render-rectangle-border.md"
+    ]
+  },
   "0x478610": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
@@ -1348,13 +1360,16 @@
   "0x47faf0": {
     "translation": "partial",
     "verification": "static-analysis-only",
-    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Edges can be composed with the directly compared 0x482610 segment translation. Neither parent has a direct original comparison; provider/resource lookup, renderer-state reset, polygon clipping/dispatch 0x474ee0, and device effects remain external.",
+    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Its all-inside 0x474ee0 quad-dispatch branch has 256 direct original comparisons. Neither parent has a direct original comparison; provider/resource lookup, renderer-state reset, polygon clipping branches, and device effects remain external.",
     "sources": [
       "client/render_rectangle.py",
       "tests/test_render_rectangle.py",
       "docs/recovery/render-rectangle-border.md",
       "client/render_segment_construct.py",
-      "client/render_clip_code.py"
+      "client/render_clip_code.py",
+      "client/render_quad_dispatch.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_quad_dispatch.py"
     ],
     "evidence_ids": [
       "ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3"

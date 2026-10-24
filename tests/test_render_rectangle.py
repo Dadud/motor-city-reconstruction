@@ -3,6 +3,7 @@ import unittest
 from client.render_rectangle import (
     plan_filled_rectangle_vertices, plan_rectangle_border_edges)
 from client.render_clip_code import RenderClipBounds
+from client.render_quad_dispatch import dispatch_inside_quad
 import struct
 
 
@@ -53,6 +54,26 @@ class RenderRectangleTests(unittest.TestCase):
             opaque_words=((0,0,0),)*4)
         self.assertEqual(tuple(v.clip_code for v in vertices),
                          (0x22,0x22,0x2a,0x2a))
+
+    def test_inside_quad_dispatch_adjusts_depth_and_preserves_payload(self):
+        word=lambda value: struct.unpack('<I',struct.pack('<f',value))[0]
+        vertices=tuple((word(float(i)),word(2.),0x3f7fff00,word(w),
+                        i+1,0,tail1,tail2)
+                       for i,(w,tail1,tail2) in enumerate((
+                           (0.25,0x12345678,9),(0.75,10,11),
+                           (1.25,12,13),(-1.,14,15))))
+        result=dispatch_inside_quad(vertices,1.,99.)
+        self.assertEqual(tuple(v[2] for v in result.vertices),
+                         (word(.75),word(.25),word(99.),word(99.)))
+        self.assertEqual(result.callback_words,result.vertices)
+        self.assertEqual(tuple(v[6:] for v in result.vertices),
+                         ((0x12345678,9),(10,11),(12,13),(14,15)))
+
+    def test_inside_quad_preserves_and_dispatches_canonical_quiet_nan(self):
+        vertices=[list((0,0,0,0,0,0,0,0)) for _ in range(4)]
+        vertices[2][7]=0xffc00000
+        result=dispatch_inside_quad(vertices,1.,99.)
+        self.assertEqual(result.callback_words,result.vertices)
 
     def test_input_words_are_range_checked(self):
         with self.assertRaises(ValueError):

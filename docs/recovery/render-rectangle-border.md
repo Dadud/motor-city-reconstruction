@@ -20,6 +20,14 @@ tail at each vertex. `0x6cb810` overwrites only the low byte of the first tail
 word with its clip code; the upper bytes and following words remain explicit
 stack-residue inputs. It does not model the initial renderer-state
 reset (`0x46abd0`) or the subsequent four-vertex polygon dispatch (`0x474ee0`),
-which performs clipping and callbacks. Actual device effects remain outside
-this recovery. Evidence for the parent decompilation is REA Evidence
+which performs clipping and callbacks.
+
+The all-inside branch of `0x474ee0` is translated in
+`client/render_quad_dispatch.py`. A 256-case direct comparison captures the
+four records at the quad callback boundary, including depth adjustment,
+fallback depth, raw attributes, untouched tail words, and canonical-NaN
+inputs. The native binary dispatches those canonical-NaN records even though
+the retained Ghidra pseudocode appears to reject them; the translation follows
+the direct observation. Other clipping branches and actual device effects
+remain outside this recovery. Evidence for the parent decompilation is REA Evidence
 `ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3`.
