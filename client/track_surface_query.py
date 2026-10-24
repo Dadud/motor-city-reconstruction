@@ -119,6 +119,38 @@ def nearest_track_initialization_point(point, track_rows):
     return best
 
 
+def track_row_side_status(point, track_rows, track_index):
+    """Return the selected status byte using the row's signed plane distance.
+
+    Native 0x42e0a0/0x42e160 form XYZ deltas, then compare the extended x87
+    dot product against zero. Positive chooses byte +0x51; zero and negative
+    choose byte +0x50.
+    """
+    if (not isinstance(track_rows, (tuple, list)) or
+            any(not isinstance(row, (bytes, bytearray)) or len(row) != 0x54
+                for row in track_rows)):
+        raise ValueError('track rows must be 0x54-byte records')
+    if type(track_index) is not int or not 0 <= track_index < len(track_rows):
+        raise ValueError('track index is outside the supplied rows')
+    if not isinstance(point, (tuple, list)) or len(point) != 3:
+        raise ValueError('point must contain XYZ')
+    point = tuple(struct.unpack('<f', struct.pack('<f', float(value)))[0]
+                  for value in point)
+    row = track_rows[track_index]
+    origin = struct.unpack_from('<3f', row, 0)
+    normal = struct.unpack_from('<3f', row, 0x24)
+    delta = tuple(struct.unpack('<f', struct.pack('<f', p - o))[0]
+                  for p, o in zip(point, origin))
+    signed_distance = sum(d * n for d, n in zip(delta, normal))
+    status_offset = 0x51 if signed_distance > 0.0 else 0x50
+    return row[status_offset]
+
+
+def track_row_has_type_two(point, track_rows, track_index):
+    """Return the native 0x42e160 predicate for the selected row side."""
+    return track_row_side_status(point, track_rows, track_index) == 2
+
+
 def nearest_track_point(point, track_rows):
     """Find the nearest XZ track row among every row in the track table."""
     if (not isinstance(track_rows,(tuple,list)) or not track_rows or

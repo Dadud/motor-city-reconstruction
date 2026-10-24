@@ -40,6 +40,35 @@
     ],
     "evidence_ids": []
   },
+  "0x42e0a0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The row-origin deltas, extended-precision signed normal dot product, and strict-positive selection of status byte +0x51 versus +0x50 are translated. 512 direct original calls match the returned low byte across positive, negative, and zero distances.",
+    "sources": [
+      "client/track_surface_query.py",
+      "tests/test_track_row_side_status.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_row_side_status.py",
+      "docs/recovery/track-row-side-status.md"
+    ],
+    "evidence_ids": [
+      "ev_e7507c538fc8e4da805f9c2a8bf553db9fedef0baf3cb86178338dc1975dfba4",
+      "ev_ef4350dac0eda98617c1c5c8357c185180ce95673e6eebb6b3524cd1bc6dd030"
+    ]
+  },
+  "0x42e160": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The shared signed normal-distance branch is translated and then compared to status value 2. 512 direct original calls match the boolean low-byte return across positive, negative, and zero distances.",
+    "sources": [
+      "client/track_surface_query.py",
+      "tests/test_track_row_side_status.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_row_side_status.py",
+      "docs/recovery/track-row-side-status.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d2e0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
