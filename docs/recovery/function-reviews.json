@@ -1,4 +1,17 @@
 {
+  "0x4b71a0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The plane equation computes the Y coordinate from the XYZ normal, reference point, and input XZ coordinates, with binary32 inputs and return value. 512 direct calls match the returned float word exactly for varied nonvertical planes. Zero normal-Y is outside the supported finite-height domain.",
+    "sources": [
+      "client/render_plane_math.py",
+      "tests/test_render_plane_math.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_plane_math.py",
+      "docs/recovery/render-plane-height.md"
+    ],
+    "evidence_ids": []
+  },
   "0x406a50": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

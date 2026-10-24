@@ -657,6 +657,20 @@ class DynoOracle:
                   instruction_limit=10_000)
         return struct.unpack('<3f',self.cpu.mem_read(output,12))
 
+    def render_plane_height(self, normal, reference, point):
+        """Run 0x4b71a0 and capture its returned float32 height."""
+        if any(len(vector)!=3 for vector in (normal,reference,point)):
+            raise ValueError('plane-height oracle requires three XYZ vectors')
+        self._reset()
+        addresses=(self.inputs+0x100,self.inputs+0x120,self.inputs+0x140)
+        for address,vector in zip(addresses,(normal,reference,point)):
+            self.cpu.mem_write(address,struct.pack('<3f',*vector))
+        output=self.inputs+0x200
+        self.call(0x4b71a0,addresses,
+                  tail=b'\xd9\x1d'+struct.pack('<I',output),
+                  instruction_limit=10_000)
+        return struct.unpack('<f',self.cpu.mem_read(output,4))[0]
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""
