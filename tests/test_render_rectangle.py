@@ -6,6 +6,7 @@ from client.render_clip_code import RenderClipBounds
 from client.render_quad_dispatch import (
     dispatch_first_fan_triangle, dispatch_inside_quad,
     dispatch_second_fan_triangle)
+from client.render_polygon_clip import reject_triangle_on_shared_near_plane
 import struct
 
 
@@ -108,6 +109,15 @@ class RenderRectangleTests(unittest.TestCase):
     def test_input_words_are_range_checked(self):
         with self.assertRaises(ValueError):
             plan_rectangle_border_edges(0,0,1,1,0,(1,2,3,0x100000000))
+
+    def test_polygon_clipper_shared_near_plane_reject(self):
+        self.assertEqual(reject_triangle_on_shared_near_plane((1,0x11,0x21)),
+                         0xffffffff)
+
+    def test_polygon_clipper_does_not_claim_partial_or_other_plane_cases(self):
+        self.assertIsNone(reject_triangle_on_shared_near_plane((1,0,1)))
+        with self.assertRaises(ValueError):
+            reject_triangle_on_shared_near_plane((1,1,1),0x04)
 
 
 if __name__=='__main__':

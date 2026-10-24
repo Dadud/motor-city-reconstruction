@@ -13,14 +13,13 @@ call. The segment constructor has 512 direct original comparisons. This
 rectangle-level geometry is based on static decompilation and unit tests; the
 parent routine has not yet been compared directly against the executable.
 
-The provider/resource lookup, its side effects, the filled rectangle routine
-`0x482700` is now partly recovered: `plan_filled_rectangle_vertices` builds
+Provider/resource lookup and its side effects remain outside this recovery.
+The filled rectangle routine `0x482700` is partly recovered:
+`plan_filled_rectangle_vertices` builds
 the TL, TR, BR, BL records, preserves each raw attribute and the three-word
 tail at each vertex. `0x6cb810` overwrites only the low byte of the first tail
 word with its clip code; the upper bytes and following words remain explicit
-stack-residue inputs. It does not model the initial renderer-state
-reset (`0x46abd0`) or the subsequent four-vertex polygon dispatch (`0x474ee0`),
-which performs clipping and callbacks.
+stack-residue inputs.
 
 The all-inside branch of `0x474ee0` is translated in
 `client/render_quad_dispatch.py`. A 256-case direct comparison captures the
@@ -45,3 +44,9 @@ The rectangle setup's `0x46abd0(0)` state reset is translated by
 the `THRASH_settexture(0)` callback event on a miss. Two hundred fifty-six
 direct calls cover both cache states; nonzero texture-state selection and its
 resource side effects are not included.
+
+`client/render_polygon_clip.py` also models the first-plane empty result in
+`0x475de0`: when all three polygon clip codes share active near-plane bit
+`0x01`, the original returns `0xffffffff`. This sentinel matched 256 direct
+native calls. The global vertex setup writes performed before that return are
+not yet modeled, nor are any intersecting or subsequent plane passes.

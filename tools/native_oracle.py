@@ -541,6 +541,26 @@ class DynoOracle:
         updated=struct.unpack('<I',self.cpu.mem_read(0x00990124,4))[0]
         return updated,argument,count
 
+    def render_polygon_shared_near_reject(self, clip_codes, vertex_records):
+        """Run the all-three-outside near-plane case of 0x475de0."""
+        if (len(clip_codes)!=3 or len(vertex_records)!=3 or
+            any(type(code) is not int or not 0<=code<=0xff
+                for code in clip_codes) or
+            any(len(record)<10 for record in vertex_records)):
+            raise ValueError('polygon near-plane oracle requires three codes and 10-word records')
+        self._reset()
+        base=self.inputs+0x100
+        pointers=self.inputs+0x40
+        code_address=self.inputs+0x20
+        self.cpu.mem_write(code_address,bytes(clip_codes))
+        for index,record in enumerate(vertex_records):
+            address=base+index*0x40
+            self.cpu.mem_write(address,struct.pack('<10I',*record[:10]))
+            self.cpu.mem_write(pointers+index*4,struct.pack('<I',address))
+        self.call(0x475de0,(pointers,code_address,0x01),
+                  instruction_limit=100_000)
+        return self.cpu.reg_read(self.reg.UC_X86_REG_EAX)
+
     def random_next(self, words):
         """Run the original shared 0x6f0fa0 generator on six supplied words."""
         if (len(words) != 6 or any(type(word) is not int or not 0 <= word <= 0xffffffff
