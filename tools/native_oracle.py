@@ -638,6 +638,25 @@ class DynoOracle:
             self.cpu.mem_write(miss,original)
         return bytes(self.cpu.mem_read(output,0x3d0))
 
+    def track_point_without_cached_geometry(self, rows, track_index):
+        """Run the no-cached-geometry branch of 0x42dc50."""
+        if (not rows or any(len(row)!=0x54 for row in rows) or
+            type(track_index) is not int or not 0<=track_index<len(rows)):
+            raise ValueError('projection oracle requires indexed 0x54 track rows')
+        self._reset()
+        table=self.inputs+0x100
+        context=self.inputs+0x1000
+        output=self.inputs+0x2000
+        self.cpu.mem_write(table,b''.join(bytes(row) for row in rows))
+        self.cpu.mem_write(0x0097c38c,struct.pack('<I',table))
+        words=[0]*17
+        words[0]=track_index
+        self.cpu.mem_write(context,struct.pack('<17I',*words))
+        self.cpu.mem_write(output,bytes(12))
+        self.call(0x42dc50,(output,context,self.inputs+0x3000),
+                  instruction_limit=10_000)
+        return struct.unpack('<3f',self.cpu.mem_read(output,12))
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""

@@ -454,12 +454,16 @@
   "0x42dc50": {
     "translation": "partial",
     "verification": "original-comparison-bounded",
-    "scope": "Triangle-mode plane selection and normalized normal are translated, including the first-triangle containment test, degenerate-normal fallback, and exact reference point. 512 synthetic original calls match the reference point byte-for-byte and normals within 2e-7 absolute component error. The 0x42e010 composition now checks successful triangle-mode samples and heights. Row mode retains its native uninitialized-normal limitation; collision response remains open.",
+    "scope": "Triangle-mode plane selection and normalized normal are translated, including the first-triangle containment test, degenerate-normal fallback, and exact reference point. 512 synthetic original calls match the reference point byte-for-byte and normals within 2e-7 absolute component error. When context +0x0c is zero, the selected track row's first three float32 values are copied to the output; 512 additional direct calls match all output words across varied rows and indices. The 0x42e010 composition checks successful triangle-mode samples and heights. Row mode retains its native uninitialized-normal limitation; collision response remains open.",
     "sources": [
       "client/track_plane.py",
       "client/track_surface.py",
       "tests/test_track_plane.py",
-      "tools/verify_track_plane.py"
+      "tools/verify_track_plane.py",
+      "client/render_projection.py",
+      "tests/test_render_projection.py",
+      "tools/verify_render_projection.py",
+      "docs/recovery/render-projection-point.md"
     ],
     "evidence_ids": [
       "ev_4c465809716e9c5ffbd41874e3fb04f6e2433610bef7be6a29485006848b2f58",
