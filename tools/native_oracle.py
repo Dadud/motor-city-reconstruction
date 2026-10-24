@@ -217,6 +217,19 @@ class DynoOracle:
         records=bytes(self.cpu.mem_read(table,len(original)))
         return words,records
 
+    def alternate_render_bounds(self, bounds):
+        """Run 0x474d00 and capture its eight duplicate rectangle globals."""
+        if len(bounds) != 4 or any(not math.isfinite(value) for value in bounds):
+            raise ValueError('alternate bounds oracle needs four finite floats')
+        self._reset()
+        values=tuple(struct.unpack('<I',struct.pack('<f',value))[0]
+                     for value in bounds)
+        self.call(0x474d00,values,instruction_limit=1000)
+        addresses=(0x993848,0x9938b0,0x9938ac,0x993bb0,
+                   0x99248c,0x993840,0x993a48,0x993bb4)
+        return tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
+                     for address in addresses)
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

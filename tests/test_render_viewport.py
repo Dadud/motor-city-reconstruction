@@ -2,7 +2,8 @@ import struct
 import unittest
 
 from client.render_viewport import (RenderViewport, classify_render_position,
-                                    configure_render_viewport)
+                                    configure_render_viewport,
+                                    set_alternate_render_bounds)
 
 
 class RenderViewportTests(unittest.TestCase):
@@ -35,6 +36,18 @@ class RenderViewportTests(unittest.TestCase):
             RenderViewport(0.,0.,640.,480.,10.,.0016666667),records)
         self.assertEqual(classify_render_position((10.,20.,.5,10.),state),0)
         self.assertNotEqual(classify_render_position((-1.,20.,.5,10.),state),0)
+
+    def test_alternate_render_bounds_preserve_native_global_aliases(self):
+        state=set_alternate_render_bounds(10.,20.,650.,500.)
+        globals_by_address=state.globals_by_address()
+        self.assertEqual(globals_by_address[0x00993848],10.)
+        self.assertEqual(globals_by_address[0x009938b0],650.)
+        self.assertEqual(globals_by_address[0x009938ac],20.)
+        self.assertEqual(globals_by_address[0x00993bb0],500.)
+        self.assertEqual(globals_by_address[0x0099248c],10.)
+        self.assertEqual(globals_by_address[0x00993840],650.)
+        self.assertEqual(globals_by_address[0x00993a48],20.)
+        self.assertEqual(globals_by_address[0x00993bb4],500.)
 
 
 if __name__ == '__main__':

@@ -63,6 +63,36 @@ class RenderViewportState:
         }
 
 
+@dataclass(frozen=True)
+class AlternateRenderBounds:
+    """Bounds copied by the viewport caller's alternate rendering path."""
+    x_min: float
+    y_min: float
+    x_max: float
+    y_max: float
+
+    def globals_by_address(self):
+        return {
+            0x00993848:self.x_min,
+            0x009938b0:self.x_max,
+            0x009938ac:self.y_min,
+            0x00993bb0:self.y_max,
+            0x0099248c:self.x_min,
+            0x00993840:self.x_max,
+            0x00993a48:self.y_min,
+            0x00993bb4:self.y_max,
+        }
+
+
+def set_alternate_render_bounds(x_min, y_min, x_max, y_max):
+    """Translate the eight global writes performed by native 0x474d00."""
+    try:
+        values=tuple(f32(value) for value in (x_min,y_min,x_max,y_max))
+    except (TypeError,ValueError) as exc:
+        raise ValueError('render bounds must be finite float32 values') from exc
+    return AlternateRenderBounds(*values)
+
+
 def classify_render_position(position, viewport_state):
     """Apply the original 0x6cb810 integer-word tests to float32 XYZW data."""
     if len(position) != 4 or any(not math.isfinite(value) for value in position):

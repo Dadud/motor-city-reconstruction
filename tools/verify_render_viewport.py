@@ -4,7 +4,8 @@ import random
 import struct
 
 from client.render_viewport import (RenderViewport, classify_render_position,
-                                    configure_render_viewport)
+                                    configure_render_viewport,
+                                    set_alternate_render_bounds)
 from tools.native_oracle import DynoOracle
 
 
@@ -37,6 +38,14 @@ def verify(executable,cases=512):
             struct.pack_into('<I',expected,slot*32+0x14,0)
         if bytes(expected)!=native_records:
             raise AssertionError(f'case {index}: scratch-table writes differ')
+        alternate=tuple(rng.uniform(-500.,2500.) for _ in range(4))
+        expected_alternate=_words(tuple(
+            set_alternate_render_bounds(*alternate).globals_by_address().values()))
+        actual_alternate=oracle.alternate_render_bounds(alternate)
+        if expected_alternate!=actual_alternate:
+            raise AssertionError(
+                f'case {index}: 0x474d00 globals differ: '
+                f'{expected_alternate!r} != {actual_alternate!r}')
         points=((state.x_min,state.y_min,.5,state.w_plane_z0),
                 (state.x_max,state.y_max,1.,state.w_plane_z0),
                 (state.x_min-1.,state.y_min,.25,state.w_plane_z0),
@@ -60,8 +69,9 @@ def main():
     parser.add_argument('executable')
     parser.add_argument('--cases',type=int,default=512)
     args=parser.parse_args()
-    print(f'0x6cb610 matches {verify(args.executable,args.cases)} viewport cases')
+    print(f'viewport setup and 0x474d00 match {verify(args.executable,args.cases)} cases')
 
 
 if __name__=='__main__':
     main()
+

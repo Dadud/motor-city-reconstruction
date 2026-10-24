@@ -19,3 +19,9 @@ usual near/far naming convention.
 
 The complete Ghidra dossier is REA Evidence
 `ev_b77b3876cf605d6f1bc6d5f1e3c18a18e345249e3d708c06a0af3441e2dd3402`.
+
+The caller's alternate path also invokes `0x474d00`, which copies its four
+rectangle edges into two renderer-global alias sets. `set_alternate_render_bounds`
+preserves that exact mapping; the combined verifier compares all eight globals
+against the original binary for each randomized viewport case. Its dossier is
+REA Evidence `ev_f782911e63ddfa5e5226a75f797cf913ac34ecd726c75e06d23fb23fbb18c6ff`.
