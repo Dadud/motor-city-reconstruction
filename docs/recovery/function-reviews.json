@@ -1,4 +1,17 @@
 {
+  "0x42d3e0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The original track sample and its four-slot forward/backward neighbors are compared by squared XZ distance with native wraparound and tie behavior. 512 direct calls match the returned index across varied track sizes, positions, and queries. Invalid indices and tracks of eight or fewer points are outside scope.",
+    "sources": [
+      "client/track_surface_query.py",
+      "tests/test_track_surface_query.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_surface_neighbor.py",
+      "docs/recovery/track-surface-neighbor.md"
+    ],
+    "evidence_ids": []
+  },
   "0x4b71a0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
