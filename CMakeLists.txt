@@ -90,6 +90,8 @@ if(BUILD_TESTING)
   target_link_libraries(mco_string_buffer_compare PRIVATE mco_core)
   add_executable(mco_string_buffer_full_compare native/tests/string_buffer_full_compare.cpp)
   target_link_libraries(mco_string_buffer_full_compare PRIVATE mco_core)
+  add_executable(mco_string_compare_compare native/tests/string_compare_compare.cpp)
+  target_link_libraries(mco_string_compare_compare PRIVATE mco_core)
   foreach(recovered driving_engine_rpm drivetrain_coupling drivetrain_stages gear_binding assembly_weight mechanical_loaders owner_wheel_setup model_bounds body_constructor body_startup owner_binding startup_balance startup_resistance acceleration_table gear_force_table model_preparation wheel_force_correction startup_record
       brake_thermal brake_forces wheel_spin combined_slip vehicle_update engine_update engine_torque_update engine_pipeline
       body_vertical_load body_resistance air_density vehicle_preparation

@@ -3876,5 +3876,27 @@
     "scope": "Mapped normal assignment paths: unique inline writes, unique empty release, shared empty decrement, shared nonempty detach, and unique capacity growth. The unique inline branch matches 512 direct original executions; all mapped paths match 512 Python/native deterministic cases. Allocator failure, exception unwinding, and source pointers into storage freed during unique growth remain open; the non-inline paths are not yet directly compared with original execution.",
     "sources": ["client/string_buffer.py", "native/include/mco/string_buffer.hpp", "native/src/string_buffer.cpp", "native/tests/string_buffer_compare.cpp", "native/tests/string_buffer_full_compare.cpp", "tests/test_string_buffer.py", "tools/native_string_buffer_compare.py", "tools/native_string_buffer_full_compare.py", "tools/verify_string_buffer.py", "docs/recovery/string-buffer.md"],
     "evidence_ids": ["ev_c2fe650478dc9ac95ca926f4e5b9b000b3fb8183f8dd962cfc8e42c394bff43b", "ev_59be61c4dd9eaa8561597bcfa990fda5da366583031564b048f1928b635ed826", "ev_a6e5dc60668639e530995a403d003cf7de410212c8c421f58fcac2bbb990a8ad", "ev_ba723a1cfd85349eef7d64ce5c05e7498ccc1d5cff85b495b3d90ce4380d231b", "ev_e25217d6bd48def98845f4d79144d504deaf77b55600b4857658dad36d55f0c0"]
+  },
+
+  "0x6aa840": {
+    "translation": "partial",
+    "verification": "original-comparison-subregions",
+    "scope": "Default locale-mode flag zero: compares NUL-terminated bytes using the observed wrapped ASCII case fold and returns -1, 0, or 1 at the first unequal folded byte. 1,024 direct original calls match, including high-bit bytes and names up to 299 bytes. The locale-dependent branch and its lock/state behavior remain open.",
+    "sources": [
+      "client/string_compare.py",
+      "native/include/mco/string_compare.hpp",
+      "native/src/string_compare.cpp",
+      "native/tests/string_compare_compare.cpp",
+      "tests/test_string_compare.py",
+      "tools/native_config_name_compare.py",
+      "tools/verify_config_name_compare.py",
+      "docs/recovery/config-name-compare.md"
+    ],
+    "evidence_ids": [
+      "ev_91c327c017e00626be20f24dbfed8419cc9ec288951e040126366df943f3974a",
+      "ev_57e7b0d4f6f6f282320cbdb4d42ab6ca2063df541aa0a5964e5d55cdf7552b1f",
+      "ev_337162f0381b81e0b2e8c99085eef7cadfb832dbe1ca45630b4087076c11d666"
+    ]
   }
+
 }
