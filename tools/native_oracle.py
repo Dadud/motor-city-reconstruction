@@ -138,6 +138,22 @@ class DynoOracle:
         final_output=struct.unpack('<I',self.cpu.mem_read(0xb368a8,4))[0]
         return positions,padding,final_source,final_output
 
+    def render_clip_code(self, vertex, bounds):
+        """Run 0x6cb810 with an XYZW point and six explicit signed limits."""
+        if (len(vertex) != 4 or len(bounds) != 6 or
+            any(type(value) is not int or not -(1 << 31) <= value < (1 << 31)
+                for value in (*vertex, *bounds))):
+            raise ValueError('clip oracle requires four signed words and six signed bounds')
+        self._reset()
+        point, output = self.inputs + 0x100, self.inputs + 0x200
+        self.cpu.mem_write(point, struct.pack('<4i', *vertex))
+        self.cpu.mem_write(output, b'\xcd')
+        for address, value in zip((0xb424c4, 0xb424b4, 0xb424c0,
+                                   0xb424a0, 0xb424a4, 0xb424b0), bounds):
+            self.cpu.mem_write(address, struct.pack('<i', value))
+        self.call(0x6cb810, (point, output), instruction_limit=1000)
+        return self.cpu.mem_read(output, 1)[0]
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""

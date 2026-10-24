@@ -3075,5 +3075,26 @@
     "doc_refs": [
       "docs/recovery/track-render-position.md"
     ]
+  },
+  "0x6cb810": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The helper computes a one-byte clip code from signed XYZW words and six caller-supplied bounds, preserving its ordered X/Y comparisons, negative-W XOR mask, and final W/Z tests. 512 direct executions against the installed binary match, including exact boundaries and randomized signed inputs. Bound producers and surrounding clipping/draw behavior remain outside this translation.",
+    "sources": [
+      "client/render_clip_code.py",
+      "tests/test_render_clip_code.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_clip_code.py",
+      "docs/recovery/render-clip-code.md"
+    ],
+    "evidence_ids": [
+      "ev_bc1bb75ed8e11be2f101f5d5a18a4e1a75d3d134896d0639c2818b1092b3ca19"
+    ],
+    "verification_refs": [
+      "tools/verify_render_clip_code.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-clip-code.md"
+    ]
   }
 }

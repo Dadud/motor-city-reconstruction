@@ -55,6 +55,8 @@ class FunctionInventoryTests(unittest.TestCase):
     def test_exported_evidence_bundle_records_are_indexable(self):
         item = dict(operation='analyze_function', normalized_result={'pseudocode': 'void f(){}'})
         self.assertEqual(list(records({'records': [item]})), [item])
+        self.assertEqual(list(records({'evidence_bundle': {'records': [item]}})),
+                         [item])
 
     def test_partial_evidence_refresh_preserves_prior_ids(self):
         rows = [dict(address='0x400000', evidence_ids=['ev_new'],
