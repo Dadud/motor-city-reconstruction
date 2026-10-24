@@ -3869,5 +3869,21 @@
     "doc_refs": [
       "docs/recovery/render-vertex-descriptor.md"
     ]
+  },
+  "0x415410": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "The unique inline-buffer branch stores nonzero source byte ranges when capacity is below 32 and sufficient. It copies forward in four-byte units plus a byte tail, writes the length and trailing zero, and matches 512 direct original calls byte-for-byte with both observed unique-buffer header sentinels. Empty, shared-buffer, heap-allocation, exception and cleanup branches remain open.",
+    "sources": [
+      "client/string_buffer.py",
+      "native/include/mco/string_buffer.hpp",
+      "native/src/string_buffer.cpp",
+      "native/tests/string_buffer_compare.cpp",
+      "tests/test_string_buffer.py",
+      "tools/native_string_buffer_compare.py",
+      "tools/verify_string_buffer.py",
+      "docs/recovery/string-buffer.md"
+    ],
+    "evidence_ids": ["ev_c2fe650478dc9ac95ca926f4e5b9b000b3fb8183f8dd962cfc8e42c394bff43b"]
   }
 }
