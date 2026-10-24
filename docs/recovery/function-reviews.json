@@ -3898,5 +3898,19 @@
       "ev_337162f0381b81e0b2e8c99085eef7cadfb832dbe1ca45630b4087076c11d666"
     ]
   }
-
+,
+  "0x409b60": {
+    "translation": "partial",
+    "verification": "static-analysis-only",
+    "scope": "Models ordered first-section/first-key lookup using the default case-insensitive comparator and the observed in-place maximum-length truncation. Caller-provided parsed records replace the original global vectors. File-path comparison/reload, pointer tables, output-buffer ABI, shared string ownership, and locale mode are not translated or directly compared.",
+    "sources": ["client/ini_config.py", "client/string_compare.py", "tests/test_ini_config.py", "docs/recovery/ini-config-loader.md"],
+    "evidence_ids": ["ev_57e7b0d4f6f6f282320cbdb4d42ab6ca2063df541aa0a5964e5d55cdf7552b1f", "ev_91c327c017e00626be20f24dbfed8419cc9ec288951e040126366df943f3974a"]
+  },
+  "0x409d00": {
+    "translation": "partial",
+    "verification": "static-analysis-only",
+    "scope": "Models byte-level section/key/value parsing for supported files and preserves source order, duplicate sections, and the original preceding-byte removal at LF. The Win32 file lifecycle, process-global vector reset/growth, string allocation, malformed overlong-line effects, and exception cleanup remain untranslated; the parser is not directly compared with an original loader call.",
+    "sources": ["client/ini_config.py", "tests/test_ini_config.py", "docs/recovery/ini-config-loader.md"],
+    "evidence_ids": ["ev_337162f0381b81e0b2e8c99085eef7cadfb832dbe1ca45630b4087076c11d666", "ev_9a1600aa15c91c9d3ddfd693d338de812a2851f5a0c252eb62077563b9aa20cf"]
+  }
 }

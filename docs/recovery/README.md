@@ -11,6 +11,10 @@ now drive that work; [installation export status](export-status.md) covers all b
 pointer boundaries and unresolved startup dependencies.
 The [cell comparison checkpoint](cell-comparisons.md) documents the shared
 native/original corpus workflow and its bounded coverage.
+The [INI-style configuration loader recovery](ini-config-loader.md) records the
+byte parser and lookup model plus the remaining Win32/global-table boundaries.
+The [configuration-name comparison](config-name-compare.md) documents the
+directly compared default-mode primitive used by that lookup.
 The [export checkpoint](export-checkpoint.md) records the completed static pass,
 build verification and the remaining reconstruction work.
 
