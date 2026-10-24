@@ -1,4 +1,17 @@
 {
+  "0x42d810": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The query-equals-row shortcut and signed 16-bit slot scan are translated over an explicit byte view. Native row stride is derived as 0x6c4 from the assembly's scaled index expression. 512 direct original calls match for direct equality, negative counts, suffix hits, and misses; ownership and construction of the global table remain unresolved.",
+    "sources": [
+      "client/track_block_membership.py",
+      "tests/test_track_block_membership.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_block_membership.py",
+      "docs/recovery/track-block-membership.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d530": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
