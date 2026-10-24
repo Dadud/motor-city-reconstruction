@@ -639,6 +639,55 @@ class DynoOracle:
         updated=struct.unpack('<I',self.cpu.mem_read(0x00990124,4))[0]
         return updated,argument,count
 
+    def render_filled_rectangle(self, rectangle, attributes, bounds, *,
+                                opaque_words):
+        """Run 0x482700 and capture records at its 0x474ee0 boundary."""
+        from client.render_clip_code import RenderClipBounds
+        if (not isinstance(bounds,RenderClipBounds) or len(rectangle)!=4 or
+            len(attributes)!=4 or len(opaque_words)!=4 or
+            any(type(value) is not int or not -0x80000000<=value<=0x7fffffff
+                for value in rectangle) or
+            any(type(value) is not int or not 0<=value<=0xffffffff
+                for value in attributes) or
+            any(not isinstance(record,(tuple,list)) or len(record)!=3 or
+                any(type(value) is not int or not 0<=value<=0xffffffff
+                    for value in record) for record in opaque_words)):
+            raise ValueError('filled rectangle oracle inputs are outside their word domains')
+        self._reset()
+        capture=self.inputs+0x500
+        self.cpu.mem_write(capture,bytes(0x100))
+        self.cpu.mem_write(0x46abd0,b'\xc3')
+        callback=bytearray(b'\x56\x57')
+        callback.extend(b'\xff\x05'+struct.pack('<I',capture))
+        callback.extend(b'\xa1'+struct.pack('<I',capture))
+        callback.extend(b'\x48')
+        callback.extend(b'\x69\xc0\x80\x00\x00\x00\x05'+
+                        struct.pack('<I',capture+0x10))
+        callback.extend(b'\x89\xc7')
+        for index in range(4):
+            callback.extend(b'\x8b\x74\x24'+bytes((12+index*4,)))
+            callback.extend(b'\xb9\x08\x00\x00\x00\xf3\xa5')
+        callback.extend(b'\x5f\x5e\xc3')
+        self.cpu.mem_write(0x474ee0,bytes(callback))
+        for address,value in zip((0xb424c4,0xb424b4,0xb424c0,
+                                  0xb424a0,0xb424a4,0xb424b0),
+                                 (bounds.x_lower,bounds.x_upper,
+                                  bounds.y_lower,bounds.y_upper,
+                                  bounds.w_upper,bounds.z_lower)):
+            self.cpu.mem_write(address,struct.pack('<i',value))
+        native_ebp=self.frame-0x1028
+        for offset,record in zip((0x6c,0x4c,0x2c,0x0c),opaque_words):
+            self.cpu.mem_write(native_ebp-offset,struct.pack('<3I',*record))
+        if hasattr(self.cpu,'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self.call(0x482700,(*rectangle,*attributes),cleanup=b'',
+                  instruction_limit=100_000)
+        count=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
+        if count!=1:
+            raise ValueError(f'filled rectangle made {count} downstream calls, expected one')
+        return tuple(struct.unpack('<8I',self.cpu.mem_read(
+            capture+0x10+index*0x20,0x20)) for index in range(4))
+
     def render_polygon_shared_near_reject(self, clip_codes, vertex_records):
         """Run the all-three-outside near-plane case of 0x475de0."""
         if (len(clip_codes)!=3 or len(vertex_records)!=3 or

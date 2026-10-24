@@ -44,11 +44,22 @@ class RenderRectangleTests(unittest.TestCase):
                          ((10.,20.),(110.,20.),(110.,80.),(10.,80.)))
         self.assertEqual(tuple(v.attribute_word for v in vertices),
                          (0x11,0x22,0x33,0x44))
+
         self.assertEqual(tuple(v.clip_tail_words[0] for v in vertices),
                          (0xaabbcc02,0x00000002,0x00000002,0x00000002))
         self.assertTrue(all((v.z_word,v.w_word)==
                             (0x3f7fff00,0x37800080) for v in vertices))
         self.assertTrue(all(v.clip_code == 0x02 for v in vertices))
+
+    def test_filled_extent_addition_uses_unwrapped_integer_x87_sum(self):
+        bounds=RenderClipBounds(-1150000000,1150000000,
+                               -1150000000,1150000000,1065353216,0)
+        vertices=plan_filled_rectangle_vertices(
+            0x01000001,0,-0x01000000,0,(1,2,3,4),bounds,
+            opaque_words=((0,0,0),)*4)
+        right=struct.unpack('<f',struct.pack('<I',vertices[1].x_word))[0]
+        self.assertEqual(right,1.0)
+        self.assertEqual(vertices[1].x_word,0x3f800000)
 
     def test_filled_vertices_compute_native_clip_codes(self):
         bounds=RenderClipBounds(-10,10,-10,10,0x3f800000,0)

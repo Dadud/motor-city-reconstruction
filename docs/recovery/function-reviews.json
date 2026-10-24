@@ -1878,7 +1878,7 @@
   "0x47faf0": {
     "translation": "partial",
     "verification": "static-analysis-only",
-    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. The filled branch 0x482700 is partly translated through four vertex records and directly verified clip-code helper calls. Its renderer reset 0x46abd0(0), all-inside/two trivial-fan 0x474ee0 subregions, and near-plane shared-reject and single-crossing portions of 0x475de0 have direct original comparisons. Neither parent has a direct original comparison; provider/resource lookup, other texture states, side-plane clipping, multi-plane intersections, and device effects remain external.",
+    "scope": "The non-filled border branch geometry, inset arithmetic, edge order, and cyclic raw attributes are translated from static decompilation. Its filled child 0x482700 is now translated and directly compared through all four complete vertex records at its 0x474ee0 call boundary. The renderer reset 0x46abd0(0), all-inside/two trivial-fan 0x474ee0 subregions, and near-plane shared-reject and single-crossing portions of 0x475de0 also have direct original comparisons. The 0x47faf0 parent itself has no direct original comparison; provider/resource lookup, other texture states, side-plane clipping, multi-plane intersections, and device effects remain external.",
     "sources": [
       "client/render_clip_code.py",
       "client/render_polygon_clip.py",
@@ -1898,6 +1898,22 @@
     ],
     "evidence_ids": [
       "ev_053cde75d143d6250566504cc8c474ecf3c2ca79788e69904de740d7a5cf63c3"
+    ]
+  },
+  "0x482700": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Builds the TL, TR, BR, BL eight-word vertex records from four signed integer inputs and raw attributes. The x87 FILD/FIADD path adds signed extents without 32-bit wrap before storing binary32 corners; each record receives the fixed Z/W words and the original 0x6cb810 clip byte while untouched tail words remain explicit caller residue. 512 direct calls compare all four complete records at the 0x474ee0 boundary. The 0x46abd0 reset and 0x474ee0 dispatcher are controlled stubs; downstream dispatch and device effects remain separate.",
+    "sources": [
+      "client/render_rectangle.py",
+      "docs/recovery/render-rectangle-border.md",
+      "tests/test_render_rectangle.py",
+      "tools/native_oracle.py",
+      "tools/verify_filled_rectangle.py"
+    ],
+    "evidence_ids": [
+      "ev_752e9be0a5552186db7ba33ac5a6af6f4bae566b88b1c285534d8b5c90c1e623",
+      "ev_f84582265006939fd71f98b1592969c566078721d98005c801dcb4646d6bf1c5"
     ]
   },
   "0x482610": {

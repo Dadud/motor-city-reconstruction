@@ -58,9 +58,15 @@ def plan_filled_rectangle_vertices(x,y,width,height,attributes,
     if not isinstance(clip_code_bounds,RenderClipBounds):
         raise TypeError('clip_code_bounds must be RenderClipBounds')
 
-    right=_signed32(x+width)
-    bottom=_signed32(y+height)
-    corners=((x,y),(right,y),(right,bottom),(x,bottom))
+    # The x87 FILD/FIADD sequence adds the signed integer extent before the
+    # result is rounded into its binary32 corner local. Integer wraparound
+    # from the border branch does not apply here.
+    left_float=_float32(float(x))
+    top_float=_float32(float(y))
+    right_float=_float32(float(x+width))
+    bottom_float=_float32(float(y+height))
+    corners=((left_float,top_float),(right_float,top_float),
+             (right_float,bottom_float),(left_float,bottom_float))
     vertices=[]
     for (vx,vy),attribute,residue in zip(corners,attributes,opaque_words):
         words=(_float_word(vx),_float_word(vy),0x3f7fff00,0x37800080,
@@ -80,6 +86,14 @@ def _float_word(value):
         return struct.unpack('<I',struct.pack('<f',float(value)))[0]
     except OverflowError:
         return 0xff800000 if value < 0 else 0x7f800000
+
+
+def _float32(value):
+    import struct
+    try:
+        return struct.unpack('<f',struct.pack('<f',value))[0]
+    except OverflowError:
+        return float('-inf') if value < 0 else float('inf')
 
 
 def plan_rectangle_border_edges(x,y,width,height,inset,colors):

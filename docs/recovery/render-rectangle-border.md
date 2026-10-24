@@ -15,12 +15,17 @@ unit tests; its MFC/provider setup has not yet been bounded by a direct parent
 comparison.
 
 Provider/resource lookup and its side effects remain outside this recovery.
-The filled rectangle routine `0x482700` is partly recovered:
-`plan_filled_rectangle_vertices` builds
-the TL, TR, BR, BL records, preserves each raw attribute and the three-word
-tail at each vertex. `0x6cb810` overwrites only the low byte of the first tail
-word with its clip code; the upper bytes and following words remain explicit
-stack-residue inputs.
+The filled rectangle routine `0x482700` is translated through its call to the
+polygon dispatcher. `plan_filled_rectangle_vertices` builds the TL, TR, BR, BL
+records, preserves each raw attribute and the three-word tail at each vertex.
+Its x87 `FILD`/`FIADD` sequence adds signed extents without 32-bit wrap before
+storing binary32 corners. `0x6cb810` overwrites only the low byte of the first
+tail word with its clip code; the upper bytes and following words remain
+explicit stack-residue inputs. A 512-case direct corpus compares all four
+complete eight-word records at the `0x474ee0` boundary. The reset and dispatcher
+are controlled stubs; downstream dispatch behavior has its separate coverage.
+REA pseudocode Evidence: `ev_f84582265006939fd71f98b1592969c566078721d98005c801dcb4646d6bf1c5`;
+assembly Evidence: `ev_752e9be0a5552186db7ba33ac5a6af6f4bae566b88b1c285534d8b5c90c1e623`.
 
 The full branch router in `0x474ee0` is translated in
 `client/render_quad_dispatch.py`. Its 1,024-call direct-original corpus checks
