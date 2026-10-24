@@ -1377,6 +1377,19 @@
     ],
     "evidence_ids": []
   },
+  "0x478980": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The four environment-object globals are visited in order; each non-null pointer is passed to the heap-release wrapper and its global is then cleared. Sixteen direct calls cover every null/non-null mask and match the ordered release arguments and all final global values. The native harness stubs only the downstream release wrapper; allocator internals are outside scope.",
+    "sources": [
+      "client/render_environment.py",
+      "tests/test_render_environment.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_environment.py",
+      "docs/recovery/render-environment-state.md"
+    ],
+    "evidence_ids": []
+  },
   "0x47f990": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

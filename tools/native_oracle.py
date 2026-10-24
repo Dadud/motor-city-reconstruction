@@ -576,6 +576,38 @@ class DynoOracle:
         return tuple(struct.unpack('<I',self.cpu.mem_read(pointer+0x3c,4))[0]
                      if pointer else None for pointer in (primary,secondary))
 
+    def release_environment_objects(self, objects):
+        """Run 0x478980 while capturing, but not executing, heap releases."""
+        if (len(objects)!=4 or any(type(value) is not int or
+            not 0<=value<=0xffffffff for value in objects)):
+            raise ValueError('cleanup oracle requires four unsigned pointers')
+        self._reset()
+        globals_=(0x00993c34,0x00993c38,0x00993c3c,0x00993c40)
+        for address,value in zip(globals_,objects):
+            self.cpu.mem_write(address,struct.pack('<I',value))
+        capture=self.inputs+0x500
+        callback=self.stub+0x800
+        self.cpu.mem_write(capture,bytes(20))
+        code=(b'\xa1'+struct.pack('<I',capture)+b'\xc1\xe0\x02'+
+              b'\x8b\x4c\x24\x04\x89\x88'+struct.pack('<I',capture+4)+
+              b'\xff\x05'+struct.pack('<I',capture)+b'\xc3')
+        self.cpu.mem_write(callback,code)
+        displacement=callback-(0x006992c5+5)
+        original=bytes(self.cpu.mem_read(0x006992c5,5))
+        self.cpu.mem_write(0x006992c5,b'\xe9'+struct.pack('<i',displacement))
+        try:
+            self.call(0x478980,instruction_limit=10_000)
+        finally:
+            self.cpu.mem_write(0x006992c5,original)
+        count=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
+        if count>4:
+            raise ValueError('native cleanup made too many heap release calls')
+        released=tuple(struct.unpack('<I',self.cpu.mem_read(
+            capture+4+4*index,4))[0] for index in range(count))
+        remaining=tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
+                        for address in globals_)
+        return released,remaining
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""
