@@ -2951,6 +2951,13 @@
       "docs/calculations/stock-driving-startup.md"
     ]
   },
+  "0x53d320": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The four-wheel support predictor computes binary32 velocity lookahead and ordered matrix transforms, calls the required terrain projection for each wheel, stores returned points and aliased support records, computes signed support deltas and inclusive contact tests, derives surface classes, and publishes the contacting-wheel count. The Python implementation matches 722 complete calls of the original 0x53d320 with exact full-owner bytes while the terrain service is supplied. The C++ implementation matches the Python output byte-for-byte and all four ordered query contexts, points, and previous positions across the same 722 cases. The original terrain projection remains a separate required boundary; this review does not claim a recovered end-to-end track service.",
+    "sources": ["client/support_prediction.py", "native/include/mco/support_prediction.hpp", "native/src/support_prediction.cpp", "native/tests/support_prediction_compare.cpp", "tools/native_support_prediction_compare.py", "tools/support_prediction_oracle.py", "docs/calculations/support-prediction.md"],
+    "evidence_ids": ["ev_f04dec3c392ad24344e59e34d5c69e17e64ee1532b5945b4ef2c74bb0683da4b"]
+  },
   "0x53d4a0": {
     "translation": "partial",
     "verification": "original-comparison-bounded",

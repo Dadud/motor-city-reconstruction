@@ -2,6 +2,13 @@
 
 `client.support_prediction.predict_support` reconstructs the complete owner
 arithmetic and four ordered terrain projections in original `0x53d320`.
+`mco::predict_support` in `native/src/support_prediction.cpp` now carries the
+same bounded calculation in the native library. The native/Python comparison
+checks all 722 support cases byte-for-byte for owner state and exactly for the
+four ordered query contexts, transformed points, and previous world points.
+The original comparison below separately checks the Python model against all
+722 original calls. Terrain projection remains a required supplied boundary in
+both ports.
 The terrain service at `0x42e010` remains an explicit required boundary. This
 distinction preserves the actual contact calculation without substituting the
 prototype wheel-radius/nearest-height contact rules.
