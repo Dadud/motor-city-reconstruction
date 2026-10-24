@@ -62,10 +62,16 @@ class DrivingLoads:
         self.resistance_mode = resistance_mode
 
     @staticmethod
-    def _write_loads(s, forces):
+    def _write_force_vectors(s, forces):
         for index, force in zip(LOAD_ORDER, forces):
             w = s.wheels[index]
             w.force = force
+
+    @staticmethod
+    def _write_y_loads(s, loads):
+        for index, load in zip(LOAD_ORDER, loads):
+            w = s.wheels[index]
+            w.force = (w.force[0], load, w.force[2])
 
     def __call__(self, call, s, force_inputs):
         if call.stage not in self.stages:
@@ -84,7 +90,7 @@ class DrivingLoads:
                 p.configuration_mass, p.wheelbase, p.front_track, p.rear_track, p.height_parameter,
                 s.front_lever, s.rear_lever, s.speed, s.turning_radius_y, s.local_acceleration[1],
                 tuple(f.moments.wheels[index].support_correction for index in LOAD_ORDER)))
-            self._write_loads(s, forces)
+            self._write_force_vectors(s, forces)
         elif call.stage == 'project_wheels':
             speeds = project_wheel_speeds(WheelSpeedState(tuple(WheelSpeedInput(w.primary_angle,
                 w.contact, w.spin, w.spin_scale) for w in s.wheels), s.local_linear[0],
@@ -97,14 +103,14 @@ class DrivingLoads:
                 s.local_acceleration[2], s.local_acceleration[0], s.speed, p.configuration_mass,
                 p.wheelbase, p.front_track, p.rear_track, p.height_parameter,
                 f.spin.front_scale, f.spin.rear_scale))
-            self._write_loads(s, forces)
+            self._write_y_loads(s, loads)
         elif call.stage == 'suspension_loads':
             loads = correct_suspension_load(SuspensionLoadInput(tuple(w.force[1] for w in wheels),
                 tuple(w.contact for w in wheels), p.pitch, s.support_count != 0, s.speed,
                 f.spin.body_secondary_angle, p.suspension_pitch, p.configuration_mass, p.mass_offset,
                 p.front_weight_parameter, p.rear_weight_parameter, s.front_lever, s.rear_lever,
                 p.wheelbase, p.rear_track, p.gear_factor, p.torque, p.component_mode, bool(s.flags & 2)))
-            self._write_loads(s, loads)
+            self._write_y_loads(s, loads)
         elif call.stage == 'resistance':
             mode = False
             disabled = bool(s.flags & 0x200)

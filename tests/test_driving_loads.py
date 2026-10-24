@@ -42,6 +42,26 @@ class DrivingLoadsTests(unittest.TestCase):
         loads(UpdateCall('project_wheels'), s, inputs)
         self.assertEqual(s.wheels[2].projected_speed, -9.)
 
+    def test_later_load_stages_preserve_other_force_components(self):
+        s, inputs, parameters = fixture()
+        s.local_acceleration = (3., 2., 1.)
+        s.speed = 20.
+        for i, wheel in enumerate(s.wheels):
+            wheel.force = (10. + i, 100. + i, 20. + i)
+        loads = DrivingLoads(parameters, lambda *args: None, lambda *args: False)
+        original = tuple(w.force for w in s.wheels)
+        loads(UpdateCall('load_transfer'), s, inputs)
+        for before, after in zip(original, s.wheels):
+            self.assertEqual((after.force[0], after.force[2]), (before[0], before[2]))
+            self.assertIsInstance(after.force[1], float)
+        after_transfer = tuple(w.force for w in s.wheels)
+        self.assertNotEqual(tuple(f[1] for f in after_transfer), tuple(f[1] for f in original))
+        loads(UpdateCall('suspension_loads'), s, inputs)
+        for before, after in zip(after_transfer, s.wheels):
+            self.assertEqual((after.force[0], after.force[2]), (before[0], before[2]))
+            self.assertIsInstance(after.force[1], float)
+        self.assertNotEqual(tuple(w.force[1] for w in s.wheels), tuple(f[1] for f in after_transfer))
+
     def test_resistance_gate_and_unbound_child_are_explicit(self):
         s, inputs, parameters = fixture()
         observations = []

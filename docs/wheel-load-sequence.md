@@ -10,7 +10,11 @@ on one original owner/configuration memory image:
 ```
 
 The Python chain passes each stage's computed loads into the next through typed
-inputs. The original execution retains the owner image between calls. Every
+inputs. `client.driving_loads.DrivingLoads` also connects these outputs to the
+shared vehicle state: the initial producer writes all three force components,
+then the transfer and suspension stages replace only the four y-axis loads and
+preserve the other force components. A stage-level test exercises those state
+writes. The original execution retains the owner image between calls. Every
 stage compares all four loads, the other force components and all remaining
 owner/configuration bytes, rather than checking only the final output.
 
