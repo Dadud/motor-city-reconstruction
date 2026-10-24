@@ -1,4 +1,11 @@
 {
+  "0x6f2da0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Computes the signed 2D cross product, spills the x87 result to binary32, then converts to signed int32 with nearest-even rounding. 512 direct original calls match exactly over both signs, half-integer cases and deterministic randomized finite coordinates. Nonfinite and out-of-int32-range determinants are outside the normal-return domain.",
+    "sources": ["client/geometry_math.py", "tests/test_geometry_math.py", "tools/verify_oriented_area2.py", "docs/recovery/oriented-area2.md"],
+    "evidence_ids": []
+  },
   "0x6f2c50": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
