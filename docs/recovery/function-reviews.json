@@ -1,4 +1,18 @@
 {
+  "0x6f12a0": {
+    "translation": "python-and-native-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The full 61-byte bit-copy transpose maps all nine 32-bit words from row-major input to transposed output without interpreting float encodings. 512 direct original calls match exactly over randomized uint32 matrices plus explicit signed-zero, NaN, infinity, subnormal and arbitrary-word patterns; input remains unchanged. Source and destination aliasing is outside scope.",
+    "sources": [
+      "client/matrix_math.py",
+      "native/src/matrix_math.cpp",
+      "tests/test_matrix_math.py",
+      "tools/native_oracle.py",
+      "tools/verify_matrix_transpose.py",
+      "docs/recovery-ledger.md"
+    ],
+    "evidence_ids": []
+  },
   "0x6f1240": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
