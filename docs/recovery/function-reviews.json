@@ -1,4 +1,11 @@
 {
+  "0x6f2c90": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Advances the supplied six-word shared random state, takes the returned word's low 16 bits, and scales by exact 2^-16. 1,024 direct original calls capture the x87 return immediately and match the binary32 value bit-for-bit. State initialization is supplied; global seeding and caller sequence behavior remain outside this helper check.",
+    "sources": ["client/random_state.py", "tests/test_random_state.py", "tools/verify_random_fraction.py", "tools/random_state_oracle.py", "docs/recovery/random-fraction.md"],
+    "evidence_ids": []
+  },
   "0x6f2b90": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",

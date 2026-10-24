@@ -21,6 +21,12 @@ class RandomStateTests(unittest.TestCase):
         self.assertEqual(state.words, (0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0))
 
+    def test_next_unit_fraction_advances_and_uses_low_word(self):
+        state = RandomState((0xf22d0e56, 0x883126e9, 0xc624dd2f,
+                             0x0702c49c, 0x9e353f7d, 0x6fdf3b64))
+        self.assertEqual(state.next_unit_fraction(), 0x51ed / 65536.0)
+        self.assertEqual(state.words[0], 0x559a51ed)
+
     def test_rejects_invalid_words(self):
         for words in ((0,) * 5, (0, 0, 0, 0, 0, -1), (0, 0, 0, 0, 0, 1 << 32)):
             with self.subTest(words=words), self.assertRaises(ValueError):

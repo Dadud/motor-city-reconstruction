@@ -34,3 +34,11 @@ class RandomState:
         if (s5_next == 0 and u1 == 0 and u2 == 0 and u3 == 0 and u4 == 0):
             self.words = ((d0 + 1) & _MASK, 1, 1, 1, 1, 0)
         return self.words[0]
+
+    def next_unit_fraction(self) -> float:
+        """Advance the generator and return its low 16 bits divided by 65536.
+
+        This is the operation performed by original routine 0x6f2c90. Its
+        binary fraction is exactly representable as a Python float.
+        """
+        return (self.next_u32() & 0xffff) / 65536.0
