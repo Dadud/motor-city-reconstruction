@@ -1,5 +1,5 @@
 """Bit-preserving matrix helpers recovered from the client math library."""
-from math import atan2, cos, inf, sin, sqrt
+from math import atan2, cos, inf, isfinite, sin, sqrt
 import struct
 
 from .tire_response import f32
@@ -43,6 +43,18 @@ def dot_3_f32(left, right):
     left = tuple(f32(value) for value in left)
     right = tuple(f32(value) for value in right)
     return f32(left[0] * right[0] + left[1] * right[1] + left[2] * right[2])
+
+
+def dot_product_batch(vectors, direction):
+    """Translate 0x6f1160: dot each consecutive 3-vector with direction."""
+    vectors = tuple(tuple(vector) for vector in vectors)
+    direction = tuple(direction)
+    if len(direction) != 3 or any(len(vector) != 3 for vector in vectors):
+        raise ValueError('dot batch requires three-component vectors')
+    if any(not isfinite(value) for vector in vectors + (direction,)
+           for value in vector):
+        raise ValueError('dot batch vectors must be finite')
+    return tuple(dot_3_f32(vector, direction) for vector in vectors)
 
 
 def vector_length3(values):

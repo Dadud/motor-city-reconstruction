@@ -1,6 +1,6 @@
 import unittest
 
-from client.matrix_math import (atan2_turns, dot_3_f32, integrate_rotation_matrix,
+from client.matrix_math import (atan2_turns, dot_3_f32, dot_product_batch, integrate_rotation_matrix,
                                 normalize_vector3, repair_rotation_matrix,
                                 transpose_3x3_words)
 
@@ -32,6 +32,13 @@ class MatrixMathTests(unittest.TestCase):
         self.assertEqual(dot_3_f32((1e20, 1, -1e20), (1, 1, 1)), 0.0)
         with self.assertRaises(ValueError):
             dot_3_f32((1, 2), (3, 4))
+
+    def test_dot_product_batch(self):
+        self.assertEqual(dot_product_batch(((1, 2, 3), (-1, 0, 1)), (4, -5, 6)),
+                         (12.0, 2.0))
+        self.assertEqual(dot_product_batch((), (1, 2, 3)), ())
+        with self.assertRaises(ValueError):
+            dot_product_batch(((1, 2),), (1, 2, 3))
 
     def test_normalize_three_component_vector(self):
         self.assertEqual(normalize_vector3((3, 0, 4)), (0.6000000238418579, 0.0, 0.800000011920929))

@@ -1,4 +1,17 @@
 {
+  "0x6f1160": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The routine computes and stores one binary32 dot product for each consecutive three-float vector against a supplied direction; a zero count performs no stores. 512 randomized direct calls match output words bit-for-bit across counts zero through sixteen, with a guard word confirming no writes past the requested output span. Camera scheduling and input ownership remain outside scope.",
+    "sources": [
+      "client/matrix_math.py",
+      "tests/test_matrix_math.py",
+      "tools/native_oracle.py",
+      "tools/verify_dot_product_batch.py",
+      "docs/recovery/dot-product-batch.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42f0c0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
