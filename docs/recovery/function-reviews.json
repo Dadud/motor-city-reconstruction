@@ -3096,5 +3096,27 @@
     "doc_refs": [
       "docs/recovery/render-clip-code.md"
     ]
+  },
+  "0x6cb970": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The near/far and X/Y segment clipping branches, outcode refreshes, common-plane rejection, pass-through path, and final global callback arguments are translated. 512 deterministic endpoint pairs match all six float32 fields bit-for-bit against direct original execution with a controlled callback stub. Runtime plane producers and the callback's actual renderer effects remain external inputs.",
+    "sources": [
+      "client/render_segment_clip.py",
+      "tests/test_render_segment_clip.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_segment_clip.py",
+      "docs/recovery/render-segment-clip.md"
+    ],
+    "evidence_ids": [
+      "ev_c5211d45205e891adf12a0bfed0f621f83297bcaf3e2298cdc1e6b96f854be95",
+      "ev_31d6c6456a2dd4a061f50fe475bd317121b1b8a11cfd7d8a89f20e2225923dc2"
+    ],
+    "verification_refs": [
+      "tools/verify_render_segment_clip.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-segment-clip.md"
+    ]
   }
 }

@@ -154,6 +154,47 @@ class DynoOracle:
         self.call(0x6cb810, (point, output), instruction_limit=1000)
         return self.cpu.mem_read(output, 1)[0]
 
+    def render_segment_clip(self, first, second, first_code, second_code,
+                            bounds):
+        """Run 0x6cb970 and capture its selected segment callback arguments."""
+        if (len(first) != 6 or len(second) != 6 or len(bounds) != 7 or
+            any(type(code) is not int or not 0 <= code <= 0xff
+                for code in (first_code,second_code)) or
+            type(bounds[6]) is not int or not 0 <= bounds[6] <= 0xff):
+            raise ValueError('segment oracle needs two six-float points, byte codes and mask')
+        self._reset()
+        first_ptr,second_ptr=self.inputs+0x100,self.inputs+0x200
+        capture=self.inputs+0x500
+        callback=self.stub+0x400
+        self.cpu.mem_write(first_ptr,struct.pack('<6f',*first))
+        self.cpu.mem_write(second_ptr,struct.pack('<6f',*second))
+        self.cpu.mem_write(capture,bytes(0x40))
+        code=bytearray(b'\x56\x57')
+        code.extend(b'\x8b\x74\x24\x0c\x89\x35'+struct.pack('<I',capture))
+        code.extend(b'\x8b\x7c\x24\x10\x89\x3d'+struct.pack('<I',capture+4))
+        code.extend(b'\xff\x05'+struct.pack('<I',capture+8))
+        code.extend(b'\xbf'+struct.pack('<I',capture+0x10)+b'\xb9\x06\x00\x00\x00\xf3\xa5')
+        code.extend(b'\x8b\x35'+struct.pack('<I',capture+4))
+        code.extend(b'\xbf'+struct.pack('<I',capture+0x28)+b'\xb9\x06\x00\x00\x00\xf3\xa5')
+        code.extend(b'\x5f\x5e\xc2\x08\x00')
+        self.cpu.mem_write(callback,bytes(code))
+        near_w,far_w,x_min,x_max,y_min,y_max,xy_mask=bounds
+        for address,value in ((0xb424bc,near_w),(0xb424c8,far_w),
+                              (0xb31fbc,x_min),(0x8c672c,x_max),
+                              (0xb31fc0,y_min),(0x8c6730,y_max)):
+            self.cpu.mem_write(address,struct.pack('<f',value))
+        self.cpu.mem_write(0x8c6735,bytes((xy_mask,)))
+        self.cpu.mem_write(0xb31fb4,struct.pack('<I',callback))
+        self.cpu.mem_write(0xb42510,struct.pack('<I',0))
+        self.call(0x6cb970,(first_ptr,second_ptr,first_code,second_code),
+                  instruction_limit=100_000)
+        count=self.cpu.mem_read(capture+8,4)
+        if not struct.unpack('<I',count)[0]:
+            return None
+        raw=bytes(self.cpu.mem_read(capture+0x10,0x30))
+        return (struct.unpack_from('<6f',raw,0),
+                struct.unpack_from('<6f',raw,0x18))
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""
