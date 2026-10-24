@@ -672,9 +672,13 @@ implements the fixed-point translation/quaternion interpolation in `0x407940`
 and the quaternion-to-matrix conversion in `0x553710`; `DecodedTrackWorld`
 exposes aligned per-object samples with `sample_object_poses(tick)`. The native
 oracle [`tools/track_object_animation_oracle.py`](../tools/track_object_animation_oracle.py)
-compared 1,046 sampled calls over all 226 installed animation payloads plus 226
-end-of-sequence checks. Maximum absolute output error was `6.11e-5` across
-float outputs; results matched within a scale-aware tolerance. The preview
+compared 2,074 sampled calls over 450 installed animation payloads plus 450
+end-of-sequence checks. Maximum absolute output error was `6.103515625e-5` at
+the largest tested magnitudes, within the scale-aware tolerance. An additional
+512 randomized direct calls cover the mode-2 early/final boundary, untouched
+outputs on final-interval return, and standalone quaternion-matrix expansion.
+The 512-case `0x42d780` composition now runs the original transform children.
+The preview
 applies the pose at a selected integer tick through `--track-animation-tick`;
 comma and period step the tick interactively. This remains sampled playback,
 without a continuous game clock. Renderer material/visibility state and native

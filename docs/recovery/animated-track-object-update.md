@@ -7,13 +7,18 @@ global time at `0xaa456c`, passing the record's position and its following
 matrix. It then stores `(new_position - old_position) * 0x83b7b8` at `+0x58`.
 Records without an animation pointer are left untouched.
 
-`update_animated_track_objects` models this caller's record traversal and
-delta writes with an explicit position-transform callback. The 512-case
-original comparison patches only the call target for `0x407940`, supplying
-known positions; all `0x78` bytes across up to seven records are compared.
-Thus the loop, gate, argument-independent parent writes, scaling, and untouched
-fields are verified. The animation interpolation and matrix transform remain
-separate dependencies and are not claimed recovered here.
+`update_animated_track_objects` models the caller's record traversal and delta
+writes. `update_animated_track_objects_from_tracks` composes it with the
+recovered mode-1 `0x407940` keyframe sampler. In 512 uninterrupted calls to the
+original `0x42d780`, with real `0x407940` and `0x553710` instructions executing,
+all non-float object bytes match exactly; changed position, matrix, and delta
+fields match within `max(1e-5, abs(expected)*2e-6)`. Cases include empty and
+multi-object arrays, null and nonnull animation pointers, varied times, signed
+fixed-point keyframes, and signed quaternion components.
+
+This composition covers the supplied table and animation records. It does not
+establish how the game constructs or owns those globals, nor the full live
+renderer lifecycle.
 
 Static provenance: retained Ghidra 12.1.4 pseudocode and native body from the
 REA export for `mcity.exe`, SHA-256

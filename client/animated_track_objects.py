@@ -2,6 +2,8 @@
 import math
 import struct
 
+from .track_object_animation import evaluate_track_object_animation
+
 
 RECORD_SIZE = 0x78
 ANIMATION_POINTER = 0x74
@@ -35,9 +37,19 @@ def update_animated_track_objects(records, delta_scale, transform_position):
         animation = struct.unpack_from('<I', record, ANIMATION_POINTER)[0]
         if animation:
             before = struct.unpack_from('<3f', record, 0)
-            after = transform_position(index, bytes(record))
+            transformed = transform_position(index, bytes(record))
+            matrix = None
+            if (isinstance(transformed, (tuple, list)) and len(transformed) == 2
+                    and isinstance(transformed[0], (tuple, list))):
+                after, matrix = transformed
+                if not isinstance(matrix, (tuple, list)) or len(matrix) != 9:
+                    raise ValueError('transform callback matrix must contain nine values')
+                matrix = tuple(_f32(value) for value in matrix)
+                struct.pack_into('<9f', record, 0x0C, *matrix)
+            else:
+                after = transformed
             if not isinstance(after, (tuple, list)) or len(after) != 3:
-                raise ValueError('transform callback must return XYZ')
+                raise ValueError('transform callback must return XYZ or (XYZ, matrix)')
             after = tuple(_f32(value) for value in after)
             struct.pack_into('<3f', record, 0, *after)
             # The original computes with x87 extended precision and rounds on
@@ -47,3 +59,21 @@ def update_animated_track_objects(records, delta_scale, transform_position):
             struct.pack_into('<3f', record, DELTA_OFFSET, *delta)
         result.append(bytes(record))
     return tuple(result)
+
+
+def update_animated_track_objects_from_tracks(records, animations, time_value,
+                                              delta_scale):
+    """Compose the mode-1 0x407940 child with the 0x42d780 caller."""
+    if not isinstance(animations, dict):
+        raise ValueError('animations must map original pointer values to byte views')
+
+    def transform(_index, record):
+        pointer = struct.unpack_from('<I', record, ANIMATION_POINTER)[0]
+        try:
+            animation = animations[pointer]
+        except KeyError as error:
+            raise ValueError(f'missing animation bytes for pointer {pointer:#x}') from error
+        pose = evaluate_track_object_animation(animation, time_value, mode=1)
+        return pose.translation, pose.rotation
+
+    return update_animated_track_objects(records, delta_scale, transform)

@@ -2,13 +2,41 @@
   "0x42d780": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The animated-record loop and scaled position-delta writes are translated over explicit 0x78-byte records. 512 original executions match every record byte with only the 0x407940 transform call replaced by a controlled position writer; transform interpolation and matrix behavior are separate dependencies.",
+    "scope": "The animated-record loop, mode-1 keyframe transform, quaternion matrix, and scaled position-delta writes compose over explicit records. In 512 uninterrupted original executions, all non-float bytes match exactly and transformed position/matrix/delta floats match within max(1e-5, abs(expected)*2e-6). Global ownership and live renderer scheduling remain outside scope.",
     "sources": [
       "client/animated_track_objects.py",
+      "client/track_object_animation.py",
       "tests/test_animated_track_objects.py",
       "tools/native_oracle.py",
       "tools/verify_animated_track_objects.py",
+      "tools/verify_track_animation.py",
+      "tools/track_object_animation_oracle.py",
       "docs/recovery/animated-track-object-update.md"
+    ],
+    "evidence_ids": []
+  },
+  "0x407940": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Mode-1 fixed-point translation and quaternion interpolation are implemented with the observed x87 weight boundaries; mode-2 final-interval return/no-write behavior is included. 512 randomized direct calls cover mode 1, mode 2 before/end of the final interval, and 450 installed animation payloads add 2,074 mode-1 samples plus 450 end checks. Float outputs use scale-aware tolerance; arbitrary negative ticks and malformed records are outside scope.",
+    "sources": [
+      "client/track_object_animation.py",
+      "tests/test_track_object_animation.py",
+      "tools/track_object_animation_oracle.py",
+      "tools/verify_track_animation.py",
+      "docs/recovery/track-animation-interpolation.md"
+    ],
+    "evidence_ids": []
+  },
+  "0x553710": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Quaternion-to-3x3 matrix expansion is implemented with binary32 output stores. 512 direct randomized original calls compare all nine output floats within the declared scale-aware tolerance; the same child also runs in the animation and object-update comparisons.",
+    "sources": [
+      "client/track_object_animation.py",
+      "tests/test_track_object_animation.py",
+      "tools/verify_track_animation.py",
+      "docs/recovery/track-animation-interpolation.md"
     ],
     "evidence_ids": []
   },
