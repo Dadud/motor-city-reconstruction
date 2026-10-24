@@ -108,6 +108,52 @@ class DynoOracle:
         captured=struct.unpack('<8I', self.cpu.mem_read(capture,32))
         return self.cpu.reg_read(self.reg.UC_X86_REG_EAX), output, captured
 
+    def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
+                                 *, previous_mode=0x1234, mode_setting=1):
+        """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""
+        words=(input_word,output_mask,temporary_mode,previous_mode,mode_setting)
+        if (type(input_word) is not int or not 0 < input_word <= 0xffffffff or
+            type(output_mask) is not int or not 0 <= output_mask < 16 or
+            any(type(v) is not int or not 0 <= v <= 0xffffffff
+                for v in (temporary_mode,previous_mode,mode_setting))):
+            raise ValueError('descriptor oracle arguments are outside the supported word domain')
+        self._reset()
+        primary_stub,secondary_stub=self.stub+0x100,self.stub+0x180
+        capture=self.inputs+0x500
+        output_addresses=tuple(self.inputs+0x200+i*4 if output_mask&(1<<i) else 0
+                               for i in range(4))
+        self.cpu.mem_write(self.inputs+0x200,struct.pack('<4I',0xfeed0000,0xfeed0001,
+                                                        0xfeed0002,0xfeed0003))
+        self.cpu.mem_write(capture,bytes(8))
+        primary=bytearray(b'\xff\x05'+struct.pack('<I',capture))
+        primary.extend(b'\x8b\x44\x24\x0c')
+        constants=(0xaabb0001,0xaabb0002,0xaabb0003,0xaabb0004)
+        primary.extend(b'\xc7\x00'+struct.pack('<I',constants[0]))
+        for offset,value in zip((4,8,12),constants[1:]):
+            primary.extend(b'\xc7\x40'+bytes([offset])+struct.pack('<I',value))
+        primary.append(0xc3)
+        secondary=b'\xff\x05'+struct.pack('<I',capture+4)+b'\xc3'
+        self.cpu.mem_write(primary_stub,bytes(primary))
+        self.cpu.mem_write(secondary_stub,secondary)
+        globals_in={
+            0x8c89f0:previous_mode,0xb368c4:1,0xb368c8:1,0xb368cc:mode_setting,
+            0xb368d4:1,0xb368d8:1,0xb368dc:1,0xb368e0:1,0xb368e4:0x31415926,
+            0x8c89f4:12,0x8c89f8:32,0xb368ac:primary_stub,
+            0xb3689c:secondary_stub}
+        for address,value in globals_in.items():
+            self.cpu.mem_write(address,struct.pack('<I',value))
+        primary_table=[0]*32;primary_table[8]=primary_stub
+        secondary_table=[0]*8;secondary_table[2]=secondary_stub
+        self.cpu.mem_write(0x8c8a00,struct.pack('<32I',*primary_table))
+        self.cpu.mem_write(0x8c8a80,struct.pack('<8I',*secondary_table))
+        self.call(0x6f3090,(input_word,*output_addresses,temporary_mode),
+                  instruction_limit=100_000)
+        read=lambda address:struct.unpack('<I',self.cpu.mem_read(address,4))[0]
+        writes=tuple(read(self.inputs+0x200+i*4) if output_mask&(1<<i) else None
+                     for i in range(4))
+        return (writes,read(0x8c89f0),read(0xb368cc),
+                struct.unpack('<2I',self.cpu.mem_read(capture,8)))
+
     def render_mode_state(self, mode_cache, zero_mode_cache, requested_mode):
         """Run 0x6f1a30 and capture its return and two global state words."""
         words = (mode_cache, zero_mode_cache, requested_mode)

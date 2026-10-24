@@ -3028,5 +3028,30 @@
     "doc_refs": [
       "docs/recovery/track-vertex-transform.md"
     ]
+  },
+  "0x6f3090": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The wrapper selects render mode 8 or 0x10008, optionally sets and conditionally restores the shared mode global, dispatches a single vertex through 0x6f28f0, then copies four callback-produced words to independently optional output pointers. 128 direct original calls with controlled native callback stubs compare all optional output writes, the final mode/cache words and primary/secondary callback counts exactly. The callback bodies and real Direct3D/device effects remain external inputs.",
+    "sources": [
+      "client/render_vertex_descriptor.py",
+      "client/render_mode_dispatch.py",
+      "client/render_state.py",
+      "tests/test_render_vertex_descriptor.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_vertex_descriptor.py",
+      "docs/recovery/render-vertex-descriptor.md"
+    ],
+    "evidence_ids": [
+      "ev_4fe53d347652730b69f6b8a62cfd62190d408fa183195d051f8913e267117191",
+      "ev_61a4e6ccff1ff1e4617ca2e51c8aea0625a89b15ff52197f611e4758fe98a860",
+      "ev_ac4d4f3f089b872a82453f4ec24eb1384716cc266b1354301fce15a4471f9910"
+    ],
+    "verification_refs": [
+      "tools/verify_render_vertex_descriptor.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-vertex-descriptor.md"
+    ]
   }
 }
