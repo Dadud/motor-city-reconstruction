@@ -2943,5 +2943,26 @@
     "doc_refs": [
       "docs/recovery/track-cross-section.md"
     ]
+  },
+  "0x6f1100": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The three-component reciprocal-magnitude scaling routine is translated, including zero-vector IEEE NaN outputs. 517 direct original calls compare all three stored binary32 components exactly. The routine is a shared primitive; caller-owned vector memory is supplied as input.",
+    "sources": [
+      "client/matrix_math.py",
+      "tests/test_matrix_math.py",
+      "tools/native_oracle.py",
+      "tools/verify_normalize_vector3.py",
+      "docs/recovery/vector-normalize.md"
+    ],
+    "evidence_ids": [
+      "ev_72702b8acdaada5fd0b0f6288626c5c49747a44ad6b9568b01901214fbada481"
+    ],
+    "verification_refs": [
+      "tools/verify_normalize_vector3.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/vector-normalize.md"
+    ]
   }
 }

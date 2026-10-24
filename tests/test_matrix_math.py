@@ -1,7 +1,8 @@
 import unittest
 
 from client.matrix_math import (atan2_turns, dot_3_f32, integrate_rotation_matrix,
-                                repair_rotation_matrix, transpose_3x3_words)
+                                normalize_vector3, repair_rotation_matrix,
+                                transpose_3x3_words)
 
 
 class MatrixMathTests(unittest.TestCase):
@@ -31,6 +32,12 @@ class MatrixMathTests(unittest.TestCase):
         self.assertEqual(dot_3_f32((1e20, 1, -1e20), (1, 1, 1)), 0.0)
         with self.assertRaises(ValueError):
             dot_3_f32((1, 2), (3, 4))
+
+    def test_normalize_three_component_vector(self):
+        self.assertEqual(normalize_vector3((3, 0, 4)), (0.6000000238418579, 0.0, 0.800000011920929))
+        self.assertTrue(all(value != value for value in normalize_vector3((0, 0, 0))))
+        with self.assertRaises(ValueError):
+            normalize_vector3((1, 2))
 
     def test_rotation_matrix_increment_uses_turns_and_x_y_z_order(self):
         identity=(1,0,0,0,1,0,0,0,1)

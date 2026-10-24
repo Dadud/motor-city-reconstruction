@@ -54,6 +54,16 @@ def vector_length3(values):
     return sqrt((z*z + y*y) + x*x)
 
 
+def normalize_vector3(values):
+    """Translate 0x6f1100: scale a 3D vector by reciprocal x87 magnitude."""
+    values = tuple(f32(value) for value in values)
+    if len(values) != 3:
+        raise ValueError('three-component vector required')
+    length = vector_length3(values)
+    inverse = inf if length == 0.0 else 1.0 / length
+    return tuple(_round_binary32(component * inverse) for component in values)
+
+
 def atan2_turns(y, x):
     """Translate 0x6f1430: x87 FPATAN scaled by the native turns constant."""
     y, x = f32(y), f32(x)
@@ -68,9 +78,7 @@ def normalized_cross3(left, right):
     cross = (f32(left[1] * right[2] - left[2] * right[1]),
              f32(left[2] * right[0] - left[0] * right[2]),
              f32(left[0] * right[1] - left[1] * right[0]))
-    length = vector_length3(cross)
-    inverse = inf if length == 0.0 else 1.0 / length
-    return tuple(_round_binary32(component * inverse) for component in cross)
+    return normalize_vector3(cross)
 
 
 def linear_vector_sequence(first, second, count):

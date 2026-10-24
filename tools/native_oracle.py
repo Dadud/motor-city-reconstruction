@@ -138,6 +138,16 @@ class DynoOracle:
         self._run(self.stub, self.stop, timeout=0, count=1000)
         return struct.unpack('<f', self.cpu.mem_read(self.inputs+16, 4))[0]
 
+    def normalize_vector3(self, values):
+        """Capture the original 0x6f1100 output vector in caller memory."""
+        if len(values) != 3:
+            raise ValueError('vector normalization oracle requires three values')
+        self._reset()
+        self.cpu.mem_write(self.inputs, struct.pack('<3f', *values))
+        output = self.inputs+16
+        self.call(0x6f1100, (self.inputs, output), instruction_limit=2000)
+        return struct.unpack('<3f', self.cpu.mem_read(output, 12))
+
     def atan2_turns(self, y, x):
         """Capture the native 0x6f1430 FPATAN result at a float store."""
         self._reset()
