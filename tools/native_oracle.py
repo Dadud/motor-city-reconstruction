@@ -605,9 +605,9 @@ class DynoOracle:
             payload+index*0x20,0x20)) for index in range(vertex_count))
         return count,payload,aux,records
 
-    def render_polygon_y_max_clip(self, clip_codes, vertex_records,
-                                  y_max, near_w=1.0, far_w=0.0):
-        """Run only the upper-Y pass of 0x475de0 and capture draw-trifan."""
+    def render_polygon_y_clip(self, clip_codes, vertex_records,
+                               boundary, near_w=1.0, far_w=0.0, *, upper):
+        """Run one isolated Y-plane pass of 0x475de0 and capture draw-trifan."""
         if (len(clip_codes)!=3 or len(vertex_records)!=3 or
             any(type(code) is not int or not 0<=code<=0xff
                 for code in clip_codes) or
@@ -631,12 +631,15 @@ class DynoOracle:
         self.cpu.mem_write(capture,bytes(16))
         self.cpu.mem_write(callback,code)
         self.cpu.mem_write(0xb4254c,struct.pack('<I',callback))
+        y_min=-1.0e20 if upper else boundary
+        y_max=boundary if upper else 1.0e20
+        plane_mask=0x08 if upper else 0x04
         for address,value in ((0x83b634,near_w),(0x83b638,far_w),
-                              (0x9938a8,0.1),(0x9938ac,-1.0e20),
+                              (0x9938a8,0.1),(0x9938ac,y_min),
                               (0x9938b0,1.0e20),(0x993bb0,y_max),
                               (0x993848,-1.0e20)):
             self.cpu.mem_write(address,struct.pack('<f',value))
-        self.call(0x475de0,(pointers,code_address,0x08),
+        self.call(0x475de0,(pointers,code_address,plane_mask),
                   instruction_limit=250_000)
         calls=struct.unpack('<I',self.cpu.mem_read(capture,4))[0]
         if not calls:
@@ -648,6 +651,16 @@ class DynoOracle:
         records=tuple(struct.unpack('<8I',self.cpu.mem_read(
             payload+index*0x20,0x20)) for index in range(vertex_count))
         return count,payload,aux,records
+
+    def render_polygon_y_max_clip(self, clip_codes, vertex_records,
+                                  y_max, near_w=1.0, far_w=0.0):
+        return self.render_polygon_y_clip(clip_codes,vertex_records,y_max,
+                                          near_w,far_w,upper=True)
+
+    def render_polygon_y_min_clip(self, clip_codes, vertex_records,
+                                  y_min, near_w=1.0, far_w=0.0):
+        return self.render_polygon_y_clip(clip_codes,vertex_records,y_min,
+                                          near_w,far_w,upper=False)
 
     def random_next(self, words):
         """Run the original shared 0x6f0fa0 generator on six supplied words."""

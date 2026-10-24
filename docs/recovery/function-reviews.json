@@ -1330,7 +1330,7 @@
   "0x475de0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
-    "scope": "The 0x01 near-plane pass is translated for two domains: all three input clip codes share the bit and the function returns 0xffffffff; or exactly one vertex is outside and the function interpolates the two crossing edges, converts the resulting polygon, and dispatches through THRASH_drawtrifan. The shared-plane sentinel matches 256 direct calls; 1,024 additional native calls match triangle count and every eight-word callback vertex across outside-corner positions and color modes. The isolated upper-Y 0x08 pass also matches 512 direct calls across outside corners and color modes. Plane composition is not claimed. Initial global vertex/color setup writes are not modeled; side planes, multi-plane intersections, and later passes remain external.",
+    "scope": "The 0x01 near-plane pass is translated for two domains: all three input clip codes share the bit and the function returns 0xffffffff; or exactly one vertex is outside and the function interpolates the two crossing edges, converts the resulting polygon, and dispatches through THRASH_drawtrifan. The shared-plane sentinel matches 256 direct calls; 1,024 additional native calls match triangle count and every eight-word callback vertex across outside-corner positions and color modes. The isolated upper-Y 0x08 and lower-Y 0x04 passes each match 512 direct calls across outside corners and color modes. Plane composition is not claimed. Initial global vertex/color setup writes are not modeled; X side planes, multi-plane intersections, and later passes remain external.",
     "sources": [
       "client/render_polygon_clip.py",
       "tests/test_render_polygon_clip.py",

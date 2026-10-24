@@ -52,10 +52,11 @@ native calls. For a triangle with exactly one vertex outside that plane, its
 intersection interpolation and final `THRASH_drawtrifan` records are also
 translated. A 1,024-case direct corpus matches callback counts and every
 eight-word output vertex, including each outside-corner position and color
-interpolation mode. The same implementation covers the isolated upper-Y plane
-pass (`0x08`), with 512 direct comparisons across three outside-corner
-positions and color modes. These are separate single-plane domains; their
-composition and multi-plane intersections have not been verified. The global
+interpolation mode. The same implementation covers the isolated upper-Y
+(`0x08`) and lower-Y (`0x04`) passes, with 512 direct comparisons each across
+three outside-corner positions and color modes. These are separate
+single-plane domains; their composition and multi-plane intersections have
+not been verified. The global
 vertex setup writes performed before the
 shared-plane return are not modeled; other clip planes, multi-plane
 intersections, and later passes remain open.
