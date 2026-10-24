@@ -1,7 +1,7 @@
 import unittest
 
 from client.matrix_math import (axis_angle_rotation_matrix, atan2_turns, cross_product3, dot_3_f32, dot_product_batch, integrate_rotation_matrix,
-                                normalize_vector3, repair_rotation_matrix, scale_matrix_rows,
+                                normalize_vector3, repair_rotation_matrix, rotate_matrix_rows_x, scale_matrix_rows,
                                 rotation_y_turns, rotation_z_turns,
                                 transpose_3x3_words)
 
@@ -75,6 +75,13 @@ class MatrixMathTests(unittest.TestCase):
                          (1., 0., 0., 0., 1., 0., 0., 0., 1.))
         with self.assertRaises(ValueError):
             axis_angle_rotation_matrix((1., 2.), 0.25)
+
+    def test_rotate_matrix_rows_about_x(self):
+        matrix = tuple(float(value) for value in range(1, 10))
+        result = rotate_matrix_rows_x(matrix, 0.25)
+        self.assertEqual(result[:3], matrix[:3])
+        for actual, expected in zip(result[3:], (7., 8., 9., -4., -5., -6.)):
+            self.assertAlmostEqual(actual, expected, places=5)
 
     def test_rotation_matrix_repair_preserves_identity_and_corrects_drift(self):
         identity=(1,0,0,0,1,0,0,0,1)
