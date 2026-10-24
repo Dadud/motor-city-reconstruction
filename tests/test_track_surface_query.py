@@ -2,7 +2,8 @@ import unittest
 
 import struct
 
-from client.track_surface_query import cached_quad_hit,nearest_track_neighbor
+from client.track_surface_query import (cached_quad_hit,
+    nearest_track_neighbor,nearest_track_quarter_point)
 
 
 class TrackSurfaceQueryTests(unittest.TestCase):
@@ -26,6 +27,18 @@ class TrackSurfaceQueryTests(unittest.TestCase):
         struct.pack_into('<3f',rows[0],0,0.,0.,0.)
         self.assertEqual(nearest_track_neighbor((0.,0.,0.),
                          tuple(bytes(row) for row in rows),0),0)
+
+    def test_quarter_scan_checks_only_stride_four_and_keeps_first_tie(self):
+        rows=[bytearray(0x54) for _ in range(9)]
+        for row in rows:
+            struct.pack_into('<3f',row,0,100.,0.,100.)
+        struct.pack_into('<3f',rows[4],0,0.,0.,0.)
+        struct.pack_into('<3f',rows[5],0,0.,0.,0.)
+        self.assertEqual(nearest_track_quarter_point(
+            (0.,0.,0.),tuple(bytes(row) for row in rows)),4)
+        struct.pack_into('<3f',rows[0],0,0.,0.,0.)
+        self.assertEqual(nearest_track_quarter_point(
+            (0.,0.,0.),tuple(bytes(row) for row in rows)),0)
 
 
 if __name__=='__main__':

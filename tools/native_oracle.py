@@ -708,6 +708,20 @@ class DynoOracle:
         self.call(0x42d3e0,(point_address,track_index),instruction_limit=10_000)
         return self.cpu.reg_read(self.reg.UC_X86_REG_EAX)
 
+    def nearest_track_quarter_point(self, point, rows):
+        """Run the original nearest sample scan at four-point strides."""
+        if not rows or any(len(row)!=0x54 for row in rows):
+            raise ValueError('track scan oracle requires 0x54-byte rows')
+        self._reset()
+        point_address=self.inputs+0x100
+        table=self.inputs+0x1000
+        self.cpu.mem_write(point_address,struct.pack('<3f',*point))
+        self.cpu.mem_write(table,b''.join(bytes(row) for row in rows))
+        self.cpu.mem_write(0x0097c38c,struct.pack('<I',table))
+        self.cpu.mem_write(0x00988e38,struct.pack('<I',len(rows)))
+        self.call(0x42d4b0,(point_address,),instruction_limit=10_000)
+        return self.cpu.reg_read(self.reg.UC_X86_REG_EAX)
+
     def render_polygon_near_clip(self, clip_codes, vertex_records,
                                  plane_w=0.0, near_w=1.0, far_w=0.0):
         """Run one W-plane polygon pass and capture the draw-trifan payload."""

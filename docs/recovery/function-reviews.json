@@ -1,4 +1,17 @@
 {
+  "0x42d4b0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The nearest XZ track-row scan at four-row strides is translated with float32 distance arithmetic and first-row tie preservation. 512 direct calls match the returned index across varied row counts and query positions.",
+    "sources": [
+      "client/track_surface_query.py",
+      "tests/test_track_surface_query.py",
+      "tools/native_oracle.py",
+      "tools/verify_track_surface_scan.py",
+      "docs/recovery/track-surface-quarter-scan.md"
+    ],
+    "evidence_ids": []
+  },
   "0x42d3e0": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
