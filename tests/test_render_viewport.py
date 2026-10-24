@@ -5,7 +5,8 @@ from client.render_viewport import (RenderViewport, classify_render_position,
                                     configure_render_viewport,
                                     prepare_render_viewport_request,
                                     RenderViewportRequest,
-                                    set_alternate_render_bounds)
+                                    set_alternate_render_bounds,
+                                    set_alternate_render_viewport_words)
 
 
 class RenderViewportTests(unittest.TestCase):
@@ -50,6 +51,19 @@ class RenderViewportTests(unittest.TestCase):
         self.assertEqual(globals_by_address[0x00993840],650.)
         self.assertEqual(globals_by_address[0x00993a48],20.)
         self.assertEqual(globals_by_address[0x00993bb4],500.)
+
+    def test_six_word_alternate_viewport_preserves_all_alias_bits(self):
+        values=(0x00000000,0x80000000,0x7fc12345,0xff800000,
+                0x00000001,0xffffffff)
+        state=set_alternate_render_viewport_words(*values)
+        self.assertEqual(tuple(state.values()),
+                         (values[0],values[2],values[1],values[3],values[5],
+                          values[4],values[0],values[2],values[1],values[3],
+                          values[5],values[4]))
+        with self.assertRaises(ValueError):
+            set_alternate_render_viewport_words(*values[:-1])
+        with self.assertRaises(ValueError):
+            set_alternate_render_viewport_words(*values[:-1],-1)
 
     def test_surface_clamping_produces_callback_edges_and_clip_state(self):
         result=prepare_render_viewport_request(

@@ -218,6 +218,26 @@ def set_alternate_render_bounds(x_min, y_min, x_max, y_max):
     return AlternateRenderBounds(*values)
 
 
+_ALTERNATE_VIEWPORT_GLOBALS=(
+    (0x00993848,0), (0x009938b0,2), (0x009938ac,1), (0x00993bb0,3),
+    (0x00993a4c,5), (0x009938a8,4), (0x0099248c,0), (0x00993840,2),
+    (0x00993a48,1), (0x00993bb4,3), (0x00993844,5), (0x00992488,4),
+)
+
+
+def set_alternate_render_viewport_words(*values):
+    """Translate 0x474d50's six raw-word copies into twelve renderer globals.
+
+    This helper deliberately transports uint32 words instead of converting
+    float values: the native routine performs only MOV operations, so NaNs,
+    signed zero, and arbitrary payload bits are preserved exactly.
+    """
+    if len(values)!=6 or any(type(value) is not int or
+                            not 0<=value<=0xffffffff for value in values):
+        raise ValueError('alternate viewport requires six unsigned 32-bit words')
+    return {address:values[index] for address,index in _ALTERNATE_VIEWPORT_GLOBALS}
+
+
 def classify_render_position(position, viewport_state):
     """Apply the original 0x6cb810 integer-word tests to float32 XYZW data."""
     if len(position) != 4 or any(not math.isfinite(value) for value in position):

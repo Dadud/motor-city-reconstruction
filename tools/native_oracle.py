@@ -230,6 +230,18 @@ class DynoOracle:
         return tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
                      for address in addresses)
 
+    def alternate_render_viewport_words(self, values):
+        """Run 0x474d50 and capture its twelve raw-word global copies."""
+        if len(values)!=6 or any(type(value) is not int or
+                                 not 0<=value<=0xffffffff for value in values):
+            raise ValueError('alternate viewport oracle requires six uint32 words')
+        self._reset()
+        self.call(0x474d50,values,instruction_limit=10_000)
+        addresses=(0x993848,0x9938b0,0x9938ac,0x993bb0,0x993a4c,0x9938a8,
+                   0x99248c,0x993840,0x993a48,0x993bb4,0x993844,0x992488)
+        return tuple(struct.unpack('<I',self.cpu.mem_read(address,4))[0]
+                     for address in addresses)
+
     def render_viewport_request(self, surface_width, surface_height, rect,
                                 *, alternate_path=False):
         """Run 0x5668c0 with its window-query gate disabled and callbacks stubbed."""

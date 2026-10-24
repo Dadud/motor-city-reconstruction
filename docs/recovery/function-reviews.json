@@ -1732,6 +1732,27 @@
       "docs/recovery/render-viewport.md"
     ]
   },
+  "0x474d50": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Copies six raw 32-bit arguments into twelve renderer globals, including exact duplicate bound and W-plane aliases. The MOV-only semantics preserve every input bit, including arbitrary float encodings. 512 randomized direct original calls compare all twelve destination words exactly.",
+    "sources": [
+      "client/render_viewport.py",
+      "tests/test_render_viewport.py",
+      "tools/native_oracle.py",
+      "tools/verify_alternate_render_viewport.py",
+      "docs/recovery/render-viewport.md"
+    ],
+    "evidence_ids": [
+      "ev_690e9a11fe855a5d5fd35d36e962dac24706b7acc20f93ea35198c98fad3cb35"
+    ],
+    "verification_refs": [
+      "tools/verify_alternate_render_viewport.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-viewport.md"
+    ]
+  },
   "0x474ee0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",

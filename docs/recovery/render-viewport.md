@@ -34,3 +34,12 @@ rectangle edges into two renderer-global alias sets. `set_alternate_render_bound
 preserves that exact mapping; the combined verifier compares all eight globals
 against the original binary for each randomized viewport case. Its dossier is
 REA Evidence `ev_f782911e63ddfa5e5226a75f797cf913ac34ecd726c75e06d23fb23fbb18c6ff`.
+
+The same viewport caller invokes `0x474d50` to copy six additional raw 32-bit
+words into twelve renderer globals, including duplicated bounds and W-plane
+values. `set_alternate_render_viewport_words` preserves the exact word bits,
+including NaN payloads and signed zero, because the original body consists only
+of loads and stores. `tools.verify_alternate_render_viewport` compares all
+twelve output words across 512 randomized direct calls.
+
+REA dossier: `ev_690e9a11fe855a5d5fd35d36e962dac24706b7acc20f93ea35198c98fad3cb35`.
