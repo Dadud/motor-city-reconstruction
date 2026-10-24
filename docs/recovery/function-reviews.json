@@ -1,4 +1,18 @@
 {
+  "0x527360": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Visits the selected 200-record trail pool, counts active definition types 1..25, computes the progress byte using wrapped signed-int multiplication and truncating division, decrements lifetime, and clears expired records. 512 direct original calls match all record bytes and 26 counters exactly. Definition records and selected group are supplied; initialization and rendering remain outside scope.",
+    "sources": ["client/particle_update.py", "tests/test_particle_update.py", "tools/verify_particle_trails.py", "docs/recovery/particle-trails.md"],
+    "evidence_ids": []
+  },
+  "0x5273f0": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "Advances the 600-entry particle pool for positive signed half-tick deltas, updating both size channels, source Y acceleration, and XYZ position with the original 1/32 time step. 512 direct original calls match the full pool and last-update global exactly across positive, zero and negative deltas and varied finite fields. Source acceleration is supplied by token; frame integration remains outside scope.",
+    "sources": ["client/particle_update.py", "tests/test_particle_update.py", "tools/verify_particle_motion.py", "docs/recovery/particle-motion.md"],
+    "evidence_ids": []
+  },
   "0x527060": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
