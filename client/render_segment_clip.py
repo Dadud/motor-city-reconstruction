@@ -6,6 +6,24 @@ import struct
 from .tire_response import f32
 
 
+
+def _f32(value):
+    """Round an intermediate like an x87 FSTP, including IEEE specials."""
+    try:
+        return struct.unpack('<f',struct.pack('<f',value))[0]
+    except OverflowError:
+        return math.copysign(float('inf'),value)
+
+
+def _ieee_div(numerator,denominator):
+    if denominator != 0.0:
+        return numerator/denominator
+    if numerator == 0.0:
+        return float('nan')
+    negative=math.copysign(1.0,numerator) != math.copysign(1.0,denominator)
+    return -float('inf') if negative else float('inf')
+
+
 @dataclass(frozen=True)
 class SegmentClipBounds:
     near_w: float
@@ -28,21 +46,21 @@ class SegmentClipBounds:
 
 
 def _interpolate(a, b, ratio):
-    return f32(a - (a - b) * ratio)
+    return _f32(a - (a - b) * ratio)
 
 
 def _interpolate_second(value, first_value, ratio):
-    return f32(value - (first_value - value) * ratio)
+    return _f32(value - (first_value - value) * ratio)
 
 
 def _depth_intersection(point, other, plane, depth, *, second=False):
     denominator=(other[3]-point[3] if second else point[3]-other[3])
-    ratio=(point[3] - plane) / denominator
+    ratio=_ieee_div(point[3] - plane,denominator)
     interpolate=(_interpolate_second if second else _interpolate)
     point[0]=interpolate(point[0],other[0],ratio)
     point[1]=interpolate(point[1],other[1],ratio)
-    point[2]=f32(depth)
-    point[3]=f32(plane)
+    point[2]=_f32(depth)
+    point[3]=_f32(plane)
 
 
 def _refresh_xy_code(point, code, bounds):
@@ -78,8 +96,8 @@ def clip_render_segment(first, second, first_code, second_code, bounds):
     if not isinstance(bounds,SegmentClipBounds):
         raise TypeError('bounds must be SegmentClipBounds')
 
-    a=[f32(value) for value in first]
-    b=[f32(value) for value in second]
+    a=[_f32(value) for value in first]
+    b=[_f32(value) for value in second]
     ca,cb=first_code,second_code
     if ca & cb:
         return None
@@ -109,9 +127,9 @@ def clip_render_segment(first, second, first_code, second_code, bounds):
 
     if ca & 0x30:
         plane=(bounds.x_min if ca & 0x10 else bounds.x_max)
-        ratio=(a[0]-plane)/(a[0]-b[0])
+        ratio=_ieee_div(a[0]-plane,a[0]-b[0])
         a[1]=_interpolate(a[1],b[1],ratio)
-        a[0]=f32(plane)
+        a[0]=_f32(plane)
         ca &= bounds.xy_mask
         if a[1] >= bounds.y_min:
             if a[1] > bounds.y_max:
@@ -122,9 +140,9 @@ def clip_render_segment(first, second, first_code, second_code, bounds):
             return None
     if cb & 0x30:
         plane=(bounds.x_min if cb & 0x10 else bounds.x_max)
-        ratio=(b[0]-plane)/(a[0]-b[0])
+        ratio=_ieee_div(b[0]-plane,a[0]-b[0])
         b[1]=_interpolate_second(b[1],a[1],ratio)
-        b[0]=f32(plane)
+        b[0]=_f32(plane)
         cb &= bounds.xy_mask
         if b[1] >= bounds.y_min:
             if b[1] > bounds.y_max:
@@ -136,12 +154,12 @@ def clip_render_segment(first, second, first_code, second_code, bounds):
 
     if ca & 0x0c:
         plane=(bounds.y_min if ca & 0x04 else bounds.y_max)
-        ratio=(a[1]-plane)/(a[1]-b[1])
+        ratio=_ieee_div(a[1]-plane,a[1]-b[1])
         a[0]=_interpolate(a[0],b[0],ratio)
-        a[1]=f32(plane)
+        a[1]=_f32(plane)
     if cb & 0x0c:
         plane=(bounds.y_min if cb & 0x04 else bounds.y_max)
-        ratio=(b[1]-plane)/(a[1]-b[1])
+        ratio=_ieee_div(b[1]-plane,a[1]-b[1])
         b[0]=_interpolate_second(b[0],a[0],ratio)
-        b[1]=f32(plane)
+        b[1]=_f32(plane)
     return tuple(a),tuple(b)

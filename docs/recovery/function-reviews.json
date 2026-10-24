@@ -1345,6 +1345,32 @@
       "docs/recovery/render-rectangle-copy.md"
     ]
   },
+  "0x482610": {
+    "translation": "partial",
+    "verification": "original-comparison-bounded",
+    "scope": "Integer screen coordinates become two six-word XYZW/attribute endpoints, then both clip codes feed the original segment clipper. The uninitialized +0x14 stack word in each endpoint is preserved as explicit input. 512 direct calls compare callback payloads across pass-through, clipped, and rejected segments, with controlled renderer globals and callback. The state-reset callback and real renderer/device effects remain external.",
+    "sources": [
+      "client/render_segment_construct.py",
+      "client/render_segment_clip.py",
+      "client/render_clip_code.py",
+      "tests/test_render_segment_construct.py",
+      "tools/native_oracle.py",
+      "tools/verify_render_segment_construct.py",
+      "docs/recovery/render-segment-construction.md"
+    ],
+    "evidence_ids": [
+      "ev_85261f5efc9d42bddd423daeabe08e35c79e45b556236c4514f9491ee229d8b3",
+      "ev_bc1bb75ed8e11be2f101f5d5a18a4e1a75d3d134896d0639c2818b1092b3ca19",
+      "ev_c5211d45205e891adf12a0bfed0f621f83297bcaf3e2298cdc1e6b96f854be95",
+      "ev_31d6c6456a2dd4a061f50fe475bd317121b1b8a11cfd7d8a89f20e2225923dc2"
+    ],
+    "verification_refs": [
+      "tools/verify_render_segment_construct.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/render-segment-construction.md"
+    ]
+  },
   "0x4836f0": {
     "translation": "partial",
     "verification": "original-comparison-subregions",
@@ -2918,23 +2944,28 @@
   "0x6cb970": {
     "translation": "python-bounded",
     "verification": "original-comparison-bounded",
-    "scope": "The near/far and X/Y segment clipping branches, outcode refreshes, common-plane rejection, pass-through path, and final global callback arguments are translated. 512 deterministic endpoint pairs match all six float32 fields bit-for-bit against direct original execution with a controlled callback stub. Runtime plane producers and the callback's actual renderer effects remain external inputs.",
+    "scope": "The near/far and X/Y segment clipping branches, outcode refreshes, common-plane rejection, pass-through path, and final callback arguments are translated. The 512-case direct clipper corpus matches all six float32 fields, and a second 512-case composed 0x482610 corpus matches callback payloads including parallel cases that produce IEEE infinity/NaN intermediates. Runtime plane producers and actual renderer callback effects remain external.",
     "sources": [
       "client/render_segment_clip.py",
       "tests/test_render_segment_clip.py",
       "tools/native_oracle.py",
       "tools/verify_render_segment_clip.py",
-      "docs/recovery/render-segment-clip.md"
+      "docs/recovery/render-segment-clip.md",
+      "client/render_segment_construct.py",
+      "tests/test_render_segment_construct.py",
+      "tools/verify_render_segment_construct.py"
     ],
     "evidence_ids": [
       "ev_c5211d45205e891adf12a0bfed0f621f83297bcaf3e2298cdc1e6b96f854be95",
       "ev_31d6c6456a2dd4a061f50fe475bd317121b1b8a11cfd7d8a89f20e2225923dc2"
     ],
     "verification_refs": [
-      "tools/verify_render_segment_clip.py"
+      "tools/verify_render_segment_clip.py",
+      "tools/verify_render_segment_construct.py"
     ],
     "doc_refs": [
-      "docs/recovery/render-segment-clip.md"
+      "docs/recovery/render-segment-clip.md",
+      "docs/recovery/render-segment-construction.md"
     ]
   },
   "0x6efcd0": {

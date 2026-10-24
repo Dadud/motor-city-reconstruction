@@ -317,6 +317,68 @@ class DynoOracle:
                   this_pointer=base+destination_offset,instruction_limit=1000)
         return bytes(self.cpu.mem_read(base,len(memory)))
 
+    def render_segment_construct(self, coordinates, attributes, opaque_words,
+                                 clip_code_bounds, segment_bounds):
+        """Run 0x482610 with explicit bounds, stack residue and callback."""
+        from client.render_clip_code import RenderClipBounds
+        from client.render_segment_clip import SegmentClipBounds
+        if (len(coordinates)!=4 or len(attributes)!=2 or len(opaque_words)!=2 or
+            not isinstance(clip_code_bounds,RenderClipBounds) or
+            not isinstance(segment_bounds,SegmentClipBounds)):
+            raise ValueError('segment constructor inputs are malformed')
+        if any(type(value) is not int or not -0x80000000<=value<=0x7fffffff
+               for value in coordinates):
+            raise ValueError('segment coordinates must be signed 32-bit integers')
+        self._reset()
+        capture=self.inputs+0x500
+        callback=self.stub+0x800
+        code=bytearray(b'\x56\x57')
+        code.extend(b'\x8b\x74\x24\x0c\x89\x35'+struct.pack('<I',capture+0x10))
+        code.extend(b'\x8b\x7c\x24\x10\x89\x3d'+struct.pack('<I',capture+0x14))
+        code.extend(b'\xff\x05'+struct.pack('<I',capture+8))
+        code.extend(b'\xbf'+struct.pack('<I',capture+0x20)+b'\xb9\x06\x00\x00\x00\xf3\xa5')
+        code.extend(b'\x8b\x74\x24\x10\xbf'+struct.pack('<I',capture+0x38))
+        code.extend(b'\xb9\x06\x00\x00\x00\xf3\xa5\x5f\x5e\xc2\x08\x00')
+        self.cpu.mem_write(callback,bytes(code))
+        self.cpu.mem_write(capture,bytes(0x50))
+        self.cpu.mem_write(0x00990124,struct.pack('<I',0))
+        for address,value in (
+            (0xb424c4,clip_code_bounds.x_lower),
+            (0xb424b4,clip_code_bounds.x_upper),
+            (0xb424c0,clip_code_bounds.y_lower),
+            (0xb424a0,clip_code_bounds.y_upper),
+            (0xb424a4,clip_code_bounds.w_upper),
+            (0xb424b0,clip_code_bounds.z_lower)):
+            self.cpu.mem_write(address,struct.pack('<i',value))
+        for address,value in ((0xb424bc,segment_bounds.near_w),
+                              (0xb424c8,segment_bounds.far_w),
+                              (0xb31fbc,segment_bounds.x_min),
+                              (0x8c672c,segment_bounds.x_max),
+                              (0xb31fc0,segment_bounds.y_min),
+                              (0x8c6730,segment_bounds.y_max)):
+            self.cpu.mem_write(address,struct.pack('<f',value))
+        self.cpu.mem_write(0x8c6735,bytes((segment_bounds.xy_mask,)))
+        self.cpu.mem_write(0xb31fb4,struct.pack('<I',callback))
+        self.cpu.mem_write(0xb42510,struct.pack('<I',0))
+        entry_stack=self.frame-0x1000
+        self.cpu.mem_write(entry_stack-0x100,bytes(0x100))
+        self.cpu.mem_write(entry_stack-0x70,struct.pack('<I',opaque_words[0]))
+        self.cpu.mem_write(entry_stack-0x50,struct.pack('<I',opaque_words[1]))
+        self.cpu.mem_write(entry_stack,struct.pack('<7I',self.stop,
+                          *(value&0xffffffff for value in coordinates),
+                          *(value&0xffffffff for value in attributes)))
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESP,entry_stack)
+        self.cpu.reg_write(self.reg.UC_X86_REG_EBP,self.frame)
+        if hasattr(self.cpu,'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self._run(0x482610,self.stop,timeout=0,count=100_000)
+        count=struct.unpack('<I',self.cpu.mem_read(capture+8,4))[0]
+        if not count:
+            return None
+        first=struct.unpack('<6I',self.cpu.mem_read(capture+0x20,24))
+        second=struct.unpack('<6I',self.cpu.mem_read(capture+0x38,24))
+        return first,second
+
     def render_vertex_descriptor(self, input_word, output_mask, temporary_mode,
                                  *, previous_mode=0x1234, mode_setting=1):
         """Run 0x6f3090 with controlled 0x6f28f0 callback implementations."""
