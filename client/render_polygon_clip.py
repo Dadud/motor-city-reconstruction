@@ -99,7 +99,8 @@ def _pack_clipped_polygon(output,near_w,far_value):
 
 def _clip_polygon_plane(vertices, codes, bit, axis, boundary,
                         vary_alpha, vary_rgb, vary_color, *, near_w=0.0,
-                        far_w=0.0, x_min=-1.0e20, x_max=1.0e20):
+                        far_w=0.0, x_min=-1.0e20, x_max=1.0e20,
+                        y_min=-1.0e20, y_max=1.0e20):
     """Clip an ordered polygon once, retaining the native edge traversal."""
     count=len(vertices)
     output=[]
@@ -131,9 +132,9 @@ def _clip_polygon_plane(vertices, codes, bit, axis, boundary,
             code=0
             if axis=='w':
                 code=1
-                if intersection[1]<-1.0e20:
+                if intersection[1]<y_min:
                     code|=4
-                if intersection[1]>1.0e20:
+                if intersection[1]>y_max:
                     code|=8
                 if intersection[0]<x_min:
                     code|=0x10
@@ -141,12 +142,20 @@ def _clip_polygon_plane(vertices, codes, bit, axis, boundary,
                     code|=0x20
             elif axis=='y':
                 code=(current_code&0xcb)|bit
+                if intersection[1]<y_min:
+                    code|=4
+                if intersection[1]>y_max:
+                    code|=8
                 if intersection[0]<x_min:
                     code|=0x10
                 if intersection[0]>x_max:
                     code|=0x20
             else:
                 code=(current_code&0xc7)|bit
+                if intersection[1]<y_min:
+                    code|=4
+                if intersection[1]>y_max:
+                    code|=8
                 if intersection[0]<x_min:
                     code|=0x10
                 if intersection[0]>x_max:
@@ -172,19 +181,92 @@ def clip_triangle_near_then_y_max(clip_codes, vertex_records, *,
     vertices=list(transformed); codes=list(clip_codes)
     if any(code&0x01 for code in codes):
         vertices,codes=_clip_polygon_plane(vertices,codes,0x01,'w',plane_w,
-            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w)
-        codes=[]
-        for vertex in vertices:
-            code=0
-            if vertex[1]<y_min: code|=0x04
-            if vertex[1]>y_max: code|=0x08
-            if vertex[0]<x_min: code|=0x10
-            if vertex[0]>x_max: code|=0x20
-            codes.append(code)
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
     if any(code&0x08 for code in codes):
         vertices,codes=_clip_polygon_plane(vertices,codes,0x08,'y',y_max,
             vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
-            x_min=x_min,x_max=x_max)
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
+    return _pack_clipped_polygon(vertices,near_w,far_w)
+
+
+def clip_triangle_near_then_y_min(clip_codes, vertex_records, *,
+                                  plane_w, y_min, near_w=1.0, far_w=0.0,
+                                  x_min=-1.0e20, x_max=1.0e20,
+                                  y_max=1.0e20):
+    """Translate near-W followed by lower-Y clipping for an input triangle."""
+    if (len(clip_codes)!=3 or len(vertex_records)!=3 or
+        any(type(code) is not int or not 0<=code<=0xff for code in clip_codes) or
+        any(not isinstance(record,(tuple,list)) or len(record)!=10 for record in vertex_records)):
+        raise ValueError('combined clipping requires three codes and 10-word vertices')
+    plane_w=_f32(float(plane_w)); near_w=_f32(float(near_w))
+    far_w=_f32(float(far_w)); y_min=_f32(float(y_min))
+    transformed,vary_alpha,vary_rgb,vary_color=_prepare_triangle(vertex_records)
+    vertices=list(transformed); codes=list(clip_codes)
+    if any(code&0x01 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,0x01,'w',plane_w,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
+    if any(code&0x04 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,0x04,'y',y_min,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
+    return _pack_clipped_polygon(vertices,near_w,far_w)
+
+
+def clip_triangle_near_then_x_plane(clip_codes, vertex_records, *,
+                                    plane_w, x_boundary, upper,
+                                    near_w=1.0, far_w=0.0,
+                                    y_min=-1.0e20,y_max=1.0e20):
+    """Translate near-W followed by one left/right-X clipping pass."""
+    if (len(clip_codes)!=3 or len(vertex_records)!=3 or
+        any(type(code) is not int or not 0<=code<=0xff for code in clip_codes) or
+        any(not isinstance(record,(tuple,list)) or len(record)!=10 for record in vertex_records) or
+        type(upper) is not bool):
+        raise ValueError('combined X clipping requires three codes, records, and a direction')
+    bit=0x20 if upper else 0x10
+    axis='x'
+    plane_w=_f32(float(plane_w)); near_w=_f32(float(near_w))
+    far_w=_f32(float(far_w)); x_boundary=_f32(float(x_boundary))
+    transformed,vary_alpha,vary_rgb,vary_color=_prepare_triangle(vertex_records)
+    vertices=list(transformed); codes=list(clip_codes)
+    if any(code&0x01 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,0x01,'w',plane_w,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_boundary if not upper else -1.0e20,
+            x_max=x_boundary if upper else 1.0e20,y_min=y_min,y_max=y_max)
+    if any(code&bit for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,bit,axis,x_boundary,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_boundary if not upper else -1.0e20,
+            x_max=x_boundary if upper else 1.0e20,y_min=y_min,y_max=y_max)
+    return _pack_clipped_polygon(vertices,near_w,far_w)
+
+
+def clip_triangle_near_then_y_max_then_x_min(
+        clip_codes, vertex_records, *, plane_w, y_max, x_min,
+        near_w=1.0,far_w=0.0,y_min=-1.0e20,x_max=1.0e20):
+    """Translate near-W, upper-Y, then left-X passes in native order."""
+    if (len(clip_codes)!=3 or len(vertex_records)!=3 or
+        any(type(code) is not int or not 0<=code<=0xff for code in clip_codes) or
+        any(not isinstance(record,(tuple,list)) or len(record)!=10 for record in vertex_records)):
+        raise ValueError('combined clipping requires three codes and 10-word vertices')
+    plane_w=_f32(float(plane_w)); near_w=_f32(float(near_w))
+    far_w=_f32(float(far_w)); y_max=_f32(float(y_max)); x_min=_f32(float(x_min))
+    transformed,vary_alpha,vary_rgb,vary_color=_prepare_triangle(vertex_records)
+    vertices=list(transformed); codes=list(clip_codes)
+    if any(code&1 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,1,'w',plane_w,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
+    if any(code&8 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,8,'y',y_max,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
+    if any(code&0x10 for code in codes):
+        vertices,codes=_clip_polygon_plane(vertices,codes,0x10,'x',x_min,
+            vary_alpha,vary_rgb,vary_color,near_w=near_w,far_w=far_w,
+            x_min=x_min,x_max=x_max,y_min=y_min,y_max=y_max)
     return _pack_clipped_polygon(vertices,near_w,far_w)
 
 

@@ -5,6 +5,8 @@ from client.render_polygon_clip import (
     clip_triangle_near_plane, clip_triangle_x_max_plane,
     clip_triangle_x_min_plane,
     clip_triangle_near_then_y_max,
+    clip_triangle_near_then_y_min,clip_triangle_near_then_x_plane,
+    clip_triangle_near_then_y_max_then_x_min,
     clip_triangle_y_max_plane,
     clip_triangle_y_min_plane, reject_triangle_on_shared_near_plane)
 
@@ -58,6 +60,39 @@ class RenderPolygonClipTests(unittest.TestCase):
         self.assertEqual(count,2)
         self.assertEqual(len(clipped),4)
         self.assertTrue(all(_float(vertex[1])<=1. for vertex in clipped))
+
+    def test_near_then_lower_y_composes(self):
+        count,clipped=clip_triangle_near_then_y_min(
+            (5,0,0),self.vertices,plane_w=.1,y_min=-1.)
+        self.assertGreaterEqual(count,1)
+        self.assertTrue(all(_float(vertex[1])>=-1. for vertex in clipped))
+
+    def test_near_then_x_planes_compose(self):
+        for upper,boundary,codes in ((False,-1.,(0x11,0,0)),
+                                     (True,1.,(0x21,0,0))):
+            points=((-3.,0.,.05),(0.,0.,.5),(2.,0.,.75)) if not upper else (
+                   (3.,0.,.05),(0.,0.,.5),(-2.,0.,.75))
+            vertices=tuple((_word(x),_word(y),_word(.2),_word(w),
+                self.vertices[i][4],0,_word(.1),_word(.2),0,0)
+                for i,(x,y,w) in enumerate(points))
+            count,clipped=clip_triangle_near_then_x_plane(
+                codes,vertices,plane_w=.1,x_boundary=boundary,
+                upper=upper)
+            self.assertGreaterEqual(count,1)
+            xs=[_float(vertex[0]) for vertex in clipped]
+            self.assertTrue(all(x>=boundary-1e-6 for x in xs) if not upper
+                            else all(x<=boundary+1e-6 for x in xs))
+
+    def test_near_upper_y_left_x_three_plane_path(self):
+        points=((-3.,3.,.05),(2.,0.,.5),(0.,-2.,.75))
+        vertices=tuple((_word(x),_word(y),_word(.2),_word(w),
+            self.vertices[i][4],0,_word(.1),_word(.2),0,0)
+            for i,(x,y,w) in enumerate(points))
+        count,clipped=clip_triangle_near_then_y_max_then_x_min(
+            (0x19,0,0),vertices,plane_w=.1,y_max=1.,x_min=-1.)
+        self.assertGreaterEqual(count,1)
+        self.assertTrue(all(_float(vertex[1])<=1. for vertex in clipped))
+        self.assertTrue(all(_float(vertex[0])>=-1. for vertex in clipped))
 
     def test_shared_near_plane_rejection_remains_available(self):
         self.assertEqual(reject_triangle_on_shared_near_plane(
