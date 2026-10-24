@@ -166,6 +166,43 @@ def _clip_polygon_plane(vertices, codes, bit, axis, boundary,
     return output,output_codes
 
 
+def clip_triangle_planes(clip_codes, vertex_records, *, plane_mask,
+                         plane_w, y_min, y_max, x_min, x_max,
+                         near_w=1.0, far_w=0.0):
+    """Translate the ordered multi-plane branch in 0x475de0.
+
+    Enabled passes follow the native order: near-W, upper-Y, lower-Y,
+    left-X, right-X. The input records and clip codes are the caller's
+    renderer state; this function preserves vertex traversal and callback
+    packing while applying any selected subset of those five planes.
+    """
+    if (not isinstance(clip_codes,(tuple,list)) or len(clip_codes)!=3 or
+        any(type(code) is not int or not 0<=code<=0xff for code in clip_codes)):
+        raise ValueError('polygon clipping requires three byte clip codes')
+    if (not isinstance(vertex_records,(tuple,list)) or len(vertex_records)!=3 or
+        any(not isinstance(record,(tuple,list)) or len(record)!=10 or any(
+            type(word) is not int or not 0<=word<=0xffffffff
+            for word in record) for record in vertex_records)):
+        raise ValueError('polygon clipping requires three ten-word vertices')
+    if type(plane_mask) is not int or plane_mask&~0x3d:
+        raise ValueError('polygon mask may select only the five clipping planes')
+    near_w,far_w,plane_w,y_min,y_max,x_min,x_max=tuple(
+        _f32(float(value)) for value in
+        (near_w,far_w,plane_w,y_min,y_max,x_min,x_max))
+    transformed,vary_alpha,vary_rgb,vary_color=_prepare_triangle(vertex_records)
+    vertices=list(transformed)
+    codes=list(clip_codes)
+    passes=((0x01,'w',plane_w),(0x08,'y',y_max),
+            (0x04,'y',y_min),(0x10,'x',x_min),(0x20,'x',x_max))
+    for bit,axis,boundary in passes:
+        if plane_mask&bit and any(code&bit for code in codes):
+            vertices,codes=_clip_polygon_plane(
+                vertices,codes,bit,axis,boundary,vary_alpha,vary_rgb,
+                vary_color,near_w=near_w,far_w=far_w,x_min=x_min,
+                x_max=x_max,y_min=y_min,y_max=y_max)
+    return _pack_clipped_polygon(vertices,near_w,far_w)
+
+
 def clip_triangle_near_then_y_max(clip_codes, vertex_records, *,
                                   plane_w, y_max, near_w=1.0, far_w=0.0,
                                   x_min=-1.0e20, x_max=1.0e20,

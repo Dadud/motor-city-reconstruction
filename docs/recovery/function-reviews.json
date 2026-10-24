@@ -1767,8 +1767,8 @@
   },
   "0x475de0": {
     "translation": "partial",
-    "verification": "original-comparison-subregions",
-    "scope": "The 0x01 near-plane pass is translated for two domains: all three input clip codes share the bit and the function returns 0xffffffff; or exactly one vertex is outside and the function interpolates the two crossing edges, converts the resulting polygon, and dispatches through THRASH_drawtrifan. The shared-plane sentinel matches 256 direct calls; 1,024 additional native calls match triangle count and every eight-word callback vertex across outside-corner positions and color modes. The isolated upper-Y 0x08, lower-Y 0x04, left-X 0x10, and right-X 0x20 passes each match 512 direct calls. Composed near-W plus upper-Y, lower-Y, left-X, and right-X each match 512 direct calls; near-W plus upper-Y plus left-X also matches 512 calls. Each comparison checks triangle count and all eight callback words for each output vertex; initial composition cases isolate one outside input vertex per plane while exercising generated vertices on subsequent passes. Other multi-plane combinations, caller setup writes, and device rendering remain external.",
+    "verification": "original-comparison-bounded",
+    "scope": "The near-W, upper/lower-Y, and left/right-X clipping passes are translated in native order, including isolated crossing domains, generated intersections, callback packing, and selected compositions. 512 direct original calls exercise all 31 nonempty subsets of those five planes with multiple outside input vertices and later passes consuming generated intersections; all callback triangle counts and eight-word output records match exactly. Separate corpora also compare the all-three-shared-near sentinel (256 calls), near-W crossing (1,024 calls), each isolated axis pass and supported two-/three-plane compositions (512 calls each), including color modes. The supported mask domain excludes the independent far-depth outcode bit; caller setup writes and actual device rendering remain external.",
     "sources": [
       "client/render_polygon_clip.py",
       "tests/test_render_polygon_clip.py",
@@ -1777,6 +1777,7 @@
       "tools/verify_render_polygon_near_plane.py",
       "tools/verify_render_polygon_y_plane.py",
       "tools/verify_render_polygon_x_plane.py",
+    "tools/verify_render_polygon_multiplane.py",
       "docs/recovery/render-rectangle-border.md",
       "docs/recovery/render-polygon-clip.md"
     ]
