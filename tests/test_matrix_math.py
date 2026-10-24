@@ -1,10 +1,15 @@
 import unittest
 
-from client.matrix_math import (dot_3_f32, integrate_rotation_matrix,
+from client.matrix_math import (atan2_turns, dot_3_f32, integrate_rotation_matrix,
                                 repair_rotation_matrix, transpose_3x3_words)
 
 
 class MatrixMathTests(unittest.TestCase):
+    def test_x87_atan2_returns_turns_with_native_constant(self):
+        self.assertEqual(atan2_turns(1, 0), 1.5707963267948966*0.15915493667125702)
+        self.assertEqual(atan2_turns(0, 1), 0.0)
+        self.assertAlmostEqual(atan2_turns(-1, -1), -0.375, places=7)
+
     def test_transposes_nine_words(self):
         self.assertEqual(transpose_3x3_words(range(9)), (0, 3, 6, 1, 4, 7, 2, 5, 8))
 

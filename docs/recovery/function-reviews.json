@@ -2920,5 +2920,28 @@
     "doc_refs": [
       "docs/recovery/track-cross-section.md"
     ]
+  },
+  "0x6f1430": {
+    "translation": "python-bounded",
+    "verification": "original-comparison-bounded",
+    "scope": "The x87 FPATAN helper converts two finite binary32 inputs to turns using the native double scale constant. 1,024 direct original calls (including axes, signed zeros, the zero pair, all quadrants and randomized values) matched the Python result bit-for-bit after the native float store.",
+    "sources": [
+      "client/matrix_math.py",
+      "client/track_cross_section.py",
+      "client/collision_terrain.py",
+      "client/startup_record.py",
+      "tests/test_matrix_math.py",
+      "tools/verify_atan2_turns.py",
+      "tools/native_oracle.py"
+    ],
+    "evidence_ids": [
+      "ev_337876610afd03208f28975030022110476923a7ba6b011aa6a85703204b1912"
+    ],
+    "verification_refs": [
+      "tools/verify_atan2_turns.py"
+    ],
+    "doc_refs": [
+      "docs/recovery/track-cross-section.md"
+    ]
   }
 }

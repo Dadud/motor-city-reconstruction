@@ -7,10 +7,10 @@ The original FUN_00483450 scene-area query return is an explicit input; its
 zero branch selects the translated fallback formula. Model-marker search and
 body-shape inertia scales are translated inline.
 """
-import math
 import struct
 from fractions import Fraction
 from client.acceleration_table import acceleration_table
+from client.matrix_math import atan2_turns
 from client.gear_binding import bind_gear_tables
 from client.gear_force_table import gear_force_table
 from client.startup_balance import (startup_balance_coefficient,
@@ -51,7 +51,7 @@ def _turns(rise, run):
 
     Returns the raw binary64 result; callers apply the FSTP rounding where
     the original stores one."""
-    return math.atan2(rise, run)*0.15915493667125702
+    return atan2_turns(rise, run)
 
 
 def _turn_limit(delta):

@@ -19,6 +19,12 @@ The call depends on shared cross-product normalization `0x6f10d0`, separately
 recovered in [normalized-cross.md](normalized-cross.md). REA function dossier:
 `ev_683e3a85b3a542a68284aadadd85f600b761b0e7cb5f50a984abe8c7c05cb1cd`.
 
+The shared `atan2_turns` in `client/matrix_math.py` now translates `0x6f1430`,
+the x87 `FPATAN` helper used by this routine, collision terrain response, and
+startup-record generation. It matched 1,024 direct original calls bit-for-bit
+after the same binary32 result store used by callers. REA dossier:
+`ev_337876610afd03208f28975030022110476923a7ba6b011aa6a85703204b1912`.
+
 The same module also translates its larger caller `0x495800` as
 `build_track_grid_strips`. It subtracts the object's vertical origin, recenters
 the section around a 16-cell phase using the original truncating `__ftol`

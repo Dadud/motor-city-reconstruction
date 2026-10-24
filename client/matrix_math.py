@@ -1,5 +1,5 @@
 """Bit-preserving matrix helpers recovered from the client math library."""
-from math import cos, inf, sin, sqrt
+from math import atan2, cos, inf, sin, sqrt
 import struct
 
 from .tire_response import f32
@@ -52,6 +52,12 @@ def vector_length3(values):
         raise ValueError('three-component vector required')
     x, y, z = values
     return sqrt((z*z + y*y) + x*x)
+
+
+def atan2_turns(y, x):
+    """Translate 0x6f1430: x87 FPATAN scaled by the native turns constant."""
+    y, x = f32(y), f32(x)
+    return atan2(y, x) * 0.15915493667125702
 
 
 def normalized_cross3(left, right):

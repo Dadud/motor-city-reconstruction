@@ -2,7 +2,7 @@
 import math
 import struct
 
-from .matrix_math import normalized_cross3
+from .matrix_math import atan2_turns, normalized_cross3
 from .tire_response import f32
 
 
@@ -64,8 +64,7 @@ def build_track_cross_section(object_transform, basis, vertical_offset, origin_s
         direction = (_round32(direction[0] / magnitude), 0.0,
                      _round32(direction[2] / magnitude))
 
-    angle = (math.atan2(direction[0], direction[2]) *
-             0.15915493667125702 + 0.5 + angle_offset)
+    angle = (atan2_turns(direction[0], direction[2]) + 0.5 + angle_offset)
     angle = wrap_track_turn(_round32(angle))
 
     cross = normalized_cross3(tuple(view_reference[i] - direction[i]

@@ -138,6 +138,26 @@ class DynoOracle:
         self._run(self.stub, self.stop, timeout=0, count=1000)
         return struct.unpack('<f', self.cpu.mem_read(self.inputs+16, 4))[0]
 
+    def atan2_turns(self, y, x):
+        """Capture the native 0x6f1430 FPATAN result at a float store."""
+        self._reset()
+        y_word = struct.unpack('<I', struct.pack('<f', y))[0]
+        x_word = struct.unpack('<I', struct.pack('<f', x))[0]
+        code = (b'\x68'+struct.pack('<I', x_word)+
+                b'\x68'+struct.pack('<I', y_word)+b'\xe8'+b'\0'*4+
+                b'\x83\xc4\x08\xd9\x1d'+struct.pack('<I', self.inputs+8)+b'\xc3')
+        call_at = self.stub+10
+        code = code[:11]+struct.pack('<i', 0x6f1430-(call_at+5))+code[15:]
+        self.cpu.mem_write(self.stub, code)
+        stack = self.frame-0x1000
+        self.cpu.mem_write(stack, struct.pack('<I', self.stop))
+        self.cpu.reg_write(self.reg.UC_X86_REG_ESP, stack)
+        self.cpu.reg_write(self.reg.UC_X86_REG_EBP, self.frame)
+        if hasattr(self.cpu, 'ctl_flush_tb'):
+            self.cpu.ctl_flush_tb()
+        self._run(self.stub, self.stop, timeout=0, count=1000)
+        return struct.unpack('<f', self.cpu.mem_read(self.inputs+8, 4))[0]
+
     def normalized_cross3(self, left, right):
         """Run the original 0x6f10d0 cross-and-normalize helper."""
         if len(left) != 3 or len(right) != 3:

@@ -6,6 +6,7 @@ from .collision_impulse import plane_height
 from .track_plane import plane_from_query_record
 from .track_surface_lookup import TrackSurfaceWorld, track_surface_lookup
 from .tire_response import f32
+from .matrix_math import atan2_turns
 
 
 # Decoded uint32 triangle-index tables read from mcity.exe's shape dispatch:
@@ -542,7 +543,7 @@ def specialized_quad_contact_selection(
 
 def _terrain_turn_angle(y, x):
     """The normalized ``fpatan(y, x)`` helper at ``0x6f1430``."""
-    return math.atan2(float(y), float(x)) * 0.15915493667125702
+    return atan2_turns(y, x)
 
 
 def _terrain_response_basis(vector, basis):
