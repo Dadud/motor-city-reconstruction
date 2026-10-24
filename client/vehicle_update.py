@@ -199,7 +199,7 @@ def update_vehicle(state, execute):
     if s.tilted or s.attitude<f32(.85):
         for w in s.wheels:
             if not w.contact or w.force[1]==0:w.force=ZERO
-        call('tilted_motion');call('refresh_motion');project_velocity();tail()
+        call('tilted_motion');call('engine_system_update');project_velocity();tail()
         return VehicleUpdateOutput(s,tuple(calls),'tilted')
     if s.flags&0x202:
         call('flagged_motion')
@@ -218,7 +218,7 @@ def update_vehicle(state, execute):
         s.local_angular_acceleration=(moment,0.,0.)
         angular_world()
         s.angular_velocity=_increment(s.angular_velocity,s.angular_acceleration)
-        call('refresh_motion');tail()
+        call('engine_system_update');tail()
         return VehicleUpdateOutput(s,tuple(calls),'low_support')
     s.local_acceleration=transform(s.linear_acceleration,s.to_local)
     extra=transform(s.extra_acceleration,s.to_local)

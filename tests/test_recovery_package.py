@@ -32,6 +32,20 @@ class RecoveryPackageTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 runner_path(directory, 'Release', 'mco_missing_compare')
 
+    def test_reviewed_comparison_arguments_reach_original_and_native_runners(self):
+        package = dict(comparisons=[
+            dict(module='tools.original', original=True, arguments=['--vehicle-system']),
+            dict(module='tools.native', runner='mco_engine_update_compare',
+                 arguments=['--vehicle-system'])], targets=['mco_engine_update_compare'])
+        with tempfile.TemporaryDirectory() as temporary:
+            directory=Path(temporary);(directory/'Release').mkdir()
+            (directory/'Release/mco_engine_update_compare.exe').touch()
+            with patch('tools.recovery_package.sys.platform', 'win32'):
+                commands, skipped = check_commands(package, directory, 'Release', Path('mcity.exe'))
+        self.assertEqual(skipped, [])
+        self.assertEqual(commands[0][-2:], ['mcity.exe', '--vehicle-system'])
+        self.assertEqual(commands[1][-1], '--vehicle-system')
+
 
 if __name__ == '__main__':
     unittest.main()

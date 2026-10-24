@@ -82,6 +82,11 @@ components, transforms them back, and clears world linear/angular acceleration.
 With identity matrices, velocity `(1,2,3)` becomes `(0,2,0)` and angular velocity
 `(4,5,6)` becomes `(4,0,6)` in disabled mode.
 
+The tilted and low-support branches also call `0x548260`, now recovered and
+named `engine_system_update`; the exact recovered body is documented in
+[vehicle-path engine controller](engine-system-update.md). It was previously
+mislabelled `refresh_motion` based on call position alone.
+
 Normal tilted/low-support/supported paths run post-update work, followed by a
 short-circuited optional follow-up. Inactive, flagged and alternate paths bypass
 that tail. The [scheduler](../scheduler.md) separately establishes list ordering

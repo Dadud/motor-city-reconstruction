@@ -18,6 +18,8 @@ def verify(directory):
         if not runner.is_file(): runner=runner.with_suffix('.exe')
         module=importlib.import_module(f'tools.native_{name}_compare')
         results[name]=module.verify(runner)
+        if name=='engine_update':
+            results['engine_system_update']=module.verify(runner,vehicle_system=True)
     orientation=directory/'mco_wheel_force_orientation_compare'
     if not orientation.is_file(): orientation=orientation.with_suffix('.exe')
     results['wheel_force_orientation']=importlib.import_module('tools.native_body_moments_compare').verify(orientation,'orientation')

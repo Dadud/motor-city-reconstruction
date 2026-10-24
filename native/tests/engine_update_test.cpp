@@ -3,6 +3,7 @@
 #undef NDEBUG
 #endif
 #include <cassert>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
@@ -36,6 +37,16 @@ int main() {
    assert(o.state.rpm_state.rpm==501);assert(o.state.effective_torque==100);
    assert(o.calls.size()==4 && o.calls[2].stage=="gear_link" && o.calls[3].stage=="drivetrain_loads");
    assert(o.state.engagement==.123456789f); }
+ { auto s=base();s.vehicle_flags=4;s.engagement=.75f;
+   auto o=mco::update_engine_system(s,[](const mco::EngineCall &c,mco::EngineUpdateState &state){
+     if(c.stage=="control_update")state.engagement=.6f;return 0;
+   });
+   assert(o.state.engagement==.25f);assert(o.calls.front().stage=="control_update");
+   auto empty=std::find_if(o.calls.begin(),o.calls.end(),[](const auto &c){return c.stage=="empty_engine_hook";});
+   auto torque=std::find_if(o.calls.begin(),o.calls.end(),[](const auto &c){return c.stage=="torque_update";});
+   assert(empty!=o.calls.end() && torque!=o.calls.end() && empty<torque); }
+ { auto s=base();s.vehicle_flags=0;s.engagement=.75f;auto o=mco::update_engine_system(s,no_effect);
+   assert(o.calls.size()==1 && o.calls[0].stage=="control_update");assert(o.state.engagement==.25f); }
  { auto s=base();s.engine_flags=0;s.vehicle_flags=3;s.current_counter=10;
    auto o=mco::update_engine(s,[](const mco::EngineCall &c,mco::EngineUpdateState &state){
      if(c.stage=="interface_query")return c.argument==8?1:0;

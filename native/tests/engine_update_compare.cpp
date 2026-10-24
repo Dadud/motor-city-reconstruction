@@ -40,7 +40,8 @@ void mutate(mco::EngineUpdateState &s,const std::string &n,double v) {
 }
 struct Mutation {std::string stage,name;double value;};
 }
-int main(){
+int main(int argc,char **argv){
+ bool vehicle_system=argc>1 && std::string(argv[1])=="--vehicle-system";
  std::cout<<std::setprecision(17);
  while(std::cin.peek()!=EOF){
   mco::EngineUpdateState s;read(s);if(!std::cin)return std::cin.eof()?0:2;
@@ -49,11 +50,12 @@ int main(){
   std::cin>>n;std::vector<Mutation> mutations;
   for(int i=0;i<n;++i){Mutation m;std::cin>>m.stage>>m.name>>m.value;mutations.push_back(m);}
   if(!std::cin)return 2;
-  auto out=mco::update_engine(s,[&](const mco::EngineCall &c,mco::EngineUpdateState &state){
+  auto execute=[&](const mco::EngineCall &c,mco::EngineUpdateState &state){
    for(const auto &m:mutations)if(m.stage==c.stage)mutate(state,m.name,m.value);
    std::string key=c.stage=="interface_query"?"query_"+std::to_string(*c.argument):c.stage;
    auto it=observations.find(key);return it==observations.end()?0:it->second;
-  });
+  };
+  auto out=vehicle_system?mco::update_engine_system(s,execute):mco::update_engine(s,execute);
   write(out.state);std::cout<<' '<<out.calls.size();for(const auto &c:out.calls)std::cout<<' '<<c.stage<<' '<<c.argument.value_or(-1);std::cout<<'\n';
   std::cin>>std::ws;
  }

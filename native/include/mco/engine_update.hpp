@@ -30,4 +30,7 @@ std::int32_t signed_engine_counter(std::int64_t value);
 double curve_torque_at_rpm(const std::vector<float> &table, std::int32_t rpm);
 // Recovered dispatcher, RPM and curve lookup. Every other child requires supplied behavior.
 EngineUpdateOutput update_engine(EngineUpdateState state, const EngineStageExecutor &execute);
+// Vehicle-path engine controller at original entry 0x548260. This executes
+// the recovered control prelude and retains the observed 0x548660 RET call.
+EngineUpdateOutput update_engine_system(EngineUpdateState state, const EngineStageExecutor &execute);
 }

@@ -11,7 +11,7 @@ from tools.native_oracle import DynoOracle
 
 STAGES={
     0x55fc30:'global_mode',0x54ebe0:'prepare_vehicle',0x53d320:'predict_support',
-    0x427da0:'support_bookkeeping',0x535fe0:'tilted_motion',0x548260:'refresh_motion',
+    0x427da0:'support_bookkeeping',0x535fe0:'tilted_motion',0x548260:'engine_system_update',
     0x402a20:'flagged_motion',0x536250:'body_forces',0x540c30:'linear_update',
     0x536480:'body_moment_inputs',0x53d920:'normal_loads',0x53e390:'grip_observation',
     0x55cfc0:'vehicle_gate',0x53e030:'project_wheels',0x540fd0:'control_update',

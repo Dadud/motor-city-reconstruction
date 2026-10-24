@@ -1,7 +1,7 @@
 from dataclasses import replace
 import unittest
 
-from client.engine_update import curve_torque_at_rpm, signed_counter, update_engine
+from client.engine_update import curve_torque_at_rpm, signed_counter, update_engine, update_engine_system
 from client.tire_response import f32
 from tools.engine_update_oracle import cases, SuppliedEngineStages
 
@@ -69,3 +69,21 @@ class EngineUpdateTests(unittest.TestCase):
         self.assertEqual([c.stage for c in output.calls],
                          ['torque_update', 'curve_lookup', 'gear_link', 'drivetrain_loads'])
         self.assertEqual(output.state.rpm_state.normalized_rpm, f32(250/6800))
+
+    def test_vehicle_engine_entry_runs_control_before_clutch_cap(self):
+        state = replace(self.state(), vehicle_flags=4, engagement=.75)
+        def execute(call, current):
+            if call.stage == 'control_update': current.engagement = .6
+            return 0
+        output = update_engine_system(state, execute)
+        self.assertEqual(output.state.engagement, f32(.25))
+        self.assertEqual([c.stage for c in output.calls[:3]],
+                         ['control_update', 'engine_setup', 'engine_control'])
+        self.assertLess(output.calls.index(next(c for c in output.calls if c.stage == 'empty_engine_hook')),
+                        output.calls.index(next(c for c in output.calls if c.stage == 'torque_update')))
+
+    def test_vehicle_engine_entry_preserves_no_start_stage_order(self):
+        state = replace(self.state(), vehicle_flags=0, engagement=.75)
+        output = update_engine_system(state, SuppliedEngineStages({}))
+        self.assertEqual([c.stage for c in output.calls], ['control_update'])
+        self.assertEqual(output.state.engagement, f32(.25))

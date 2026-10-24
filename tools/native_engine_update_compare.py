@@ -3,7 +3,7 @@ import argparse
 import json
 import math
 import subprocess
-from client.engine_update import update_engine
+from client.engine_update import update_engine, update_engine_system
 from tools import engine_update_oracle as oracle
 
 RPM_INTS=('idle_rpm','configured_max_rpm','target_rpm','rpm','limiter_rpm','gear_index','enabled')
@@ -18,8 +18,8 @@ def numbers(s):
 
 def state_values(s):return integers(s)+numbers(s)+[len(s.torque_curve),*s.torque_curve]
 
-def verify(runner):
-    corpus=list(oracle.cases())+list(getattr(oracle,'mutation_cases',lambda:())());lines=[]
+def verify(runner,vehicle_system=False):
+    corpus=list(oracle.system_cases() if vehicle_system else list(oracle.cases())+list(oracle.mutation_cases()));lines=[]
     for s,o in corpus:
         values=state_values(s);observations={k:v for k,v in o.items() if k!='mutations'}
         values.append(len(observations))
@@ -30,12 +30,12 @@ def verify(runner):
         values.append(len(mutations))
         for m in mutations:values.extend(m)
         lines.append(' '.join(v if isinstance(v,str) else format(v,'.17g') for v in values))
-    result=subprocess.run([str(runner)],input='\n'.join(lines)+'\n',capture_output=True,text=True,check=True,timeout=30)
+    result=subprocess.run([str(runner),*(('--vehicle-system',) if vehicle_system else ())],input='\n'.join(lines)+'\n',capture_output=True,text=True,check=True,timeout=90)
     output=result.stdout.splitlines()
     if len(output)!=len(corpus):raise AssertionError('engine output count')
     maximum=0.
     for i,(line,(s,o)) in enumerate(zip(output,corpus)):
-        out=update_engine(s,oracle.SuppliedEngineStages(o));tokens=line.split()
+        out=(update_engine_system if vehicle_system else update_engine)(s,oracle.SuppliedEngineStages(o));tokens=line.split()
         expected=integers(out.state);actual=list(map(int,tokens[:len(expected)]));del tokens[:len(expected)]
         if actual!=expected:raise AssertionError((i,'integer state',actual,expected))
         expected=numbers(out.state);actual=list(map(float,tokens[:len(expected)]));del tokens[:len(expected)]
@@ -47,7 +47,7 @@ def verify(runner):
         if curve!=list(out.state.torque_curve):raise AssertionError((i,'curve mutation'))
         n=int(tokens.pop(0));calls=[(tokens[j*2],int(tokens[j*2+1])) for j in range(n)]
         if len(tokens)!=n*2 or calls!=[(c.stage,-1 if c.argument is None else c.argument) for c in out.calls]:raise AssertionError((i,'ordered calls',calls,out.calls))
-    return {'cases':len(corpus),'maximum_absolute_error':maximum,'scope':'native/Python full dispatcher with recovered RPM and curve; explicit supplied children'}
+    return {'cases':len(corpus),'maximum_absolute_error':maximum,'scope':('native/Python 0x548260 vehicle engine controller with recovered RPM/curve and explicit child boundaries' if vehicle_system else 'native/Python full 0x545af0 dispatcher with recovered RPM and curve; explicit supplied children')}
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('runner');print(json.dumps(verify(p.parse_args().runner)))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('runner');p.add_argument('--vehicle-system',action='store_true');args=p.parse_args();print(json.dumps(verify(args.runner,args.vehicle_system)))

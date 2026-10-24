@@ -18,7 +18,7 @@ int main() {
     std::array<std::byte,4> active{};
     std::array<std::byte,128> keys{};
     mco::detail::write_word(globals,target_window,7);
-    mco::detail::write_word(globals,hooks_enabled,0);
+    mco::detail::write_word(globals,policy_enabled,0);
     mco::detail::write_word(active,0,0);
     keys.fill(std::byte{0x5a});
     Calls calls{};

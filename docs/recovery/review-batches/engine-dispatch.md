@@ -14,6 +14,7 @@ reviews present at audit time.
 | `0x546330` | Condition/gate body, working name `gear_link` | Part of 1,136 combined condition/thermal cases |
 | `0x5464c0` | Thermal body, working name `drivetrain_loads` | Part of the same 1,136 cases |
 | `0x546e70` | Driving RPM helper | 2,592 cases; no calls replaced |
+| `0x548260` | Vehicle-path engine controller, including control prelude and engagement cap | 6,954 cases; actual RPM/curve children and explicit supplied side-effect boundaries |
 
 The connected engine pipeline additionally passes **514 scenarios and 1,696
 persistent ticks**, starting at the original dispatcher and retaining the real

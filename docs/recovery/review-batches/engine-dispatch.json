@@ -200,6 +200,53 @@
         "Authentic per-gear speed factors and engagement/input producers; host exponential equivalence outside recorded corpus; invalid/overflow behavior."
       ],
       "acceptance": "Replay 2,592 original/native cases and persistent engine pipeline; connect actual gearing and initialized-car inputs."
+    },
+    "0x548260": {
+      "translation": "python-and-native-bounded",
+      "verification": "original-comparison-bounded",
+      "subsystem": "engine-dispatch-and-consumers",
+      "owner": "engine-dispatch",
+      "scope": "Complete vehicle-path engine controller with the 0x540fd0 control prelude, 0.25 engagement cap, shared engine-mode dispatch, exact ordered 0x548660 RET call, recovered RPM update and torque-curve lookup. Fresh original comparison passes 6,954 cases; C++ matches Python on the same corpus with zero observed numeric error. Control update and other side-effecting children remain explicit supplied boundaries.",
+      "sources": [
+        "client/engine_update.py",
+        "client/vehicle_update.py",
+        "native/include/mco/engine_update.hpp",
+        "native/src/engine_update.cpp",
+        "native/src/vehicle_update.cpp",
+        "tools/engine_update_oracle.py",
+        "tools/native_engine_update_compare.py",
+        "docs/calculations/engine-system-update.md"
+      ],
+      "evidence_ids": [
+        "ev_65c6b52d77b5116b8b714487deed906d81ed9282fe0ef56ec669b6f09d8f363a"
+      ],
+      "dependencies": [
+        "0x540fd0",
+        "0x540070",
+        "0x545ec0",
+        "0x546130",
+        "0x546330",
+        "0x5464c0",
+        "0x546ad0",
+        "0x546c50",
+        "0x546e70",
+        "0x547120",
+        "0x547c60",
+        "0x548050",
+        "0x548f00",
+        "0x548fa0",
+        "0x55ce20",
+        "0x55cee0"
+      ],
+      "shared_types": [
+        "EngineUpdateState",
+        "DrivingEngineRPM"
+      ],
+      "supported_domain": "The reviewed direct corpus domain of the shared engine state, signed activation/start counters, selector values 0..7, finite RPM/curve fields, and supplied query/effect observations. Original malformed-pointer behavior and unsupported curve-table accesses remain excluded.",
+      "unresolved": [
+        "Authentic control update integration at this boundary; real interface/service observations and side effects; full stock-car producers and complete vehicle/gameplay acceptance."
+      ],
+      "acceptance": "Run tools.engine_update_oracle with --vehicle-system and tools.native_engine_update_compare with --vehicle-system; preserve exact call order and tracked engine/configuration bytes."
     }
   }
 }

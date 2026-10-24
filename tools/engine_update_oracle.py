@@ -5,12 +5,13 @@ import itertools
 import json
 import math
 import struct
-from client.engine_update import EngineUpdateState,update_engine
+from client.engine_update import EngineUpdateState,update_engine,update_engine_system
 from client.driving_engine_rpm import DrivingEngineRPM
 from tools.driving_engine_rpm_oracle import FIELDS,INTS
 from tools.native_oracle import DynoOracle
 
 STAGES={0x55ce20:'activation_counter',0x540070:'enable_signal',0x55cee0:'start_counter',
+    0x540fd0:'control_update',0x548660:'empty_engine_hook',
     0x545ec0:'engine_setup',0x546130:'engine_control',0x546330:'gear_link',0x5464c0:'drivetrain_loads',
     0x546ad0:'engagement_inputs',0x547120:'torque_update',0x547c60:'wheel_drive',0x548050:'engine_finalize',
     0x548fa0:'idle_regulation',0x546c50:'start_acceleration',0x546e70:'rpm_update',0x548f00:'curve_lookup'}
@@ -72,6 +73,13 @@ def mutation_cases():
                  'mutations':{stage:((name,value),)}}
 
 
+def system_cases():
+    """The 0x548260 wrapper's control prelude and engagement boundary."""
+    for s,observations in itertools.chain(cases(),mutation_cases()):
+        for engagement in (0.,.1,.25,.25000003,.5,1.):
+            yield replace(s,engagement=engagement),observations
+
+
 def encode(s,config):
     image=bytearray([0xa5])*0x1d00
     for name,off in FIELDS.items():struct.pack_into('<i' if name in INTS else '<f',image,off,getattr(s.rpm_state,name))
@@ -86,7 +94,7 @@ def encode(s,config):
     return image,data
 
 
-def verify(executable):
+def verify(executable,vehicle_system=False):
     from unicorn import UC_HOOK_CODE
     o=DynoOracle(executable);cpu,reg=o.cpu,o.reg
     owner,config,interface,vtable=o.inputs,o.inputs+0x3000,o.inputs+0x4000,o.inputs+0x4100
@@ -121,12 +129,15 @@ def verify(executable):
         cpu.reg_write(reg.UC_X86_REG_EAX,int(value));cpu.reg_write(reg.UC_X86_REG_ESP,stack+cleanup);cpu.reg_write(reg.UC_X86_REG_EIP,ret)
     for entry in (*STAGES,query):cpu.hook_add(UC_HOOK_CODE,child,begin=entry,end=entry)
     count,maximum=0,0.
-    for s,observations in itertools.chain(cases(),mutation_cases()):
+    corpus=system_cases() if vehicle_system else itertools.chain(cases(),mutation_cases())
+    update=update_engine_system if vehicle_system else update_engine
+    entry=0x548260 if vehicle_system else 0x545af0
+    for s,observations in corpus:
         o._reset();before,data=encode(s,config);cpu.mem_write(owner,bytes(before));cpu.mem_write(config,bytes(data))
         cpu.mem_write(0x83f204,struct.pack('<8i',*s.activation_delays));cpu.mem_write(0xaa456c,struct.pack('<i',s.current_counter))
         calls.clear();stack=o.frame-0x1000;cpu.mem_write(stack,struct.pack('<II',o.stop,owner));cpu.reg_write(reg.UC_X86_REG_ESP,stack)
-        o._run(0x545af0,o.stop,count=100000)
-        output=update_engine(s,SuppliedEngineStages(observations));expected,_=encode(output.state,config)
+        o._run(entry,o.stop,count=150000)
+        output=update(s,SuppliedEngineStages(observations));expected,_=encode(output.state,config)
         if calls!=[(c.stage,c.argument) for c in output.calls]:raise AssertionError((count,'calls',calls,output.calls,s,observations))
         actual=bytes(cpu.mem_read(owner,len(before)))
         positions=[off for name,off in FIELDS.items() if name not in INTS]+list(SCALARS)
@@ -139,8 +150,8 @@ def verify(executable):
             raise AssertionError((count,'unmodelled state',hex(offset),actual[offset:offset+4],expected[offset:offset+4],s))
         if bytes(cpu.mem_read(config,len(data)))!=data:raise AssertionError('configuration mutation')
         count+=1
-    return {'cases':count,'maximum_absolute_error':maximum,'scope':'complete engine dispatcher with actual RPM and curve lookup; other children/interface observations and delay/curve data supplied; exact call order and owner/config bytes'}
+    return {'cases':count,'maximum_absolute_error':maximum,'scope':('complete 0x548260 vehicle engine controller with recovered RPM/curve plus observed 0x540fd0 and 0x548660 call boundaries; other effects supplied; tracked engine owner/configuration bytes and call order checked' if vehicle_system else 'complete engine dispatcher with actual RPM and curve lookup; other children/interface observations and delay/curve data supplied; exact call order and owner/config bytes')}
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('executable');print(json.dumps(verify(p.parse_args().executable)))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('executable');p.add_argument('--vehicle-system',action='store_true');args=p.parse_args();print(json.dumps(verify(args.executable,args.vehicle_system)))

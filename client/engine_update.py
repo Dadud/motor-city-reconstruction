@@ -80,8 +80,8 @@ def _normalize(s):
     return s
 
 
-def update_engine(state,execute):
-    """One complete 0x545af0 dispatch; unknown child behavior must be supplied.
+def _update_engine(state,execute,*,vehicle_system):
+    """Shared body for the two observed engine dispatch entry points.
 
     Recovered rpm_update and curve_lookup are executed internally. execute is
     required for other stages and query observations, with mutable typed state.
@@ -100,6 +100,9 @@ def update_engine(state,execute):
         r=s.rpm_state
         rpm=round(f32(r.limiter_rpm*.875))
         s.rpm_state=replace(r,rpm=rpm,angular_speed=f32(rpm*f32(.10471976)),acceleration_output=0.)
+    if vehicle_system:
+        call('control_update')
+        s.engagement=f32(min(s.engagement,f32(.25)))
     if not s.engine_flags&1:
         if call('interface_query',8)==0:
             s.engine_flags|=1;_normalize(s)
@@ -109,8 +112,10 @@ def update_engine(state,execute):
     if not flags&2:
         if flags&4 and s.engine_flags&1:
             for stage in ('engine_setup','engine_control','gear_link','drivetrain_loads',
-                          'engagement_inputs','torque_update','wheel_drive','engine_finalize'):
+                          'engagement_inputs'):
                 call(stage)
+            if vehicle_system:call('empty_engine_hook')
+            for stage in ('torque_update','wheel_drive','engine_finalize'):call(stage)
         return EngineUpdateOutput(s,tuple(calls))
     if not flags&4:
         if not flags&1 or s.override_value==0 or not s.engine_flags&1:
@@ -145,3 +150,18 @@ def update_engine(state,execute):
     if s.vehicle_flags&1 and s.vehicle_flags&2:
         call('gear_link');call('drivetrain_loads')
     return EngineUpdateOutput(s,tuple(calls))
+
+
+def update_engine(state,execute):
+    """Recover the original 0x545af0 engine dispatcher."""
+    return _update_engine(state,execute,vehicle_system=False)
+
+
+def update_engine_system(state,execute):
+    """Recover 0x548260, the vehicle-path engine controller.
+
+    This entry applies the recovered control update and engagement cap before
+    sharing the common engine dispatch. Its 0x548660 RET is preserved as an
+    ordered call for exact caller comparisons.
+    """
+    return _update_engine(state,execute,vehicle_system=True)

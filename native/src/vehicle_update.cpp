@@ -151,7 +151,7 @@ VehicleUpdateOutput update_vehicle(VehicleUpdateState s, const VehicleStageExecu
       if (!w.contact || w.force[1] == 0)
         w.force = {};
     call("tilted_motion");
-    call("refresh_motion");
+    call("engine_system_update");
     project();
     tail();
     return finish("tilted");
@@ -182,7 +182,7 @@ VehicleUpdateOutput update_vehicle(VehicleUpdateState s, const VehicleStageExecu
     s.local_angular_acceleration = {moment, 0, 0};
     angular_world();
     s.angular_velocity = increment(s.angular_velocity, s.angular_acceleration);
-    call("refresh_motion");
+    call("engine_system_update");
     tail();
     return finish("low_support");
   }

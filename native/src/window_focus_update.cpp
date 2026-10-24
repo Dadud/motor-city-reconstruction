@@ -13,7 +13,7 @@ std::uint32_t window_focus_update(WindowFocusState& state,std::uint32_t window,
     const bool inactive=(wparam&0xffffu)==0 || (wparam>>16)!=0;
     if(inactive) {
         if(state.active()!=0) state.set_active(0);
-        if(dispatch.load(input_queue_image::hooks_enabled)!=0) {
+        if(dispatch.load(input_queue_image::policy_enabled)!=0) {
             auto hook=state.keyboard_hook();
             if(hook!=0) {
                 if(!state.unhook) throw std::invalid_argument("keyboard unhook bridge required");
@@ -38,7 +38,7 @@ std::uint32_t window_focus_update(WindowFocusState& state,std::uint32_t window,
         throw std::invalid_argument("default window procedure bridge required");
     result=state.default_procedure(state,window,message,wparam,lparam,state.user);
     state.set_active(1);
-    if(dispatch.load(input_queue_image::hooks_enabled)==0) return 1;
+    if(dispatch.load(input_queue_image::policy_enabled)==0) return 1;
 
     auto hook=state.keyboard_hook();
     if(hook==0) {

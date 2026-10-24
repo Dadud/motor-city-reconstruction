@@ -43,6 +43,10 @@ def load_packages(root):
                 raise ValueError('comparison must name a tools module')
             if check.get('runner') and check['runner'] not in package['targets']:
                 raise ValueError('comparison runner is not a package target')
+            if not isinstance(check.get('arguments', []), list) or not all(
+                isinstance(value, str) for value in check.get('arguments', [])
+            ):
+                raise ValueError('comparison arguments must be a list of strings')
             if not (root / (check['module'].replace('.', '/')+'.py')).is_file():
                 raise ValueError('comparison module missing')
     # Cycles in hand-assigned package dependencies are configuration errors.
@@ -74,6 +78,7 @@ def check_commands(package, directory, config, original=None):
             command.append(str(original))
         else:
             command.append(str(runner_path(directory, config, check['runner'])))
+        command.extend(check.get('arguments', []))
         commands.append(command)
     return commands, skipped
 

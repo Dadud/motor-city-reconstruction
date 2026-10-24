@@ -127,6 +127,10 @@
         {
           "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
           "address": "0x546e70"
+        },
+        {
+          "target_sha256": "28c0cdde77ed24bac6aeeea65699c16be0f31e6aa8cb5db38417f0f3d5880164",
+          "address": "0x548260"
         }
       ],
       "targets": [
@@ -181,10 +185,24 @@
         {
           "module": "tools.engine_pipeline_oracle",
           "original": true
+        },
+        {
+          "module": "tools.engine_update_oracle",
+          "original": true,
+          "arguments": [
+            "--vehicle-system"
+          ]
+        },
+        {
+          "module": "tools.native_engine_update_compare",
+          "runner": "mco_engine_update_compare",
+          "arguments": [
+            "--vehicle-system"
+          ]
         }
       ],
-      "acceptance": "Bounded original dispatcher/torque/RPM/links comparisons and persistent shared-owner pipeline.",
-      "unresolved": "Explicit supplied control, boost, limiter, pulse, damage and interface/effect children; complete driving not verified."
+      "acceptance": "Bounded original dispatcher/torque/RPM/links comparisons and persistent shared-owner pipeline. The 0x548260 vehicle-path controller also passes 6,954 original/native cases through the engine-update runner.",
+      "unresolved": "Explicit supplied control, boost, limiter, pulse, damage and interface/effect children; complete driving not verified.; control prelude effects and remaining children stay supplied"
     }
   ]
 }

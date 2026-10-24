@@ -40,7 +40,9 @@ double curve_torque_at_rpm(const std::vector<float> &table, std::int32_t rpm) {
   if (index >= table.size()-1) throw std::invalid_argument("RPM outside supplied torque curve");
   return (double(table[index+1])-table[index])*(double(stored(rpm))-double(index)*500)*double(stored(.002))+table[index];
 }
-EngineUpdateOutput update_engine(EngineUpdateState s, const EngineStageExecutor &execute) {
+namespace {
+EngineUpdateOutput update_engine_impl(EngineUpdateState s, const EngineStageExecutor &execute,
+                                      bool vehicle_system) {
   if (!execute) throw std::invalid_argument("engine child executor required");
   normalize(s); std::vector<EngineCall> calls;
   auto call = [&](const std::string &stage, std::optional<std::int32_t> argument = {}) {
@@ -55,6 +57,10 @@ EngineUpdateOutput update_engine(EngineUpdateState s, const EngineStageExecutor 
     auto &r = s.rpm_state; r.rpm = nearest(stored(double(r.limiter_rpm)*.875));
     r.angular_speed = stored(double(r.rpm)*double(stored(.10471976))); r.acceleration_output = 0;
   };
+  if (vehicle_system) {
+    call("control_update");
+    s.engagement = std::min(s.engagement, stored(.25));
+  }
   if (!(s.engine_flags&1)) {
     if (call("interface_query",8)==0) { s.engine_flags |= 1; normalize(s); }
     else if (signed_engine_counter(std::int64_t(call("activation_counter"))-256+s.activation_delays[s.selector_index])<=s.current_counter) {
@@ -63,8 +69,11 @@ EngineUpdateOutput update_engine(EngineUpdateState s, const EngineStageExecutor 
   }
   auto flags = s.vehicle_flags;
   if (!(flags&2)) {
-    if ((flags&4) && (s.engine_flags&1))
-      for (const auto *stage : {"engine_setup","engine_control","gear_link","drivetrain_loads","engagement_inputs","torque_update","wheel_drive","engine_finalize"}) call(stage);
+    if ((flags&4) && (s.engine_flags&1)) {
+      for (const auto *stage : {"engine_setup","engine_control","gear_link","drivetrain_loads","engagement_inputs"}) call(stage);
+      if (vehicle_system) call("empty_engine_hook");
+      for (const auto *stage : {"torque_update","wheel_drive","engine_finalize"}) call(stage);
+    }
     return {std::move(s),std::move(calls)};
   }
   if (!(flags&4)) {
@@ -94,5 +103,12 @@ EngineUpdateOutput update_engine(EngineUpdateState s, const EngineStageExecutor 
   s.curve_torque=stored(torque); s.power=std::max(0.f,stored(torque*r.rpm*double(stored(.00010471976))));
   if ((s.vehicle_flags&1) && (s.vehicle_flags&2)) { call("gear_link"); call("drivetrain_loads"); }
   return {std::move(s),std::move(calls)};
+}
+} // namespace
+EngineUpdateOutput update_engine(EngineUpdateState s, const EngineStageExecutor &execute) {
+  return update_engine_impl(std::move(s), execute, false);
+}
+EngineUpdateOutput update_engine_system(EngineUpdateState s, const EngineStageExecutor &execute) {
+  return update_engine_impl(std::move(s), execute, true);
 }
 }
